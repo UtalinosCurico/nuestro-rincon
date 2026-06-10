@@ -1,0 +1,35 @@
+{
+  "name": "Catalina & Diego - Nuestro Rincon",
+  "short_name": "Nuestro Rincon",
+  "description": "Rincon romantico privado de Catalina y Diego.",
+  "lang": "es-CL",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf7f1",
+  "theme_color": "#5f6655",
+  "categories": ["lifestyle", "photo", "personalization"],
+  "icons": [
+    {
+      "src": "/assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Abrir Nuestro Rincon",
+      "short_name": "Abrir",
+      "url": "/",
+      "icons": [{ "src": "/assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    }
+  ]
+}

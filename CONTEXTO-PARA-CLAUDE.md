@@ -47,6 +47,8 @@ No es una app bancaria ni SaaS grande. El PIN existente es simbolico, no segurid
 nuestro-rincon/
   index.html                  Pagina principal que Vercel sirve en /
   catalina-y-diego.html        Copia equivalente para abrir por nombre historico
+  manifest.webmanifest        Manifest PWA para instalar como app
+  sw.js                       Service worker basico para app instalable/offline shell
   api/
     estado.js                 API Vercel serverless para Neon
     backups.js                Historial de respaldos en Neon
@@ -100,6 +102,7 @@ Ademas de la pagina base, ya estan implementadas estas mejoras:
 - Estado visible de musica: "Sonando: Te Quiero Tanto - Kevin Kaarl".
 - El boton de musica recuerda la preferencia e intenta retomar al entrar.
 - Subida opcional de fotos a Vercel Blob mediante `/api/upload`.
+- PWA instalable: manifest, iconos, service worker y metatags mobile.
 
 Antes guardaba solo en `localStorage`. Ahora funciona asi:
 
@@ -256,6 +259,18 @@ Probar sincronizacion:
 3. Esperar 1 segundo.
 4. Abrir la pagina en otro navegador/celular.
 5. Confirmar que aparece el cambio.
+
+Probar instalacion como app:
+
+1. Abrir `https://nuestro-rincon-neon.vercel.app` desde Chrome/Edge Android o navegador de escritorio.
+2. Buscar "Instalar app" / "Agregar a pantalla principal".
+3. Confirmar que aparece como "Nuestro Rincon".
+4. Abrir desde el icono instalado.
+
+Notas:
+
+- En iPhone se instala desde Safari -> Compartir -> Agregar a pantalla de inicio.
+- El service worker cachea la carcasa de la app, manifest e iconos. No cachea APIs ni audio para evitar datos viejos o cache grande.
 
 ## Reglas para futuras ediciones
 

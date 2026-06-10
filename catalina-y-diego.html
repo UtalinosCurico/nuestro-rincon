@@ -2,8 +2,15 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#5f6655">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nuestro Rincón">
 <title>Catalina &amp; Diego — Nuestro Rincón</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/assets/icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/icons/icon-maskable.svg">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -2610,6 +2617,16 @@ async function verBackupsNube(){
     estadoNube('error', '&#9888;&#65039; No se pudo leer el historial', true);
     console.warn('No se pudo usar el historial de respaldos:', error);
   }
+}
+
+/* ============================================================
+   APP INSTALABLE (PWA)
+   ============================================================ */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .catch(error => console.warn('No se pudo registrar la app instalable:', error));
+  });
 }
 </script>
 </body>

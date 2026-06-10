@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#5f6655"/>
+  <circle cx="256" cy="256" r="182" fill="#faf7f1"/>
+  <circle cx="256" cy="256" r="132" fill="#f3eee4"/>
+  <path d="M155 274c0-73 46-124 111-124 36 0 65 16 84 40l-36 29c-12-16-28-25-48-25-38 0-64 32-64 80s27 80 68 80c23 0 42-10 56-30l36 28c-21 30-53 46-94 46-67 0-113-50-113-124Z" fill="#b9985a"/>
+  <path d="M241 260c0-26 19-45 45-45 17 0 30 8 38 21 8-13 22-21 39-21 26 0 45 19 45 45 0 43-56 72-84 91-28-19-83-48-83-91Z" fill="#c98e9b"/>
+  <text x="256" y="420" text-anchor="middle" font-family="Georgia, serif" font-size="56" fill="#3d3a33">C ♥ D</text>
+</svg>
