@@ -834,7 +834,7 @@
     <div class="pregunta-dia">
       <span class="etiqueta-p">Pregunta del día</span>
       <span class="texto-p" id="preguntaDia">...</span>
-      <div style="font-size:.85rem;color:var(--gris);margin-top:8px">Respóndanla en una nota aquí abajo &#11015;&#65039;</div>
+      <div id="estadoPreguntaDia" style="font-size:.85rem;color:var(--gris);margin-top:8px">Respóndanla en una nota aquí abajo &#11015;&#65039;</div>
     </div>
 
     <div class="tarjeta">
@@ -932,6 +932,194 @@ const PREGUNTAS_DIA = [
   '¿Cuál fue la última vez que te hice reír fuerte?',
   '¿Qué plan pendiente te gustaría cumplir pronto?',
   '¿Qué te gustaría que te dijera más seguido?',
+  '¿Qué parte de tu día me habrías mostrado si pudiera estar ahí?',
+  '¿Qué lugar cotidiano sería más bonito si fuéramos juntos?',
+  '¿Qué gesto mío te hace sentir cuidado/a?',
+  '¿Qué olor te recuerda a un momento feliz conmigo?',
+  '¿Qué comida te gustaría que fuera nuestra tradición?',
+  '¿Qué foto nuestra pondrías en un portarretrato?',
+  '¿Qué sueño tuyo quieres que yo cuide contigo?',
+  '¿Qué cosa simple te gustaría hacer conmigo mañana?',
+  '¿Qué te dio ternura de mí últimamente?',
+  '¿Qué frase mía se te quedó pegada?',
+  '¿Qué parte de nuestra historia te gusta contar?',
+  '¿Qué canción pondrías para manejar conmigo de noche?',
+  '¿Qué día repetirías conmigo sin cambiar nada?',
+  '¿Qué detalle te gustaría recibir cuando estás cansado/a?',
+  '¿Qué aventura chica podríamos hacer esta semana?',
+  '¿Qué cosa de mí te hace sentir en casa?',
+  '¿Qué abrazo recuerdas con más cariño?',
+  '¿Qué momento nuestro parece escena de película?',
+  '¿Qué plan barato pero perfecto harías conmigo?',
+  '¿Qué palabra usarías para describirnos hoy?',
+  '¿Qué te gustaría aprender juntos?',
+  '¿Qué miedo te gustaría que enfrentemos de la mano?',
+  '¿Qué lugar de Chile quieres conocer conmigo?',
+  '¿Qué sería un desayuno perfecto juntos?',
+  '¿Qué mensaje mío te gustaría recibir de sorpresa?',
+  '¿Qué cosa te enamora más cuando estamos tranquilos?',
+  '¿Qué recuerdo nuestro te calma cuando tienes un mal día?',
+  '¿Qué promesa pequeña quieres que nos hagamos?',
+  '¿Qué serie o película sientes que deberíamos ver abrazados?',
+  '¿Qué sabor te recuerda a nosotros?',
+  '¿Qué momento familiar te gustaría vivir conmigo?',
+  '¿Qué te gustaría que hagamos en nuestro próximo aniversario?',
+  '¿Qué detalle mío notaste antes que yo supiera?',
+  '¿Qué te gustaría guardar en una cajita de recuerdos?',
+  '¿Qué sueño de infancia te gustaría contarme mejor?',
+  '¿Qué parte de mi personalidad te da paz?',
+  '¿Qué cosa cotidiana te gustaría convertir en ritual de pareja?',
+  '¿Qué te gustaría que hagamos cuando llueva?',
+  '¿Qué lugar sería nuestro refugio ideal?',
+  '¿Qué canción debería sonar en una tarde perfecta?',
+  '¿Qué te gustaría que inventáramos como tradición anual?',
+  '¿Qué te gustaría escribirnos para leer en cinco años?',
+  '¿Qué cosa te hizo pensar “qué lindo/a es” esta semana?',
+  '¿Qué plan harías si tuviéramos solo dos horas libres?',
+  '¿Qué te gustaría que cocine para ti?',
+  '¿Qué plato te gustaría cocinarme?',
+  '¿Qué regalo hecho a mano te gustaría recibir?',
+  '¿Qué gesto te hace sentir amado/a sin palabras?',
+  '¿Qué parte de mi risa reconoces altiro?',
+  '¿Qué momento nuestro fue inesperadamente perfecto?',
+  '¿Qué cosa te gustaría sanar conmigo?',
+  '¿Qué te gustaría que hablemos más seguido?',
+  '¿Qué haríamos en una cita sin celular?',
+  '¿Qué lugar elegirías para mirar estrellas conmigo?',
+  '¿Qué te gustaría que recuerde siempre de ti?',
+  '¿Qué te gustaría que yo entienda mejor de tu forma de amar?',
+  '¿Qué recuerdo pequeño te gustaría no olvidar nunca?',
+  '¿Qué te gustaría celebrar aunque nadie más lo entienda?',
+  '¿Qué parte de nuestra relación te hace sentir orgulloso/a?',
+  '¿Qué aventura grande te gustaría planear conmigo?',
+  '¿Qué canción te gustaría dedicarme hoy?',
+  '¿Qué te gustaría que hagamos cuando estemos viejitos?',
+  '¿Qué apodo cariñoso te gusta más?',
+  '¿Qué cosa te gustaría que te pregunte más?',
+  '¿Qué lugar de nuestra ciudad se siente especial para nosotros?',
+  '¿Qué momento te hizo sentir que esto iba en serio?',
+  '¿Qué te gustaría que tengamos en nuestra futura casa?',
+  '¿Qué flor combina conmigo?',
+  '¿Qué flor combina contigo?',
+  '¿Qué día común se volvió especial por estar juntos?',
+  '¿Qué te gustaría que hagamos antes de que termine el mes?',
+  '¿Qué cosa te hace extrañarme más?',
+  '¿Qué te gustaría escuchar cuando estamos lejos?',
+  '¿Qué recuerdo nuestro te gustaría poner en una canción?',
+  '¿Qué harías conmigo en una mañana libre?',
+  '¿Qué harías conmigo en una noche fría?',
+  '¿Qué detalle romántico te parece simple pero precioso?',
+  '¿Qué parte de mi forma de hablar te gusta?',
+  '¿Qué te gustaría que aprendamos del otro este año?',
+  '¿Qué momento te gustaría fotografiar la próxima vez?',
+  '¿Qué sueño compartido te emociona más?',
+  '¿Qué lugar sería perfecto para un picnic?',
+  '¿Qué te gustaría que hagamos si nos ganamos un día entero juntos?',
+  '¿Qué te gustaría que hagamos si tenemos solo diez minutos juntos?',
+  '¿Qué te gustaría que nunca dejemos de hacer?',
+  '¿Qué te gustaría repetir de nuestra primera etapa?',
+  '¿Qué te sorprendió de mí para bien?',
+  '¿Qué te gustaría que te dedique: una canción, una carta o una foto?',
+  '¿Qué momento te hizo sentir muy querido/a?',
+  '¿Qué recuerdo te da risa cada vez que lo piensas?',
+  '¿Qué te gustaría que tengamos como frase nuestra?',
+  '¿Qué palabra prohibirías en una pelea para cuidarnos mejor?',
+  '¿Qué regla bonita pondrías para cuando discutamos?',
+  '¿Qué te ayuda a sentirte acompañado/a?',
+  '¿Qué necesito saber para cuidarte mejor cuando estás triste?',
+  '¿Qué cosa mía te gustaría descubrir más?',
+  '¿Qué parte de ti quieres que yo cuide con más ternura?',
+  '¿Qué plan harías conmigo si no importara la plata?',
+  '¿Qué plan harías conmigo sin gastar nada?',
+  '¿Qué detalle te gustaría dejarme escondido algún día?',
+  '¿Qué cosa te gustaría encontrar en una nota sorpresa?',
+  '¿Qué recuerdo nuestro merece una página completa?',
+  '¿Qué te gustaría que hagamos en primavera?',
+  '¿Qué te gustaría que hagamos en verano?',
+  '¿Qué te gustaría que hagamos en otoño?',
+  '¿Qué te gustaría que hagamos en invierno?',
+  '¿Qué te gustaría que sea nuestro próximo viaje?',
+  '¿Qué lugar te gustaría mostrarme porque habla de ti?',
+  '¿Qué parte de mi mundo quieres conocer mejor?',
+  '¿Qué parte de tu mundo quieres compartir conmigo?',
+  '¿Qué día de la semana se siente más nuestro?',
+  '¿Qué hora del día te gusta más para hablar conmigo?',
+  '¿Qué te gustaría que hagamos después de una semana pesada?',
+  '¿Qué te gustaría que hagamos para celebrar una buena noticia?',
+  '¿Qué gesto romántico te da vergüenza admitir que te encanta?',
+  '¿Qué momento nuestro pondrías en cámara lenta?',
+  '¿Qué escena nuestra te gustaría vivir de nuevo?',
+  '¿Qué cosa de mi personalidad te hace reír?',
+  '¿Qué cosa de tu personalidad crees que yo amo mucho?',
+  '¿Qué canción describe cómo te sientes conmigo?',
+  '¿Qué color sientes que representa nuestra relación?',
+  '¿Qué recuerdo nuestro huele a flores?',
+  '¿Qué recuerdo nuestro sabe a felicidad?',
+  '¿Qué te gustaría que hagamos en una tarde de lluvia?',
+  '¿Qué te gustaría que hagamos en una tarde de sol?',
+  '¿Qué te gustaría que hagamos para desconectarnos del mundo?',
+  '¿Qué momento te hizo sentir que somos equipo?',
+  '¿Qué te gustaría lograr juntos este año?',
+  '¿Qué meta chiquitita podríamos cumplir esta semana?',
+  '¿Qué te gustaría que celebremos cada 28?',
+  '¿Qué te gustaría que hagamos para nuestro primer año?',
+  '¿Qué le dirías a nuestro “yo” del futuro?',
+  '¿Qué le dirías a nuestro “yo” del primer día?',
+  '¿Qué te gustaría que recordemos cuando estemos lejos?',
+  '¿Qué te gustaría que hagamos cuando uno extrañe al otro?',
+  '¿Qué te gustaría recibir después de un mal día?',
+  '¿Qué te gustaría darme después de mi mal día?',
+  '¿Qué cosa te gustaría que se vuelva costumbre entre nosotros?',
+  '¿Qué promesa cotidiana vale más que una promesa gigante?',
+  '¿Qué te gustaría que hagamos antes de dormir?',
+  '¿Qué te gustaría que hagamos al despertar juntos?',
+  '¿Qué conversación pendiente te gustaría tener con calma?',
+  '¿Qué sueño loco te gustaría contarme sin filtro?',
+  '¿Qué plan improvisado nos quedaría perfecto?',
+  '¿Qué recuerdo te gustaría transformar en foto?',
+  '¿Qué foto nuestra falta tomar?',
+  '¿Qué lugar merece ser nuestro próximo fondo de pantalla?',
+  '¿Qué te gustaría que escriba en una carta para ti?',
+  '¿Qué te gustaría escribirme en una carta?',
+  '¿Qué cosa te gustaría que valore más de ti?',
+  '¿Qué cosa sientes que yo valoro mucho de ti?',
+  '¿Qué detalle de nuestro comienzo te emociona todavía?',
+  '¿Qué día sentiste que te hice bien?',
+  '¿Qué día sentiste que me hiciste bien?',
+  '¿Qué te gustaría que hagamos cuando cumplamos una meta?',
+  '¿Qué recuerdo nuestro te gustaría contarle a alguien querido?',
+  '¿Qué te gustaría que sea “nuestro lugar” oficial?',
+  '¿Qué te gustaría que sea “nuestra comida” oficial?',
+  '¿Qué te gustaría que sea “nuestra canción” después de esta?',
+  '¿Qué te gustaría que sea “nuestra palabra” del mes?',
+  '¿Qué cosa pequeña agradeces de mí hoy?',
+  '¿Qué cosa pequeña agradezco de ti hoy?',
+  '¿Qué te gustaría que hagamos para sorprender al otro?',
+  '¿Qué plan romántico te daría risa pero igual harías?',
+  '¿Qué plan cursi te gustaría vivir conmigo?',
+  '¿Qué cosa del futuro te da nervios pero también ilusión?',
+  '¿Qué cosa del presente quieres disfrutar más conmigo?',
+  '¿Qué te gustaría que no demos por sentado?',
+  '¿Qué te gustaría que cuidemos siempre?',
+  '¿Qué parte de esta página te gustaría llenar pronto?',
+  '¿Qué sección nueva te gustaría que inventemos para nosotros?',
+  '¿Qué te gustaría que hagamos si tenemos un día solo para nosotros?',
+  '¿Qué te gustaría que hagamos si estamos en silencio juntos?',
+  '¿Qué te gustaría que yo recuerde cuando no estés cerca?',
+  '¿Qué te gustaría recordar de mí cuando no estoy cerca?',
+  '¿Qué te gustaría que hagamos con nuestras fotos favoritas?',
+  '¿Qué momento merece ser favorito en el carrusel?',
+  '¿Qué recuerdo pondrías en el frasco hoy?',
+  '¿Qué carta te gustaría abrir en el futuro?',
+  '¿Qué te gustaría que diga nuestra próxima nota de amor?',
+  '¿Qué parte de ti se siente más libre conmigo?',
+  '¿Qué parte de mí sientes que se abrió contigo?',
+  '¿Qué te gustaría que hagamos para seguir eligiéndonos bonito?',
+  '¿Qué te gustaría responderme con una foto hoy?',
+  '¿Qué te gustaría responderme con una canción hoy?',
+  '¿Qué te gustaría responderme con un audio hoy?',
+  '¿Qué pregunta me harías si supieras que responderé con todo el corazón?',
+  '¿Qué te gustaría que te pregunte mañana?',
 ];
 
 /* ============================================================
@@ -1003,6 +1191,7 @@ let datos = {
   ],
 
   estados: { Catalina: 'Pensando en ti &#10084;&#65039;', Diego: 'Pensando en ti &#10084;&#65039;' },
+  preguntaDia: { fecha: null, texto: null, usadas: [] },
 
   notas: [
     { de: 'Diego', texto: 'Cada flor que veas hoy, imagina que te la regalé yo.', fecha: '28/12/2025' },
@@ -1108,6 +1297,7 @@ function repintarTodo(){
   Object.keys(LISTAS).forEach(pintarLista);
   pintarPlan();
   pintarEstados();
+  pintarPreguntaDia();
   pintarNotas();
   pintarStats();
 }
@@ -2325,10 +2515,91 @@ async function cambiarEstado(quien){
 }
 
 /* ============================================================
-   PREGUNTA DEL DÍA (rota sola, una distinta cada día)
+   PREGUNTA DEL DÍA
+   Aleatoria, compartida en Neon y sin repetir hasta agotar el banco.
    ============================================================ */
-document.getElementById('preguntaDia').textContent =
-  PREGUNTAS_DIA[Math.floor(Date.now() / 86400000) % PREGUNTAS_DIA.length];
+function fechaHoyClave(){
+  const h = new Date();
+  return h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0') + '-' + String(h.getDate()).padStart(2, '0');
+}
+
+function indiceAleatorio(max){
+  if(window.crypto && window.crypto.getRandomValues){
+    const valores = new Uint32Array(1);
+    window.crypto.getRandomValues(valores);
+    return valores[0] % max;
+  }
+  return Math.floor(Math.random() * max);
+}
+
+function normalizarPreguntaDia(){
+  if(!datos.preguntaDia || typeof datos.preguntaDia !== 'object'){
+    datos.preguntaDia = { fecha: null, texto: null, usadas: [] };
+  }
+  const vistas = new Set();
+  datos.preguntaDia.usadas = (Array.isArray(datos.preguntaDia.usadas) ? datos.preguntaDia.usadas : [])
+    .filter(q => PREGUNTAS_DIA.includes(q))
+    .filter(q => {
+      if(vistas.has(q)) return false;
+      vistas.add(q);
+      return true;
+    });
+  if(datos.preguntaDia.texto && !PREGUNTAS_DIA.includes(datos.preguntaDia.texto)){
+    datos.preguntaDia.texto = null;
+    datos.preguntaDia.fecha = null;
+  }
+}
+
+function elegirPreguntaNueva(){
+  normalizarPreguntaDia();
+  const usadas = new Set(datos.preguntaDia.usadas);
+  const disponibles = PREGUNTAS_DIA.filter(q => !usadas.has(q));
+  if(!disponibles.length) return null;
+  const texto = disponibles[indiceAleatorio(disponibles.length)];
+  usadas.add(texto);
+  datos.preguntaDia = {
+    fecha: fechaHoyClave(),
+    texto,
+    usadas: [...usadas],
+  };
+  return texto;
+}
+
+function pintarPreguntaDia(opciones = {}){
+  const guardarSiCambia = opciones.guardarSiCambia !== false;
+  const hoy = fechaHoyClave();
+  const preguntaEl = document.getElementById('preguntaDia');
+  const estadoEl = document.getElementById('estadoPreguntaDia');
+  normalizarPreguntaDia();
+
+  let texto = datos.preguntaDia.fecha === hoy ? datos.preguntaDia.texto : null;
+  let cambio = false;
+
+  if(!texto){
+    if(guardarSiCambia){
+      texto = elegirPreguntaNueva();
+      cambio = !!texto;
+    }else{
+      const usadas = new Set(datos.preguntaDia.usadas);
+      const disponibles = PREGUNTAS_DIA.filter(q => !usadas.has(q));
+      texto = disponibles.length ? disponibles[indiceAleatorio(disponibles.length)] : null;
+    }
+  }
+
+  if(texto){
+    preguntaEl.textContent = texto;
+    const restantes = Math.max(0, PREGUNTAS_DIA.length - datos.preguntaDia.usadas.length);
+    estadoEl.textContent = 'Aleatoria y sin repetir · quedan ' + restantes + ' preguntas nuevas';
+  }else{
+    preguntaEl.textContent = 'Ya respondieron todas las preguntas sin repetir.';
+    estadoEl.textContent = 'Agreguen más preguntas al banco para seguir con una nueva cada día.';
+  }
+
+  if(cambio && guardarSiCambia) guardar();
+}
+
+pintarPreguntaDia({ guardarSiCambia: false });
+setInterval(() => pintarPreguntaDia(), 60000);
 
 /* ============================================================
    NOTAS Y TIPS

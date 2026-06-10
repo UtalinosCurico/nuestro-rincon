@@ -84,6 +84,7 @@ El HTML mantiene un objeto global `datos` con toda la informacion de la pagina:
 - series
 - lugares
 - estados
+- preguntaDia
 - notas
 
 ## Estado funcional actualizado
@@ -103,6 +104,7 @@ Ademas de la pagina base, ya estan implementadas estas mejoras:
 - El boton de musica recuerda la preferencia e intenta retomar al entrar.
 - Subida opcional de fotos a Vercel Blob mediante `/api/upload`.
 - PWA instalable: manifest, iconos, service worker y metatags mobile.
+- Pregunta del dia aleatoria compartida, con banco grande y sin repetir hasta agotar preguntas.
 
 Antes guardaba solo en `localStorage`. Ahora funciona asi:
 
@@ -167,6 +169,24 @@ El objeto completo de la pagina se guarda en:
 ```text
 rincon_estado.data
 ```
+
+La pregunta diaria usa:
+
+```js
+datos.preguntaDia = {
+  fecha: 'AAAA-MM-DD',
+  texto: 'pregunta actual',
+  usadas: ['pregunta ya usada', 'otra pregunta ya usada']
+}
+```
+
+Reglas:
+
+- No usar `Date.now() % preguntas.length`; eso repite.
+- `pintarPreguntaDia()` elige una pregunta aleatoria solo si cambio el dia.
+- La pregunta nueva se toma desde `PREGUNTAS_DIA` excluyendo todo lo que ya este en `usadas`.
+- Cuando se agote el banco, no debe repetir: muestra aviso para agregar mas preguntas.
+- El historial vive en Neon, asi Catalina y Diego ven la misma pregunta diaria.
 
 Tabla de respaldos creada automaticamente:
 
