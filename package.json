@@ -1,0 +1,12 @@
+{
+  "name": "nuestro-rincon",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pagina romantica de Catalina y Diego con sincronizacion en Neon.",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2"
+  }
+}

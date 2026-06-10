@@ -765,6 +765,7 @@
    ============================================================ */
 const INICIO = new Date(2025, 11, 28, 17, 50, 0); // 28 dic 2025, 17:50 (meses 0-11)
 const CLAVE_GUARDADO = 'nuestroRinconCyD_v2';
+const API_ESTADO = '/api/estado';
 const RUTA_VIDEO_LOCAL = null; // ej: 'nuestro-video.mp4' cuando lo tengas en VSCode
 
 const ESTADOS_POSIBLES = ['Disponible &#128522;', 'Ocupada/o &#128218;', 'Durmiendo &#128564;', 'Pensando en ti &#10084;&#65039;'];
@@ -859,12 +860,15 @@ let datos = {
 
 /* ============================================================
    GUARDADO AUTOMÁTICO
-   - Como archivo o página real: se guarda solo (localStorage).
-   - En la vista previa del chat: los cambios duran la sesión.
+   - localStorage queda como respaldo rápido por dispositivo.
+   - En Vercel, /api/estado sincroniza el objeto completo con Neon.
    ============================================================ */
+let temporizadorGuardado = null;
+
 function guardar(){
   try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
   pintarStats();
+  programarGuardadoRemoto();
 }
 function cargar(){
   try{
@@ -873,6 +877,64 @@ function cargar(){
   }catch(e){}
 }
 cargar();
+
+function programarGuardadoRemoto(){
+  if(location.protocol === 'file:') return;
+  clearTimeout(temporizadorGuardado);
+  temporizadorGuardado = setTimeout(guardarRemoto, 700);
+}
+
+async function guardarRemoto(){
+  try{
+    const respuesta = await fetch(API_ESTADO, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data: datos }),
+    });
+    if(!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
+  }catch(error){
+    console.warn('No se pudo sincronizar con Neon. Se mantiene copia local.', error);
+  }
+}
+
+async function cargarRemoto(){
+  if(location.protocol === 'file:') return;
+  try{
+    const respuesta = await fetch(API_ESTADO, { headers: { 'Accept': 'application/json' } });
+    if(!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
+    const remoto = await respuesta.json();
+    if(remoto && remoto.data && typeof remoto.data === 'object'){
+      datos = Object.assign(datos, remoto.data);
+      try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
+      repintarTodo();
+    }
+  }catch(error){
+    console.warn('No se pudo cargar desde Neon. Se usa la copia local.', error);
+  }
+}
+
+function repintarTodo(){
+  document.getElementById('frase').textContent = datos.frase;
+  prepararBienvenida();
+  aplicarOscuro();
+  aplicarFondo();
+  pintarRazones();
+  pintarTimeline();
+  pintarFotos();
+  pintarComparador();
+  pintarVideo();
+  pintarCanciones();
+  pintarCancionHero();
+  pintarFrasco();
+  pintarCartas();
+  Object.keys(LISTAS).forEach(pintarLista);
+  pintarPlan();
+  pintarEstados();
+  pintarNotas();
+  pintarStats();
+}
+
+setTimeout(cargarRemoto, 0);
 
 /* ============================================================
    BIENVENIDA + PIN
