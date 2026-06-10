@@ -34,6 +34,47 @@ async function prepararTabla(sql) {
     VALUES (${ESTADO_ID}, '{}'::jsonb)
     ON CONFLICT (id) DO NOTHING
   `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS rincon_backups (
+      id BIGSERIAL PRIMARY KEY,
+      estado_id TEXT NOT NULL,
+      data JSONB NOT NULL,
+      motivo TEXT NOT NULL DEFAULT 'automatico',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+}
+
+async function crearBackupSiCorresponde(sql, dataActual) {
+  if (!dataActual || Object.keys(dataActual).length === 0) return;
+
+  const recientes = await sql`
+    SELECT id
+    FROM rincon_backups
+    WHERE estado_id = ${ESTADO_ID}
+      AND motivo = 'automatico'
+      AND created_at > now() - interval '30 minutes'
+    LIMIT 1
+  `;
+
+  if (recientes.length) return;
+
+  await sql`
+    INSERT INTO rincon_backups (estado_id, data, motivo)
+    VALUES (${ESTADO_ID}, ${JSON.stringify(dataActual)}::jsonb, 'automatico')
+  `;
+
+  await sql`
+    DELETE FROM rincon_backups
+    WHERE id IN (
+      SELECT id
+      FROM rincon_backups
+      WHERE estado_id = ${ESTADO_ID}
+      ORDER BY created_at DESC
+      OFFSET 30
+    )
+  `;
 }
 
 module.exports = async function handler(req, res) {
@@ -65,6 +106,17 @@ module.exports = async function handler(req, res) {
 
       if (!data || Array.isArray(data)) {
         return json(res, 400, { error: "El cuerpo debe ser { data: objeto }." });
+      }
+
+      const actuales = await sql`
+        SELECT data
+        FROM rincon_estado
+        WHERE id = ${ESTADO_ID}
+        LIMIT 1
+      `;
+      const dataActual = actuales[0]?.data || {};
+      if (JSON.stringify(dataActual) !== JSON.stringify(data)) {
+        await crearBackupSiCorresponde(sql, dataActual);
       }
 
       const filas = await sql`

@@ -88,7 +88,7 @@
   .cancion-momento-hero{
     margin-top:14px;font-size:.85rem;letter-spacing:1px;font-weight:300;
     background:rgba(0,0,0,.25);padding:8px 18px;border-radius:999px;
-    display:none;
+    display:none;line-height:1.45;
   }
   .chevron{margin-bottom:8px;animation:flotar 2s ease-in-out infinite;opacity:.85;}
   .btn-fondo{position:absolute;top:14px;right:14px;z-index:2;display:none;}
@@ -122,6 +122,22 @@
     box-shadow:0 10px 30px var(--sombra);
   }
   .memoria-banner b{font-family:'Playfair Display',serif;color:var(--dorado);font-weight:600;}
+
+  /* ===== Momentos especiales ===== */
+  .especiales-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:22px;}
+  .especial-card{
+    background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:18px;
+    padding:18px;text-align:left;box-shadow:0 10px 30px var(--sombra);position:relative;
+  }
+  .especial-card.principal{border-color:var(--dorado-claro);background:linear-gradient(180deg,var(--blanco),var(--crema));}
+  .especial-card .tag{
+    display:inline-block;border-radius:999px;padding:4px 10px;background:var(--crema-oscuro);
+    color:var(--dorado);font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;
+  }
+  .especial-card h4{font-family:'Playfair Display',serif;font-size:1.18rem;margin-bottom:5px;}
+  .especial-card p{font-weight:300;color:var(--gris);line-height:1.45;font-size:.95rem;}
+  .especial-card .cuenta{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.55rem;margin-top:12px;}
+  .especial-card .btn-borrar{position:absolute;top:8px;right:8px;}
 
   /* ===== Tarjetas ===== */
   .tarjeta{
@@ -412,6 +428,14 @@
   #btnOscuro{bottom:150px;}
   body.editando #btnEditar{background:var(--dorado);color:#fff;}
   #btnMusica.activo-musica{background:var(--dorado);color:#fff;}
+  .estado-musica{
+    position:fixed;right:88px;bottom:32px;z-index:49;
+    background:var(--tinta);color:var(--crema);border-radius:999px;
+    padding:8px 14px;font-size:.86rem;font-weight:300;box-shadow:0 8px 24px var(--sombra);
+    opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .25s, transform .25s;
+    max-width:min(310px,calc(100vw - 124px));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .estado-musica.visible{opacity:.95;transform:none;}
   .aviso-edicion{
     position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
     background:var(--tinta);color:var(--crema);padding:10px 22px;border-radius:999px;
@@ -491,6 +515,26 @@
   #nube.ok{color:var(--verde);}
   #nube.error{color:#b66;}
 
+  @media (max-width:640px){
+    .hero{min-height:100svh;}
+    .hero-contenido{width:100%;gap:13px;padding:18px 18px 96px;}
+    .hero h1{font-size:clamp(4rem,20vw,5rem);}
+    .hero .frase{max-width:calc(100vw - 56px);font-size:1.02rem;}
+    .cancion-momento-hero{
+      max-width:calc(100vw - 170px);
+      align-self:flex-start;
+      margin-left:12px;
+      text-align:center;
+      padding:10px 16px;
+    }
+    .flotante{right:14px;width:50px;height:50px;}
+    #btnMusica{bottom:24px;}
+    #btnEditar{bottom:86px;}
+    #btnOscuro{bottom:148px;}
+    .estado-musica{right:78px;bottom:32px;max-width:calc(100vw - 106px);}
+    #nube{max-width:calc(100vw - 28px);white-space:normal;text-align:center;justify-content:center;}
+  }
+
   /* ===== Lightbox: ver fotos en grande ===== */
   #lightbox{
     position:fixed;inset:0;z-index:190;background:rgba(22,21,17,.93);
@@ -566,8 +610,18 @@
   </div>
 </section>
 
-<!-- ============ RAZONES POR LAS QUE TE AMO ============ -->
+<!-- ============ MOMENTOS ESPECIALES ============ -->
 <section class="revelar" style="background:var(--crema-oscuro)">
+  <div class="seccion-interna ancha">
+    <h2 class="titulo-seccion">Momentos especiales</h2>
+    <p class="bajada">Aniversarios, fechas importantes y pequeñas celebraciones</p>
+    <div class="especiales-grid" id="listaMomentosEspeciales"></div>
+    <button class="boton" onclick="agregarMomentoEspecial()">Agregar fecha especial</button>
+  </div>
+</section>
+
+<!-- ============ RAZONES POR LAS QUE TE AMO ============ -->
+<section class="revelar">
   <div class="seccion-interna">
     <h2 class="titulo-seccion">Razones por las que te amo</h2>
     <p class="bajada">Una razón distinta cada día</p>
@@ -808,6 +862,8 @@
   <div style="margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
     <button class="boton suave chico" onclick="descargarRespaldo()">&#128190; Descargar respaldo</button>
     <button class="boton suave chico" onclick="document.getElementById('inputRespaldo').click()">&#128194; Restaurar respaldo</button>
+    <button class="boton suave chico" onclick="crearBackupNube()">&#9729;&#65039; Guardar en nube</button>
+    <button class="boton suave chico" onclick="verBackupsNube()">Historial nube</button>
   </div>
   <input type="file" id="inputRespaldo" accept="application/json,.json">
 </footer>
@@ -816,6 +872,7 @@
 <button class="flotante" id="btnOscuro" title="Modo oscuro" aria-label="Cambiar modo oscuro">&#127769;</button>
 <button class="flotante" id="btnEditar" title="Modo edición" aria-label="Activar modo edición">&#9998;</button>
 <button class="flotante" id="btnMusica" title="Música de fondo" aria-label="Reproducir música de fondo">&#9835;</button>
+<div class="estado-musica" id="estadoMusica" aria-live="polite"></div>
 <div class="aviso-edicion" id="avisoEdicion"></div>
 
 <!-- Modal genérico (cartas, recuerdos) -->
@@ -846,9 +903,12 @@
 const INICIO = new Date(2025, 11, 28, 17, 50, 0); // 28 dic 2025, 17:50 (meses 0-11)
 const CLAVE_GUARDADO = 'nuestroRinconCyD_v2';
 const API_ESTADO = '/api/estado';
+const API_BACKUPS = '/api/backups';
+const API_UPLOAD = '/api/upload';
 const RUTA_VIDEO_LOCAL = null; // ej: 'nuestro-video.mp4' cuando lo tengas en VSCode
 
 const ESTADOS_POSIBLES = ['Disponible &#128522;', 'Ocupada/o &#128218;', 'Durmiendo &#128564;', 'Pensando en ti &#10084;&#65039;'];
+const MUSICA_FONDO = { titulo: 'Te Quiero Tanto', artista: 'Kevin Kaarl' };
 
 const PREGUNTAS_DIA = [
   '¿Cuál fue el momento más feliz de tu semana?',
@@ -886,6 +946,10 @@ let datos = {
 
   timeline: [
     { fecha: '2025-12-28', titulo: 'Empezamos esta historia', desc: 'A las 17:50, ese domingo cambió todo.', foto: null },
+  ],
+
+  momentosEspeciales: [
+    { fecha: '2025-12-28', titulo: 'Nuestro aniversario', desc: 'El día que empezó todo.', tipo: 'Aniversario' },
   ],
 
   razones: [
@@ -946,6 +1010,9 @@ let datos = {
 let temporizadorGuardado = null;
 let guardadoPendiente = false;   // hay cambios locales esperando subir a Neon
 let ultimaCadenaRemota = null;   // último estado conocido de Neon (para no repintar de más)
+let guardandoRemoto = false;
+let ultimoGuardadoRemoto = null;
+let ultimoEstadoNube = 'idle';
 
 function guardar(){
   try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
@@ -969,7 +1036,9 @@ function programarGuardadoRemoto(){
 
 async function guardarRemoto(){
   guardadoPendiente = false;
-  estadoNube('', '&#9729;&#65039; Guardando&hellip;');
+  guardandoRemoto = true;
+  ultimoEstadoNube = 'sync';
+  estadoNube('', '&#9729;&#65039; Sincronizando&hellip;');
   try{
     const respuesta = await fetch(API_ESTADO, {
       method: 'POST',
@@ -978,16 +1047,22 @@ async function guardarRemoto(){
     });
     if(!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
     ultimaCadenaRemota = JSON.stringify(datos);
-    estadoNube('ok', '&#10003; Guardado en la nube', true);
+    ultimoGuardadoRemoto = new Date();
+    ultimoEstadoNube = 'ok';
+    actualizarTextoGuardado();
   }catch(error){
+    ultimoEstadoNube = 'error';
     estadoNube('error', '&#9888;&#65039; Sin conexi&oacute;n &mdash; guardado solo aqu&iacute;', true);
     console.warn('No se pudo sincronizar con Neon. Se mantiene copia local.', error);
+  }finally{
+    guardandoRemoto = false;
   }
 }
 
 async function cargarRemoto(){
   if(location.protocol === 'file:') return;
   if(guardadoPendiente) return; // no pisar cambios locales que aún no suben
+  if(guardandoRemoto) return;
   try{
     const respuesta = await fetch(API_ESTADO, { headers: { 'Accept': 'application/json' } });
     if(!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
@@ -999,6 +1074,9 @@ async function cargarRemoto(){
       datos = Object.assign(datos, remoto.data);
       try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
       repintarTodo();
+      if(remoto.updatedAt) ultimoGuardadoRemoto = new Date(remoto.updatedAt);
+      ultimoEstadoNube = 'ok';
+      estadoNube('ok', '&#10003; Cambios recibidos desde la nube', true);
     }
   }catch(error){
     console.warn('No se pudo cargar desde Neon. Se usa la copia local.', error);
@@ -1019,6 +1097,7 @@ function repintarTodo(){
   pintarCancionHero();
   pintarFrasco();
   pintarCartas();
+  pintarMomentosEspeciales();
   Object.keys(LISTAS).forEach(pintarLista);
   pintarPlan();
   pintarEstados();
@@ -1048,8 +1127,16 @@ function prepararBienvenida(){
     document.getElementById('pinInput').focus();
   }
 }
-function entrar(){
+async function entrar(){
   document.getElementById('bienvenida').classList.add('oculta');
+  if(localStorage.getItem('musicaFondoActiva') === '1' && audioFondo?.paused){
+    try{
+      await audioFondo.play();
+      actualizarBotonMusica();
+    }catch{
+      mostrarEstadoMusica('Toca ♪ para retomar la música', true);
+    }
+  }
 }
 function verificarPin(){
   const valor = document.getElementById('pinInput').value;
@@ -1093,6 +1180,94 @@ function actualizarContador(){
 }
 actualizarContador();
 setInterval(actualizarContador, 1000);
+
+/* ============================================================
+   MOMENTOS ESPECIALES
+   ============================================================ */
+function fechaLocal(iso){
+  const [a, m, d] = iso.split('-').map(Number);
+  return new Date(a, m - 1, d);
+}
+
+function diasHastaSiguienteAnual(iso){
+  const base = fechaLocal(iso);
+  const hoy = new Date();
+  const hoyInicio = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+  let objetivo = new Date(hoy.getFullYear(), base.getMonth(), base.getDate());
+  if(objetivo < hoyInicio) objetivo = new Date(hoy.getFullYear() + 1, base.getMonth(), base.getDate());
+  return Math.ceil((objetivo - hoyInicio) / 86400000);
+}
+
+function textoCuentaEspecial(dias){
+  if(dias === 0) return 'Hoy 💛';
+  if(dias === 1) return 'Mañana';
+  return 'En ' + dias + ' días';
+}
+
+function proximoMesJuntos(){
+  const hoy = new Date();
+  let meses = (hoy.getFullYear() - INICIO.getFullYear()) * 12 + (hoy.getMonth() - INICIO.getMonth());
+  let objetivo = new Date(INICIO.getFullYear(), INICIO.getMonth() + meses, INICIO.getDate(), INICIO.getHours(), INICIO.getMinutes());
+  if(objetivo <= hoy) objetivo = new Date(INICIO.getFullYear(), INICIO.getMonth() + meses + 1, INICIO.getDate(), INICIO.getHours(), INICIO.getMinutes());
+  const totalMeses = (objetivo.getFullYear() - INICIO.getFullYear()) * 12 + (objetivo.getMonth() - INICIO.getMonth());
+  return { fecha: objetivo, totalMeses };
+}
+
+function pintarMomentosEspeciales(){
+  const cont = document.getElementById('listaMomentosEspeciales');
+  if(!cont) return;
+  cont.innerHTML = '';
+
+  const mes = proximoMesJuntos();
+  const diasMes = Math.ceil((new Date(mes.fecha.getFullYear(), mes.fecha.getMonth(), mes.fecha.getDate()) - new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())) / 86400000);
+  const cardMes = document.createElement('div');
+  cardMes.className = 'especial-card principal';
+  cardMes.innerHTML =
+    '<span class="tag">Mes juntos</span>' +
+    '<h4>' + mes.totalMeses + ' meses de nosotros</h4>' +
+    '<p>El próximo 28 celebramos otro mes desde que empezó esta historia.</p>' +
+    '<div class="cuenta">' + textoCuentaEspecial(diasMes) + '</div>';
+  cont.appendChild(cardMes);
+
+  (datos.momentosEspeciales || []).forEach((m, i) => {
+    const card = document.createElement('div');
+    card.className = 'especial-card';
+    const dias = diasHastaSiguienteAnual(m.fecha);
+    const tag = m.tipo || 'Especial';
+    card.innerHTML =
+      '<span class="tag">' + tag + '</span>' +
+      '<h4></h4><p></p>' +
+      '<div class="cuenta">' + textoCuentaEspecial(dias) + '</div>';
+    card.querySelector('h4').textContent = m.titulo;
+    card.querySelector('p').textContent = fechaBonita(m.fecha) + (m.desc ? ' · ' + m.desc : '');
+
+    const borrar = document.createElement('button');
+    borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
+    borrar.onclick = async () => {
+      if(await confirmar('¿Borrar esta fecha especial?', { peligro: true, textoOk: 'Borrar' })){
+        datos.momentosEspeciales.splice(i, 1);
+        pintarMomentosEspeciales(); guardar();
+      }
+    };
+    card.appendChild(borrar);
+    cont.appendChild(card);
+  });
+}
+
+async function agregarMomentoEspecial(){
+  const r = await pedirFormulario('Nueva fecha especial', [
+    { nombre: 'fecha', etiqueta: 'Fecha', tipo: 'date', requerido: true },
+    { nombre: 'titulo', etiqueta: 'Título', requerido: true, placeholder: 'Cumpleaños, primera salida...' },
+    { nombre: 'tipo', etiqueta: 'Tipo', tipo: 'select', opciones: ['Aniversario','Cumpleaños','Viaje','Sorpresa','Otro'] },
+    { nombre: 'desc', etiqueta: 'Detalle', tipo: 'textarea', filas: 2, placeholder: 'Por qué importa esta fecha' },
+  ], { textoOk: 'Agregar' });
+  if(!r) return;
+  datos.momentosEspeciales = datos.momentosEspeciales || [];
+  datos.momentosEspeciales.push({ fecha: r.fecha, titulo: r.titulo, tipo: r.tipo || 'Especial', desc: r.desc || '' });
+  pintarMomentosEspeciales(); guardar();
+}
+
+pintarMomentosEspeciales();
 
 /* ============================================================
    MODO EDICIÓN
@@ -1152,7 +1327,7 @@ aplicarFondo();
 document.getElementById('inputFondo').addEventListener('change', async e => {
   const archivo = e.target.files[0];
   if(!archivo) return;
-  datos.fondoHero = await comprimirImagen(archivo, 1400, 0.8);
+  datos.fondoHero = await guardarImagen(archivo, 1400, 0.8, 'fondo');
   aplicarFondo(); guardar();
 });
 
@@ -1173,6 +1348,33 @@ function comprimirImagen(archivo, maxLado, calidad){
     };
     lector.readAsDataURL(archivo);
   });
+}
+
+let blobNoConfigurado = false;
+async function subirImagenRemota(dataUrl, carpeta){
+  if(location.protocol === 'file:' || blobNoConfigurado) return dataUrl;
+  try{
+    const respuesta = await fetch(API_UPLOAD, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dataUrl, carpeta }),
+    });
+    if(respuesta.status === 501){
+      blobNoConfigurado = true;
+      return dataUrl;
+    }
+    if(!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
+    const resultado = await respuesta.json();
+    return resultado.url || dataUrl;
+  }catch(error){
+    console.warn('No se pudo subir la imagen a Blob. Se guarda comprimida en Neon.', error);
+    return dataUrl;
+  }
+}
+
+async function guardarImagen(archivo, maxLado, calidad, carpeta){
+  const dataUrl = await comprimirImagen(archivo, maxLado, calidad);
+  return subirImagenRemota(dataUrl, carpeta);
 }
 
 /* ============================================================
@@ -1322,7 +1524,7 @@ function fotoParaHito(i){
   input.type = 'file'; input.accept = 'image/*';
   input.onchange = async () => {
     if(input.files[0]){
-      datos.timeline[i].foto = await comprimirImagen(input.files[0], 800, 0.8);
+      datos.timeline[i].foto = await guardarImagen(input.files[0], 800, 0.8, 'timeline');
       pintarTimeline(); guardar();
     }
   };
@@ -1392,7 +1594,7 @@ function reemplazarFoto(indice){
   input.type = 'file'; input.accept = 'image/*';
   input.onchange = async () => {
     if(input.files[0]){
-      datos.fotos[indice].src = await comprimirImagen(input.files[0], 1000, 0.82);
+      datos.fotos[indice].src = await guardarImagen(input.files[0], 1000, 0.82, 'fotos');
       pintarFotos(); guardar();
     }
   };
@@ -1401,7 +1603,7 @@ function reemplazarFoto(indice){
 
 document.getElementById('inputFotos').addEventListener('change', async e => {
   for(const archivo of e.target.files){
-    const src = await comprimirImagen(archivo, 1000, 0.82);
+    const src = await guardarImagen(archivo, 1000, 0.82, 'fotos');
     datos.fotos.push({ src, caption: '', fav: false });
   }
   pintarFotos(); guardar();
@@ -1443,7 +1645,7 @@ function subirComp(cual){
   input.type = 'file'; input.accept = 'image/*';
   input.onchange = async () => {
     if(input.files[0]){
-      datos.antesAhora[cual] = await comprimirImagen(input.files[0], 1000, 0.82);
+      datos.antesAhora[cual] = await guardarImagen(input.files[0], 1000, 0.82, 'comparador');
       pintarComparador(); guardar();
     }
   };
@@ -1944,6 +2146,24 @@ function estadoNube(tipo, html, autoOcultar){
   if(autoOcultar) nubeTimer = setTimeout(() => nubeEl.classList.remove('visible'), 2400);
 }
 
+function textoTiempoRelativo(fecha){
+  if(!fecha) return 'recién';
+  const segundos = Math.max(0, Math.floor((new Date() - fecha) / 1000));
+  if(segundos < 10) return 'recién';
+  if(segundos < 60) return 'hace ' + segundos + ' segundos';
+  const minutos = Math.floor(segundos / 60);
+  if(minutos < 60) return 'hace ' + minutos + (minutos === 1 ? ' minuto' : ' minutos');
+  const horas = Math.floor(minutos / 60);
+  return 'hace ' + horas + (horas === 1 ? ' hora' : ' horas');
+}
+
+function actualizarTextoGuardado(){
+  if(ultimoEstadoNube !== 'ok' || !ultimoGuardadoRemoto) return;
+  estadoNube('ok', '&#10003; Guardado ' + textoTiempoRelativo(ultimoGuardadoRemoto));
+}
+
+setInterval(actualizarTextoGuardado, 10000);
+
 /* ============================================================
    LISTAS GENÉRICAS + PROGRESO
    ============================================================ */
@@ -2245,12 +2465,21 @@ document.querySelectorAll('.revelar').forEach(s => observador.observe(s));
    ============================================================ */
 const btnMusica = document.getElementById('btnMusica');
 const audioFondo = document.getElementById('cancionFondo');
+const estadoMusica = document.getElementById('estadoMusica');
+
+function mostrarEstadoMusica(texto, visible){
+  if(!estadoMusica) return;
+  estadoMusica.textContent = texto || '';
+  estadoMusica.classList.toggle('visible', !!visible);
+}
 
 function actualizarBotonMusica(){
   if(!audioFondo) return;
-  btnMusica.classList.toggle('activo-musica', !audioFondo.paused);
+  const sonando = !audioFondo.paused;
+  btnMusica.classList.toggle('activo-musica', sonando);
   btnMusica.title = audioFondo.paused ? 'Reproducir música de fondo' : 'Pausar música de fondo';
   btnMusica.setAttribute('aria-label', btnMusica.title);
+  mostrarEstadoMusica('Sonando: ' + MUSICA_FONDO.titulo + ' — ' + MUSICA_FONDO.artista, sonando);
 }
 
 btnMusica.addEventListener('click', async () => {
@@ -2262,9 +2491,11 @@ btnMusica.addEventListener('click', async () => {
   try{
     if(audio.paused){
       await audio.play();
-      avisar('Sonando: Te Quiero Tanto — Kevin Kaarl ♪');
+      localStorage.setItem('musicaFondoActiva', '1');
+      avisar('Sonando: ' + MUSICA_FONDO.titulo + ' — ' + MUSICA_FONDO.artista + ' ♪');
     }else{
       audio.pause();
+      localStorage.setItem('musicaFondoActiva', '0');
       avisar('Música pausada');
     }
     actualizarBotonMusica();
@@ -2276,6 +2507,10 @@ btnMusica.addEventListener('click', async () => {
 audioFondo?.addEventListener('play', actualizarBotonMusica);
 audioFondo?.addEventListener('pause', actualizarBotonMusica);
 actualizarBotonMusica();
+
+document.addEventListener('visibilitychange', () => {
+  if(!document.hidden) actualizarBotonMusica();
+});
 
 /* ============================================================
    RESPALDOS: descargar / restaurar todo como archivo JSON
@@ -2309,6 +2544,73 @@ document.getElementById('inputRespaldo').addEventListener('change', async e => {
     avisar('Ese archivo no parece un respaldo válido 🌸');
   }
 });
+
+function fechaHoraCorta(valor){
+  return new Date(valor).toLocaleString('es-CL', {
+    day: '2-digit', month: '2-digit', year: '2-digit',
+    hour: '2-digit', minute: '2-digit',
+  });
+}
+
+async function crearBackupNube(){
+  estadoNube('', '&#9729;&#65039; Creando respaldo&hellip;');
+  try{
+    const respuesta = await fetch(API_BACKUPS, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ accion: 'crear', motivo: 'manual' }),
+    });
+    if(!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
+    estadoNube('ok', '&#10003; Respaldo guardado en la nube', true);
+  }catch(error){
+    estadoNube('error', '&#9888;&#65039; No se pudo crear el respaldo', true);
+    console.warn('No se pudo crear respaldo en Neon:', error);
+  }
+}
+
+async function verBackupsNube(){
+  try{
+    const respuesta = await fetch(API_BACKUPS, { headers: { 'Accept': 'application/json' } });
+    if(!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
+    const data = await respuesta.json();
+    const backups = data.backups || [];
+    if(!backups.length){
+      avisar('Todavía no hay respaldos en la nube');
+      return;
+    }
+
+    const opciones = backups.map(b =>
+      '<b>' + fechaHoraCorta(b.createdAt) + '</b><br>' +
+      '<small>' + b.motivo + ' · ' + b.fotos + ' fotos · ' + b.notas + ' notas · ' + b.momentos + ' momentos</small>'
+    );
+    const idx = await elegirOpcion('Historial en la nube', opciones, 'Elige un respaldo para restaurarlo');
+    if(idx === null) return;
+
+    const elegido = backups[idx];
+    const ok = await confirmar('¿Restaurar este respaldo?', {
+      detalle: 'Se reemplazará la página actual por el respaldo del ' + fechaHoraCorta(elegido.createdAt) + '. Antes de restaurar se guardará una copia del estado actual.',
+      textoOk: 'Restaurar',
+      peligro: true,
+    });
+    if(!ok) return;
+
+    const restore = await fetch(API_BACKUPS, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ accion: 'restaurar', id: elegido.id }),
+    });
+    if(!restore.ok) throw new Error('HTTP ' + restore.status);
+    const restaurado = await restore.json();
+    datos = Object.assign(datos, restaurado.data || {});
+    try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
+    ultimaCadenaRemota = JSON.stringify(datos);
+    repintarTodo();
+    estadoNube('ok', '&#10003; Respaldo restaurado desde la nube', true);
+  }catch(error){
+    estadoNube('error', '&#9888;&#65039; No se pudo leer el historial', true);
+    console.warn('No se pudo usar el historial de respaldos:', error);
+  }
+}
 </script>
 </body>
 </html>

@@ -49,6 +49,8 @@ nuestro-rincon/
   catalina-y-diego.html        Copia equivalente para abrir por nombre historico
   api/
     estado.js                 API Vercel serverless para Neon
+    backups.js                Historial de respaldos en Neon
+    upload.js                 Subida opcional de imagenes a Vercel Blob
   package.json                Dependencia del driver Neon
   package-lock.json
   .gitignore
@@ -74,12 +76,30 @@ El HTML mantiene un objeto global `datos` con toda la informacion de la pagina:
 - suenos
 - metas
 - proximoPlan
+- momentosEspeciales
 - regalosCatalina
 - regalosDiego
 - series
 - lugares
 - estados
 - notas
+
+## Estado funcional actualizado
+
+Ademas de la pagina base, ya estan implementadas estas mejoras:
+
+- Popups propios en vez de `prompt`, `confirm` y `alert`.
+- Indicador de sincronizacion con mensajes como "Sincronizando...", "Guardado hace X" y "Cambios recibidos".
+- Auto-sincronizacion con Neon cada 60 segundos y al volver a la pestana.
+- Lightbox para ver fotos en grande.
+- Botones de respaldo JSON local.
+- Historial de respaldos en Neon con tabla `rincon_backups`.
+- Botones en el footer para crear y restaurar respaldos de nube.
+- Seccion "Momentos especiales" con fechas editables y proximo mes juntos automatico.
+- Tema musical de fondo: `assets/audio/te-quiero-tanto-kevin-kaarl.mp3`.
+- Estado visible de musica: "Sonando: Te Quiero Tanto - Kevin Kaarl".
+- El boton de musica recuerda la preferencia e intenta retomar al entrar.
+- Subida opcional de fotos a Vercel Blob mediante `/api/upload`.
 
 Antes guardaba solo en `localStorage`. Ahora funciona asi:
 
@@ -145,6 +165,38 @@ El objeto completo de la pagina se guarda en:
 rincon_estado.data
 ```
 
+Tabla de respaldos creada automaticamente:
+
+```sql
+CREATE TABLE IF NOT EXISTS rincon_backups (
+  id BIGSERIAL PRIMARY KEY,
+  estado_id TEXT NOT NULL,
+  data JSONB NOT NULL,
+  motivo TEXT NOT NULL DEFAULT 'manual',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+```
+
+La API `POST /api/estado` crea un respaldo automatico antes de sobrescribir datos cuando no existe uno automatico reciente. La API `GET /api/backups` lista respaldos y `POST /api/backups` permite crear/restaurar.
+
+## Vercel Blob opcional para fotos
+
+El endpoint `/api/upload` usa `@vercel/blob` si existe esta variable en Vercel:
+
+```text
+BLOB_READ_WRITE_TOKEN
+```
+
+Si esa variable no existe, no se rompe nada: el frontend vuelve al metodo anterior y guarda la imagen comprimida como dataURL dentro del JSON de Neon.
+
+Para activar Blob:
+
+1. En Vercel, ir al proyecto.
+2. Storage / Blob.
+3. Crear o conectar un Blob Store al proyecto.
+4. Confirmar que Vercel agrego `BLOB_READ_WRITE_TOKEN`.
+5. Redeploy.
+
 ## Seguridad importante
 
 La connection string de Neon fue pegada durante la conversacion original. Se recomienda rotar la contrasena/credencial en Neon y luego actualizar `DATABASE_URL` en Vercel.
@@ -176,11 +228,10 @@ Vercel redeploya automaticamente desde la rama:
 main
 ```
 
-Ultimos commits al crear este documento:
+Para ver los ultimos commits reales:
 
-```text
-3d5c56f Agregar sincronizacion con Neon
-2bc591b Primera version Catalina y Diego
+```powershell
+git log --oneline -5
 ```
 
 ## Verificacion rapida
@@ -224,11 +275,10 @@ Probar sincronizacion:
 
 ## Mejoras sugeridas despues
 
-- Agregar indicador visual: "Guardado en la nube" / "Sin conexion".
-- Agregar backups manuales: boton para descargar/exportar `datos` como JSON.
-- Agregar importador JSON para restaurar respaldo.
-- Pasar fotos a storage externo y dejar Neon solo para metadatos.
 - Agregar versionado simple o historial en tabla aparte para recuperar estados anteriores.
+- Agregar autenticacion simple para proteger `/api/estado`, `/api/backups` y `/api/upload`.
+- Mejorar resolucion de conflictos cuando ambos editan exactamente al mismo tiempo.
+- Mostrar un panel de uso de almacenamiento: peso estimado del JSON, fotos en Blob, cantidad de backups.
 
 ## Comandos utiles
 
