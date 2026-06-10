@@ -229,7 +229,7 @@
     border-radius:3px;display:flex;align-items:center;justify-content:center;
     color:rgba(255,255,255,.85);font-size:2.2rem;object-fit:cover;overflow:hidden;
   }
-  .marco img.foto{object-fit:cover;}
+  .marco img.foto{object-fit:cover;cursor:zoom-in;}
   .marco figcaption{font-family:'Playfair Display',serif;font-style:italic;color:var(--gris);margin-top:12px;font-size:.95rem;text-align:center;}
   body.editando .marco figcaption{outline:1px dashed var(--dorado-claro);outline-offset:3px;cursor:text;}
   .marco .btn-borrar{position:absolute;top:4px;right:4px;background:rgba(255,255,255,.85);border-radius:50%;}
@@ -435,6 +435,71 @@
     75%{transform:translateY(82vh) translateX(22px) rotate(280deg);}
     100%{transform:translateY(112vh) translateX(-10px) rotate(380deg);opacity:0;}
   }
+
+  /* ===== Popups bonitos (reemplazan prompt/confirm) ===== */
+  #popup{
+    position:fixed;inset:0;z-index:180;background:rgba(40,42,34,.55);
+    display:none;align-items:flex-end;justify-content:center;
+    backdrop-filter:blur(3px);
+  }
+  #popup.visible{display:flex;}
+  .popup-caja{
+    background:var(--blanco);border-radius:24px 24px 0 0;
+    max-width:480px;width:100%;padding:28px 24px 34px;
+    box-shadow:0 -12px 44px rgba(0,0,0,.28);
+    max-height:88vh;overflow-y:auto;text-align:left;
+    animation:subirPopup .32s cubic-bezier(.21,1.02,.55,1) both;
+  }
+  @media (min-width:600px){
+    #popup{align-items:center;padding:24px;}
+    .popup-caja{border-radius:24px;animation:crecerPopup .25s ease both;}
+  }
+  @keyframes subirPopup{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+  @keyframes crecerPopup{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+  .popup-caja h3{
+    font-family:'Playfair Display',serif;color:var(--dorado);
+    font-size:1.35rem;margin-bottom:6px;text-align:center;
+  }
+  .popup-caja .popup-sub{color:var(--gris);font-weight:300;font-size:.92rem;text-align:center;margin-bottom:6px;}
+  .popup-caja label{
+    display:block;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;
+    color:var(--dorado);margin:14px 2px 0;
+  }
+  .popup-caja .campo{margin-top:6px;}
+  .popup-acciones{display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
+  .popup-acciones .boton{margin-top:0;flex:1;min-width:120px;}
+  .popup-opciones{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+  .popup-opcion{
+    border:1.5px solid var(--dorado-claro);background:var(--crema);color:var(--tinta);
+    border-radius:14px;padding:13px 16px;cursor:pointer;font-family:'Jost',sans-serif;
+    font-size:1rem;transition:border-color .2s, transform .1s;text-align:center;
+  }
+  .popup-opcion:hover{border-color:var(--dorado);transform:translateY(-1px);}
+  .popup-error{color:#b66;font-size:.85rem;min-height:1.1em;margin-top:8px;text-align:center;}
+
+  /* ===== Indicador de sincronización con la nube ===== */
+  #nube{
+    position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-70px);
+    z-index:55;background:var(--blanco);color:var(--gris);
+    border:1px solid var(--crema-oscuro);border-radius:999px;
+    padding:7px 18px;font-size:.85rem;font-weight:300;
+    box-shadow:0 8px 24px var(--sombra);transition:transform .35s ease;
+    pointer-events:none;display:flex;align-items:center;gap:8px;white-space:nowrap;
+  }
+  #nube.visible{transform:translateX(-50%) translateY(0);}
+  #nube.ok{color:var(--verde);}
+  #nube.error{color:#b66;}
+
+  /* ===== Lightbox: ver fotos en grande ===== */
+  #lightbox{
+    position:fixed;inset:0;z-index:190;background:rgba(22,21,17,.93);
+    display:none;flex-direction:column;align-items:center;justify-content:center;
+    padding:24px;gap:14px;cursor:zoom-out;
+  }
+  #lightbox.visible{display:flex;animation:fundidoLb .25s ease;}
+  @keyframes fundidoLb{from{opacity:0}to{opacity:1}}
+  #lightbox img{max-width:94vw;max-height:80vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+  #lightbox figcaption{color:#f3eee4;font-family:'Playfair Display',serif;font-style:italic;font-size:1.05rem;text-align:center;}
 
   input[type=file]{display:none;}
 
@@ -739,6 +804,11 @@
   <div class="iniciales">C &hearts; D</div>
   <p>Desde el 28 de diciembre de 2025 &mdash; y para siempre</p>
   <button class="boton suave chico" id="btnPin" onclick="configurarPin()" style="display:none">Configurar PIN</button>
+  <div style="margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <button class="boton suave chico" onclick="descargarRespaldo()">&#128190; Descargar respaldo</button>
+    <button class="boton suave chico" onclick="document.getElementById('inputRespaldo').click()">&#128194; Restaurar respaldo</button>
+  </div>
+  <input type="file" id="inputRespaldo" accept="application/json,.json">
 </footer>
 
 <!-- Botones flotantes -->
@@ -755,6 +825,15 @@
     <div class="cuerpo-modal" id="modalCuerpo"></div>
   </div>
 </div>
+
+<!-- Popup de formularios y confirmaciones (reemplaza prompt/confirm) -->
+<div id="popup" role="dialog" aria-modal="true"></div>
+
+<!-- Lightbox para ver fotos en grande -->
+<div id="lightbox" role="dialog" aria-modal="true"></div>
+
+<!-- Indicador de sincronización con la nube -->
+<div id="nube" aria-live="polite"></div>
 
 <!-- Canción de fondo: en VSCode descomenta y pon tu mp3 -->
 <!-- <audio id="cancionFondo" src="nuestra-cancion.mp3" loop></audio> -->
@@ -864,6 +943,8 @@ let datos = {
    - En Vercel, /api/estado sincroniza el objeto completo con Neon.
    ============================================================ */
 let temporizadorGuardado = null;
+let guardadoPendiente = false;   // hay cambios locales esperando subir a Neon
+let ultimaCadenaRemota = null;   // último estado conocido de Neon (para no repintar de más)
 
 function guardar(){
   try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
@@ -880,11 +961,14 @@ cargar();
 
 function programarGuardadoRemoto(){
   if(location.protocol === 'file:') return;
+  guardadoPendiente = true;
   clearTimeout(temporizadorGuardado);
   temporizadorGuardado = setTimeout(guardarRemoto, 700);
 }
 
 async function guardarRemoto(){
+  guardadoPendiente = false;
+  estadoNube('', '&#9729;&#65039; Guardando&hellip;');
   try{
     const respuesta = await fetch(API_ESTADO, {
       method: 'POST',
@@ -892,18 +976,25 @@ async function guardarRemoto(){
       body: JSON.stringify({ data: datos }),
     });
     if(!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
+    ultimaCadenaRemota = JSON.stringify(datos);
+    estadoNube('ok', '&#10003; Guardado en la nube', true);
   }catch(error){
+    estadoNube('error', '&#9888;&#65039; Sin conexi&oacute;n &mdash; guardado solo aqu&iacute;', true);
     console.warn('No se pudo sincronizar con Neon. Se mantiene copia local.', error);
   }
 }
 
 async function cargarRemoto(){
   if(location.protocol === 'file:') return;
+  if(guardadoPendiente) return; // no pisar cambios locales que aún no suben
   try{
     const respuesta = await fetch(API_ESTADO, { headers: { 'Accept': 'application/json' } });
     if(!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
     const remoto = await respuesta.json();
-    if(remoto && remoto.data && typeof remoto.data === 'object'){
+    if(remoto && remoto.data && typeof remoto.data === 'object' && Object.keys(remoto.data).length){
+      const cadena = JSON.stringify(remoto.data);
+      if(cadena === ultimaCadenaRemota) return; // nada nuevo en la nube
+      ultimaCadenaRemota = cadena;
       datos = Object.assign(datos, remoto.data);
       try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
       repintarTodo();
@@ -936,6 +1027,14 @@ function repintarTodo(){
 
 setTimeout(cargarRemoto, 0);
 
+// Refresco automático: si el otro guardó algo, aparece solo
+setInterval(() => {
+  if(document.visibilityState === 'visible') cargarRemoto();
+}, 60000);
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible') cargarRemoto();
+});
+
 /* ============================================================
    BIENVENIDA + PIN
    El PIN es simbólico: cualquier persona que sepa de código
@@ -962,17 +1061,21 @@ function verificarPin(){
 document.getElementById('pinInput')?.addEventListener('keydown', e => {
   if(e.key === 'Enter') verificarPin();
 });
-function configurarPin(){
+async function configurarPin(){
   if(datos.pin){
-    if(confirm('Ya hay un PIN. ¿Quieres quitarlo?')){ datos.pin = null; guardar(); avisar('PIN eliminado'); }
+    const quitar = await confirmar('Ya hay un PIN puesto', {
+      detalle: '¿Quieres quitarlo para que la página abra directo?',
+      textoOk: 'Quitar PIN',
+    });
+    if(quitar){ datos.pin = null; guardar(); avisar('PIN eliminado'); }
     return;
   }
-  const nuevo = prompt('Elige un PIN de 4 dígitos:');
-  if(nuevo && /^\d{4}$/.test(nuevo)){
-    datos.pin = nuevo; guardar(); avisar('PIN guardado: se pedirá al abrir la página');
-  }else if(nuevo){
-    alert('Tiene que ser de 4 números, ej: 2812');
-  }
+  const r = await pedirFormulario('Configurar PIN', [
+    { nombre: 'pin', etiqueta: 'PIN de 4 dígitos', inputmode: 'numeric', maxlength: 4,
+      requerido: true, patron: /^\d{4}$/, mensajePatron: 'Tiene que ser de 4 números, ej: 2812',
+      placeholder: '2812' },
+  ], { textoOk: 'Guardar PIN' });
+  if(r){ datos.pin = r.pin; guardar(); avisar('PIN guardado: se pedirá al abrir la página'); }
 }
 prepararBienvenida();
 
@@ -1012,10 +1115,12 @@ document.getElementById('btnEditar').addEventListener('click', () => {
 /* Frase del hero editable */
 const fraseEl = document.getElementById('frase');
 fraseEl.textContent = datos.frase;
-fraseEl.addEventListener('click', () => {
+fraseEl.addEventListener('click', async () => {
   if(!editando) return;
-  const nueva = prompt('Nueva frase para la portada:', datos.frase);
-  if(nueva && nueva.trim()){ datos.frase = nueva.trim(); fraseEl.textContent = datos.frase; guardar(); }
+  const r = await pedirFormulario('Frase de la portada', [
+    { nombre: 'frase', etiqueta: 'Frase', tipo: 'textarea', filas: 2, valor: datos.frase, requerido: true },
+  ]);
+  if(r){ datos.frase = r.frase; fraseEl.textContent = datos.frase; guardar(); }
 });
 
 /* ============================================================
@@ -1089,23 +1194,32 @@ function pintarRazones(){
     div.className = 'item';
     const punto = document.createElement('span'); punto.className = 'punto';
     const texto = document.createElement('span'); texto.className = 'texto'; texto.textContent = r;
-    texto.onclick = () => {
+    texto.onclick = async () => {
       if(!editando) return;
-      const nuevo = prompt('Editar razón:', r);
-      if(nuevo && nuevo.trim()){ datos.razones[i] = nuevo.trim(); pintarRazones(); guardar(); }
+      const res = await pedirFormulario('Editar razón', [
+        { nombre: 'r', etiqueta: 'Razón', tipo: 'textarea', filas: 2, valor: r, requerido: true },
+      ]);
+      if(res){ datos.razones[i] = res.r; pintarRazones(); guardar(); }
     };
     const borrar = document.createElement('button');
     borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
-    borrar.onclick = () => { datos.razones.splice(i,1); pintarRazones(); guardar(); };
+    borrar.onclick = async () => {
+      if(await confirmar('¿Borrar esta razón?', { peligro: true, textoOk: 'Borrar' })){
+        datos.razones.splice(i,1); pintarRazones(); guardar();
+      }
+    };
     div.append(punto, texto, borrar);
     lista.appendChild(div);
   });
 }
 pintarRazones();
 
-function agregarRazon(){
-  const r = prompt('¿Por qué amas al otro? (se suma a la lista)');
-  if(r && r.trim()){ datos.razones.push(r.trim()); pintarRazones(); guardar(); }
+async function agregarRazon(){
+  const r = await pedirFormulario('Nueva razón', [
+    { nombre: 'r', etiqueta: '¿Por qué amas al otro?', tipo: 'textarea', filas: 2,
+      requerido: true, placeholder: 'Porque...' },
+  ], { textoOk: 'Agregar' });
+  if(r){ datos.razones.push(r.r); pintarRazones(); guardar(); }
 }
 function alternarRazones(){
   const lista = document.getElementById('listaRazones');
@@ -1150,22 +1264,24 @@ function pintarTimeline(){
     btnFoto.onclick = () => fotoParaHito(indiceReal);
     const borrar = document.createElement('button');
     borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
-    borrar.onclick = () => {
-      if(confirm('¿Borrar este momento?')){ datos.timeline.splice(indiceReal,1); pintarTimeline(); guardar(); }
+    borrar.onclick = async () => {
+      if(await confirmar('¿Borrar este momento?', { peligro: true, textoOk: 'Borrar' })){
+        datos.timeline.splice(indiceReal,1); pintarTimeline(); guardar();
+      }
     };
     acciones.append(btnFoto, borrar);
     div.appendChild(acciones);
 
-    t.onclick = () => {
+    const editarHito = async () => {
       if(!editando) return;
-      const nuevo = prompt('Editar título:', h.titulo);
-      if(nuevo && nuevo.trim()){ h.titulo = nuevo.trim(); pintarTimeline(); guardar(); }
+      const r = await pedirFormulario('Editar momento', [
+        { nombre: 'titulo', etiqueta: 'Título', valor: h.titulo, requerido: true },
+        { nombre: 'desc', etiqueta: 'Descripción', tipo: 'textarea', filas: 2, valor: h.desc || '' },
+      ]);
+      if(r){ h.titulo = r.titulo; h.desc = r.desc; pintarTimeline(); guardar(); }
     };
-    p.onclick = () => {
-      if(!editando) return;
-      const nuevo = prompt('Editar descripción:', h.desc || '');
-      if(nuevo !== null){ h.desc = nuevo.trim(); pintarTimeline(); guardar(); }
-    };
+    t.onclick = editarHito;
+    p.onclick = editarHito;
 
     cont.appendChild(div);
   });
@@ -1188,15 +1304,15 @@ function revisarMemoria(eventos){
   }
 }
 
-function agregarHito(){
-  const titulo = prompt('¿Qué momento quieres guardar? (ej: Primer beso, Primera cita)');
-  if(!titulo || !titulo.trim()) return;
-  let fecha = prompt('¿Qué día fue? Formato AAAA-MM-DD (ej: 2026-01-14)');
-  if(!fecha || !/^\d{4}-\d{2}-\d{2}$/.test(fecha.trim())){
-    alert('La fecha tiene que ir como 2026-01-14'); return;
-  }
-  const desc = prompt('Cuéntalo en una frase (opcional):') || '';
-  datos.timeline.push({ fecha: fecha.trim(), titulo: titulo.trim(), desc: desc.trim(), foto: null });
+async function agregarHito(){
+  const r = await pedirFormulario('Nuevo momento', [
+    { nombre: 'titulo', etiqueta: 'Título', requerido: true, placeholder: 'Primer beso, primera cita...' },
+    { nombre: 'fecha', etiqueta: '¿Qué día fue?', tipo: 'date', requerido: true,
+      patron: /^\d{4}-\d{2}-\d{2}$/, mensajePatron: 'Elige una fecha válida' },
+    { nombre: 'desc', etiqueta: 'Cuéntalo en una frase (opcional)', tipo: 'textarea', filas: 2 },
+  ], { textoOk: 'Guardar momento' });
+  if(!r) return;
+  datos.timeline.push({ fecha: r.fecha, titulo: r.titulo, desc: r.desc, foto: null });
   pintarTimeline(); guardar();
 }
 
@@ -1229,6 +1345,7 @@ function pintarFotos(){
     if(f.src){
       const img = document.createElement('img');
       img.className = 'foto'; img.src = f.src; img.alt = f.caption || 'Foto de nosotros';
+      img.onclick = () => abrirLightbox(f.src, f.caption);
       fig.appendChild(img);
     }else{
       const div = document.createElement('div');
@@ -1246,17 +1363,21 @@ function pintarFotos(){
 
     const cap = document.createElement('figcaption');
     cap.textContent = f.caption || 'Toca para escribir...';
-    cap.onclick = () => {
+    cap.onclick = async () => {
       if(!editando && f.caption) return;
-      const nueva = prompt('Texto para esta foto:', f.caption || '');
-      if(nueva !== null){ f.caption = nueva.trim(); pintarFotos(); guardar(); }
+      const r = await pedirFormulario('Texto para esta foto', [
+        { nombre: 'c', etiqueta: 'Pie de foto', valor: f.caption || '', placeholder: 'Ese día inolvidable...' },
+      ]);
+      if(r){ f.caption = r.c; pintarFotos(); guardar(); }
     };
     fig.appendChild(cap);
 
     const borrar = document.createElement('button');
     borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;'; borrar.title = 'Quitar foto';
-    borrar.onclick = () => {
-      if(confirm('¿Quitar esta foto?')){ datos.fotos.splice(i,1); pintarFotos(); guardar(); }
+    borrar.onclick = async () => {
+      if(await confirmar('¿Quitar esta foto?', { peligro: true, textoOk: 'Quitar' })){
+        datos.fotos.splice(i,1); pintarFotos(); guardar();
+      }
     };
     fig.appendChild(borrar);
 
@@ -1361,12 +1482,16 @@ function extraerYoutube(link){
   const m = link.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([\w-]{6,})/);
   return m ? m[1] : null;
 }
-function ponerYoutube(){
-  const link = prompt('Pega el link de YouTube del video:');
-  if(link && extraerYoutube(link)){
-    datos.videoYoutube = link.trim(); pintarVideo(); guardar();
-  }else if(link){
-    alert('Ese link no parece de YouTube, revísalo porfa.');
+async function ponerYoutube(){
+  const r = await pedirFormulario('Video de YouTube', [
+    { nombre: 'link', etiqueta: 'Link del video', requerido: true,
+      placeholder: 'https://youtube.com/watch?v=...' },
+  ], { textoOk: 'Usar video' });
+  if(!r) return;
+  if(extraerYoutube(r.link)){
+    datos.videoYoutube = r.link; pintarVideo(); guardar();
+  }else{
+    avisar('Ese link no parece de YouTube, revísalo porfa 🌸');
   }
 }
 document.getElementById('inputVideo').addEventListener('change', e => {
@@ -1425,8 +1550,10 @@ function pintarCanciones(){
     };
     const borrar = document.createElement('button');
     borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
-    borrar.onclick = () => {
-      if(confirm('¿Quitar esta canción?')){ datos.canciones.splice(i,1); pintarCanciones(); pintarCancionHero(); guardar(); }
+    borrar.onclick = async () => {
+      if(await confirmar('¿Quitar esta canción?', { peligro: true, textoOk: 'Quitar' })){
+        datos.canciones.splice(i,1); pintarCanciones(); pintarCancionHero(); guardar();
+      }
     };
     botones.append(destacar, borrar);
     cab.appendChild(botones);
@@ -1473,14 +1600,16 @@ function pintarCancionHero(){
 pintarCanciones();
 pintarCancionHero();
 
-function agregarCancion(){
-  const titulo = prompt('Nombre de la canción:');
-  if(!titulo || !titulo.trim()) return;
-  const artista = prompt('Artista:') || '';
-  const motivo = prompt('¿Por qué te recuerda al otro? (opcional)') || '';
-  const link = prompt('Link de Spotify, YouTube u otra plataforma (opcional):') || '';
-  const de = confirm('¿La elige Catalina? (Aceptar = Catalina, Cancelar = Diego)') ? 'Catalina' : 'Diego';
-  datos.canciones.push({ titulo: titulo.trim(), artista: artista.trim(), motivo: motivo.trim(), link: link.trim(), de, destacada: false });
+async function agregarCancion(){
+  const r = await pedirFormulario('Nueva canción', [
+    { nombre: 'titulo', etiqueta: 'Nombre de la canción', requerido: true },
+    { nombre: 'artista', etiqueta: 'Artista' },
+    { nombre: 'motivo', etiqueta: '¿Por qué te recuerda al otro?', tipo: 'textarea', filas: 2 },
+    { nombre: 'link', etiqueta: 'Link de Spotify o YouTube (opcional)', placeholder: 'https://open.spotify.com/...' },
+    { nombre: 'de', etiqueta: '¿Quién la elige?', tipo: 'select', opciones: ['Diego', 'Catalina'] },
+  ], { textoOk: 'Agregar canción' });
+  if(!r) return;
+  datos.canciones.push({ titulo: r.titulo, artista: r.artista, motivo: r.motivo, link: r.link, de: r.de, destacada: false });
   pintarCanciones(); guardar();
 }
 
@@ -1495,15 +1624,17 @@ function pintarFrasco(){
 }
 pintarFrasco();
 
-function guardarRecuerdo(){
-  const texto = prompt('Escribe el momento feliz que quieres guardar:');
-  if(!texto || !texto.trim()) return;
-  let cat = prompt('Categoría: Divertido, Romántico, Viaje o Sorpresa', 'Romántico') || 'Romántico';
-  cat = CATEGORIAS.find(c => c.toLowerCase() === cat.trim().toLowerCase()) || 'Romántico';
-  const de = confirm('¿Lo guarda Catalina? (Aceptar = Catalina, Cancelar = Diego)') ? 'Catalina' : 'Diego';
+async function guardarRecuerdo(){
+  const r = await pedirFormulario('Guardar recuerdo nuevo', [
+    { nombre: 'texto', etiqueta: 'El momento feliz', tipo: 'textarea', requerido: true,
+      placeholder: 'Ese día que...' },
+    { nombre: 'categoria', etiqueta: 'Categoría', tipo: 'select', opciones: CATEGORIAS },
+    { nombre: 'de', etiqueta: '¿Quién lo guarda?', tipo: 'select', opciones: ['Diego', 'Catalina'] },
+  ], { textoOk: 'Guardar en el frasco' });
+  if(!r) return;
   const hoy = new Date();
   const fecha = String(hoy.getDate()).padStart(2,'0') + '/' + String(hoy.getMonth()+1).padStart(2,'0') + '/' + hoy.getFullYear();
-  datos.recuerdos.push({ texto: texto.trim(), categoria: cat, de, fecha });
+  datos.recuerdos.push({ texto: r.texto, categoria: r.categoria, de: r.de, fecha });
   pintarFrasco(); guardar();
   avisar('Recuerdo guardado en el frasco 🤍');
 }
@@ -1559,9 +1690,11 @@ function pintarCartas(){
 
     const borrar = document.createElement('button');
     borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
-    borrar.onclick = ev => {
+    borrar.onclick = async ev => {
       ev.stopPropagation();
-      if(confirm('¿Borrar esta carta?')){ datos.cartas.splice(indiceReal,1); pintarCartas(); guardar(); }
+      if(await confirmar('¿Borrar esta carta?', { peligro: true, textoOk: 'Borrar' })){
+        datos.cartas.splice(indiceReal,1); pintarCartas(); guardar();
+      }
     };
 
     div.append(info, candado, borrar);
@@ -1579,17 +1712,19 @@ function pintarCartas(){
 }
 pintarCartas();
 
-function escribirCarta(){
-  const titulo = prompt('Título de la carta (ej: "Para cuando estés triste"):');
-  if(!titulo || !titulo.trim()) return;
-  const mensaje = prompt('Escribe el mensaje (quedará guardado hasta que se abra):');
-  if(!mensaje || !mensaje.trim()) return;
-  let fecha = prompt('¿Desde qué fecha se puede abrir? Formato AAAA-MM-DD\n(Si es "para cuando estés triste", pon la fecha de hoy y queda abrible siempre)');
-  if(!fecha || !/^\d{4}-\d{2}-\d{2}$/.test(fecha.trim())){
-    alert('La fecha tiene que ir como 2026-12-28'); return;
-  }
-  const de = confirm('¿La escribe Catalina? (Aceptar = Catalina, Cancelar = Diego)') ? 'Catalina' : 'Diego';
-  datos.cartas.push({ titulo: titulo.trim(), mensaje: mensaje.trim(), fecha: fecha.trim(), de });
+async function escribirCarta(){
+  const r = await pedirFormulario('Escribir carta', [
+    { nombre: 'titulo', etiqueta: 'Título', requerido: true, placeholder: 'Para cuando estés triste...' },
+    { nombre: 'mensaje', etiqueta: 'Mensaje (queda guardado hasta que se abra)', tipo: 'textarea', filas: 5, requerido: true },
+    { nombre: 'fecha', etiqueta: '¿Desde qué fecha se puede abrir?', tipo: 'date', requerido: true,
+      patron: /^\d{4}-\d{2}-\d{2}$/, mensajePatron: 'Elige una fecha válida' },
+    { nombre: 'de', etiqueta: '¿Quién la escribe?', tipo: 'select', opciones: ['Diego', 'Catalina'] },
+  ], {
+    textoOk: 'Guardar carta',
+    subtitulo: 'Si es "para cuando estés triste", pon la fecha de hoy y queda abrible siempre',
+  });
+  if(!r) return;
+  datos.cartas.push({ titulo: r.titulo, mensaje: r.mensaje, fecha: r.fecha, de: r.de });
   pintarCartas(); guardar();
   avisar('Carta guardada en el buzón del tiempo 💌');
 }
@@ -1608,6 +1743,205 @@ function cerrarModal(){
 document.getElementById('modal').addEventListener('click', e => {
   if(e.target.id === 'modal') cerrarModal();
 });
+
+/* ============================================================
+   POPUPS BONITOS (reemplazan los prompt/confirm del navegador)
+   - pedirFormulario(titulo, campos, opciones) -> Promise<objeto|null>
+   - confirmar(titulo, opciones) -> Promise<boolean>
+   - elegirOpcion(titulo, lista) -> Promise<indice|null>
+   ============================================================ */
+const popupEl = document.getElementById('popup');
+let cerrarPopupActual = null;
+
+function abrirPopupBase(construir){
+  return new Promise(resolver => {
+    popupEl.innerHTML = '';
+    const caja = document.createElement('div');
+    caja.className = 'popup-caja';
+    const cerrar = valor => {
+      popupEl.classList.remove('visible');
+      popupEl.innerHTML = '';
+      cerrarPopupActual = null;
+      resolver(valor);
+    };
+    cerrarPopupActual = cerrar;
+    construir(caja, cerrar);
+    popupEl.appendChild(caja);
+    popupEl.classList.add('visible');
+  });
+}
+popupEl.addEventListener('click', e => {
+  if(e.target === popupEl && cerrarPopupActual) cerrarPopupActual(null);
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    if(cerrarPopupActual) cerrarPopupActual(null);
+    cerrarModal();
+    cerrarLightbox();
+  }
+});
+
+function pedirFormulario(titulo, campos, opciones = {}){
+  return abrirPopupBase((caja, cerrar) => {
+    const h = document.createElement('h3'); h.textContent = titulo;
+    caja.appendChild(h);
+    if(opciones.subtitulo){
+      const s = document.createElement('p'); s.className = 'popup-sub'; s.textContent = opciones.subtitulo;
+      caja.appendChild(s);
+    }
+    const entradas = {};
+    campos.forEach(campo => {
+      const lab = document.createElement('label');
+      lab.textContent = campo.etiqueta;
+      caja.appendChild(lab);
+      let input;
+      if(campo.tipo === 'textarea'){
+        input = document.createElement('textarea');
+        input.rows = campo.filas || 3;
+      }else if(campo.tipo === 'select'){
+        input = document.createElement('select');
+        (campo.opciones || []).forEach(op => {
+          const o = document.createElement('option');
+          o.value = op; o.innerHTML = op;
+          input.appendChild(o);
+        });
+      }else{
+        input = document.createElement('input');
+        input.type = campo.tipo || 'text';
+        if(campo.maxlength) input.maxLength = campo.maxlength;
+        if(campo.inputmode) input.inputMode = campo.inputmode;
+      }
+      input.className = 'campo';
+      if(campo.placeholder) input.placeholder = campo.placeholder;
+      if(campo.valor) input.value = campo.valor;
+      entradas[campo.nombre] = { input, campo };
+      caja.appendChild(input);
+    });
+    const error = document.createElement('div'); error.className = 'popup-error';
+    caja.appendChild(error);
+
+    function intentar(){
+      const resultado = {};
+      for(const nombre in entradas){
+        const { input, campo } = entradas[nombre];
+        const valor = input.value.trim();
+        if(campo.requerido && !valor){
+          error.textContent = 'Falta completar: ' + campo.etiqueta.toLowerCase();
+          input.focus();
+          return;
+        }
+        if(valor && campo.patron && !campo.patron.test(valor)){
+          error.textContent = campo.mensajePatron || ('Revisa el campo: ' + campo.etiqueta.toLowerCase());
+          input.focus();
+          return;
+        }
+        resultado[nombre] = valor;
+      }
+      cerrar(resultado);
+    }
+
+    const acciones = document.createElement('div'); acciones.className = 'popup-acciones';
+    const btnCancelar = document.createElement('button');
+    btnCancelar.className = 'boton suave'; btnCancelar.type = 'button';
+    btnCancelar.textContent = opciones.textoCancelar || 'Cancelar';
+    btnCancelar.onclick = () => cerrar(null);
+    const btnOk = document.createElement('button');
+    btnOk.className = 'boton'; btnOk.type = 'button';
+    btnOk.textContent = opciones.textoOk || 'Guardar';
+    btnOk.onclick = intentar;
+    acciones.append(btnCancelar, btnOk);
+    caja.appendChild(acciones);
+
+    // Enter envía el formulario (salvo dentro de un párrafo largo)
+    caja.addEventListener('keydown', e => {
+      if(e.key === 'Enter' && e.target.tagName !== 'TEXTAREA'){ e.preventDefault(); intentar(); }
+    });
+    setTimeout(() => {
+      const primero = Object.values(entradas)[0];
+      if(primero) primero.input.focus();
+    }, 80);
+  });
+}
+
+function confirmar(titulo, opciones = {}){
+  return abrirPopupBase((caja, cerrar) => {
+    const h = document.createElement('h3'); h.textContent = titulo;
+    caja.appendChild(h);
+    if(opciones.detalle){
+      const s = document.createElement('p'); s.className = 'popup-sub'; s.textContent = opciones.detalle;
+      caja.appendChild(s);
+    }
+    const acciones = document.createElement('div'); acciones.className = 'popup-acciones';
+    const btnNo = document.createElement('button');
+    btnNo.className = 'boton suave'; btnNo.textContent = opciones.textoCancelar || 'Cancelar';
+    btnNo.onclick = () => cerrar(false);
+    const btnSi = document.createElement('button');
+    btnSi.className = 'boton' + (opciones.peligro ? ' rosa' : '');
+    btnSi.textContent = opciones.textoOk || 'Sí';
+    btnSi.onclick = () => cerrar(true);
+    acciones.append(btnNo, btnSi);
+    caja.appendChild(acciones);
+  }).then(v => !!v);
+}
+
+function elegirOpcion(titulo, lista, subtitulo){
+  return abrirPopupBase((caja, cerrar) => {
+    const h = document.createElement('h3'); h.textContent = titulo;
+    caja.appendChild(h);
+    if(subtitulo){
+      const s = document.createElement('p'); s.className = 'popup-sub'; s.textContent = subtitulo;
+      caja.appendChild(s);
+    }
+    const cont = document.createElement('div'); cont.className = 'popup-opciones';
+    lista.forEach((op, i) => {
+      const b = document.createElement('button');
+      b.className = 'popup-opcion'; b.innerHTML = op;
+      b.onclick = () => cerrar(i);
+      cont.appendChild(b);
+    });
+    caja.appendChild(cont);
+    const acciones = document.createElement('div'); acciones.className = 'popup-acciones';
+    const btnNo = document.createElement('button');
+    btnNo.className = 'boton suave'; btnNo.textContent = 'Cancelar';
+    btnNo.onclick = () => cerrar(null);
+    acciones.appendChild(btnNo);
+    caja.appendChild(acciones);
+  });
+}
+
+/* ============================================================
+   LIGHTBOX: ver fotos en grande
+   ============================================================ */
+const lightboxEl = document.getElementById('lightbox');
+function abrirLightbox(src, caption){
+  lightboxEl.innerHTML = '';
+  const img = document.createElement('img');
+  img.src = src; img.alt = caption || 'Foto de nosotros';
+  lightboxEl.appendChild(img);
+  if(caption){
+    const cap = document.createElement('figcaption'); cap.textContent = caption;
+    lightboxEl.appendChild(cap);
+  }
+  lightboxEl.classList.add('visible');
+}
+function cerrarLightbox(){
+  lightboxEl.classList.remove('visible');
+  lightboxEl.innerHTML = '';
+}
+lightboxEl.addEventListener('click', cerrarLightbox);
+
+/* ============================================================
+   INDICADOR DE NUBE (estado de sincronización)
+   ============================================================ */
+const nubeEl = document.getElementById('nube');
+let nubeTimer = null;
+function estadoNube(tipo, html, autoOcultar){
+  nubeEl.className = tipo || '';
+  nubeEl.classList.add('visible');
+  nubeEl.innerHTML = html;
+  clearTimeout(nubeTimer);
+  if(autoOcultar) nubeTimer = setTimeout(() => nubeEl.classList.remove('visible'), 2400);
+}
 
 /* ============================================================
    LISTAS GENÉRICAS + PROGRESO
@@ -1643,16 +1977,22 @@ function pintarLista(clave){
 
     const texto = document.createElement('span');
     texto.className = 'texto'; texto.textContent = item.texto;
-    texto.onclick = () => {
+    texto.onclick = async () => {
       if(!editando) return;
-      const nuevo = prompt('Editar:', item.texto);
-      if(nuevo && nuevo.trim()){ item.texto = nuevo.trim(); pintarLista(clave); guardar(); }
+      const r = await pedirFormulario('Editar', [
+        { nombre: 't', etiqueta: 'Texto', valor: item.texto, requerido: true },
+      ]);
+      if(r){ item.texto = r.t; pintarLista(clave); guardar(); }
     };
     div.appendChild(texto);
 
     const borrar = document.createElement('button');
     borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
-    borrar.onclick = () => { datos[clave].splice(i,1); pintarLista(clave); guardar(); };
+    borrar.onclick = async () => {
+      if(await confirmar('¿Borrar este punto?', { peligro: true, textoOk: 'Borrar' })){
+        datos[clave].splice(i,1); pintarLista(clave); guardar();
+      }
+    };
     div.appendChild(borrar);
 
     cont.appendChild(div);
@@ -1669,14 +2009,15 @@ function pintarLista(clave){
 }
 Object.keys(LISTAS).forEach(pintarLista);
 
-function agregarItem(clave, pregunta){
-  const texto = prompt(pregunta);
-  if(texto && texto.trim()){
-    const nuevo = { texto: texto.trim() };
-    if(LISTAS[clave].conCheck) nuevo.listo = false;
-    datos[clave].push(nuevo);
-    pintarLista(clave); guardar();
-  }
+async function agregarItem(clave, pregunta){
+  const r = await pedirFormulario(pregunta, [
+    { nombre: 't', etiqueta: 'Escríbelo aquí', requerido: true },
+  ], { textoOk: 'Agregar' });
+  if(!r) return;
+  const nuevo = { texto: r.t };
+  if(LISTAS[clave].conCheck) nuevo.listo = false;
+  datos[clave].push(nuevo);
+  pintarLista(clave); guardar();
 }
 
 /* ============================================================
@@ -1723,14 +2064,15 @@ function pintarPlan(){
     zona.append(p, btn);
   }
 }
-function definirPlan(){
-  const nombre = prompt('¿Cuál es el plan? (ej: Viaje a la playa, Aniversario)');
-  if(!nombre || !nombre.trim()) return;
-  const fecha = prompt('¿Para qué fecha? Formato AAAA-MM-DD');
-  if(!fecha || !/^\d{4}-\d{2}-\d{2}$/.test(fecha.trim())){
-    alert('La fecha tiene que ir como 2026-09-15'); return;
-  }
-  datos.proximoPlan = { nombre: nombre.trim(), fecha: fecha.trim() };
+async function definirPlan(){
+  const r = await pedirFormulario('Próximo plan', [
+    { nombre: 'nombre', etiqueta: '¿Cuál es el plan?', requerido: true,
+      placeholder: 'Viaje a la playa, aniversario...' },
+    { nombre: 'fecha', etiqueta: '¿Para qué fecha?', tipo: 'date', requerido: true,
+      patron: /^\d{4}-\d{2}-\d{2}$/, mensajePatron: 'Elige una fecha válida' },
+  ], { textoOk: 'Guardar plan' });
+  if(!r) return;
+  datos.proximoPlan = { nombre: r.nombre, fecha: r.fecha };
   pintarPlan(); guardar();
 }
 pintarPlan();
@@ -1746,11 +2088,9 @@ function pintarEstados(){
 }
 pintarEstados();
 
-function cambiarEstado(quien){
-  const opciones = ESTADOS_POSIBLES.map((e, i) => (i+1) + '. ' + e.replace(/&#\d+;|&#x[\da-f]+;/gi,'').trim()).join('\n');
-  const eleccion = prompt('Estado de ' + quien + ':\n' + opciones + '\n\nEscribe el número (1-4):');
-  const idx = parseInt(eleccion) - 1;
-  if(idx >= 0 && idx < ESTADOS_POSIBLES.length){
+async function cambiarEstado(quien){
+  const idx = await elegirOpcion('¿Cómo está ' + quien + ' hoy?', ESTADOS_POSIBLES);
+  if(idx !== null && idx !== undefined){
     datos.estados[quien] = ESTADOS_POSIBLES[idx];
     pintarEstados(); guardar();
   }
@@ -1789,8 +2129,10 @@ function pintarNotas(){
 
     const borrar = document.createElement('button');
     borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
-    borrar.onclick = () => {
-      if(confirm('¿Borrar esta nota?')){ datos.notas.splice(i,1); pintarNotas(); guardar(); }
+    borrar.onclick = async () => {
+      if(await confirmar('¿Borrar esta nota?', { peligro: true, textoOk: 'Borrar' })){
+        datos.notas.splice(i,1); pintarNotas(); guardar();
+      }
     };
     div.appendChild(borrar);
 
@@ -1907,6 +2249,39 @@ document.getElementById('btnMusica').addEventListener('click', () => {
     return;
   }
   if(audio.paused){ audio.play(); } else { audio.pause(); }
+});
+
+/* ============================================================
+   RESPALDOS: descargar / restaurar todo como archivo JSON
+   ============================================================ */
+function descargarRespaldo(){
+  const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'nuestro-rincon-respaldo-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  avisar('Respaldo descargado 💾');
+}
+
+document.getElementById('inputRespaldo').addEventListener('change', async e => {
+  const archivo = e.target.files[0];
+  e.target.value = '';
+  if(!archivo) return;
+  try{
+    const importado = JSON.parse(await archivo.text());
+    if(!importado || typeof importado !== 'object' || Array.isArray(importado)) throw new Error('formato');
+    const ok = await confirmar('¿Restaurar este respaldo?', {
+      detalle: 'Se reemplazará lo que hay ahora en la página por el contenido del archivo.',
+      textoOk: 'Restaurar', peligro: true,
+    });
+    if(!ok) return;
+    datos = Object.assign(datos, importado);
+    guardar(); repintarTodo();
+    avisar('Respaldo restaurado ✨');
+  }catch(err){
+    avisar('Ese archivo no parece un respaldo válido 🌸');
+  }
 });
 </script>
 </body>
