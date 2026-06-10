@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalina &amp; Diego — Nuestro Rincón</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --crema:#faf7f1;
+    --crema-oscuro:#f3eee4;
+    --dorado:#b9985a;
+    --dorado-claro:#d8c08f;
+    --rosa:#c98e9b;
+    --rosa-claro:#ecd3d8;
+    --tinta:#3d3a33;
+    --gris:#7a766c;
+    --verde:#8a9a7b;
+    --blanco:#ffffff;
+    --sombra:rgba(61,58,51,.10);
+  }
+  /* ===== MODO OSCURO: se cambian las variables y listo ===== */
+  body.oscuro{
+    --crema:#211f1a;
+    --crema-oscuro:#2b2922;
+    --blanco:#322f28;
+    --tinta:#ece5d6;
+    --gris:#b3ac9c;
+    --dorado:#cfae6e;
+    --dorado-claro:#a98f5c;
+    --rosa:#d8a2af;
+    --sombra:rgba(0,0,0,.35);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Jost',sans-serif;
+    background:var(--crema);
+    color:var(--tinta);
+    overflow-x:hidden;
+    transition:background .4s, color .4s;
+  }
+  h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+
+  /* ===== Guirnalda floral ===== */
+  .guirnalda{width:100%;height:90px;background-repeat:repeat-x;background-size:auto 100%;pointer-events:none;}
+  .guirnalda.abajo{transform:scaleY(-1);}
+  body.oscuro .guirnalda{opacity:.85;filter:brightness(.92);}
+
+  /* ===== PANTALLA DE BIENVENIDA / PIN ===== */
+  #bienvenida{
+    position:fixed;inset:0;z-index:200;
+    background:linear-gradient(180deg,#5f6655,#4c5243);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    color:#fff;text-align:center;padding:24px;gap:18px;
+    transition:opacity .8s, visibility .8s;
+  }
+  #bienvenida.oculta{opacity:0;visibility:hidden;}
+  #bienvenida h1{font-size:clamp(2.2rem,8vw,3.6rem);}
+  #bienvenida .sub{font-weight:300;letter-spacing:2px;opacity:.9;}
+  #pinZona{display:none;flex-direction:column;align-items:center;gap:12px;}
+  #pinZona input{
+    font-family:'Playfair Display',serif;font-size:1.8rem;letter-spacing:14px;
+    text-align:center;width:200px;padding:10px;
+    border:none;border-radius:14px;background:rgba(255,255,255,.92);color:#3d3a33;
+  }
+  #pinError{color:#ffd9d9;font-size:.9rem;min-height:1.2em;font-weight:300;}
+
+  /* ===== HERO ===== */
+  .hero{
+    min-height:100vh;display:flex;flex-direction:column;
+    justify-content:space-between;align-items:center;text-align:center;
+    background:linear-gradient(180deg,#5f6655 0%, #767d68 45%, #5a604f 100%);
+    background-size:cover;background-position:center;
+    color:#fff;position:relative;
+  }
+  .hero::before{content:'';position:absolute;inset:0;background:rgba(40,42,34,.38);opacity:0;transition:opacity .4s;}
+  .hero.con-foto::before{opacity:1;}
+  .hero > *{position:relative;z-index:1;}
+  .hero-contenido{display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px;animation:aparecer 1.6s ease both;}
+  .hero .fecha{font-family:'Playfair Display',serif;letter-spacing:4px;font-size:1.15rem;}
+  .hero .linea{width:190px;height:1px;background:rgba(255,255,255,.55);}
+  .hero h1{font-size:clamp(3rem,10vw,5.2rem);font-weight:700;line-height:1.05;}
+  .amp{width:58px;height:58px;border-radius:50%;background:var(--dorado);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.7rem;margin:6px 0;}
+  .hero .subtitulo{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(1.4rem,5vw,2rem);margin-top:10px;}
+  .hero .frase{font-weight:300;letter-spacing:1px;font-size:1.05rem;margin-top:18px;max-width:340px;}
+  body.editando .hero .frase{outline:1px dashed rgba(255,255,255,.6);outline-offset:6px;cursor:text;}
+  .cancion-momento-hero{
+    margin-top:14px;font-size:.85rem;letter-spacing:1px;font-weight:300;
+    background:rgba(0,0,0,.25);padding:8px 18px;border-radius:999px;
+    display:none;
+  }
+  .chevron{margin-bottom:8px;animation:flotar 2s ease-in-out infinite;opacity:.85;}
+  .btn-fondo{position:absolute;top:14px;right:14px;z-index:2;display:none;}
+  body.editando .btn-fondo{display:inline-block;}
+  @keyframes flotar{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+  @keyframes aparecer{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+  /* ===== Secciones + reveal al hacer scroll ===== */
+  section{padding:70px 20px;}
+  .seccion-interna{max-width:560px;margin:0 auto;text-align:center;}
+  .ancha{max-width:920px;}
+  .titulo-seccion{color:var(--dorado);font-size:clamp(2rem,7vw,2.8rem);font-weight:600;margin-bottom:8px;}
+  .bajada{color:var(--gris);font-weight:300;letter-spacing:.5px;margin-bottom:36px;}
+  .revelar{opacity:0;transform:translateY(26px);transition:opacity .8s ease, transform .8s ease;}
+  .revelar.visible{opacity:1;transform:none;}
+
+  /* ===== Contador ===== */
+  .contador{display:flex;justify-content:center;align-items:stretch;flex-wrap:wrap;}
+  .unidad{padding:0 18px;border-right:1px solid var(--dorado-claro);}
+  .unidad:last-child{border-right:none;}
+  .unidad .numero{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,8vw,3.4rem);font-weight:700;}
+  .unidad .etiqueta{color:var(--dorado);font-size:.95rem;letter-spacing:1px;margin-top:2px;}
+  .corazon{color:var(--dorado);font-size:1.6rem;margin-top:34px;display:inline-block;animation:latido 1.6s ease-in-out infinite;}
+  @keyframes latido{0%,100%{transform:scale(1)}25%{transform:scale(1.18)}40%{transform:scale(1)}}
+
+  .memoria-banner{
+    max-width:560px;margin:30px auto 0;
+    background:var(--blanco);border:1px solid var(--dorado-claro);
+    border-radius:16px;padding:16px 20px;
+    font-weight:300;display:none;
+    box-shadow:0 10px 30px var(--sombra);
+  }
+  .memoria-banner b{font-family:'Playfair Display',serif;color:var(--dorado);font-weight:600;}
+
+  /* ===== Tarjetas ===== */
+  .tarjeta{
+    background:var(--blanco);border-radius:22px;
+    box-shadow:0 14px 40px var(--sombra);
+    padding:42px 28px;margin:0 auto 28px;max-width:430px;text-align:center;
+  }
+  .tarjeta.media{max-width:430px;flex:1 1 320px;margin:0;}
+  .tarjeta .icono{font-size:2rem;margin-bottom:14px;}
+  .tarjeta h3{
+    color:var(--dorado);font-size:1.5rem;letter-spacing:3px;font-weight:600;text-transform:uppercase;
+    padding-bottom:16px;border-bottom:1px solid var(--crema-oscuro);margin-bottom:18px;
+  }
+  .fila-tarjetas{display:flex;flex-wrap:wrap;gap:26px;justify-content:center;align-items:flex-start;}
+
+  /* ===== Ítems de lista ===== */
+  .item{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 4px;border-bottom:1px solid var(--crema-oscuro);}
+  .item:last-of-type{border-bottom:none;}
+  .item .check{
+    min-width:26px;height:26px;border:1.5px solid var(--dorado);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;color:var(--blanco);
+    font-size:.85rem;cursor:pointer;transition:background .25s;flex-shrink:0;
+  }
+  .item.listo .check{background:var(--dorado);}
+  .item.listo .texto{text-decoration:line-through;opacity:.55;}
+  .item .texto{font-weight:300;font-size:1.02rem;flex:1;}
+  .item .punto{min-width:8px;height:8px;border-radius:50%;background:var(--dorado-claro);flex-shrink:0;}
+
+  /* Barra de progreso de metas */
+  .progreso{margin:4px 0 16px;}
+  .progreso .barra{height:8px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;}
+  .progreso .relleno{height:100%;width:0;background:linear-gradient(90deg,var(--dorado-claro),var(--dorado));border-radius:999px;transition:width .6s ease;}
+  .progreso .pct{font-size:.85rem;color:var(--gris);margin-top:6px;font-weight:300;}
+
+  .btn-borrar{display:none;border:none;background:none;color:#b66;font-size:1.1rem;cursor:pointer;padding:2px 6px;}
+  body.editando .btn-borrar{display:inline-block;}
+
+  .boton{
+    margin-top:22px;background:var(--dorado);color:#fff;border:none;
+    font-family:'Playfair Display',serif;font-size:1rem;padding:12px 30px;border-radius:12px;cursor:pointer;
+    transition:background .25s, transform .15s;
+  }
+  .boton:hover{background:#a3854c;transform:translateY(-1px);}
+  .boton:focus-visible{outline:3px solid var(--dorado-claro);outline-offset:2px;}
+  .boton.suave{background:var(--crema-oscuro);color:var(--tinta);}
+  .boton.suave:hover{background:#e7e0d0;}
+  body.oscuro .boton.suave:hover{background:#3a372e;}
+  .boton.rosa{background:var(--rosa);}
+  .boton.rosa:hover{background:#b87a88;}
+  .boton.chico{padding:8px 18px;font-size:.9rem;margin-top:10px;}
+
+  .campo{
+    width:100%;border:1px solid var(--dorado-claro);border-radius:12px;padding:12px 14px;
+    font-family:'Jost',sans-serif;font-size:1rem;margin-top:10px;background:var(--crema);
+    color:var(--tinta);resize:vertical;
+  }
+  .campo:focus{outline:2px solid var(--dorado);}
+
+  /* ===== Razones ===== */
+  .razon-dia{
+    font-family:'Playfair Display',serif;font-style:italic;
+    font-size:clamp(1.2rem,4.5vw,1.6rem);line-height:1.5;
+    max-width:480px;margin:0 auto 8px;
+  }
+  .razon-num{color:var(--rosa);font-size:.85rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
+  .contador-razones{
+    font-family:'Playfair Display',serif;font-size:3rem;color:var(--dorado);font-weight:700;
+  }
+  .contador-razones small{font-size:1rem;color:var(--gris);font-family:'Jost',sans-serif;font-weight:300;display:block;letter-spacing:1px;}
+
+  /* ===== Línea de tiempo ===== */
+  .timeline{position:relative;max-width:640px;margin:0 auto;text-align:left;padding-left:34px;}
+  .timeline::before{
+    content:'';position:absolute;left:10px;top:6px;bottom:6px;width:2px;
+    background:linear-gradient(180deg,var(--dorado-claro),var(--rosa-claro));
+  }
+  .hito{position:relative;padding:0 0 34px 18px;}
+  .hito::before{
+    content:'';position:absolute;left:-31px;top:4px;
+    width:16px;height:16px;border-radius:50%;
+    background:var(--blanco);border:3px solid var(--dorado);
+  }
+  .hito .fecha-hito{color:var(--dorado);font-size:.85rem;letter-spacing:2px;text-transform:uppercase;}
+  .hito h4{font-family:'Playfair Display',serif;font-size:1.3rem;margin:4px 0 6px;}
+  .hito p{font-weight:300;color:var(--gris);font-size:.98rem;}
+  .hito img{
+    margin-top:12px;width:100%;max-width:300px;border-radius:12px;
+    box-shadow:0 8px 24px var(--sombra);display:block;
+  }
+  .hito .acciones{margin-top:8px;}
+
+  /* ===== Fotos ===== */
+  .fotos-seccion{background:var(--crema-oscuro);}
+  .carrusel{display:flex;gap:18px;overflow-x:auto;padding:10px 6px 26px;scroll-snap-type:x mandatory;}
+  .marco{
+    scroll-snap-align:center;min-width:260px;max-width:260px;
+    background:var(--blanco);border-radius:6px;padding:12px 12px 16px;
+    box-shadow:0 10px 30px var(--sombra);transform:rotate(-1.2deg);position:relative;
+  }
+  .marco:nth-child(even){transform:rotate(1.4deg);}
+  .marco.favorita{box-shadow:0 10px 30px rgba(185,152,90,.45);outline:2px solid var(--dorado-claro);}
+  .marco .foto{
+    width:100%;aspect-ratio:3/4;
+    background:linear-gradient(160deg,#cfd5c2,#9aa28a);
+    border-radius:3px;display:flex;align-items:center;justify-content:center;
+    color:rgba(255,255,255,.85);font-size:2.2rem;object-fit:cover;overflow:hidden;
+  }
+  .marco img.foto{object-fit:cover;}
+  .marco figcaption{font-family:'Playfair Display',serif;font-style:italic;color:var(--gris);margin-top:12px;font-size:.95rem;text-align:center;}
+  body.editando .marco figcaption{outline:1px dashed var(--dorado-claro);outline-offset:3px;cursor:text;}
+  .marco .btn-borrar{position:absolute;top:4px;right:4px;background:rgba(255,255,255,.85);border-radius:50%;}
+  .btn-fav{
+    position:absolute;top:18px;left:18px;border:none;cursor:pointer;
+    background:rgba(255,255,255,.85);border-radius:50%;width:32px;height:32px;
+    font-size:1rem;color:#c98e9b;
+  }
+  .marco.favorita .btn-fav{background:var(--rosa);color:#fff;}
+
+  /* ===== Antes y Ahora ===== */
+  .comparador{
+    position:relative;max-width:520px;margin:0 auto;
+    aspect-ratio:4/3;border-radius:18px;overflow:hidden;
+    box-shadow:0 14px 40px var(--sombra);background:var(--crema-oscuro);
+  }
+  .comparador img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .comparador .etiqueta-comp{
+    position:absolute;top:12px;padding:5px 14px;border-radius:999px;
+    background:rgba(0,0,0,.45);color:#fff;font-size:.8rem;letter-spacing:1px;z-index:3;
+  }
+  .comparador .divisor{
+    position:absolute;top:0;bottom:0;width:3px;background:#fff;z-index:2;
+    box-shadow:0 0 10px rgba(0,0,0,.4);transform:translateX(-50%);
+  }
+  .comparador .sin-fotos{
+    position:absolute;inset:0;display:flex;flex-direction:column;gap:10px;
+    align-items:center;justify-content:center;color:var(--gris);font-weight:300;
+  }
+  .rango{width:100%;max-width:520px;margin-top:14px;accent-color:var(--dorado);}
+
+  /* ===== Música ===== */
+  .cancion{
+    text-align:left;background:var(--crema);border-radius:14px;
+    padding:16px;margin-bottom:14px;border:1px solid var(--crema-oscuro);position:relative;
+  }
+  .cancion.destacada{border:2px solid var(--dorado);box-shadow:0 8px 24px rgba(185,152,90,.25);}
+  .insignia-momento{
+    position:absolute;top:-12px;left:14px;
+    background:var(--dorado);color:#fff;font-size:.72rem;letter-spacing:2px;
+    text-transform:uppercase;padding:4px 12px;border-radius:999px;
+  }
+  .cancion .titulo-cancion{font-family:'Playfair Display',serif;font-size:1.15rem;}
+  .cancion .artista{color:var(--gris);font-size:.92rem;margin-bottom:6px;}
+  .cancion .motivo{font-weight:300;font-style:italic;font-size:.97rem;margin:8px 0;}
+  .cancion .de-quien{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--dorado);}
+  .cancion .de-quien.catalina{color:var(--rosa);}
+  .cancion iframe{width:100%;height:80px;border:none;border-radius:12px;margin-top:10px;}
+  .cancion a.enlace{display:inline-block;margin-top:8px;color:var(--dorado);text-decoration:none;font-size:.92rem;border-bottom:1px solid var(--dorado-claro);}
+  .btn-destacar{border:none;background:none;cursor:pointer;font-size:1.1rem;color:var(--dorado-claro);padding:2px 6px;}
+  .cancion.destacada .btn-destacar{color:var(--dorado);}
+
+  /* ===== Frasco de recuerdos ===== */
+  .frasco-visual{font-size:3.4rem;margin-bottom:6px;}
+  .recuerdo-mostrado{
+    background:var(--crema);border-radius:16px;padding:22px;
+    font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;line-height:1.5;
+    margin:16px 0;display:none;border:1px dashed var(--dorado-claro);
+  }
+  .recuerdo-mostrado .meta-recuerdo{
+    display:block;font-family:'Jost',sans-serif;font-style:normal;font-size:.78rem;
+    letter-spacing:2px;text-transform:uppercase;color:var(--gris);margin-top:10px;
+  }
+  .cat-recuerdo{
+    display:inline-block;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;
+    padding:3px 10px;border-radius:999px;background:var(--crema-oscuro);color:var(--gris);margin-right:6px;
+  }
+
+  /* ===== Cartas para el futuro ===== */
+  .carta{
+    text-align:left;background:var(--crema);border-radius:14px;
+    padding:18px;margin-bottom:14px;border:1px solid var(--crema-oscuro);
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+  }
+  .carta .info-carta{flex:1;}
+  .carta .titulo-carta{font-family:'Playfair Display',serif;font-size:1.1rem;}
+  .carta .estado-carta{font-size:.82rem;color:var(--gris);font-weight:300;margin-top:3px;}
+  .carta .candado{font-size:1.5rem;}
+  .carta.abierta{cursor:pointer;}
+  .carta.abierta:hover{border-color:var(--dorado);}
+  .carta.cerrada{opacity:.75;}
+
+  /* ===== Próximo plan ===== */
+  .plan-countdown .numero-grande{
+    font-family:'Playfair Display',serif;font-size:clamp(3rem,12vw,4.6rem);
+    font-weight:700;color:var(--dorado);line-height:1;
+  }
+  .plan-countdown .nombre-plan{font-family:'Playfair Display',serif;font-style:italic;font-size:1.2rem;margin-top:8px;}
+
+  /* ===== Estado actual ===== */
+  .estados{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
+  .estado-persona{
+    background:var(--crema);border-radius:16px;padding:18px 24px;min-width:180px;
+    border:1px solid var(--crema-oscuro);
+  }
+  .estado-persona .nombre-estado{font-family:'Playfair Display',serif;font-size:1.15rem;margin-bottom:4px;}
+  .estado-persona .valor-estado{font-weight:300;color:var(--gris);}
+  .estado-persona.catalina .nombre-estado{color:var(--rosa);}
+  .estado-persona.diego .nombre-estado{color:var(--dorado);}
+
+  /* ===== Pregunta del día ===== */
+  .pregunta-dia{
+    background:var(--crema);border:1px dashed var(--dorado-claro);border-radius:16px;
+    padding:18px;margin-bottom:20px;font-weight:300;
+  }
+  .pregunta-dia .etiqueta-p{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--dorado);display:block;margin-bottom:6px;}
+  .pregunta-dia .texto-p{font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;}
+
+  /* ===== Notas ===== */
+  .nota{
+    background:var(--crema);border-left:3px solid var(--dorado-claro);
+    border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:12px;
+    text-align:left;font-weight:300;display:flex;justify-content:space-between;gap:8px;align-items:flex-start;
+  }
+  .nota.catalina{border-left-color:var(--rosa);}
+  .nota .de{font-size:.78rem;letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:4px;color:var(--dorado);}
+  .nota.catalina .de{color:var(--rosa);}
+  .nota .fecha-nota{font-size:.75rem;color:var(--gris);margin-left:8px;letter-spacing:1px;text-transform:none;}
+  .chips{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+  .chip{
+    border:1.5px solid var(--dorado);background:none;color:var(--dorado);
+    border-radius:999px;padding:8px 22px;cursor:pointer;
+    font-family:'Jost',sans-serif;font-size:.95rem;transition:all .2s;
+  }
+  .chip.catalina{border-color:var(--rosa);color:var(--rosa);}
+  .chip.activo{background:var(--dorado);color:#fff;}
+  .chip.catalina.activo{background:var(--rosa);color:#fff;}
+
+  /* ===== Estadísticas ===== */
+  .stats{display:flex;flex-wrap:wrap;gap:0;justify-content:center;}
+  .stat{padding:10px 22px;border-right:1px solid var(--dorado-claro);min-width:120px;margin-bottom:18px;}
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;}
+  .stat .lab{color:var(--dorado);font-size:.85rem;letter-spacing:1px;}
+
+  /* ===== Vídeo ===== */
+  .momentos video, .momentos iframe.yt{
+    width:100%;max-width:760px;aspect-ratio:16/9;border-radius:18px;border:none;
+    box-shadow:0 16px 44px var(--sombra);background:#2e3128;
+  }
+  .momentos .vacio{
+    max-width:760px;margin:0 auto;aspect-ratio:16/9;border-radius:18px;
+    border:2px dashed var(--dorado-claro);display:flex;flex-direction:column;gap:10px;
+    align-items:center;justify-content:center;color:var(--gris);font-weight:300;
+  }
+
+  /* ===== Modal ===== */
+  #modal{
+    position:fixed;inset:0;z-index:150;background:rgba(40,42,34,.55);
+    display:none;align-items:center;justify-content:center;padding:24px;
+  }
+  #modal.visible{display:flex;}
+  .modal-caja{
+    background:var(--blanco);border-radius:22px;max-width:480px;width:100%;
+    padding:36px 28px;text-align:center;position:relative;
+    box-shadow:0 24px 60px rgba(0,0,0,.3);
+    max-height:80vh;overflow-y:auto;
+  }
+  .modal-caja h3{color:var(--dorado);font-size:1.4rem;margin-bottom:16px;}
+  .modal-caja .cuerpo-modal{font-weight:300;line-height:1.6;white-space:pre-wrap;text-align:left;}
+  .cerrar-modal{
+    position:absolute;top:12px;right:16px;border:none;background:none;
+    font-size:1.4rem;cursor:pointer;color:var(--gris);
+  }
+
+  /* ===== Footer ===== */
+  footer{text-align:center;padding:50px 20px 110px;color:var(--gris);font-weight:300;}
+  footer .iniciales{font-family:'Playfair Display',serif;color:var(--dorado);font-size:2rem;margin-bottom:8px;}
+
+  /* ===== Botones flotantes ===== */
+  .flotante{
+    position:fixed;right:22px;z-index:50;width:52px;height:52px;border-radius:50%;border:none;
+    background:rgba(255,255,255,.92);color:var(--dorado);font-size:1.25rem;cursor:pointer;
+    box-shadow:0 6px 20px rgba(61,58,51,.22);transition:transform .15s;
+  }
+  body.oscuro .flotante{background:rgba(50,47,40,.95);}
+  .flotante:hover{transform:scale(1.06);}
+  #btnMusica{bottom:22px;}
+  #btnEditar{bottom:86px;}
+  #btnOscuro{bottom:150px;}
+  body.editando #btnEditar{background:var(--dorado);color:#fff;}
+  .aviso-edicion{
+    position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
+    background:var(--tinta);color:var(--crema);padding:10px 22px;border-radius:999px;
+    font-size:.9rem;font-weight:300;z-index:60;opacity:0;pointer-events:none;transition:opacity .3s;
+    max-width:90vw;text-align:center;
+  }
+  .aviso-edicion.visible{opacity:.95;}
+
+  /* ===== Pétalos cayendo ===== */
+  .petalo{
+    position:fixed;top:-30px;z-index:5;pointer-events:none;
+    width:14px;height:18px;border-radius:80% 0 80% 0;
+    background:linear-gradient(135deg,#f9f4e8,#ecdfc3);
+    opacity:.8;
+    animation:caer linear forwards;
+  }
+  body.oscuro .petalo{opacity:.35;}
+  @keyframes caer{
+    0%{transform:translateY(0) translateX(0) rotate(0deg);}
+    25%{transform:translateY(28vh) translateX(26px) rotate(95deg);}
+    50%{transform:translateY(55vh) translateX(-18px) rotate(190deg);}
+    75%{transform:translateY(82vh) translateX(22px) rotate(280deg);}
+    100%{transform:translateY(112vh) translateX(-10px) rotate(380deg);opacity:0;}
+  }
+
+  input[type=file]{display:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+    html{scroll-behavior:auto;}
+    .revelar{opacity:1;transform:none;}
+    .petalo{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ BIENVENIDA / PIN ============ -->
+<div id="bienvenida">
+  <div style="font-size:2.4rem">&#127802;</div>
+  <h1 class="serif">Catalina &amp; Diego</h1>
+  <p class="sub">Nuestro rincón del mundo</p>
+  <button class="boton" id="btnEntrar" onclick="entrar()">Entrar &#10084;</button>
+  <div id="pinZona">
+    <p class="sub">Ingresa el PIN de 4 dígitos</p>
+    <input type="password" inputmode="numeric" maxlength="4" id="pinInput" autocomplete="off">
+    <span id="pinError"></span>
+    <button class="boton" onclick="verificarPin()">Abrir</button>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="hero">
+  <button class="boton suave btn-fondo" onclick="document.getElementById('inputFondo').click()">Cambiar foto de fondo</button>
+  <input type="file" id="inputFondo" accept="image/*">
+  <div class="guirnalda" id="g1"></div>
+  <div class="hero-contenido">
+    <div class="fecha">28 . 12 . 2025</div>
+    <div class="linea"></div>
+    <h1>Catalina</h1>
+    <div class="amp serif">&amp;</div>
+    <h1>Diego</h1>
+    <div class="linea"></div>
+    <div class="subtitulo">¡Nuestro Rincón!</div>
+    <p class="frase" id="frase">Te elijo hoy y por el resto de mi vida</p>
+    <div class="cancion-momento-hero" id="cancionMomentoHero"></div>
+  </div>
+  <svg class="chevron" width="34" height="20" viewBox="0 0 34 20" fill="none" aria-hidden="true">
+    <path d="M2 2 L17 16 L32 2" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</header>
+
+<!-- ============ CONTADOR ============ -->
+<section>
+  <div class="guirnalda" id="g2" style="margin:-70px -20px 50px;width:auto"></div>
+  <div class="seccion-interna">
+    <h2 class="titulo-seccion">Llevamos</h2>
+    <p class="bajada">juntos desde las 17:50 de ese domingo</p>
+    <div class="contador" aria-live="polite">
+      <div class="unidad"><div class="numero" id="dias">0</div><div class="etiqueta">Días</div></div>
+      <div class="unidad"><div class="numero" id="horas">0</div><div class="etiqueta">hr</div></div>
+      <div class="unidad"><div class="numero" id="minutos">0</div><div class="etiqueta">min</div></div>
+      <div class="unidad"><div class="numero" id="segundos">0</div><div class="etiqueta">seg</div></div>
+    </div>
+    <span class="corazon" aria-hidden="true">&#10084;</span>
+    <div class="memoria-banner" id="memoriaBanner"></div>
+  </div>
+</section>
+
+<!-- ============ RAZONES POR LAS QUE TE AMO ============ -->
+<section class="revelar" style="background:var(--crema-oscuro)">
+  <div class="seccion-interna">
+    <h2 class="titulo-seccion">Razones por las que te amo</h2>
+    <p class="bajada">Una razón distinta cada día</p>
+    <div class="tarjeta">
+      <div class="razon-num" id="razonNum">Razón del día</div>
+      <div class="razon-dia" id="razonDia">...</div>
+      <div class="contador-razones" id="totalRazones">0<small>razones y contando</small></div>
+      <div id="listaRazones" style="display:none"></div>
+      <button class="boton rosa" onclick="agregarRazon()">Agregar razón</button>
+      <button class="boton suave" onclick="alternarRazones()" id="btnVerRazones">Ver todas</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LÍNEA DE TIEMPO ============ -->
+<section class="revelar">
+  <div class="seccion-interna ancha">
+    <h2 class="titulo-seccion">Nuestra Historia</h2>
+    <p class="bajada">Los momentos que nos trajeron hasta aquí</p>
+    <div class="timeline" id="timeline"></div>
+    <button class="boton" onclick="agregarHito()">Agregar momento</button>
+  </div>
+</section>
+
+<!-- ============ FOTOS ============ -->
+<section class="fotos-seccion revelar">
+  <div class="seccion-interna ancha">
+    <h2 class="titulo-seccion">Retratos de nuestro amor</h2>
+    <p class="bajada">La clave es disfrutar cada momento &mdash; toca el corazón para marcar favoritas</p>
+    <div class="carrusel" id="carrusel"></div>
+    <button class="boton" onclick="document.getElementById('inputFotos').click()">Agregar fotos</button>
+    <input type="file" id="inputFotos" accept="image/*" multiple>
+
+    <div style="margin-top:60px">
+      <h3 class="serif" style="color:var(--dorado);font-size:1.6rem;margin-bottom:6px">Antes &amp; Ahora</h3>
+      <p class="bajada">Desliza para comparar cómo hemos crecido juntos</p>
+      <div class="comparador" id="comparador"></div>
+      <input type="range" class="rango" id="rangoComp" min="0" max="100" value="50" aria-label="Comparar antes y ahora">
+      <div>
+        <button class="boton chico suave" onclick="subirComp('antes')">Foto de antes</button>
+        <button class="boton chico suave" onclick="subirComp('ahora')">Foto de ahora</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MOMENTOS (VIDEO) ============ -->
+<section class="momentos revelar">
+  <div class="seccion-interna ancha">
+    <h2 class="titulo-seccion">Nuestros Momentos</h2>
+    <p class="bajada">Un compilado de nosotros dos</p>
+    <div id="zonaVideo"></div>
+    <div style="margin-top:18px">
+      <button class="boton" onclick="document.getElementById('inputVideo').click()">Subir video</button>
+      <button class="boton suave" onclick="ponerYoutube()">Usar link de YouTube</button>
+      <input type="file" id="inputVideo" accept="video/*">
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÚSICA ============ -->
+<section class="revelar" style="background:var(--crema-oscuro)">
+  <div class="seccion-interna">
+    <h2 class="titulo-seccion">Nuestra Música</h2>
+    <p class="bajada">Canciones que nos recuerdan al otro &mdash; toca la &#9733; para elegir la canción del momento</p>
+    <div class="tarjeta">
+      <div class="icono" aria-hidden="true">&#127925;</div>
+      <h3>Playlist del corazón</h3>
+      <div id="listaCanciones"></div>
+      <button class="boton" onclick="agregarCancion()">Agregar canción</button>
+      <p style="font-size:.85rem;color:var(--gris);font-weight:300;margin-top:12px">
+        Pega el link de Spotify y se mostrará el reproductor aquí mismo &#10024;
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FRASCO DE RECUERDOS ============ -->
+<section class="revelar">
+  <div class="seccion-interna">
+    <h2 class="titulo-seccion">Frasco de Recuerdos</h2>
+    <p class="bajada">Guardamos momentos felices y sacamos uno al azar cuando lo necesitemos</p>
+    <div class="tarjeta">
+      <div class="frasco-visual" aria-hidden="true">&#127858;&#65039;</div>
+      <h3 id="tituloFrasco">0 recuerdos guardados</h3>
+      <div class="recuerdo-mostrado" id="recuerdoMostrado"></div>
+      <button class="boton" onclick="sacarRecuerdo()">Sacar un recuerdo &#10024;</button>
+      <button class="boton suave" onclick="guardarRecuerdo()">Guardar recuerdo nuevo</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CARTAS PARA EL FUTURO ============ -->
+<section class="revelar" style="background:var(--crema-oscuro)">
+  <div class="seccion-interna">
+    <h2 class="titulo-seccion">Cartas para el Futuro</h2>
+    <p class="bajada">Mensajes que se abren cuando llegue su momento &mdash; nuestra cápsula del tiempo</p>
+    <div class="tarjeta">
+      <div class="icono" aria-hidden="true">&#128140;</div>
+      <h3>Buzón del tiempo</h3>
+      <div id="listaCartas"></div>
+      <button class="boton" onclick="escribirCarta()">Escribir carta</button>
+      <p style="font-size:.85rem;color:var(--gris);font-weight:300;margin-top:12px">
+        Ideas: "Para cuando estés triste", "Para nuestro aniversario", "Para cuando me extrañes", "Para dentro de 1 año"
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUEÑOS Y METAS ============ -->
+<section class="revelar">
+  <div class="seccion-interna ancha">
+    <h2 class="titulo-seccion">Sueños &amp; Metas</h2>
+    <p class="bajada">Lo que vamos a construir juntos &mdash; toca el círculo cuando lo cumplamos</p>
+    <div class="fila-tarjetas">
+      <div class="tarjeta media">
+        <div class="icono" aria-hidden="true">&#127775;</div>
+        <h3>Sueños grandes</h3>
+        <div class="progreso"><div class="barra"><div class="relleno" id="progSuenos"></div></div><div class="pct" id="pctSuenos"></div></div>
+        <div id="listaSuenos"></div>
+        <button class="boton" onclick="agregarItem('suenos','¿Qué sueño grande quieren cumplir?')">Agregar sueño</button>
+      </div>
+      <div class="tarjeta media">
+        <div class="icono" aria-hidden="true">&#127807;</div>
+        <h3>Metas cercanas</h3>
+        <div class="progreso"><div class="barra"><div class="relleno" id="progMetas"></div></div><div class="pct" id="pctMetas"></div></div>
+        <div id="listaMetas"></div>
+        <button class="boton" onclick="agregarItem('metas','¿Qué meta nueva quieren cumplir?')">Agregar meta</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRÓXIMO PLAN ============ -->
+<section class="revelar" style="background:var(--crema-oscuro)">
+  <div class="seccion-interna">
+    <h2 class="titulo-seccion">Próximo Plan</h2>
+    <p class="bajada">La cuenta regresiva para vernos / viajar / celebrar</p>
+    <div class="tarjeta plan-countdown" id="zonaPlan"></div>
+  </div>
+</section>
+
+<!-- ============ REGALOS Y GUSTOS ============ -->
+<section class="revelar">
+  <div class="seccion-interna ancha">
+    <h2 class="titulo-seccion">Regalos &amp; Gustos</h2>
+    <p class="bajada">Ideas por si alguien quiere consentir al otro</p>
+    <div class="fila-tarjetas">
+      <div class="tarjeta media">
+        <div class="icono" aria-hidden="true">&#127802;</div>
+        <h3 style="color:var(--rosa)">Para Catalina</h3>
+        <div id="listaRegalosCatalina"></div>
+        <button class="boton rosa" onclick="agregarItem('regalosCatalina','¿Qué le gustaría a Catalina?')">Agregar idea</button>
+      </div>
+      <div class="tarjeta media">
+        <div class="icono" aria-hidden="true">&#127873;</div>
+        <h3>Para Diego</h3>
+        <div id="listaRegalosDiego"></div>
+        <button class="boton" onclick="agregarItem('regalosDiego','¿Qué le gustaría a Diego?')">Agregar idea</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERIES Y LUGARES ============ -->
+<section class="revelar" style="background:var(--crema-oscuro)">
+  <div class="seccion-interna ancha">
+    <h2 class="titulo-seccion">Pendientes de pareja</h2>
+    <p class="bajada">Series por ver y lugares por conocer</p>
+    <div class="fila-tarjetas">
+      <div class="tarjeta media">
+        <div class="icono" aria-hidden="true">&#127916;</div>
+        <h3>Series &amp; Películas</h3>
+        <div id="listaSeries"></div>
+        <button class="boton" onclick="agregarItem('series','¿Qué serie o película quieren ver?')">Agregar</button>
+      </div>
+      <div class="tarjeta media">
+        <div class="icono" aria-hidden="true">&#128205;</div>
+        <h3>Lugares</h3>
+        <div id="listaLugares"></div>
+        <button class="boton" onclick="agregarItem('lugares','¿Qué lugar quieren conocer juntos?')">Agregar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ESTADO + NOTAS ============ -->
+<section class="revelar">
+  <div class="seccion-interna">
+    <h2 class="titulo-seccion">¿Cómo estamos hoy?</h2>
+    <p class="bajada">Toca tu tarjeta para cambiar tu estado</p>
+    <div class="estados">
+      <div class="estado-persona catalina" onclick="cambiarEstado('Catalina')" role="button" tabindex="0">
+        <div class="nombre-estado">Catalina</div>
+        <div class="valor-estado" id="estadoCatalina">&mdash;</div>
+      </div>
+      <div class="estado-persona diego" onclick="cambiarEstado('Diego')" role="button" tabindex="0">
+        <div class="nombre-estado">Diego</div>
+        <div class="valor-estado" id="estadoDiego">&mdash;</div>
+      </div>
+    </div>
+
+    <div class="pregunta-dia">
+      <span class="etiqueta-p">Pregunta del día</span>
+      <span class="texto-p" id="preguntaDia">...</span>
+      <div style="font-size:.85rem;color:var(--gris);margin-top:8px">Respóndanla en una nota aquí abajo &#11015;&#65039;</div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="icono" aria-hidden="true">&#128140;</div>
+      <h3>Buzón de amor</h3>
+      <div id="listaNotas"></div>
+      <div class="chips" role="group" aria-label="Quién escribe">
+        <button class="chip catalina" id="chipCatalina" onclick="elegirAutor('Catalina')">Catalina</button>
+        <button class="chip activo" id="chipDiego" onclick="elegirAutor('Diego')">Diego</button>
+      </div>
+      <textarea class="campo" id="nuevaNota" rows="2" placeholder="Escribe una nota nueva..."></textarea>
+      <button class="boton" onclick="agregarNota()">Guardar nota</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ESTADÍSTICAS ============ -->
+<section class="revelar" style="background:var(--crema-oscuro)">
+  <div class="seccion-interna ancha">
+    <h2 class="titulo-seccion">Nuestra relación en números</h2>
+    <p class="bajada">Todo lo que hemos guardado aquí</p>
+    <div class="stats" id="stats"></div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="guirnalda abajo" id="g3" style="margin-bottom:40px"></div>
+  <div class="iniciales">C &hearts; D</div>
+  <p>Desde el 28 de diciembre de 2025 &mdash; y para siempre</p>
+  <button class="boton suave chico" id="btnPin" onclick="configurarPin()" style="display:none">Configurar PIN</button>
+</footer>
+
+<!-- Botones flotantes -->
+<button class="flotante" id="btnOscuro" title="Modo oscuro" aria-label="Cambiar modo oscuro">&#127769;</button>
+<button class="flotante" id="btnEditar" title="Modo edición" aria-label="Activar modo edición">&#9998;</button>
+<button class="flotante" id="btnMusica" title="Música de fondo" aria-label="Reproducir música de fondo">&#9835;</button>
+<div class="aviso-edicion" id="avisoEdicion"></div>
+
+<!-- Modal genérico (cartas, recuerdos) -->
+<div id="modal" role="dialog" aria-modal="true">
+  <div class="modal-caja">
+    <button class="cerrar-modal" onclick="cerrarModal()" aria-label="Cerrar">&#10005;</button>
+    <h3 class="serif" id="modalTitulo"></h3>
+    <div class="cuerpo-modal" id="modalCuerpo"></div>
+  </div>
+</div>
+
+<!-- Canción de fondo: en VSCode descomenta y pon tu mp3 -->
+<!-- <audio id="cancionFondo" src="nuestra-cancion.mp3" loop></audio> -->
+
+<script>
+/* ============================================================
+   CONFIGURACIÓN PRINCIPAL
+   ============================================================ */
+const INICIO = new Date(2025, 11, 28, 17, 50, 0); // 28 dic 2025, 17:50 (meses 0-11)
+const CLAVE_GUARDADO = 'nuestroRinconCyD_v2';
+const RUTA_VIDEO_LOCAL = null; // ej: 'nuestro-video.mp4' cuando lo tengas en VSCode
+
+const ESTADOS_POSIBLES = ['Disponible &#128522;', 'Ocupada/o &#128218;', 'Durmiendo &#128564;', 'Pensando en ti &#10084;&#65039;'];
+
+const PREGUNTAS_DIA = [
+  '¿Cuál fue el momento más feliz de tu semana?',
+  '¿Qué fue lo primero que pensaste de mí cuando me conociste?',
+  'Si pudiéramos teletransportarnos ahora, ¿a dónde iríamos?',
+  '¿Qué canción te hizo pensar en mí hoy?',
+  '¿Cuál es tu recuerdo favorito de nosotros hasta ahora?',
+  '¿Qué te gustaría que cocináramos juntos?',
+  '¿Qué es algo pequeño que hago y que te encanta?',
+  '¿Cómo te imaginas un domingo perfecto conmigo?',
+  '¿Qué quieres que celebremos este mes, aunque sea chico?',
+  '¿Qué flor me regalarías hoy y por qué?',
+  '¿Qué aprendiste de mí esta semana?',
+  '¿Cuál fue la última vez que te hice reír fuerte?',
+  '¿Qué plan pendiente te gustaría cumplir pronto?',
+  '¿Qué te gustaría que te dijera más seguido?',
+];
+
+/* ============================================================
+   DATOS INICIALES (todo esto se edita después desde la página)
+   ============================================================ */
+let datos = {
+  frase: 'Te elijo hoy y por el resto de mi vida',
+  fondoHero: null,
+  videoYoutube: null,
+  oscuro: false,
+  pin: null, // PIN de 4 dígitos (símbolo de privacidad, no seguridad real)
+
+  fotos: [
+    { src: null, caption: 'Nuestro primer día', fav: false },
+    { src: null, caption: 'Esa tarde que no olvidamos', fav: false },
+    { src: null, caption: 'Riéndonos de todo', fav: false },
+  ],
+  antesAhora: { antes: null, ahora: null },
+
+  timeline: [
+    { fecha: '2025-12-28', titulo: 'Empezamos esta historia', desc: 'A las 17:50, ese domingo cambió todo.', foto: null },
+  ],
+
+  razones: [
+    'Porque tu risa arregla cualquier día',
+    'Porque amas las flores tanto como yo te amo a ti',
+  ],
+
+  canciones: [
+    { titulo: 'Nuestra canción', artista: 'Por definir', motivo: 'La primera que bailamos juntos', link: '', de: 'Diego', destacada: true },
+  ],
+
+  recuerdos: [
+    { texto: 'El día que empezamos: 28 de diciembre, 17:50.', categoria: 'Romántico', de: 'Diego', fecha: '28/12/2025' },
+  ],
+
+  cartas: [
+    // { titulo: 'Para cuando estés triste', de: 'Diego', mensaje: '...', fecha: '2026-08-08' }
+  ],
+
+  suenos: [
+    { texto: 'Viajar juntos fuera de Chile', listo: false },
+    { texto: 'Tener nuestro propio espacio lleno de flores', listo: false },
+  ],
+  metas: [
+    { texto: 'Ver el atardecer en la playa', listo: false },
+    { texto: 'Hacer un picnic entre flores', listo: false },
+    { texto: 'Cocinar algo rico los dos', listo: false },
+  ],
+
+  proximoPlan: null, // { nombre: 'Viaje a la playa', fecha: '2026-09-15' }
+
+  regalosCatalina: [
+    { texto: 'Flores (siempre flores)' },
+    { texto: 'Algo hecho a mano' },
+  ],
+  regalosDiego: [
+    { texto: 'Algo para sus juegos' },
+  ],
+  series: [
+    { texto: 'Elegir nuestra primera serie juntos', listo: false },
+  ],
+  lugares: [
+    { texto: 'Un campo de flores en primavera', listo: false },
+  ],
+
+  estados: { Catalina: 'Pensando en ti &#10084;&#65039;', Diego: 'Pensando en ti &#10084;&#65039;' },
+
+  notas: [
+    { de: 'Diego', texto: 'Cada flor que veas hoy, imagina que te la regalé yo.', fecha: '28/12/2025' },
+  ],
+};
+
+/* ============================================================
+   GUARDADO AUTOMÁTICO
+   - Como archivo o página real: se guarda solo (localStorage).
+   - En la vista previa del chat: los cambios duran la sesión.
+   ============================================================ */
+function guardar(){
+  try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
+  pintarStats();
+}
+function cargar(){
+  try{
+    const crudo = localStorage.getItem(CLAVE_GUARDADO);
+    if(crudo){ datos = Object.assign(datos, JSON.parse(crudo)); }
+  }catch(e){}
+}
+cargar();
+
+/* ============================================================
+   BIENVENIDA + PIN
+   El PIN es simbólico: cualquier persona que sepa de código
+   podría saltárselo, pero sirve para que se sienta de ustedes.
+   ============================================================ */
+function prepararBienvenida(){
+  if(datos.pin){
+    document.getElementById('btnEntrar').style.display = 'none';
+    document.getElementById('pinZona').style.display = 'flex';
+    document.getElementById('pinInput').focus();
+  }
+}
+function entrar(){
+  document.getElementById('bienvenida').classList.add('oculta');
+}
+function verificarPin(){
+  const valor = document.getElementById('pinInput').value;
+  if(valor === datos.pin){ entrar(); }
+  else{
+    document.getElementById('pinError').textContent = 'Ese no es... intenta de nuevo 🌸';
+    document.getElementById('pinInput').value = '';
+  }
+}
+document.getElementById('pinInput')?.addEventListener('keydown', e => {
+  if(e.key === 'Enter') verificarPin();
+});
+function configurarPin(){
+  if(datos.pin){
+    if(confirm('Ya hay un PIN. ¿Quieres quitarlo?')){ datos.pin = null; guardar(); avisar('PIN eliminado'); }
+    return;
+  }
+  const nuevo = prompt('Elige un PIN de 4 dígitos:');
+  if(nuevo && /^\d{4}$/.test(nuevo)){
+    datos.pin = nuevo; guardar(); avisar('PIN guardado: se pedirá al abrir la página');
+  }else if(nuevo){
+    alert('Tiene que ser de 4 números, ej: 2812');
+  }
+}
+prepararBienvenida();
+
+/* ============================================================
+   CONTADOR EN VIVO
+   ============================================================ */
+function actualizarContador(){
+  const diff = Math.max(0, new Date() - INICIO);
+  const seg = Math.floor(diff / 1000);
+  document.getElementById('dias').textContent = Math.floor(seg / 86400);
+  document.getElementById('horas').textContent = Math.floor((seg % 86400) / 3600);
+  document.getElementById('minutos').textContent = Math.floor((seg % 3600) / 60);
+  document.getElementById('segundos').textContent = seg % 60;
+}
+actualizarContador();
+setInterval(actualizarContador, 1000);
+
+/* ============================================================
+   MODO EDICIÓN
+   ============================================================ */
+let editando = false;
+function avisar(msj){
+  const aviso = document.getElementById('avisoEdicion');
+  aviso.textContent = msj;
+  aviso.classList.add('visible');
+  setTimeout(() => aviso.classList.remove('visible'), 2600);
+}
+document.getElementById('btnEditar').addEventListener('click', () => {
+  editando = !editando;
+  document.body.classList.toggle('editando', editando);
+  document.getElementById('btnPin').style.display = editando ? 'inline-block' : 'none';
+  avisar(editando
+    ? 'Modo edición: toca textos para cambiarlos, usa las ✕ para borrar'
+    : 'Modo edición desactivado');
+});
+
+/* Frase del hero editable */
+const fraseEl = document.getElementById('frase');
+fraseEl.textContent = datos.frase;
+fraseEl.addEventListener('click', () => {
+  if(!editando) return;
+  const nueva = prompt('Nueva frase para la portada:', datos.frase);
+  if(nueva && nueva.trim()){ datos.frase = nueva.trim(); fraseEl.textContent = datos.frase; guardar(); }
+});
+
+/* ============================================================
+   MODO OSCURO
+   ============================================================ */
+function aplicarOscuro(){
+  document.body.classList.toggle('oscuro', !!datos.oscuro);
+  document.getElementById('btnOscuro').innerHTML = datos.oscuro ? '&#9728;&#65039;' : '&#127769;';
+}
+document.getElementById('btnOscuro').addEventListener('click', () => {
+  datos.oscuro = !datos.oscuro;
+  aplicarOscuro();
+  guardar();
+});
+aplicarOscuro();
+
+/* ============================================================
+   FOTO DE FONDO + COMPRESIÓN DE IMÁGENES
+   ============================================================ */
+function aplicarFondo(){
+  const hero = document.getElementById('hero');
+  if(datos.fondoHero){
+    hero.style.backgroundImage = `url(${datos.fondoHero})`;
+    hero.classList.add('con-foto');
+  }
+}
+aplicarFondo();
+document.getElementById('inputFondo').addEventListener('change', async e => {
+  const archivo = e.target.files[0];
+  if(!archivo) return;
+  datos.fondoHero = await comprimirImagen(archivo, 1400, 0.8);
+  aplicarFondo(); guardar();
+});
+
+function comprimirImagen(archivo, maxLado, calidad){
+  return new Promise(resolver => {
+    const lector = new FileReader();
+    lector.onload = ev => {
+      const img = new Image();
+      img.onload = () => {
+        const escala = Math.min(1, maxLado / Math.max(img.width, img.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * escala);
+        canvas.height = Math.round(img.height * escala);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolver(canvas.toDataURL('image/jpeg', calidad));
+      };
+      img.src = ev.target.result;
+    };
+    lector.readAsDataURL(archivo);
+  });
+}
+
+/* ============================================================
+   RAZONES POR LAS QUE TE AMO
+   ============================================================ */
+function pintarRazones(){
+  const total = datos.razones.length;
+  document.getElementById('totalRazones').innerHTML = total + '<small>razones y contando</small>';
+  if(total){
+    const idx = Math.floor(Date.now() / 86400000) % total; // razón distinta cada día
+    document.getElementById('razonNum').textContent = 'Razón #' + (idx + 1) + ' — la de hoy';
+    document.getElementById('razonDia').textContent = '“' + datos.razones[idx] + '”';
+  }else{
+    document.getElementById('razonDia').textContent = 'Agrega la primera razón 🌸';
+  }
+  const lista = document.getElementById('listaRazones');
+  lista.innerHTML = '';
+  datos.razones.forEach((r, i) => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    const punto = document.createElement('span'); punto.className = 'punto';
+    const texto = document.createElement('span'); texto.className = 'texto'; texto.textContent = r;
+    texto.onclick = () => {
+      if(!editando) return;
+      const nuevo = prompt('Editar razón:', r);
+      if(nuevo && nuevo.trim()){ datos.razones[i] = nuevo.trim(); pintarRazones(); guardar(); }
+    };
+    const borrar = document.createElement('button');
+    borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
+    borrar.onclick = () => { datos.razones.splice(i,1); pintarRazones(); guardar(); };
+    div.append(punto, texto, borrar);
+    lista.appendChild(div);
+  });
+}
+pintarRazones();
+
+function agregarRazon(){
+  const r = prompt('¿Por qué amas al otro? (se suma a la lista)');
+  if(r && r.trim()){ datos.razones.push(r.trim()); pintarRazones(); guardar(); }
+}
+function alternarRazones(){
+  const lista = document.getElementById('listaRazones');
+  const visible = lista.style.display !== 'none';
+  lista.style.display = visible ? 'none' : 'block';
+  document.getElementById('btnVerRazones').textContent = visible ? 'Ver todas' : 'Ocultar lista';
+}
+
+/* ============================================================
+   LÍNEA DE TIEMPO + MEMORIA AUTOMÁTICA ("tal día como hoy")
+   ============================================================ */
+function fechaBonita(iso){
+  const [a, m, d] = iso.split('-').map(Number);
+  const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return d + ' ' + meses[m-1] + ' ' + a;
+}
+
+function pintarTimeline(){
+  const cont = document.getElementById('timeline');
+  cont.innerHTML = '';
+  const ordenados = [...datos.timeline].sort((a,b) => a.fecha.localeCompare(b.fecha));
+  ordenados.forEach(h => {
+    const indiceReal = datos.timeline.indexOf(h);
+    const div = document.createElement('div');
+    div.className = 'hito';
+
+    const f = document.createElement('div'); f.className = 'fecha-hito'; f.textContent = fechaBonita(h.fecha);
+    const t = document.createElement('h4'); t.textContent = h.titulo;
+    const p = document.createElement('p'); p.textContent = h.desc || '';
+    div.append(f, t, p);
+
+    if(h.foto){
+      const img = document.createElement('img');
+      img.src = h.foto; img.alt = h.titulo;
+      div.appendChild(img);
+    }
+
+    const acciones = document.createElement('div'); acciones.className = 'acciones';
+    const btnFoto = document.createElement('button');
+    btnFoto.className = 'btn-borrar'; btnFoto.innerHTML = '&#128247;'; btnFoto.title = 'Agregar/cambiar foto';
+    btnFoto.style.color = 'var(--dorado)';
+    btnFoto.onclick = () => fotoParaHito(indiceReal);
+    const borrar = document.createElement('button');
+    borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
+    borrar.onclick = () => {
+      if(confirm('¿Borrar este momento?')){ datos.timeline.splice(indiceReal,1); pintarTimeline(); guardar(); }
+    };
+    acciones.append(btnFoto, borrar);
+    div.appendChild(acciones);
+
+    t.onclick = () => {
+      if(!editando) return;
+      const nuevo = prompt('Editar título:', h.titulo);
+      if(nuevo && nuevo.trim()){ h.titulo = nuevo.trim(); pintarTimeline(); guardar(); }
+    };
+    p.onclick = () => {
+      if(!editando) return;
+      const nuevo = prompt('Editar descripción:', h.desc || '');
+      if(nuevo !== null){ h.desc = nuevo.trim(); pintarTimeline(); guardar(); }
+    };
+
+    cont.appendChild(div);
+  });
+  revisarMemoria(ordenados);
+}
+
+function revisarMemoria(eventos){
+  // ¿Algún momento de la línea de tiempo cumple años hoy?
+  const hoy = new Date();
+  const banner = document.getElementById('memoriaBanner');
+  banner.style.display = 'none';
+  for(const h of eventos){
+    const [a, m, d] = h.fecha.split('-').map(Number);
+    if(m === hoy.getMonth()+1 && d === hoy.getDate() && a < hoy.getFullYear()){
+      const anios = hoy.getFullYear() - a;
+      banner.innerHTML = '&#127802; <b>Tal día como hoy</b>, hace ' + anios + (anios === 1 ? ' año' : ' años') + ': ' + h.titulo;
+      banner.style.display = 'block';
+      break;
+    }
+  }
+}
+
+function agregarHito(){
+  const titulo = prompt('¿Qué momento quieres guardar? (ej: Primer beso, Primera cita)');
+  if(!titulo || !titulo.trim()) return;
+  let fecha = prompt('¿Qué día fue? Formato AAAA-MM-DD (ej: 2026-01-14)');
+  if(!fecha || !/^\d{4}-\d{2}-\d{2}$/.test(fecha.trim())){
+    alert('La fecha tiene que ir como 2026-01-14'); return;
+  }
+  const desc = prompt('Cuéntalo en una frase (opcional):') || '';
+  datos.timeline.push({ fecha: fecha.trim(), titulo: titulo.trim(), desc: desc.trim(), foto: null });
+  pintarTimeline(); guardar();
+}
+
+function fotoParaHito(i){
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = async () => {
+    if(input.files[0]){
+      datos.timeline[i].foto = await comprimirImagen(input.files[0], 800, 0.8);
+      pintarTimeline(); guardar();
+    }
+  };
+  input.click();
+}
+pintarTimeline();
+
+/* ============================================================
+   GALERÍA DE FOTOS (con favoritas)
+   ============================================================ */
+function pintarFotos(){
+  const cont = document.getElementById('carrusel');
+  cont.innerHTML = '';
+  // Las favoritas van primero
+  const orden = [...datos.fotos.keys()].sort((a,b) => (datos.fotos[b].fav?1:0) - (datos.fotos[a].fav?1:0));
+  orden.forEach(i => {
+    const f = datos.fotos[i];
+    const fig = document.createElement('figure');
+    fig.className = 'marco' + (f.fav ? ' favorita' : '');
+
+    if(f.src){
+      const img = document.createElement('img');
+      img.className = 'foto'; img.src = f.src; img.alt = f.caption || 'Foto de nosotros';
+      fig.appendChild(img);
+    }else{
+      const div = document.createElement('div');
+      div.className = 'foto'; div.innerHTML = '&#128247;';
+      div.style.cursor = 'pointer'; div.title = 'Toca para subir esta foto';
+      div.onclick = () => reemplazarFoto(i);
+      fig.appendChild(div);
+    }
+
+    const fav = document.createElement('button');
+    fav.className = 'btn-fav'; fav.innerHTML = '&#10084;';
+    fav.title = f.fav ? 'Quitar de favoritas' : 'Marcar favorita';
+    fav.onclick = () => { f.fav = !f.fav; pintarFotos(); guardar(); };
+    fig.appendChild(fav);
+
+    const cap = document.createElement('figcaption');
+    cap.textContent = f.caption || 'Toca para escribir...';
+    cap.onclick = () => {
+      if(!editando && f.caption) return;
+      const nueva = prompt('Texto para esta foto:', f.caption || '');
+      if(nueva !== null){ f.caption = nueva.trim(); pintarFotos(); guardar(); }
+    };
+    fig.appendChild(cap);
+
+    const borrar = document.createElement('button');
+    borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;'; borrar.title = 'Quitar foto';
+    borrar.onclick = () => {
+      if(confirm('¿Quitar esta foto?')){ datos.fotos.splice(i,1); pintarFotos(); guardar(); }
+    };
+    fig.appendChild(borrar);
+
+    cont.appendChild(fig);
+  });
+}
+pintarFotos();
+
+function reemplazarFoto(indice){
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = async () => {
+    if(input.files[0]){
+      datos.fotos[indice].src = await comprimirImagen(input.files[0], 1000, 0.82);
+      pintarFotos(); guardar();
+    }
+  };
+  input.click();
+}
+
+document.getElementById('inputFotos').addEventListener('change', async e => {
+  for(const archivo of e.target.files){
+    const src = await comprimirImagen(archivo, 1000, 0.82);
+    datos.fotos.push({ src, caption: '', fav: false });
+  }
+  pintarFotos(); guardar();
+  e.target.value = '';
+});
+
+/* ============================================================
+   ANTES Y AHORA (comparador con deslizador)
+   ============================================================ */
+function pintarComparador(){
+  const cont = document.getElementById('comparador');
+  cont.innerHTML = '';
+  const { antes, ahora } = datos.antesAhora;
+  if(antes && ahora){
+    const imgAntes = document.createElement('img'); imgAntes.src = antes; imgAntes.alt = 'Antes';
+    const imgAhora = document.createElement('img'); imgAhora.src = ahora; imgAhora.alt = 'Ahora'; imgAhora.id = 'imgAhora';
+    const div = document.createElement('div'); div.className = 'divisor'; div.id = 'divisorComp';
+    const e1 = document.createElement('span'); e1.className = 'etiqueta-comp'; e1.style.left = '12px'; e1.textContent = 'Antes';
+    const e2 = document.createElement('span'); e2.className = 'etiqueta-comp'; e2.style.right = '12px'; e2.textContent = 'Ahora';
+    cont.append(imgAntes, imgAhora, div, e1, e2);
+    moverComparador(document.getElementById('rangoComp').value);
+  }else{
+    const vacio = document.createElement('div');
+    vacio.className = 'sin-fotos';
+    vacio.innerHTML = '<span style="font-size:2rem">&#128248;</span><span>Sube una foto de "antes" y una de "ahora"</span>';
+    cont.appendChild(vacio);
+  }
+}
+function moverComparador(valor){
+  const img = document.getElementById('imgAhora');
+  const div = document.getElementById('divisorComp');
+  if(img){ img.style.clipPath = 'inset(0 0 0 ' + valor + '%)'; }
+  if(div){ div.style.left = valor + '%'; }
+}
+document.getElementById('rangoComp').addEventListener('input', e => moverComparador(e.target.value));
+
+function subirComp(cual){
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = async () => {
+    if(input.files[0]){
+      datos.antesAhora[cual] = await comprimirImagen(input.files[0], 1000, 0.82);
+      pintarComparador(); guardar();
+    }
+  };
+  input.click();
+}
+pintarComparador();
+
+/* ============================================================
+   VIDEO / MOMENTOS
+   ============================================================ */
+function pintarVideo(){
+  const zona = document.getElementById('zonaVideo');
+  zona.innerHTML = '';
+  if(RUTA_VIDEO_LOCAL){
+    const v = document.createElement('video');
+    v.src = RUTA_VIDEO_LOCAL; v.controls = true;
+    zona.appendChild(v);
+  }else if(datos.videoYoutube){
+    const id = extraerYoutube(datos.videoYoutube);
+    if(id){
+      const f = document.createElement('iframe');
+      f.className = 'yt';
+      f.src = 'https://www.youtube.com/embed/' + id;
+      f.allowFullscreen = true;
+      zona.appendChild(f);
+    }
+  }else{
+    const div = document.createElement('div');
+    div.className = 'vacio';
+    div.innerHTML = '<span style="font-size:2rem">&#127909;</span><span>Aquí irá nuestro compilado de fotos y videos</span>';
+    zona.appendChild(div);
+  }
+}
+pintarVideo();
+
+function extraerYoutube(link){
+  const m = link.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([\w-]{6,})/);
+  return m ? m[1] : null;
+}
+function ponerYoutube(){
+  const link = prompt('Pega el link de YouTube del video:');
+  if(link && extraerYoutube(link)){
+    datos.videoYoutube = link.trim(); pintarVideo(); guardar();
+  }else if(link){
+    alert('Ese link no parece de YouTube, revísalo porfa.');
+  }
+}
+document.getElementById('inputVideo').addEventListener('change', e => {
+  const archivo = e.target.files[0];
+  if(!archivo) return;
+  // Muy pesado para guardar en el navegador: se ve mientras esté abierta la página.
+  const zona = document.getElementById('zonaVideo');
+  zona.innerHTML = '';
+  const v = document.createElement('video');
+  v.src = URL.createObjectURL(archivo); v.controls = true;
+  zona.appendChild(v);
+});
+
+/* ============================================================
+   MÚSICA / PLAYLIST (con canción del momento ★)
+   ============================================================ */
+function embedSpotify(link){
+  const m = (link || '').match(/open\.spotify\.com\/(intl-[a-z]+\/)?(track|playlist|album)\/([A-Za-z0-9]+)/);
+  return m ? `https://open.spotify.com/embed/${m[2]}/${m[3]}` : null;
+}
+
+function pintarCanciones(){
+  const cont = document.getElementById('listaCanciones');
+  cont.innerHTML = '';
+  // La destacada va primero
+  const orden = [...datos.canciones.keys()].sort((a,b) => (datos.canciones[b].destacada?1:0) - (datos.canciones[a].destacada?1:0));
+  orden.forEach(i => {
+    const c = datos.canciones[i];
+    const div = document.createElement('div');
+    div.className = 'cancion' + (c.destacada ? ' destacada' : '');
+
+    if(c.destacada){
+      const ins = document.createElement('span');
+      ins.className = 'insignia-momento';
+      ins.textContent = 'Canción del momento';
+      div.appendChild(ins);
+    }
+
+    const cab = document.createElement('div');
+    cab.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;gap:6px';
+
+    const info = document.createElement('div');
+    const t = document.createElement('div'); t.className = 'titulo-cancion'; t.textContent = c.titulo;
+    const a = document.createElement('div'); a.className = 'artista'; a.textContent = c.artista;
+    info.append(t, a);
+    cab.appendChild(info);
+
+    const botones = document.createElement('div');
+    const destacar = document.createElement('button');
+    destacar.className = 'btn-destacar'; destacar.innerHTML = '&#9733;';
+    destacar.title = 'Hacer canción del momento';
+    destacar.onclick = () => {
+      datos.canciones.forEach(x => x.destacada = false);
+      c.destacada = true;
+      pintarCanciones(); pintarCancionHero(); guardar();
+    };
+    const borrar = document.createElement('button');
+    borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
+    borrar.onclick = () => {
+      if(confirm('¿Quitar esta canción?')){ datos.canciones.splice(i,1); pintarCanciones(); pintarCancionHero(); guardar(); }
+    };
+    botones.append(destacar, borrar);
+    cab.appendChild(botones);
+    div.appendChild(cab);
+
+    if(c.motivo){
+      const m = document.createElement('div');
+      m.className = 'motivo'; m.textContent = '“' + c.motivo + '”';
+      div.appendChild(m);
+    }
+
+    const de = document.createElement('span');
+    de.className = 'de-quien' + (c.de === 'Catalina' ? ' catalina' : '');
+    de.textContent = 'La eligió ' + (c.de || 'Diego');
+    div.appendChild(de);
+
+    const emb = embedSpotify(c.link);
+    if(emb){
+      const f = document.createElement('iframe');
+      f.src = emb; f.allow = 'encrypted-media';
+      div.appendChild(f);
+    }else if(c.link){
+      const enlace = document.createElement('a');
+      enlace.className = 'enlace'; enlace.href = c.link;
+      enlace.target = '_blank'; enlace.rel = 'noopener';
+      enlace.textContent = 'Escuchar aquí ♪';
+      div.appendChild(document.createElement('br'));
+      div.appendChild(enlace);
+    }
+
+    cont.appendChild(div);
+  });
+}
+function pintarCancionHero(){
+  const dest = datos.canciones.find(c => c.destacada);
+  const el = document.getElementById('cancionMomentoHero');
+  if(dest){
+    el.innerHTML = '&#9835; Canción del momento: <b>' + dest.titulo + '</b>' + (dest.artista ? ' — ' + dest.artista : '');
+    el.style.display = 'inline-block';
+  }else{
+    el.style.display = 'none';
+  }
+}
+pintarCanciones();
+pintarCancionHero();
+
+function agregarCancion(){
+  const titulo = prompt('Nombre de la canción:');
+  if(!titulo || !titulo.trim()) return;
+  const artista = prompt('Artista:') || '';
+  const motivo = prompt('¿Por qué te recuerda al otro? (opcional)') || '';
+  const link = prompt('Link de Spotify, YouTube u otra plataforma (opcional):') || '';
+  const de = confirm('¿La elige Catalina? (Aceptar = Catalina, Cancelar = Diego)') ? 'Catalina' : 'Diego';
+  datos.canciones.push({ titulo: titulo.trim(), artista: artista.trim(), motivo: motivo.trim(), link: link.trim(), de, destacada: false });
+  pintarCanciones(); guardar();
+}
+
+/* ============================================================
+   FRASCO DE RECUERDOS
+   ============================================================ */
+const CATEGORIAS = ['Divertido', 'Romántico', 'Viaje', 'Sorpresa'];
+
+function pintarFrasco(){
+  const n = datos.recuerdos.length;
+  document.getElementById('tituloFrasco').textContent = n + (n === 1 ? ' recuerdo guardado' : ' recuerdos guardados');
+}
+pintarFrasco();
+
+function guardarRecuerdo(){
+  const texto = prompt('Escribe el momento feliz que quieres guardar:');
+  if(!texto || !texto.trim()) return;
+  let cat = prompt('Categoría: Divertido, Romántico, Viaje o Sorpresa', 'Romántico') || 'Romántico';
+  cat = CATEGORIAS.find(c => c.toLowerCase() === cat.trim().toLowerCase()) || 'Romántico';
+  const de = confirm('¿Lo guarda Catalina? (Aceptar = Catalina, Cancelar = Diego)') ? 'Catalina' : 'Diego';
+  const hoy = new Date();
+  const fecha = String(hoy.getDate()).padStart(2,'0') + '/' + String(hoy.getMonth()+1).padStart(2,'0') + '/' + hoy.getFullYear();
+  datos.recuerdos.push({ texto: texto.trim(), categoria: cat, de, fecha });
+  pintarFrasco(); guardar();
+  avisar('Recuerdo guardado en el frasco 🤍');
+}
+
+function sacarRecuerdo(){
+  if(!datos.recuerdos.length){ avisar('El frasco está vacío todavía'); return; }
+  const r = datos.recuerdos[Math.floor(Math.random() * datos.recuerdos.length)];
+  const zona = document.getElementById('recuerdoMostrado');
+  zona.innerHTML = '“' + r.texto + '”' +
+    '<span class="meta-recuerdo"><span class="cat-recuerdo">' + r.categoria + '</span>' +
+    'Guardado por ' + r.de + ' · ' + r.fecha + '</span>';
+  zona.style.display = 'block';
+}
+
+/* ============================================================
+   CARTAS PARA EL FUTURO (bloqueadas hasta su fecha)
+   Sirven también como cápsula del tiempo: ambos escriben y
+   se abren cuando llegue el día.
+   ============================================================ */
+function cartaAbrible(carta){
+  const [a, m, d] = carta.fecha.split('-').map(Number);
+  return new Date() >= new Date(a, m-1, d);
+}
+
+function pintarCartas(){
+  const cont = document.getElementById('listaCartas');
+  cont.innerHTML = '';
+  if(!datos.cartas.length){
+    const p = document.createElement('p');
+    p.style.cssText = 'font-weight:300;color:var(--gris)';
+    p.textContent = 'Todavía no hay cartas. Escribe la primera 💌';
+    cont.appendChild(p);
+  }
+  const ordenadas = [...datos.cartas].sort((a,b) => a.fecha.localeCompare(b.fecha));
+  ordenadas.forEach(c => {
+    const indiceReal = datos.cartas.indexOf(c);
+    const abrible = cartaAbrible(c);
+    const div = document.createElement('div');
+    div.className = 'carta ' + (abrible ? 'abierta' : 'cerrada');
+
+    const info = document.createElement('div');
+    info.className = 'info-carta';
+    const t = document.createElement('div'); t.className = 'titulo-carta'; t.textContent = c.titulo;
+    const e = document.createElement('div'); e.className = 'estado-carta';
+    e.textContent = abrible
+      ? 'Lista para abrir · de ' + c.de
+      : 'Se abre el ' + fechaBonita(c.fecha) + ' · de ' + c.de;
+    info.append(t, e);
+
+    const candado = document.createElement('span');
+    candado.className = 'candado';
+    candado.innerHTML = abrible ? '&#128140;' : '&#128274;';
+
+    const borrar = document.createElement('button');
+    borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
+    borrar.onclick = ev => {
+      ev.stopPropagation();
+      if(confirm('¿Borrar esta carta?')){ datos.cartas.splice(indiceReal,1); pintarCartas(); guardar(); }
+    };
+
+    div.append(info, candado, borrar);
+
+    div.onclick = () => {
+      if(abrible){
+        abrirModal(c.titulo, c.mensaje + '\n\n— Con amor, ' + c.de);
+      }else{
+        avisar('Paciencia 🤍 esta carta se abre el ' + fechaBonita(c.fecha));
+      }
+    };
+
+    cont.appendChild(div);
+  });
+}
+pintarCartas();
+
+function escribirCarta(){
+  const titulo = prompt('Título de la carta (ej: "Para cuando estés triste"):');
+  if(!titulo || !titulo.trim()) return;
+  const mensaje = prompt('Escribe el mensaje (quedará guardado hasta que se abra):');
+  if(!mensaje || !mensaje.trim()) return;
+  let fecha = prompt('¿Desde qué fecha se puede abrir? Formato AAAA-MM-DD\n(Si es "para cuando estés triste", pon la fecha de hoy y queda abrible siempre)');
+  if(!fecha || !/^\d{4}-\d{2}-\d{2}$/.test(fecha.trim())){
+    alert('La fecha tiene que ir como 2026-12-28'); return;
+  }
+  const de = confirm('¿La escribe Catalina? (Aceptar = Catalina, Cancelar = Diego)') ? 'Catalina' : 'Diego';
+  datos.cartas.push({ titulo: titulo.trim(), mensaje: mensaje.trim(), fecha: fecha.trim(), de });
+  pintarCartas(); guardar();
+  avisar('Carta guardada en el buzón del tiempo 💌');
+}
+
+/* ============================================================
+   MODAL GENÉRICO
+   ============================================================ */
+function abrirModal(titulo, cuerpo){
+  document.getElementById('modalTitulo').textContent = titulo;
+  document.getElementById('modalCuerpo').textContent = cuerpo;
+  document.getElementById('modal').classList.add('visible');
+}
+function cerrarModal(){
+  document.getElementById('modal').classList.remove('visible');
+}
+document.getElementById('modal').addEventListener('click', e => {
+  if(e.target.id === 'modal') cerrarModal();
+});
+
+/* ============================================================
+   LISTAS GENÉRICAS + PROGRESO
+   ============================================================ */
+const LISTAS = {
+  suenos:          { id: 'listaSuenos',          conCheck: true,  progreso: ['progSuenos','pctSuenos'] },
+  metas:           { id: 'listaMetas',           conCheck: true,  progreso: ['progMetas','pctMetas'] },
+  regalosCatalina: { id: 'listaRegalosCatalina', conCheck: false },
+  regalosDiego:    { id: 'listaRegalosDiego',    conCheck: false },
+  series:          { id: 'listaSeries',          conCheck: true },
+  lugares:         { id: 'listaLugares',         conCheck: true },
+};
+
+function pintarLista(clave){
+  const cfg = LISTAS[clave];
+  const cont = document.getElementById(cfg.id);
+  cont.innerHTML = '';
+  datos[clave].forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'item' + (item.listo ? ' listo' : '');
+
+    if(cfg.conCheck){
+      const check = document.createElement('span');
+      check.className = 'check'; check.innerHTML = '&#10003;';
+      check.title = 'Marcar como cumplido';
+      check.onclick = () => { item.listo = !item.listo; pintarLista(clave); guardar(); };
+      div.appendChild(check);
+    }else{
+      const punto = document.createElement('span');
+      punto.className = 'punto';
+      div.appendChild(punto);
+    }
+
+    const texto = document.createElement('span');
+    texto.className = 'texto'; texto.textContent = item.texto;
+    texto.onclick = () => {
+      if(!editando) return;
+      const nuevo = prompt('Editar:', item.texto);
+      if(nuevo && nuevo.trim()){ item.texto = nuevo.trim(); pintarLista(clave); guardar(); }
+    };
+    div.appendChild(texto);
+
+    const borrar = document.createElement('button');
+    borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
+    borrar.onclick = () => { datos[clave].splice(i,1); pintarLista(clave); guardar(); };
+    div.appendChild(borrar);
+
+    cont.appendChild(div);
+  });
+
+  // Barra de progreso si corresponde
+  if(cfg.progreso){
+    const total = datos[clave].length;
+    const hechos = datos[clave].filter(x => x.listo).length;
+    const pct = total ? Math.round(hechos / total * 100) : 0;
+    document.getElementById(cfg.progreso[0]).style.width = pct + '%';
+    document.getElementById(cfg.progreso[1]).textContent = hechos + ' de ' + total + ' cumplidos · ' + pct + '%';
+  }
+}
+Object.keys(LISTAS).forEach(pintarLista);
+
+function agregarItem(clave, pregunta){
+  const texto = prompt(pregunta);
+  if(texto && texto.trim()){
+    const nuevo = { texto: texto.trim() };
+    if(LISTAS[clave].conCheck) nuevo.listo = false;
+    datos[clave].push(nuevo);
+    pintarLista(clave); guardar();
+  }
+}
+
+/* ============================================================
+   PRÓXIMO PLAN (cuenta regresiva)
+   ============================================================ */
+function pintarPlan(){
+  const zona = document.getElementById('zonaPlan');
+  zona.innerHTML = '';
+  if(datos.proximoPlan){
+    const [a, m, d] = datos.proximoPlan.fecha.split('-').map(Number);
+    const objetivo = new Date(a, m-1, d);
+    const diffDias = Math.ceil((objetivo - new Date()) / 86400000);
+
+    const num = document.createElement('div');
+    num.className = 'numero-grande';
+    const nom = document.createElement('div');
+    nom.className = 'nombre-plan';
+
+    if(diffDias > 0){
+      num.textContent = diffDias;
+      nom.textContent = (diffDias === 1 ? 'día para: ' : 'días para: ') + datos.proximoPlan.nombre;
+    }else if(diffDias === 0){
+      num.innerHTML = '&#127881;';
+      nom.textContent = '¡Hoy es el día! ' + datos.proximoPlan.nombre;
+    }else{
+      num.innerHTML = '&#10084;';
+      nom.textContent = datos.proximoPlan.nombre + ' ya pasó, ¡a planear el siguiente!';
+    }
+    zona.append(num, nom);
+
+    const btn = document.createElement('button');
+    btn.className = 'boton suave chico';
+    btn.textContent = 'Cambiar plan';
+    btn.onclick = definirPlan;
+    zona.appendChild(btn);
+  }else{
+    const p = document.createElement('p');
+    p.style.cssText = 'font-weight:300;color:var(--gris)';
+    p.textContent = 'Todavía no hay un plan con fecha. ¡Pongan uno!';
+    const btn = document.createElement('button');
+    btn.className = 'boton';
+    btn.textContent = 'Definir próximo plan';
+    btn.onclick = definirPlan;
+    zona.append(p, btn);
+  }
+}
+function definirPlan(){
+  const nombre = prompt('¿Cuál es el plan? (ej: Viaje a la playa, Aniversario)');
+  if(!nombre || !nombre.trim()) return;
+  const fecha = prompt('¿Para qué fecha? Formato AAAA-MM-DD');
+  if(!fecha || !/^\d{4}-\d{2}-\d{2}$/.test(fecha.trim())){
+    alert('La fecha tiene que ir como 2026-09-15'); return;
+  }
+  datos.proximoPlan = { nombre: nombre.trim(), fecha: fecha.trim() };
+  pintarPlan(); guardar();
+}
+pintarPlan();
+setInterval(pintarPlan, 60000); // se refresca solo cada minuto
+
+/* ============================================================
+   ESTADO ACTUAL
+   (sin backend, cada dispositivo guarda el suyo)
+   ============================================================ */
+function pintarEstados(){
+  document.getElementById('estadoCatalina').innerHTML = datos.estados.Catalina || '&mdash;';
+  document.getElementById('estadoDiego').innerHTML = datos.estados.Diego || '&mdash;';
+}
+pintarEstados();
+
+function cambiarEstado(quien){
+  const opciones = ESTADOS_POSIBLES.map((e, i) => (i+1) + '. ' + e.replace(/&#\d+;|&#x[\da-f]+;/gi,'').trim()).join('\n');
+  const eleccion = prompt('Estado de ' + quien + ':\n' + opciones + '\n\nEscribe el número (1-4):');
+  const idx = parseInt(eleccion) - 1;
+  if(idx >= 0 && idx < ESTADOS_POSIBLES.length){
+    datos.estados[quien] = ESTADOS_POSIBLES[idx];
+    pintarEstados(); guardar();
+  }
+}
+
+/* ============================================================
+   PREGUNTA DEL DÍA (rota sola, una distinta cada día)
+   ============================================================ */
+document.getElementById('preguntaDia').textContent =
+  PREGUNTAS_DIA[Math.floor(Date.now() / 86400000) % PREGUNTAS_DIA.length];
+
+/* ============================================================
+   NOTAS Y TIPS
+   ============================================================ */
+let autorActual = 'Diego';
+function elegirAutor(nombre){
+  autorActual = nombre;
+  document.getElementById('chipCatalina').classList.toggle('activo', nombre === 'Catalina');
+  document.getElementById('chipDiego').classList.toggle('activo', nombre === 'Diego');
+}
+
+function pintarNotas(){
+  const cont = document.getElementById('listaNotas');
+  cont.innerHTML = '';
+  datos.notas.forEach((n, i) => {
+    const div = document.createElement('div');
+    div.className = 'nota' + (n.de === 'Catalina' ? ' catalina' : '');
+
+    const cuerpo = document.createElement('div');
+    const de = document.createElement('span');
+    de.className = 'de';
+    de.innerHTML = n.de + (n.fecha ? '<span class="fecha-nota">' + n.fecha + '</span>' : '');
+    cuerpo.appendChild(de);
+    cuerpo.appendChild(document.createTextNode(n.texto));
+    div.appendChild(cuerpo);
+
+    const borrar = document.createElement('button');
+    borrar.className = 'btn-borrar'; borrar.innerHTML = '&#10005;';
+    borrar.onclick = () => {
+      if(confirm('¿Borrar esta nota?')){ datos.notas.splice(i,1); pintarNotas(); guardar(); }
+    };
+    div.appendChild(borrar);
+
+    cont.appendChild(div);
+  });
+}
+pintarNotas();
+
+function agregarNota(){
+  const campo = document.getElementById('nuevaNota');
+  const texto = campo.value.trim();
+  if(!texto) return;
+  const hoy = new Date();
+  const fecha = String(hoy.getDate()).padStart(2,'0') + '/' + String(hoy.getMonth()+1).padStart(2,'0') + '/' + hoy.getFullYear();
+  datos.notas.push({ de: autorActual, texto, fecha });
+  campo.value = '';
+  pintarNotas(); guardar();
+}
+
+/* ============================================================
+   ESTADÍSTICAS DE LA RELACIÓN
+   ============================================================ */
+function pintarStats(){
+  const stats = [
+    [datos.fotos.filter(f => f.src).length, 'fotos'],
+    [datos.notas.length, 'notas'],
+    [datos.canciones.length, 'canciones'],
+    [datos.razones.length, 'razones'],
+    [datos.recuerdos.length, 'recuerdos'],
+    [datos.metas.filter(m => m.listo).length + datos.suenos.filter(s => s.listo).length, 'metas cumplidas'],
+    [datos.lugares.filter(l => l.listo).length, 'lugares visitados'],
+    [datos.timeline.length, 'momentos'],
+  ];
+  const cont = document.getElementById('stats');
+  cont.innerHTML = '';
+  stats.forEach(([num, lab]) => {
+    const div = document.createElement('div');
+    div.className = 'stat';
+    div.innerHTML = '<div class="num">' + num + '</div><div class="lab">' + lab + '</div>';
+    cont.appendChild(div);
+  });
+}
+pintarStats();
+
+/* ============================================================
+   GUIRNALDA FLORAL (SVG, sin imágenes externas)
+   ============================================================ */
+const florSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="90" viewBox="0 0 300 90">
+  <g opacity="0.95">
+    <ellipse cx="40" cy="30" rx="22" ry="9" fill="#8a9a7b" transform="rotate(-25 40 30)" opacity="0.8"/>
+    <ellipse cx="120" cy="18" rx="20" ry="8" fill="#9aa88c" transform="rotate(15 120 18)" opacity="0.8"/>
+    <ellipse cx="205" cy="28" rx="24" ry="9" fill="#7e8e6f" transform="rotate(-12 205 28)" opacity="0.8"/>
+    <ellipse cx="272" cy="20" rx="18" ry="7" fill="#9aa88c" transform="rotate(28 272 20)" opacity="0.8"/>
+    <g transform="translate(70,22)">
+      <circle r="20" fill="#f6f2e8"/><circle r="14" fill="#efe8d8"/><circle r="8" fill="#e4d9c0"/><circle r="3.5" fill="#d8c08f"/>
+    </g>
+    <g transform="translate(155,16)">
+      <circle r="16" fill="#fbf8f0"/><circle r="11" fill="#f1ead9"/><circle r="6" fill="#e2d6ba"/><circle r="2.5" fill="#cdb27e"/>
+    </g>
+    <g transform="translate(240,24)">
+      <circle r="19" fill="#f6f2e8"/><circle r="13" fill="#efe8d8"/><circle r="7" fill="#e4d9c0"/><circle r="3" fill="#d8c08f"/>
+    </g>
+    <g transform="translate(10,15)">
+      <circle r="12" fill="#fbf8f0"/><circle r="8" fill="#f1ead9"/><circle r="4" fill="#e2d6ba"/>
+    </g>
+    <circle cx="100" cy="10" r="2.5" fill="#d8c08f"/>
+    <circle cx="185" cy="8" r="2" fill="#d8c08f"/>
+    <circle cx="265" cy="6" r="2.5" fill="#d8c08f"/>
+    <circle cx="30" cy="6" r="2" fill="#d8c08f"/>
+    <circle cx="135" cy="34" r="2" fill="#cdb27e"/>
+    <circle cx="222" cy="40" r="2" fill="#cdb27e"/>
+  </g>
+</svg>`;
+const florURL = 'url("data:image/svg+xml,' + encodeURIComponent(florSVG) + '")';
+['g1','g2','g3'].forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.style.backgroundImage = florURL;
+});
+
+/* ============================================================
+   PÉTALOS CAYENDO (suaves, máx 10 a la vez)
+   Se desactivan solos si el sistema pide menos movimiento.
+   ============================================================ */
+const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(!reducirMovimiento){
+  setInterval(() => {
+    if(document.querySelectorAll('.petalo').length >= 10) return;
+    const p = document.createElement('div');
+    p.className = 'petalo';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (9 + Math.random() * 7) + 's';
+    p.style.transform = 'scale(' + (0.7 + Math.random() * 0.7) + ')';
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 17000);
+  }, 1800);
+}
+
+/* ============================================================
+   REVELADO SUAVE AL HACER SCROLL
+   ============================================================ */
+const observador = new IntersectionObserver(entradas => {
+  entradas.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.revelar').forEach(s => observador.observe(s));
+
+/* ============================================================
+   MÚSICA DE FONDO (botón ♪)
+   ============================================================ */
+document.getElementById('btnMusica').addEventListener('click', () => {
+  const audio = document.getElementById('cancionFondo');
+  if(!audio){
+    avisar('En VSCode descomenta el <audio> del final y agrega su mp3 🎵');
+    return;
+  }
+  if(audio.paused){ audio.play(); } else { audio.pause(); }
+});
+</script>
+</body>
+</html>
