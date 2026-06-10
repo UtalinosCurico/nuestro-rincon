@@ -411,6 +411,7 @@
   #btnEditar{bottom:86px;}
   #btnOscuro{bottom:150px;}
   body.editando #btnEditar{background:var(--dorado);color:#fff;}
+  #btnMusica.activo-musica{background:var(--dorado);color:#fff;}
   .aviso-edicion{
     position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
     background:var(--tinta);color:var(--crema);padding:10px 22px;border-radius:999px;
@@ -835,8 +836,8 @@
 <!-- Indicador de sincronización con la nube -->
 <div id="nube" aria-live="polite"></div>
 
-<!-- Canción de fondo: en VSCode descomenta y pon tu mp3 -->
-<!-- <audio id="cancionFondo" src="nuestra-cancion.mp3" loop></audio> -->
+<!-- Canción de fondo: se reproduce solo cuando tocan el botón ♪ -->
+<audio id="cancionFondo" src="assets/audio/te-quiero-tanto-kevin-kaarl.mp3" preload="none" loop></audio>
 
 <script>
 /* ============================================================
@@ -893,7 +894,7 @@ let datos = {
   ],
 
   canciones: [
-    { titulo: 'Nuestra canción', artista: 'Por definir', motivo: 'La primera que bailamos juntos', link: '', de: 'Diego', destacada: true },
+    { titulo: 'Te Quiero Tanto', artista: 'Kevin Kaarl', motivo: 'El tema de nuestra página', link: '', de: 'Diego', destacada: true },
   ],
 
   recuerdos: [
@@ -2242,14 +2243,39 @@ document.querySelectorAll('.revelar').forEach(s => observador.observe(s));
 /* ============================================================
    MÚSICA DE FONDO (botón ♪)
    ============================================================ */
-document.getElementById('btnMusica').addEventListener('click', () => {
+const btnMusica = document.getElementById('btnMusica');
+const audioFondo = document.getElementById('cancionFondo');
+
+function actualizarBotonMusica(){
+  if(!audioFondo) return;
+  btnMusica.classList.toggle('activo-musica', !audioFondo.paused);
+  btnMusica.title = audioFondo.paused ? 'Reproducir música de fondo' : 'Pausar música de fondo';
+  btnMusica.setAttribute('aria-label', btnMusica.title);
+}
+
+btnMusica.addEventListener('click', async () => {
   const audio = document.getElementById('cancionFondo');
   if(!audio){
-    avisar('En VSCode descomenta el <audio> del final y agrega su mp3 🎵');
+    avisar('No encontré la canción de fondo 🎵');
     return;
   }
-  if(audio.paused){ audio.play(); } else { audio.pause(); }
+  try{
+    if(audio.paused){
+      await audio.play();
+      avisar('Sonando: Te Quiero Tanto — Kevin Kaarl ♪');
+    }else{
+      audio.pause();
+      avisar('Música pausada');
+    }
+    actualizarBotonMusica();
+  }catch(error){
+    console.warn('No se pudo reproducir la canción:', error);
+    avisar('El navegador bloqueó el audio. Toca de nuevo el botón ♪');
+  }
 });
+audioFondo?.addEventListener('play', actualizarBotonMusica);
+audioFondo?.addEventListener('pause', actualizarBotonMusica);
+actualizarBotonMusica();
 
 /* ============================================================
    RESPALDOS: descargar / restaurar todo como archivo JSON
