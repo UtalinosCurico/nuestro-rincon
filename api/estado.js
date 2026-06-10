@@ -115,13 +115,15 @@ module.exports = async function handler(req, res) {
         LIMIT 1
       `;
       const dataActual = actuales[0]?.data || {};
-      if (JSON.stringify(dataActual) !== JSON.stringify(data)) {
+      const dataParaGuardar = { ...dataActual, ...data };
+
+      if (JSON.stringify(dataActual) !== JSON.stringify(dataParaGuardar)) {
         await crearBackupSiCorresponde(sql, dataActual);
       }
 
       const filas = await sql`
         UPDATE rincon_estado
-        SET data = ${JSON.stringify(data)}::jsonb,
+        SET data = ${JSON.stringify(dataParaGuardar)}::jsonb,
             updated_at = now()
         WHERE id = ${ESTADO_ID}
         RETURNING updated_at
