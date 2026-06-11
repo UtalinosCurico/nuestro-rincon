@@ -81,7 +81,7 @@ La pagina primero pinta sin guardar para no pisar Neon durante la carga inicial,
 
 ## Musica recomendada
 
-Para musica de fondo real, lo mas estable sigue siendo usar un archivo de audio propio en `assets/audio` y controlar el elemento `<audio>`. Spotify se debe tratar como reproductor embebido/playlist dentro de la pagina. Si se quiere reproduccion completa controlada desde la app con Spotify, se necesita OAuth + Spotify Web Playback SDK y una cuenta Spotify Premium; no es tan simple como pegar un link.
+Para musica de fondo real, lo mas estable sigue siendo usar un archivo de audio propio en `assets/audio` y controlar el elemento `<audio>`. La seccion de canciones acepta links de Apple Music y Spotify: los links de `music.apple.com` se transforman a `embed.music.apple.com` para mostrar el reproductor embebido. Si se quiere control completo de Apple Music desde botones propios, se necesita MusicKit on the Web, autorizacion del usuario y token de desarrollador de Apple; no es tan simple como pegar un link.
 
 ## Datos y sincronizacion
 
