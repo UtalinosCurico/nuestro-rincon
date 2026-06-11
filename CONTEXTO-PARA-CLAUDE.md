@@ -70,6 +70,19 @@ Se uso `D:\Usuario\Downloads\Nuestro Rincon - Mejorado v2.html` como maqueta vis
 
 No se cambio la logica de Neon, Blob, PWA, respaldos, pregunta diaria, musica, APIs ni estructura del objeto `datos`.
 
+## Pregunta del dia con respuestas
+
+La pregunta del dia ahora vive en una seccion propia, separada del buzon de amor. El objeto `datos.preguntaDia` mantiene:
+
+- `fecha`, `texto` y `usadas` para la pregunta diaria aleatoria sin repetirse.
+- `respuestas`, un objeto por fecha con las respuestas de `Catalina` y `Diego`.
+
+La pagina primero pinta sin guardar para no pisar Neon durante la carga inicial, y luego fija la pregunta si corresponde. Mantener esta precaucion si se toca `pintarPreguntaDia`.
+
+## Musica recomendada
+
+Para musica de fondo real, lo mas estable sigue siendo usar un archivo de audio propio en `assets/audio` y controlar el elemento `<audio>`. Spotify se debe tratar como reproductor embebido/playlist dentro de la pagina. Si se quiere reproduccion completa controlada desde la app con Spotify, se necesita OAuth + Spotify Web Playback SDK y una cuenta Spotify Premium; no es tan simple como pegar un link.
+
 ## Datos y sincronizacion
 
 El HTML mantiene un objeto global `datos` con toda la informacion de la pagina:

@@ -360,6 +360,18 @@
   }
   .pregunta-dia .etiqueta-p{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--dorado);display:block;margin-bottom:6px;}
   .pregunta-dia .texto-p{font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;}
+  .pregunta-dia.apartada{max-width:680px;margin:0 auto 24px;padding:24px 20px;}
+  .pregunta-dia.apartada .texto-p{display:block;font-size:clamp(1.25rem,4.5vw,1.55rem);line-height:1.45;}
+  .respuestas-pregunta{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:18px;}
+  .respuesta-pregunta{
+    background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:18px;
+    padding:18px;text-align:left;box-shadow:0 10px 28px var(--sombra);
+  }
+  .respuesta-pregunta h4{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.15rem;margin-bottom:8px;}
+  .respuesta-pregunta.catalina h4{color:var(--rosa);}
+  .respuesta-pregunta p{color:var(--gris);font-weight:300;line-height:1.55;white-space:pre-wrap;min-height:3.1em;}
+  .respuesta-pregunta.sin-respuesta p{font-style:italic;opacity:.8;}
+  .respuesta-pregunta .fecha-nota{display:block;margin-top:8px;margin-left:0;}
 
   /* ===== Notas ===== */
   .nota{
@@ -1006,12 +1018,6 @@
       </div>
     </div>
 
-    <div class="pregunta-dia">
-      <span class="etiqueta-p">Pregunta del día</span>
-      <span class="texto-p" id="preguntaDia">...</span>
-      <div id="estadoPreguntaDia" style="font-size:.85rem;color:var(--gris);margin-top:8px">Respóndanla en una nota aquí abajo &#11015;&#65039;</div>
-    </div>
-
     <div class="tarjeta">
       <div class="icono" aria-hidden="true">&#128140;</div>
       <h3>Buzón de amor</h3>
@@ -1026,8 +1032,35 @@
   </div>
 </section>
 
-<!-- ============ ESTADÍSTICAS ============ -->
+<!-- ============ PREGUNTA DEL DIA ============ -->
 <section class="revelar" style="background:var(--crema-oscuro)">
+  <div class="seccion-interna ancha">
+    <h2 class="titulo-seccion">Pregunta del d&iacute;a</h2>
+    <p class="bajada">Una conversaci&oacute;n distinta cada d&iacute;a, con la respuesta de cada uno guardada aparte</p>
+    <div class="pregunta-dia apartada">
+      <span class="etiqueta-p">Hoy toca responder</span>
+      <span class="texto-p" id="preguntaDia">...</span>
+      <div id="estadoPreguntaDia" style="font-size:.85rem;color:var(--gris);margin-top:10px"></div>
+    </div>
+    <div class="respuestas-pregunta" id="respuestasPreguntaDia">
+      <div class="respuesta-pregunta catalina sin-respuesta" id="cardRespuestaCatalina">
+        <h4>Catalina</h4>
+        <p id="respuestaPreguntaCatalina">A&uacute;n no responde.</p>
+        <span class="fecha-nota" id="fechaRespuestaCatalina"></span>
+        <button class="boton chico suave" onclick="responderPreguntaDia('Catalina')">Responder Catalina</button>
+      </div>
+      <div class="respuesta-pregunta sin-respuesta" id="cardRespuestaDiego">
+        <h4>Diego</h4>
+        <p id="respuestaPreguntaDiego">A&uacute;n no responde.</p>
+        <span class="fecha-nota" id="fechaRespuestaDiego"></span>
+        <button class="boton chico suave" onclick="responderPreguntaDia('Diego')">Responder Diego</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ESTADÍSTICAS ============ -->
+<section class="revelar">
   <div class="seccion-interna ancha">
     <h2 class="titulo-seccion">Nuestra relación en números</h2>
     <p class="bajada">Todo lo que hemos guardado aquí</p>
@@ -1366,7 +1399,7 @@ let datos = {
   ],
 
   estados: { Catalina: 'Pensando en ti &#10084;&#65039;', Diego: 'Pensando en ti &#10084;&#65039;' },
-  preguntaDia: { fecha: null, texto: null, usadas: [] },
+  preguntaDia: { fecha: null, texto: null, usadas: [], respuestas: {} },
 
   notas: [
     { de: 'Diego', texto: 'Cada flor que veas hoy, imagina que te la regalé yo.', fecha: '28/12/2025' },
@@ -2709,7 +2742,10 @@ function indiceAleatorio(max){
 
 function normalizarPreguntaDia(){
   if(!datos.preguntaDia || typeof datos.preguntaDia !== 'object'){
-    datos.preguntaDia = { fecha: null, texto: null, usadas: [] };
+    datos.preguntaDia = { fecha: null, texto: null, usadas: [], respuestas: {} };
+  }
+  if(!datos.preguntaDia.respuestas || typeof datos.preguntaDia.respuestas !== 'object' || Array.isArray(datos.preguntaDia.respuestas)){
+    datos.preguntaDia.respuestas = {};
   }
   const vistas = new Set();
   datos.preguntaDia.usadas = (Array.isArray(datos.preguntaDia.usadas) ? datos.preguntaDia.usadas : [])
@@ -2725,6 +2761,49 @@ function normalizarPreguntaDia(){
   }
 }
 
+function asegurarRespuestaPreguntaActual(){
+  normalizarPreguntaDia();
+  if(!datos.preguntaDia.fecha || !datos.preguntaDia.texto) return null;
+  const clave = datos.preguntaDia.fecha;
+  if(!datos.preguntaDia.respuestas[clave] || typeof datos.preguntaDia.respuestas[clave] !== 'object'){
+    datos.preguntaDia.respuestas[clave] = {
+      pregunta: datos.preguntaDia.texto,
+      Catalina: '',
+      Diego: '',
+      actualizadoCatalina: '',
+      actualizadoDiego: '',
+    };
+  }
+  const registro = datos.preguntaDia.respuestas[clave];
+  if(!registro.pregunta) registro.pregunta = datos.preguntaDia.texto;
+  if(typeof registro.Catalina !== 'string') registro.Catalina = '';
+  if(typeof registro.Diego !== 'string') registro.Diego = '';
+  if(typeof registro.actualizadoCatalina !== 'string') registro.actualizadoCatalina = '';
+  if(typeof registro.actualizadoDiego !== 'string') registro.actualizadoDiego = '';
+  return registro;
+}
+
+function fechaRespuestaCorta(){
+  const h = new Date();
+  return String(h.getDate()).padStart(2,'0') + '/' + String(h.getMonth()+1).padStart(2,'0') + '/' + h.getFullYear() +
+    ' ' + String(h.getHours()).padStart(2,'0') + ':' + String(h.getMinutes()).padStart(2,'0');
+}
+
+function pintarRespuestasPreguntaDia(){
+  const registro = asegurarRespuestaPreguntaActual();
+  ['Catalina','Diego'].forEach(quien => {
+    const textoEl = document.getElementById('respuestaPregunta' + quien);
+    const cardEl = document.getElementById('cardRespuesta' + quien);
+    const fechaEl = document.getElementById('fechaRespuesta' + quien);
+    if(!textoEl || !cardEl || !fechaEl) return;
+    const respuesta = registro ? registro[quien] : '';
+    const fecha = registro ? registro['actualizado' + quien] : '';
+    cardEl.classList.toggle('sin-respuesta', !respuesta);
+    textoEl.textContent = respuesta || 'Aun no responde.';
+    fechaEl.textContent = fecha ? 'Ultima respuesta: ' + fecha : '';
+  });
+}
+
 function elegirPreguntaNueva(){
   normalizarPreguntaDia();
   const usadas = new Set(datos.preguntaDia.usadas);
@@ -2732,11 +2811,14 @@ function elegirPreguntaNueva(){
   if(!disponibles.length) return null;
   const texto = disponibles[indiceAleatorio(disponibles.length)];
   usadas.add(texto);
+  const respuestas = datos.preguntaDia.respuestas;
   datos.preguntaDia = {
     fecha: fechaHoyClave(),
     texto,
     usadas: [...usadas],
+    respuestas,
   };
+  asegurarRespuestaPreguntaActual();
   return texto;
 }
 
@@ -2763,17 +2845,42 @@ function pintarPreguntaDia(opciones = {}){
 
   if(texto){
     preguntaEl.textContent = texto;
+    asegurarRespuestaPreguntaActual();
+    pintarRespuestasPreguntaDia();
     const restantes = Math.max(0, PREGUNTAS_DIA.length - datos.preguntaDia.usadas.length);
     estadoEl.textContent = 'Aleatoria y sin repetir · quedan ' + restantes + ' preguntas nuevas';
   }else{
     preguntaEl.textContent = 'Ya respondieron todas las preguntas sin repetir.';
-    estadoEl.textContent = 'Agreguen más preguntas al banco para seguir con una nueva cada día.';
+    pintarRespuestasPreguntaDia();
+    estadoEl.textContent = 'Agreguen mas preguntas al banco para seguir con una nueva cada dia.';
   }
 
   if(cambio && guardarSiCambia) guardar();
 }
 
+async function responderPreguntaDia(quien){
+  let textoPregunta = datos.preguntaDia.fecha === fechaHoyClave() ? datos.preguntaDia.texto : null;
+  if(!textoPregunta) textoPregunta = elegirPreguntaNueva();
+  if(!textoPregunta){
+    avisar('Ya respondieron todo el banco de preguntas');
+    pintarPreguntaDia();
+    return;
+  }
+  const registro = asegurarRespuestaPreguntaActual();
+  const r = await pedirFormulario('Respuesta de ' + quien, [
+    { nombre: 'respuesta', etiqueta: 'Pregunta: ' + textoPregunta, tipo: 'textarea', filas: 5,
+      valor: registro[quien] || '', requerido: true,
+      placeholder: 'Escribe aqui la respuesta de ' + quien + '...' },
+  ], { textoOk: 'Guardar respuesta' });
+  if(!r) return;
+  registro[quien] = r.respuesta;
+  registro['actualizado' + quien] = fechaRespuestaCorta();
+  pintarPreguntaDia();
+  guardar();
+}
+
 pintarPreguntaDia({ guardarSiCambia: false });
+setTimeout(() => pintarPreguntaDia(), 1500);
 setInterval(() => pintarPreguntaDia(), 60000);
 
 /* ============================================================
