@@ -59,6 +59,17 @@ nuestro-rincon/
   CONTEXTO-PARA-CLAUDE.md
 ```
 
+## Cambios visuales aplicados desde Claude Design
+
+Se uso `D:\Usuario\Downloads\Nuestro Rincon - Mejorado v2.html` como maqueta visual, no como reemplazo de la app. Se copiaron mejoras de apariencia en `index.html` y se sincronizo `catalina-y-diego.html`:
+
+- luces suaves en el hero, brillo del boton de entrada y anillo animado del `&`;
+- mejor espaciado de secciones, titulos, bajadas y contador;
+- tarjetas, botones, inputs, fotos, canciones, notas, estados y pregunta del dia mas pulidos;
+- ajuste mobile para que la pastilla de cancion respire mejor junto a los botones flotantes.
+
+No se cambio la logica de Neon, Blob, PWA, respaldos, pregunta diaria, musica, APIs ni estructura del objeto `datos`.
+
 ## Datos y sincronizacion
 
 El HTML mantiene un objeto global `datos` con toda la informacion de la pagina:
