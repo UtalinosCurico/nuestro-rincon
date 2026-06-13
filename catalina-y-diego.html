@@ -665,113 +665,275 @@
   .petalo.rosa{background:linear-gradient(135deg,#f4dce1,#e4bac4);}
   .petalo.dorado{background:linear-gradient(135deg,#eedfba,#d8c08f);}
 
-
   /* ===== Rincón de juegos ===== */
   .juegos-seccion{background:var(--crema);}
-  .jx-wrap{max-width:760px;margin:0 auto;}
-  .jx-mascota-panel{
-    display:flex;gap:22px;flex-wrap:wrap;align-items:center;justify-content:center;
-    background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:24px;
-    padding:22px;margin:0 auto 28px;max-width:560px;
-    box-shadow:0 1px 2px var(--sombra-tenue),0 16px 40px var(--sombra);
+
+  /* Tarjeta lanzadora en la página */
+  .jx-launch{
+    display:flex;align-items:center;gap:18px;width:100%;max-width:460px;margin:8px auto 0;
+    background:linear-gradient(135deg,var(--blanco),var(--crema));
+    border:1px solid var(--crema-oscuro);border-radius:26px;padding:18px;cursor:pointer;
+    box-shadow:0 1px 2px var(--sombra-tenue),0 18px 44px var(--sombra);
+    transition:transform .18s ease, box-shadow .25s ease;text-align:left;font-family:inherit;color:inherit;
+    position:relative;overflow:hidden;
   }
-  .jx-escena{
-    position:relative;width:180px;height:180px;border-radius:22px;overflow:hidden;
-    flex-shrink:0;display:flex;align-items:flex-end;justify-content:center;
-    box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);
+  .jx-launch::after{
+    content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);
+    transform:skewX(-18deg);transition:left .6s ease;
+  }
+  .jx-launch:hover{transform:translateY(-3px);box-shadow:0 1px 2px var(--sombra-tenue),0 24px 54px var(--sombra);}
+  .jx-launch:hover::after{left:130%;}
+  .jx-launch:active{transform:translateY(-1px) scale(.99);}
+  .jx-launch-escena{
+    width:96px;height:96px;border-radius:20px;flex-shrink:0;position:relative;overflow:hidden;
+    display:flex;align-items:flex-end;justify-content:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);
     background:linear-gradient(180deg,#dff0d8,#bcd9a3);
   }
-  .jx-escena svg{width:80%;height:80%;margin-bottom:4%;position:relative;z-index:2;filter:drop-shadow(0 6px 10px rgba(0,0,0,.18));}
-  .jx-acc{position:absolute;z-index:3;font-size:2.3rem;line-height:1;pointer-events:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28));}
-  .jx-acc.arriba{top:6%;left:50%;transform:translateX(-50%);}
-  .jx-acc.ojos{top:43%;left:50%;transform:translate(-50%,-50%);font-size:1.9rem;}
-  .jx-acc.cuello{top:73%;left:50%;transform:translate(-50%,-50%);font-size:2rem;}
-  .jx-info{flex:1;min-width:200px;text-align:left;}
-  .jx-nombre{font-family:'Playfair Display',serif;font-size:1.55rem;color:var(--dorado);}
-  .jx-nivel{color:var(--gris);font-weight:300;margin:2px 0 9px;font-size:.95rem;}
-  .jx-xpbar{height:8px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;max-width:240px;}
-  .jx-xpbar > div{height:100%;width:0;background:linear-gradient(90deg,var(--dorado-claro),var(--dorado));transition:width .5s ease;}
-  .jx-monedas{font-family:'Playfair Display',serif;font-size:1.3rem;margin:12px 0;}
-  .jx-acciones{display:flex;gap:10px;flex-wrap:wrap;}
-  .jx-acciones .boton{margin-top:0;}
-
-  .jx-tabs{display:flex;gap:10px;justify-content:center;margin:0 0 22px;flex-wrap:wrap;}
-  .jx-tab{
-    border:1.5px solid var(--dorado-claro);background:var(--blanco);color:var(--tinta);
-    border-radius:999px;padding:10px 28px;cursor:pointer;font-family:'Jost',sans-serif;font-size:.98rem;
-    transition:all .2s;
+  .jx-launch-escena svg{width:82%;height:82%;margin-bottom:3%;animation:jxBob 3.4s ease-in-out infinite;}
+  .jx-launch-info{flex:1;min-width:0;}
+  .jx-launch-nombre{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--dorado);line-height:1.1;}
+  .jx-launch-sub{color:var(--gris);font-weight:300;font-size:.92rem;margin:3px 0 12px;}
+  .jx-launch-cta{
+    display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--dorado),var(--rosa));
+    color:#fff;border-radius:999px;padding:9px 22px;font-family:'Playfair Display',serif;font-size:1rem;
+    box-shadow:0 8px 20px rgba(201,142,155,.35);
   }
-  .jx-tab.activo{background:var(--dorado);color:#fff;border-color:var(--dorado);}
+  @keyframes jxBob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-5px) rotate(-1.5deg)}}
 
-  .jx-panel{
-    background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:24px;
-    padding:24px 20px;max-width:560px;margin:0 auto;
-    box-shadow:0 1px 2px var(--sombra-tenue),0 16px 40px var(--sombra);
+  /* ===== Consola a pantalla completa ===== */
+  #jxApp{position:fixed;inset:0;z-index:160;display:none;}
+  #jxApp.abierta{display:block;animation:jxAppIn .32s ease;}
+  @keyframes jxAppIn{from{opacity:0}to{opacity:1}}
+  .jx-app-bg{position:absolute;inset:0;background:
+    radial-gradient(120% 80% at 80% -10%, rgba(216,192,143,.30), transparent 60%),
+    radial-gradient(120% 80% at -10% 110%, rgba(201,142,155,.28), transparent 60%),
+    linear-gradient(180deg,var(--crema),var(--crema-oscuro));}
+  body.oscuro .jx-app-bg{background:
+    radial-gradient(120% 80% at 80% -10%, rgba(207,174,110,.20), transparent 60%),
+    radial-gradient(120% 80% at -10% 110%, rgba(216,162,175,.18), transparent 60%),
+    linear-gradient(180deg,#211f1a,#1a1813);}
+  .jx-app-frame{position:relative;height:100%;display:flex;flex-direction:column;max-width:560px;margin:0 auto;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);}
+
+  .jx-app-top{
+    display:flex;align-items:center;gap:12px;padding:14px 16px 10px;flex-shrink:0;
   }
-  .jx-panel.oculto{display:none;}
-  .jx-dificultad{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px;}
-  .jx-dif{border:1.5px solid var(--dorado-claro);background:var(--crema);color:var(--tinta);border-radius:999px;padding:8px 18px;cursor:pointer;font-size:.88rem;font-family:'Jost',sans-serif;transition:all .2s;}
-  .jx-dif.activo{background:var(--rosa);color:#fff;border-color:var(--rosa);}
-  .jx-barra-juego{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0;color:var(--gris);font-weight:300;font-size:.9rem;flex-wrap:wrap;}
-  .jx-barra-juego span:last-child{font-variant-numeric:tabular-nums;}
+  .jx-icon-btn{
+    width:42px;height:42px;border-radius:14px;border:1px solid var(--crema-oscuro);
+    background:var(--blanco);color:var(--tinta);font-size:1.5rem;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px var(--sombra);
+    transition:transform .15s, background .2s;
+  }
+  .jx-icon-btn:hover{background:var(--crema-oscuro);}
+  .jx-icon-btn:active{transform:scale(.92);}
+  .jx-app-title{flex:1;text-align:center;font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--dorado);font-weight:600;}
+  .jx-coins{
+    display:flex;align-items:center;gap:6px;background:var(--blanco);border:1px solid var(--dorado-claro);
+    border-radius:999px;padding:8px 14px;font-family:'Playfair Display',serif;font-weight:700;color:var(--tinta);
+    box-shadow:0 4px 12px var(--sombra);font-variant-numeric:tabular-nums;
+  }
+  .jx-coins.bump{animation:jxBump .4s ease;}
+  @keyframes jxBump{0%,100%{transform:none}40%{transform:scale(1.22)}}
+  .jx-coin{display:inline-block;}
 
-  /* Sudoku */
-  .jx-sudoku{display:grid;grid-template-columns:repeat(9,1fr);gap:1px;background:var(--dorado);
-    border:2px solid var(--dorado);border-radius:10px;overflow:hidden;max-width:430px;margin:0 auto;aspect-ratio:1;}
+  .jx-screens{flex:1;position:relative;overflow:hidden;}
+  .jx-screen{
+    position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:6px 16px 28px;
+    opacity:0;visibility:hidden;transform:translateX(28px);
+    transition:opacity .28s ease, transform .28s ease, visibility .28s;
+    -webkit-overflow-scrolling:touch;
+  }
+  .jx-screen.activa{opacity:1;visibility:visible;transform:none;}
+  .jx-screen.saliendo-izq{transform:translateX(-28px);}
+
+  /* ===== HUB ===== */
+  .jx-pet-stage{
+    position:relative;border-radius:24px;overflow:hidden;padding:18px;
+    background:linear-gradient(180deg,#dff0d8,#bcd9a3);
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.06),0 14px 34px var(--sombra);
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+  }
+  .jx-pet-holder{position:relative;width:160px;height:160px;display:flex;align-items:flex-end;justify-content:center;cursor:pointer;}
+  .jx-pet-holder svg{width:84%;height:84%;margin-bottom:4%;filter:drop-shadow(0 8px 12px rgba(0,0,0,.2));animation:jxBob 3.6s ease-in-out infinite;}
+  .jx-pet-holder.feliz svg{animation:jxJump .7s ease;}
+  @keyframes jxJump{0%,100%{transform:translateY(0)}30%{transform:translateY(-26px) rotate(-5deg)}55%{transform:translateY(-6px) rotate(4deg)}}
+  .jx-acc{position:absolute;z-index:3;line-height:1;pointer-events:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28));}
+  .jx-acc.arriba{top:4%;left:50%;transform:translateX(-50%);font-size:2.5rem;}
+  .jx-acc.ojos{top:42%;left:50%;transform:translate(-50%,-50%);font-size:2rem;}
+  .jx-acc.cuello{top:72%;left:50%;transform:translate(-50%,-50%);font-size:2.1rem;}
+  .jx-pet-edit{position:absolute;right:14px;top:14px;background:rgba(255,255,255,.85);border:none;border-radius:999px;padding:7px 14px;font-size:.82rem;cursor:pointer;color:var(--tinta);box-shadow:0 4px 10px rgba(0,0,0,.12);}
+  .jx-pet-nombre{font-family:'Playfair Display',serif;font-size:1.5rem;color:#3d3a33;margin-top:6px;}
+  .jx-pet-titulo{color:#5a604f;font-size:.86rem;letter-spacing:1px;text-transform:uppercase;}
+  .jx-xp{width:min(240px,80%);height:9px;background:rgba(255,255,255,.55);border-radius:999px;overflow:hidden;margin:10px 0 4px;}
+  .jx-xp > div{height:100%;width:0;background:linear-gradient(90deg,#f4d58a,#b9985a);border-radius:999px;transition:width .6s cubic-bezier(.22,1,.36,1);}
+  .jx-xp-tag{font-size:.78rem;color:#5a604f;}
+
+  .jx-daily{
+    display:flex;align-items:center;gap:14px;margin:18px 0;padding:16px 18px;border-radius:20px;
+    background:var(--blanco);border:1px solid var(--crema-oscuro);box-shadow:0 10px 26px var(--sombra);
+  }
+  .jx-daily.listo{border-color:var(--dorado);box-shadow:0 0 0 2px rgba(216,192,143,.4),0 12px 28px var(--sombra);}
+  .jx-daily-emo{font-size:2.2rem;}
+  .jx-daily.listo .jx-daily-emo{animation:jxWobble 1.6s ease-in-out infinite;}
+  @keyframes jxWobble{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}75%{transform:rotate(9deg)}}
+  .jx-daily-txt{flex:1;text-align:left;}
+  .jx-daily-txt b{font-family:'Playfair Display',serif;color:var(--dorado);}
+  .jx-daily-txt small{display:block;color:var(--gris);font-weight:300;font-size:.82rem;margin-top:2px;}
+
+  .jx-sec-tit{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.05rem;margin:6px 2px 12px;text-align:left;}
+  .jx-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .jx-card{
+    position:relative;border:none;cursor:pointer;border-radius:22px;padding:18px 16px 16px;text-align:left;
+    color:#fff;overflow:hidden;font-family:inherit;
+    box-shadow:0 12px 28px var(--sombra);transition:transform .16s ease, box-shadow .25s ease;
+    min-height:148px;display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .jx-card:active{transform:scale(.97);}
+  .jx-card:hover{transform:translateY(-3px);box-shadow:0 18px 38px var(--sombra);}
+  .jx-card.full{grid-column:1 / -1;min-height:96px;flex-direction:row;align-items:center;gap:14px;}
+  .jx-card-emo{font-size:2.4rem;filter:drop-shadow(0 3px 5px rgba(0,0,0,.25));}
+  .jx-card-nom{font-family:'Playfair Display',serif;font-size:1.3rem;line-height:1.1;margin-top:8px;}
+  .jx-card.full .jx-card-nom{margin-top:0;}
+  .jx-card-desc{font-size:.8rem;opacity:.92;font-weight:300;margin-top:3px;}
+  .jx-card-stat{font-size:.74rem;background:rgba(255,255,255,.25);border-radius:999px;padding:3px 10px;align-self:flex-start;margin-top:10px;}
+  .jx-card .sheen{position:absolute;inset:0;background:radial-gradient(120% 80% at 85% 0%,rgba(255,255,255,.35),transparent 55%);pointer-events:none;}
+  .jx-card.sudoku{background:linear-gradient(150deg,#8a9a7b,#5f6655);}
+  .jx-card.zip{background:linear-gradient(150deg,#c98e9b,#a56b86);}
+  .jx-card.closet{background:linear-gradient(150deg,#d8b673,#b9985a);}
+
+  .jx-mini-stats{display:flex;gap:10px;margin-top:18px;}
+  .jx-mini{flex:1;background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:16px;padding:12px;text-align:center;box-shadow:0 6px 16px var(--sombra);}
+  .jx-mini .n{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--dorado);}
+  .jx-mini .l{font-size:.7rem;color:var(--gris);letter-spacing:1px;text-transform:uppercase;}
+
+  /* ===== Controles de juego ===== */
+  .jx-seg{display:inline-flex;background:var(--crema-oscuro);border-radius:999px;padding:4px;gap:4px;margin:0 auto 14px;}
+  .jx-seg button{
+    border:none;background:none;color:var(--gris);border-radius:999px;padding:8px 18px;cursor:pointer;
+    font-family:'Jost',sans-serif;font-size:.88rem;transition:all .2s;white-space:nowrap;
+  }
+  .jx-seg button.activo{background:var(--blanco);color:var(--tinta);box-shadow:0 3px 10px var(--sombra);font-weight:500;}
+  .jx-juego-top{display:flex;justify-content:center;}
+  .jx-hud{display:flex;justify-content:center;gap:10px;margin:4px 0 14px;flex-wrap:wrap;}
+  .jx-hud .pill{
+    display:flex;align-items:center;gap:6px;background:var(--blanco);border:1px solid var(--crema-oscuro);
+    border-radius:999px;padding:6px 14px;font-size:.84rem;color:var(--tinta);font-variant-numeric:tabular-nums;
+    box-shadow:0 4px 10px var(--sombra-tenue);
+  }
+  .jx-board-wrap{display:flex;justify-content:center;}
+  .jx-ctrl{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap;}
+  .jx-btn{
+    border:none;border-radius:14px;padding:12px 22px;cursor:pointer;font-family:'Playfair Display',serif;
+    font-size:.98rem;background:var(--dorado);color:#fff;box-shadow:0 8px 18px rgba(185,152,90,.3);
+    transition:transform .14s, box-shadow .2s, background .2s;
+  }
+  .jx-btn:active{transform:scale(.96);}
+  .jx-btn.ghost{background:var(--blanco);color:var(--tinta);border:1px solid var(--dorado-claro);box-shadow:none;}
+  .jx-btn.rosa{background:linear-gradient(135deg,var(--rosa),#b87a88);box-shadow:0 8px 18px rgba(201,142,155,.32);}
+  .jx-tip{text-align:center;color:var(--gris);font-weight:300;font-size:.86rem;margin:0 auto 8px;max-width:340px;line-height:1.45;}
+
+  /* ===== Sudoku ===== */
+  .jx-sudoku{
+    width:min(94vw,440px);aspect-ratio:1;display:grid;grid-template-columns:repeat(9,1fr);
+    background:var(--blanco);border-radius:14px;overflow:hidden;
+    box-shadow:0 0 0 3px var(--dorado),0 16px 40px var(--sombra);
+  }
   .jx-sc{
-    background:var(--crema);display:flex;align-items:center;justify-content:center;
-    font-family:'Playfair Display',serif;font-size:clamp(1rem,4.6vw,1.5rem);cursor:pointer;
-    user-select:none;color:var(--dorado);transition:background .12s;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;
+    font-family:'Playfair Display',serif;font-size:clamp(1.05rem,5vw,1.5rem);color:var(--dorado);
+    border-right:1px solid var(--crema-oscuro);border-bottom:1px solid var(--crema-oscuro);
+    background:var(--crema);transition:background .12s;position:relative;
   }
+  .jx-sc.cr2{border-right:2.5px solid var(--dorado);}
+  .jx-sc.cb2{border-bottom:2.5px solid var(--dorado);}
   .jx-sc.fija{color:var(--tinta);font-weight:700;background:var(--crema-oscuro);cursor:default;}
-  .jx-sc.sel{background:var(--rosa-claro);}
-  .jx-sc.par{background:rgba(185,152,90,.14);}
-  .jx-sc.error{color:#c0392b;background:#f7dada;}
-  .jx-sc.bd-r{box-shadow:inset -2px 0 0 var(--dorado);}
-  .jx-sc.bd-b{box-shadow:inset 0 -2px 0 var(--dorado);}
-  .jx-sc.bd-rb{box-shadow:inset -2px 0 0 var(--dorado),inset 0 -2px 0 var(--dorado);}
-  .jx-num{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:430px;margin:16px auto 0;}
-  .jx-num button{
-    border:1px solid var(--dorado-claro);background:var(--crema);color:var(--tinta);
-    border-radius:12px;padding:12px 0;font-family:'Playfair Display',serif;font-size:1.2rem;cursor:pointer;transition:all .15s;
+  .jx-sc.par{background:rgba(216,192,143,.20);}
+  .jx-sc.mismo{background:rgba(201,142,155,.22);}
+  .jx-sc.sel{background:var(--rosa-claro);box-shadow:inset 0 0 0 2px var(--rosa);z-index:1;}
+  .jx-sc.error{color:#c0392b;animation:jxShake .3s ease;}
+  @keyframes jxShake{0%,100%{transform:none}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+  .jx-pad{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;width:min(94vw,440px);margin:14px auto 0;}
+  .jx-pad button{
+    position:relative;border:1px solid var(--dorado-claro);background:var(--blanco);color:var(--tinta);
+    border-radius:12px;padding:10px 0;font-family:'Playfair Display',serif;font-size:1.15rem;cursor:pointer;
+    transition:transform .12s, background .15s;
   }
-  .jx-num button:hover{background:var(--dorado);color:#fff;}
-  .jx-num button.borrar{font-size:.92rem;font-family:'Jost',sans-serif;}
-  .jx-sudoku-ctrl{text-align:center;margin-top:16px;}
+  .jx-pad button:active{transform:scale(.9);background:var(--dorado);color:#fff;}
+  .jx-pad button.lleno{opacity:.32;pointer-events:none;}
+  .jx-pad button .cnt{position:absolute;top:2px;right:5px;font-size:.6rem;color:var(--gris);font-family:'Jost',sans-serif;}
+  .jx-pad2{display:flex;gap:8px;width:min(94vw,440px);margin:8px auto 0;}
+  .jx-pad2 button{flex:1;border:1px solid var(--dorado-claro);background:var(--crema);border-radius:12px;padding:11px 0;cursor:pointer;font-family:'Jost',sans-serif;font-size:.92rem;color:var(--tinta);transition:transform .12s;}
+  .jx-pad2 button:active{transform:scale(.95);}
 
-  /* Zip */
-  .jx-zip{position:relative;margin:0 auto;touch-action:none;width:min(92vw,420px);aspect-ratio:1;}
-  .jx-zip-grid{display:grid;gap:6px;width:100%;height:100%;position:relative;z-index:1;}
+  /* ===== Zip ===== */
+  .jx-zip{position:relative;width:min(94vw,440px);aspect-ratio:1;margin:0 auto;touch-action:none;}
+  .jx-zip-grid{position:relative;display:grid;gap:clamp(5px,1.6vw,9px);width:100%;height:100%;z-index:1;}
   .jx-zc{
-    background:var(--crema);border:1px solid var(--crema-oscuro);border-radius:12px;
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(1rem,5vw,1.5rem);
-    color:var(--dorado);user-select:none;transition:background .12s;
+    position:relative;background:var(--blanco);border-radius:16px;
+    box-shadow:inset 0 0 0 1.5px var(--crema-oscuro);
+    display:flex;align-items:center;justify-content:center;user-select:none;
+    transition:box-shadow .15s, background .15s;
   }
-  .jx-zc.num{background:var(--blanco);box-shadow:inset 0 0 0 2px var(--dorado-claro);}
-  .jx-zc.en-ruta{background:var(--rosa-claro);}
-  .jx-zc.inicio{box-shadow:inset 0 0 0 2px var(--rosa);}
-  .jx-zip svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;}
-  .jx-zip-ctrl{text-align:center;margin-top:14px;}
-
-  /* Tienda */
-  .jx-tienda-cat{margin-top:6px;}
-  .jx-tienda-cat h4{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1rem;letter-spacing:1px;margin:16px 0 8px;text-align:left;}
-  .jx-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:10px;}
-  .jx-item{
-    border:1.5px solid var(--crema-oscuro);border-radius:16px;padding:12px 8px;text-align:center;cursor:pointer;
-    background:var(--crema);transition:border-color .2s,transform .12s;
+  .jx-zc.en-ruta{background:var(--rosa-claro);box-shadow:inset 0 0 0 1.5px var(--rosa-claro);}
+  .jx-zc .nbadge{
+    width:74%;height:74%;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(1rem,5.4vw,1.6rem);
+    background:var(--blanco);color:var(--dorado);box-shadow:0 4px 10px var(--sombra),inset 0 0 0 2px var(--dorado-claro);
+    z-index:2;position:relative;
   }
-  .jx-item:hover{border-color:var(--dorado);transform:translateY(-2px);}
-  .jx-item.equipado{border-color:var(--rosa);box-shadow:0 0 0 2px var(--rosa-claro);}
-  .jx-item .em{font-size:2rem;}
-  .jx-item .nm{font-size:.78rem;color:var(--gris);margin-top:4px;}
-  .jx-item .pr{font-size:.8rem;color:var(--dorado);font-weight:600;margin-top:4px;}
-  .jx-item .pr.tiene{color:var(--verde);}
-  .jx-feliz{animation:jxBrinco .6s ease;}
-  @keyframes jxBrinco{0%,100%{transform:none}30%{transform:translateY(-12px) rotate(-4deg)}60%{transform:translateY(-4px) rotate(3deg)}}
+  .jx-zc.num.en-ruta .nbadge{background:var(--dorado);color:#fff;box-shadow:0 4px 12px rgba(185,152,90,.45);}
+  .jx-zc.inicio .nbadge{box-shadow:0 4px 12px rgba(201,142,155,.5),inset 0 0 0 2px var(--rosa);color:var(--rosa);}
+  .jx-zc.inicio.en-ruta .nbadge{background:var(--rosa);color:#fff;}
+  .jx-zip-svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:visible;}
 
+  /* ===== Celebración + confeti ===== */
+  #jxConfeti{position:absolute;inset:0;width:100%;height:100%;z-index:7;pointer-events:none;display:none;}
+  #jxConfeti.on{display:block;}
+  .jx-celebra{
+    position:absolute;inset:0;z-index:6;display:none;align-items:center;justify-content:center;padding:24px;
+    background:rgba(40,42,34,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  }
+  .jx-celebra.on{display:flex;animation:jxAppIn .25s ease;}
+  .jx-celebra-caja{
+    background:var(--blanco);border-radius:26px;padding:30px 26px;text-align:center;max-width:340px;width:100%;
+    box-shadow:0 30px 70px rgba(0,0,0,.35);animation:jxPop .4s cubic-bezier(.2,1.1,.5,1) both;
+  }
+  @keyframes jxPop{from{transform:scale(.8);opacity:0}to{transform:none;opacity:1}}
+  .jx-celebra-gato{width:120px;height:120px;margin:0 auto;display:flex;align-items:flex-end;justify-content:center;position:relative;}
+  .jx-celebra-gato svg{width:100%;height:100%;animation:jxJump .8s ease infinite;}
+  .jx-celebra-caja h3{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.6rem;margin:6px 0 4px;}
+  .jx-celebra-caja p{color:var(--gris);font-weight:300;margin-bottom:8px;}
+  .jx-premios{display:flex;justify-content:center;gap:12px;margin:14px 0 20px;}
+  .jx-premio{background:var(--crema);border-radius:14px;padding:10px 16px;font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--tinta);}
+  .jx-nivelup{display:inline-block;margin-bottom:14px;background:linear-gradient(135deg,var(--dorado),var(--rosa));color:#fff;border-radius:999px;padding:6px 16px;font-size:.86rem;letter-spacing:1px;animation:jxWobble 1.4s ease-in-out infinite;}
+  .jx-monedita{position:fixed;z-index:200;font-size:1.4rem;pointer-events:none;transition:transform .8s cubic-bezier(.5,0,.6,1),opacity .8s;}
 
+  /* ===== Cerrar/Vestir popups internos ===== */
+  .jx-cerrar-tienda{margin-top:18px;}
+
+  /* ===== Closet ===== */
+  .jx-closet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px;margin-top:6px;}
+  .jx-it{
+    border:1.5px solid var(--crema-oscuro);border-radius:18px;padding:14px 8px 10px;text-align:center;cursor:pointer;
+    background:var(--blanco);transition:transform .14s, border-color .2s, box-shadow .2s;position:relative;
+  }
+  .jx-it:active{transform:scale(.95);}
+  .jx-it:hover{border-color:var(--dorado);transform:translateY(-2px);}
+  .jx-it.equipado{border-color:var(--rosa);box-shadow:0 0 0 2px var(--rosa-claro);}
+  .jx-it .em{font-size:2.1rem;}
+  .jx-it .nm{font-size:.78rem;color:var(--gris);margin-top:6px;}
+  .jx-it .pr{font-size:.8rem;font-weight:600;color:var(--dorado);margin-top:5px;font-family:'Playfair Display',serif;}
+  .jx-it .pr.tiene{color:var(--verde);}
+  .jx-it .lock{position:absolute;top:8px;right:9px;font-size:.8rem;opacity:.5;}
+
+  @media (max-width:380px){
+    .jx-cards{grid-template-columns:1fr;}
+    .jx-card{min-height:120px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .jx-launch-escena svg,.jx-pet-holder svg,.jx-celebra-gato svg,.jx-daily.listo .jx-daily-emo,.jx-nivelup{animation:none !important;}
+  }
   input[type=file]{display:none;}
 
   @media (prefers-reduced-motion: reduce){
@@ -1084,66 +1246,39 @@
 
 <!-- ============ RINCÓN DE JUEGOS ============ -->
 <section class="revelar juegos-seccion" id="juegos">
-  <div class="seccion-interna ancha jx-wrap">
+  <div class="seccion-interna ancha">
     <h2 class="titulo-seccion">Rincón de juegos</h2>
-    <p class="bajada">Juega, gana monedas y consiente a tu gatito 🐱</p>
-
-    <div class="jx-mascota-panel">
-      <div class="jx-escena" id="jxEscena"></div>
-      <div class="jx-info">
-        <div class="jx-nombre" id="jxNombre">Michi</div>
-        <div class="jx-nivel">Nivel <span id="jxNivel">1</span> · <span id="jxTitulo">Gatito tierno</span></div>
-        <div class="jx-xpbar"><div id="jxXp"></div></div>
-        <div class="jx-monedas">🪙 <span id="jxMonedas">0</span> monedas</div>
-        <div class="jx-acciones">
-          <button class="boton chico rosa" id="jxBtnTienda">Vestir 🎀</button>
-          <button class="boton chico suave" id="jxBtnNombre">Renombrar</button>
-        </div>
+    <p class="bajada">Un rinconcito para jugar, ganar monedas y consentir a Michi 🐱</p>
+    <button class="jx-launch" id="jxLaunch" aria-haspopup="dialog">
+      <div class="jx-launch-escena" id="jxLaunchEscena"></div>
+      <div class="jx-launch-info">
+        <div class="jx-launch-nombre" id="jxLaunchNombre">Michi</div>
+        <div class="jx-launch-sub">Nivel <span id="jxLaunchNivel">1</span> · 🪙 <span id="jxLaunchMonedas">0</span> monedas</div>
+        <span class="jx-launch-cta">▶ Jugar</span>
       </div>
-    </div>
-
-    <div class="jx-tabs">
-      <button class="jx-tab activo" data-juego="sudoku">🔢 Sudoku</button>
-      <button class="jx-tab" data-juego="zip">➰ Zip</button>
-    </div>
-
-    <div class="jx-panel" id="jxPanelSudoku">
-      <div class="jx-dificultad" id="jxSudokuDif">
-        <button class="jx-dif activo" data-dif="facil">Fácil</button>
-        <button class="jx-dif" data-dif="medio">Medio</button>
-        <button class="jx-dif" data-dif="dificil">Difícil</button>
-      </div>
-      <div class="jx-barra-juego">
-        <span id="jxSudokuEstado">Elige dificultad y juega</span>
-        <span id="jxSudokuTiempo">⏱️ 0:00</span>
-      </div>
-      <div class="jx-sudoku" id="jxSudokuGrid"></div>
-      <div class="jx-num" id="jxSudokuNum"></div>
-      <div class="jx-sudoku-ctrl">
-        <button class="boton chico" id="jxSudokuNuevo">Nuevo juego</button>
-        <button class="boton chico suave" id="jxSudokuComprobar">Comprobar</button>
-      </div>
-    </div>
-
-    <div class="jx-panel oculto" id="jxPanelZip">
-      <div class="jx-dificultad" id="jxZipDif">
-        <button class="jx-dif activo" data-size="5">5 × 5</button>
-        <button class="jx-dif" data-size="6">6 × 6</button>
-        <button class="jx-dif" data-size="7">7 × 7</button>
-      </div>
-      <div class="jx-barra-juego">
-        <span id="jxZipEstado">Une 1 → 2 → 3… con una sola línea, llenando toda la grilla</span>
-        <span id="jxZipResueltos">✔️ 0</span>
-      </div>
-      <div class="jx-zip" id="jxZip"></div>
-      <div class="jx-zip-ctrl">
-        <button class="boton chico" id="jxZipNuevo">Nuevo</button>
-        <button class="boton chico suave" id="jxZipReiniciar">Reiniciar línea</button>
-      </div>
-    </div>
+    </button>
   </div>
 </section>
 
+<!-- Consola de juegos a pantalla completa -->
+<div id="jxApp" role="dialog" aria-modal="true" aria-label="Rincón de juegos" aria-hidden="true">
+  <div class="jx-app-bg" aria-hidden="true"></div>
+  <div class="jx-app-frame">
+    <header class="jx-app-top">
+      <button class="jx-icon-btn" id="jxBack" aria-label="Atrás">‹</button>
+      <div class="jx-app-title" id="jxTitle">Rincón de juegos</div>
+      <div class="jx-coins" id="jxCoins"><span class="jx-coin">🪙</span><span id="jxCoinsN">0</span></div>
+    </header>
+    <div class="jx-screens" id="jxScreens">
+      <section class="jx-screen activa" id="jxScreenHub"></section>
+      <section class="jx-screen" id="jxScreenSudoku"></section>
+      <section class="jx-screen" id="jxScreenZip"></section>
+      <section class="jx-screen" id="jxScreenCloset"></section>
+    </div>
+  </div>
+  <canvas id="jxConfeti" aria-hidden="true"></canvas>
+  <div class="jx-celebra" id="jxCelebra" aria-hidden="true"></div>
+</div>
 
 <!-- ============ FOOTER ============ -->
 <footer>
@@ -1486,8 +1621,9 @@ let datos = {
     monedas: 0,
     mascota: { nombre: 'Michi', xp: 0, equipado: { sombrero: null, accesorio: null, fondo: 'fondo:pradera' } },
     comprados: ['fondo:pradera'],
-    sudoku: { resueltos: 0 },
+    sudoku: { resueltos: 0, mejor: {} },
     zip: { resueltos: 0 },
+    diario: { ultimo: null, racha: 0 },
   },
 };
 
@@ -3482,11 +3618,10 @@ if('serviceWorker' in navigator){
       .catch(error => console.warn('No se pudo registrar la app instalable:', error));
   });
 }
-
 /* ============================================================
-   RINCÓN DE JUEGOS: mascota (gatito), Sudoku y Zip
-   La progresión (monedas, ropa, niveles) vive en datos.juegos,
-   así que se sincroniza con Neon igual que el resto.
+   RINCÓN DE JUEGOS — consola con hub, Sudoku y Zip
+   La progresión (monedas, ropa, niveles, rachas) vive en
+   datos.juegos, así que se sincroniza con Neon como el resto.
    ============================================================ */
 const JX_COSMETICOS = [
   { id:'sombrero:flor',     slot:'sombrero',  donde:'arriba', nombre:'Flor',      emoji:'🌸',  precio:30 },
@@ -3505,6 +3640,7 @@ const JX_COSMETICOS = [
   { id:'fondo:playa',       slot:'fondo', nombre:'Playa',     emoji:'🏖️', precio:80, css:'linear-gradient(180deg,#bfe9f2,#f5e6c5)' },
 ];
 const JX_TITULOS = ['Gatito tierno','Michi curioso','Michi juguetón','Michi valiente','Michi sabio','Michi estrella','Michi leyenda'];
+const JX_NIVEL_XP = 120;
 
 function jxCosmetico(id){ return JX_COSMETICOS.find(c => c.id === id); }
 
@@ -3522,11 +3658,15 @@ function asegurarJuegos(){
   if(!m.equipado.fondo) m.equipado.fondo = 'fondo:pradera';
   if(!Array.isArray(j.comprados)) j.comprados = [];
   if(!j.comprados.includes('fondo:pradera')) j.comprados.push('fondo:pradera');
-  if(!j.sudoku || typeof j.sudoku !== 'object') j.sudoku = { resueltos:0 };
-  if(!j.zip || typeof j.zip !== 'object') j.zip = { resueltos:0 };
+  if(!j.sudoku || typeof j.sudoku !== 'object') j.sudoku = {};
+  if(typeof j.sudoku.resueltos !== 'number') j.sudoku.resueltos = 0;
+  if(!j.sudoku.mejor || typeof j.sudoku.mejor !== 'object') j.sudoku.mejor = {};
+  if(!j.zip || typeof j.zip !== 'object') j.zip = {};
+  if(typeof j.zip.resueltos !== 'number') j.zip.resueltos = 0;
+  if(!j.diario || typeof j.diario !== 'object') j.diario = { ultimo:null, racha:0 };
 }
 
-function jxNivel(){ asegurarJuegos(); return Math.floor(datos.juegos.mascota.xp / 120) + 1; }
+function jxNivel(){ asegurarJuegos(); return Math.floor(datos.juegos.mascota.xp / JX_NIVEL_XP) + 1; }
 
 function jxGatoSVG(){
   return `<svg viewBox="0 0 200 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Gatito">
@@ -3553,38 +3693,268 @@ function jxGatoSVG(){
     <path d="M40 102 h26 M40 112 h24 M134 102 h26 M136 112 h24" stroke="#d8c08f" stroke-width="2" stroke-linecap="round"/>
   </svg>`;
 }
-
-function pintarJuegos(){
+function jxPetHTML(){
   asegurarJuegos();
-  const escena = document.getElementById('jxEscena');
-  if(!escena) return;
-  const j = datos.juegos, m = j.mascota;
-  const fondo = jxCosmetico(m.equipado.fondo) || jxCosmetico('fondo:pradera');
-  escena.style.background = fondo.css;
-  const acc = [];
-  if(m.equipado.sombrero){ const c = jxCosmetico(m.equipado.sombrero); if(c) acc.push('<span class="jx-acc ' + c.donde + '">' + c.emoji + '</span>'); }
-  if(m.equipado.accesorio){ const c = jxCosmetico(m.equipado.accesorio); if(c) acc.push('<span class="jx-acc ' + c.donde + '">' + c.emoji + '</span>'); }
-  escena.innerHTML = jxGatoSVG() + acc.join('');
-  const nivel = jxNivel();
-  document.getElementById('jxNombre').textContent = m.nombre;
-  document.getElementById('jxNivel').textContent = nivel;
-  document.getElementById('jxTitulo').textContent = JX_TITULOS[Math.min(nivel - 1, JX_TITULOS.length - 1)];
-  document.getElementById('jxXp').style.width = ((m.xp % 120) / 120 * 100) + '%';
-  document.getElementById('jxMonedas').textContent = j.monedas;
-  document.getElementById('jxZipResueltos').textContent = '✔️ ' + j.zip.resueltos;
+  const m = datos.juegos.mascota;
+  let acc = '';
+  if(m.equipado.sombrero){ const c = jxCosmetico(m.equipado.sombrero); if(c) acc += '<span class="jx-acc ' + c.donde + '">' + c.emoji + '</span>'; }
+  if(m.equipado.accesorio){ const c = jxCosmetico(m.equipado.accesorio); if(c) acc += '<span class="jx-acc ' + c.donde + '">' + c.emoji + '</span>'; }
+  return jxGatoSVG() + acc;
+}
+function jxFondoCss(){
+  asegurarJuegos();
+  const f = jxCosmetico(datos.juegos.mascota.equipado.fondo) || jxCosmetico('fondo:pradera');
+  return f.css;
 }
 
-function jxRecompensar(monedas, xp, motivo){
+/* ===== Sonido suave (WebAudio, sin archivos) ===== */
+let jxAudio = null;
+function jxMute(){ return localStorage.getItem('jxMute') === '1'; }
+function jxSonido(tipo){
+  if(jxMute()) return;
+  try{
+    jxAudio = jxAudio || new (window.AudioContext || window.webkitAudioContext)();
+    if(jxAudio.state === 'suspended') jxAudio.resume();
+    const t = jxAudio.currentTime;
+    const notas = { tap:[440], bien:[660,880], gana:[523,659,784,1047], compra:[392,587], mal:[180,140] }[tipo] || [440];
+    notas.forEach((f, i) => {
+      const o = jxAudio.createOscillator(), g = jxAudio.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      const ini = t + i * 0.09;
+      g.gain.setValueAtTime(0, ini);
+      g.gain.linearRampToValueAtTime(0.06, ini + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, ini + 0.22);
+      o.connect(g); g.connect(jxAudio.destination);
+      o.start(ini); o.stop(ini + 0.24);
+    });
+  }catch(e){}
+}
+function jxVibrar(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+
+/* ===== Confeti ===== */
+function jxConfeti(intensidad){
+  const cv = document.getElementById('jxConfeti');
+  if(!cv) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce) return;
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const W = cv.clientWidth, H = cv.clientHeight;
+  cv.width = W * dpr; cv.height = H * dpr;
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  cv.classList.add('on');
+  const colores = ['#d8c08f','#b9985a','#c98e9b','#ecd3d8','#f6f2e8','#8a9a7b'];
+  const N = intensidad || 130;
+  const ps = [];
+  for(let i = 0; i < N; i++){
+    ps.push({ x: W/2 + (Math.random()-.5)*W*.4, y: H*.42 + (Math.random()-.5)*40,
+      vx:(Math.random()-.5)*9, vy:-6-Math.random()*8, g:0.25+Math.random()*0.12,
+      s:5+Math.random()*7, rot:Math.random()*6.28, vr:(Math.random()-.5)*0.4,
+      c:colores[Math.floor(Math.random()*colores.length)], vida:0 });
+  }
+  let raf;
+  (function anim(){
+    ctx.clearRect(0,0,W,H);
+    let vivos = 0;
+    for(const p of ps){
+      p.vida++; p.vx*=0.99; p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
+      const a = Math.max(0, 1 - p.vida/120);
+      if(a > 0 && p.y < H+40){
+        vivos++;
+        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.globalAlpha=a;
+        ctx.fillStyle=p.c; ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6); ctx.restore();
+      }
+    }
+    if(vivos > 0){ raf = requestAnimationFrame(anim); }
+    else{ cv.classList.remove('on'); ctx.clearRect(0,0,W,H); cancelAnimationFrame(raf); }
+  })();
+}
+
+/* ===== Monedas que vuelan al contador ===== */
+function jxVolarMonedas(desdeEl, cantidad){
+  const destino = document.getElementById('jxCoins');
+  if(!destino || !desdeEl) return;
+  const a = desdeEl.getBoundingClientRect();
+  const b = destino.getBoundingClientRect();
+  const n = Math.min(12, Math.max(5, Math.round(cantidad/3)));
+  for(let i = 0; i < n; i++){
+    const c = document.createElement('div');
+    c.className = 'jx-monedita'; c.textContent = '🪙';
+    c.style.left = (a.left + a.width/2 - 10) + 'px';
+    c.style.top = (a.top + a.height/2 - 10) + 'px';
+    document.body.appendChild(c);
+    const dx = b.left + b.width/2 - (a.left + a.width/2);
+    const dy = b.top + b.height/2 - (a.top + a.height/2);
+    requestAnimationFrame(() => {
+      c.style.transitionDelay = (i*0.04) + 's';
+      c.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(.5)';
+      c.style.opacity = '0';
+    });
+    setTimeout(() => c.remove(), 1000 + i*40);
+  }
+  setTimeout(() => { destino.classList.remove('bump'); void destino.offsetWidth; destino.classList.add('bump'); }, 380);
+}
+
+function jxActualizarCoins(){
+  asegurarJuegos();
+  const n = datos.juegos.monedas;
+  const a = document.getElementById('jxCoinsN'); if(a) a.textContent = n;
+  const b = document.getElementById('jxLaunchMonedas'); if(b) b.textContent = n;
+}
+
+function jxRecompensar(monedas, xp, opc){
+  opc = opc || {};
   asegurarJuegos();
   const nivelAntes = jxNivel();
   datos.juegos.monedas += monedas;
   datos.juegos.mascota.xp += xp;
-  pintarJuegos();
-  const escena = document.getElementById('jxEscena');
-  if(escena){ escena.classList.remove('jx-feliz'); void escena.offsetWidth; escena.classList.add('jx-feliz'); }
+  jxActualizarCoins();
+  if(opc.desde) jxVolarMonedas(opc.desde, monedas);
   guardar();
-  const subio = jxNivel() > nivelAntes;
-  avisar((motivo || '¡Bien!') + '  +' + monedas + ' 🪙  +' + xp + ' XP' + (subio ? '  ¡' + datos.juegos.mascota.nombre + ' subió a nivel ' + jxNivel() + '! 🎉' : ''));
+  return { subioNivel: jxNivel() > nivelAntes, nivel: jxNivel() };
+}
+
+/* ============================================================
+   NAVEGACIÓN DE LA CONSOLA
+   ============================================================ */
+const JX_PANTALLAS = {
+  hub:    { el:'jxScreenHub',    titulo:'Rincón de juegos', render:() => jxRenderHub() },
+  sudoku: { el:'jxScreenSudoku', titulo:'Sudoku',          render:() => sdMostrar() },
+  zip:    { el:'jxScreenZip',    titulo:'Zip',             render:() => zipMostrar() },
+  closet: { el:'jxScreenCloset', titulo:'Clóset de Michi', render:() => jxRenderCloset() },
+};
+let jxPantalla = 'hub';
+
+function jxIr(p){
+  const cfg = JX_PANTALLAS[p]; if(!cfg) return;
+  const antes = document.querySelector('.jx-screen.activa');
+  if(antes){ antes.classList.remove('activa'); antes.classList.add('saliendo-izq'); }
+  const destino = document.getElementById(cfg.el);
+  cfg.render();
+  destino.classList.remove('saliendo-izq');
+  destino.scrollTop = 0;
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.jx-screen').forEach(s => { if(s !== destino){ s.classList.remove('activa'); } });
+    destino.classList.add('activa');
+  });
+  jxPantalla = p;
+  document.getElementById('jxTitle').textContent = cfg.titulo;
+  document.getElementById('jxBack').textContent = p === 'hub' ? '✕' : '‹';
+}
+
+function jxAbrirApp(){
+  asegurarJuegos();
+  const app = document.getElementById('jxApp');
+  app.classList.add('abierta'); app.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  jxActualizarCoins();
+  jxIr('hub');
+}
+function jxCerrarApp(){
+  const app = document.getElementById('jxApp');
+  app.classList.remove('abierta'); app.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  if(sudokuTimer) clearInterval(sudokuTimer);
+  if(zipTimer) clearInterval(zipTimer);
+  pintarJuegos();
+}
+function jxAtras(){
+  if(jxPantalla === 'hub') jxCerrarApp();
+  else jxIr('hub');
+}
+
+/* ============================================================
+   LANZADOR EN LA PÁGINA + repintado
+   ============================================================ */
+function pintarJuegos(){
+  asegurarJuegos();
+  const esc = document.getElementById('jxLaunchEscena');
+  if(esc){
+    esc.style.background = jxFondoCss();
+    esc.innerHTML = jxPetHTML();
+  }
+  const m = datos.juegos.mascota;
+  const nom = document.getElementById('jxLaunchNombre'); if(nom) nom.textContent = m.nombre;
+  const niv = document.getElementById('jxLaunchNivel'); if(niv) niv.textContent = jxNivel();
+  jxActualizarCoins();
+  if(document.getElementById('jxApp')?.classList.contains('abierta')){
+    if(jxPantalla === 'hub') jxRenderHub();
+    else if(jxPantalla === 'closet') jxRenderCloset();
+  }
+}
+
+/* ============================================================
+   HUB
+   ============================================================ */
+function jxHoyClave(){
+  const h = new Date();
+  return h.getFullYear() + '-' + String(h.getMonth()+1).padStart(2,'0') + '-' + String(h.getDate()).padStart(2,'0');
+}
+function jxDiarioDisponible(){ asegurarJuegos(); return datos.juegos.diario.ultimo !== jxHoyClave(); }
+
+function jxRenderHub(){
+  asegurarJuegos();
+  const j = datos.juegos, m = j.mascota, nivel = jxNivel();
+  const xpPct = (m.xp % JX_NIVEL_XP) / JX_NIVEL_XP * 100;
+  const disp = jxDiarioDisponible();
+  const el = document.getElementById('jxScreenHub');
+  el.innerHTML =
+    '<div class="jx-pet-stage" style="background:' + jxFondoCss() + '">' +
+      '<button class="jx-pet-edit" id="jxEditNom">✎ Renombrar</button>' +
+      '<div class="jx-pet-holder" id="jxPetHolder">' + jxPetHTML() + '</div>' +
+      '<div class="jx-pet-nombre">' + m.nombre + '</div>' +
+      '<div class="jx-pet-titulo">Nivel ' + nivel + ' · ' + JX_TITULOS[Math.min(nivel-1, JX_TITULOS.length-1)] + '</div>' +
+      '<div class="jx-xp"><div style="width:' + xpPct + '%"></div></div>' +
+      '<div class="jx-xp-tag">' + (m.xp % JX_NIVEL_XP) + ' / ' + JX_NIVEL_XP + ' XP</div>' +
+    '</div>' +
+    '<div class="jx-daily' + (disp ? ' listo' : '') + '" id="jxDaily">' +
+      '<div class="jx-daily-emo">' + (disp ? '🎁' : '✅') + '</div>' +
+      '<div class="jx-daily-txt">' +
+        '<b>' + (disp ? 'Regalo diario' : 'Vuelve mañana') + '</b>' +
+        '<small>' + (disp ? 'Toca para reclamar tus monedas' : 'Racha de ' + j.diario.racha + ' día(s) 🔥') + '</small>' +
+      '</div>' +
+      (disp ? '<span class="jx-card-stat" style="background:var(--dorado);color:#fff">Reclamar</span>' : '') +
+    '</div>' +
+    '<div class="jx-sec-tit">Elige un juego</div>' +
+    '<div class="jx-cards">' +
+      '<button class="jx-card sudoku" data-ir="sudoku"><div class="sheen"></div>' +
+        '<div class="jx-card-emo">🔢</div><div><div class="jx-card-nom">Sudoku</div>' +
+        '<div class="jx-card-desc">Completa la grilla</div></div>' +
+        '<span class="jx-card-stat">✔ ' + j.sudoku.resueltos + ' resueltos</span></button>' +
+      '<button class="jx-card zip" data-ir="zip"><div class="sheen"></div>' +
+        '<div class="jx-card-emo">➰</div><div><div class="jx-card-nom">Zip</div>' +
+        '<div class="jx-card-desc">Una línea, todos los puntos</div></div>' +
+        '<span class="jx-card-stat">✔ ' + j.zip.resueltos + ' resueltos</span></button>' +
+      '<button class="jx-card closet full" data-ir="closet"><div class="sheen"></div>' +
+        '<div class="jx-card-emo">👗</div><div style="flex:1"><div class="jx-card-nom">Clóset de ' + m.nombre + '</div>' +
+        '<div class="jx-card-desc">Viste y decora a tu gatito con lo que ganas</div></div></button>' +
+    '</div>' +
+    '<div class="jx-mini-stats">' +
+      '<div class="jx-mini"><div class="n">' + nivel + '</div><div class="l">Nivel</div></div>' +
+      '<div class="jx-mini"><div class="n">' + j.comprados.filter(x => x !== 'fondo:pradera').length + '</div><div class="l">Ítems</div></div>' +
+      '<div class="jx-mini"><div class="n">' + (j.sudoku.resueltos + j.zip.resueltos) + '</div><div class="l">Partidas</div></div>' +
+    '</div>';
+
+  document.getElementById('jxEditNom').onclick = (e) => { e.stopPropagation(); jxRenombrar(); };
+  document.getElementById('jxPetHolder').onclick = () => { jxSonido('tap'); jxIr('closet'); };
+  el.querySelectorAll('[data-ir]').forEach(b => b.onclick = () => { jxSonido('tap'); jxIr(b.dataset.ir); });
+  const daily = document.getElementById('jxDaily');
+  if(disp) daily.onclick = jxReclamarDiario; else daily.onclick = null;
+}
+
+function jxReclamarDiario(){
+  asegurarJuegos();
+  if(!jxDiarioDisponible()) return;
+  const j = datos.juegos;
+  const hoy = jxHoyClave();
+  const ayer = new Date(); ayer.setDate(ayer.getDate()-1);
+  const ayerClave = ayer.getFullYear() + '-' + String(ayer.getMonth()+1).padStart(2,'0') + '-' + String(ayer.getDate()).padStart(2,'0');
+  j.diario.racha = (j.diario.ultimo === ayerClave) ? (j.diario.racha + 1) : 1;
+  j.diario.ultimo = hoy;
+  const premio = 15 + Math.min(35, (j.diario.racha - 1) * 5);
+  const r = jxRecompensar(premio, 10, { desde: document.getElementById('jxDaily') });
+  jxSonido('compra'); jxVibrar(30); jxConfeti(70);
+  avisar('🎁 Regalo diario: +' + premio + ' monedas · racha ' + j.diario.racha + ' 🔥');
+  jxRenderHub();
 }
 
 async function jxRenombrar(){
@@ -3592,412 +3962,499 @@ async function jxRenombrar(){
   const r = await pedirFormulario('Nombre del gatito', [
     { nombre:'n', etiqueta:'¿Cómo se llama?', valor:datos.juegos.mascota.nombre, requerido:true, maxlength:16 },
   ], { textoOk:'Guardar' });
-  if(r){ datos.juegos.mascota.nombre = r.n; pintarJuegos(); guardar(); }
+  if(r){ datos.juegos.mascota.nombre = r.n; guardar(); pintarJuegos(); if(jxPantalla === 'hub') jxRenderHub(); }
 }
 
-function jxAbrirTienda(){
+/* ============================================================
+   CLÓSET
+   ============================================================ */
+function jxRenderCloset(){
   asegurarJuegos();
-  abrirPopupBase((caja, cerrar) => {
-    function render(){
-      const j = datos.juegos, m = j.mascota;
-      caja.innerHTML = '';
-      const h = document.createElement('h3'); h.textContent = 'Vestir a ' + m.nombre; caja.appendChild(h);
-      const sub = document.createElement('p'); sub.className = 'popup-sub'; sub.innerHTML = '🪙 ' + j.monedas + ' monedas · juega para ganar más'; caja.appendChild(sub);
-      [['sombrero','Sombreros'], ['accesorio','Accesorios'], ['fondo','Escenarios']].forEach(([slot, titulo]) => {
-        const cont = document.createElement('div'); cont.className = 'jx-tienda-cat';
-        const t = document.createElement('h4'); t.textContent = titulo; cont.appendChild(t);
-        const grid = document.createElement('div'); grid.className = 'jx-items';
-        if(slot !== 'fondo'){
-          const none = document.createElement('div');
-          none.className = 'jx-item' + (!m.equipado[slot] ? ' equipado' : '');
-          none.innerHTML = '<div class="em">🚫</div><div class="nm">Ninguno</div>';
-          none.onclick = () => { m.equipado[slot] = null; pintarJuegos(); guardar(); render(); };
-          grid.appendChild(none);
-        }
-        JX_COSMETICOS.filter(c => c.slot === slot).forEach(c => {
-          const tiene = c.precio === 0 || j.comprados.includes(c.id);
-          const equipado = m.equipado[slot] === c.id;
-          const el = document.createElement('div');
-          el.className = 'jx-item' + (equipado ? ' equipado' : '');
-          el.innerHTML = '<div class="em">' + c.emoji + '</div><div class="nm">' + c.nombre + '</div>' +
-            '<div class="pr' + (tiene ? ' tiene' : '') + '">' + (tiene ? (equipado ? 'Puesto' : 'Tengo') : c.precio + ' 🪙') + '</div>';
-          el.onclick = async () => {
-            if(tiene){
-              m.equipado[slot] = c.id; pintarJuegos(); guardar(); render();
-            }else{
-              if(j.monedas < c.precio){ avisar('Te faltan ' + (c.precio - j.monedas) + ' monedas 🪙'); return; }
-              const ok = await confirmar('¿Comprar ' + c.nombre + '?', { detalle:'Cuesta ' + c.precio + ' monedas', textoOk:'Comprar' });
-              if(!ok) return;
-              j.monedas -= c.precio; j.comprados.push(c.id); m.equipado[slot] = c.id;
-              pintarJuegos(); guardar(); render(); avisar('¡' + c.nombre + ' desbloqueado! ✨');
-            }
-          };
-          grid.appendChild(el);
-        });
-        cont.appendChild(grid); caja.appendChild(cont);
-      });
-      const acc = document.createElement('div'); acc.className = 'popup-acciones';
-      const b = document.createElement('button'); b.className = 'boton'; b.textContent = 'Listo'; b.onclick = () => cerrar(null);
-      acc.appendChild(b); caja.appendChild(acc);
+  const j = datos.juegos, m = j.mascota;
+  const el = document.getElementById('jxScreenCloset');
+  const cat = (slot, titulo) => {
+    let items = '';
+    if(slot !== 'fondo'){
+      items += '<div class="jx-it' + (!m.equipado[slot] ? ' equipado' : '') + '" data-quitar="' + slot + '">' +
+        '<div class="em">🚫</div><div class="nm">Ninguno</div></div>';
     }
-    render();
+    JX_COSMETICOS.filter(c => c.slot === slot).forEach(c => {
+      const tiene = c.precio === 0 || j.comprados.includes(c.id);
+      const eq = m.equipado[slot] === c.id;
+      items += '<div class="jx-it' + (eq ? ' equipado' : '') + '" data-id="' + c.id + '">' +
+        (tiene ? '' : '<span class="lock">🔒</span>') +
+        '<div class="em">' + c.emoji + '</div><div class="nm">' + c.nombre + '</div>' +
+        '<div class="pr' + (tiene ? ' tiene' : '') + '">' + (tiene ? (eq ? 'Puesto' : 'Tengo') : c.precio + ' 🪙') + '</div></div>';
+    });
+    return '<div class="jx-sec-tit">' + titulo + '</div><div class="jx-closet-grid">' + items + '</div>';
+  };
+  el.innerHTML =
+    '<div class="jx-pet-stage" style="background:' + jxFondoCss() + ';margin-bottom:18px">' +
+      '<div class="jx-pet-holder" id="jxClosetPet">' + jxPetHTML() + '</div>' +
+      '<div class="jx-pet-nombre">' + m.nombre + '</div>' +
+    '</div>' +
+    cat('sombrero', 'Sombreros') + cat('accesorio', 'Accesorios') + cat('fondo', 'Escenarios');
+
+  el.querySelectorAll('[data-quitar]').forEach(it => it.onclick = () => {
+    m.equipado[it.dataset.quitar] = null; jxSonido('tap'); guardar(); jxRenderCloset(); pintarJuegos();
   });
+  el.querySelectorAll('[data-id]').forEach(it => it.onclick = () => jxTocarItem(jxCosmetico(it.dataset.id)));
 }
 
-/* ===== Pestañas + botones de mascota ===== */
-document.querySelectorAll('.jx-tab').forEach(tab => {
-  tab.onclick = () => {
-    document.querySelectorAll('.jx-tab').forEach(t => t.classList.toggle('activo', t === tab));
-    const juego = tab.dataset.juego;
-    document.getElementById('jxPanelSudoku').classList.toggle('oculto', juego !== 'sudoku');
-    document.getElementById('jxPanelZip').classList.toggle('oculto', juego !== 'zip');
+async function jxTocarItem(c){
+  asegurarJuegos();
+  const j = datos.juegos, m = j.mascota;
+  const tiene = c.precio === 0 || j.comprados.includes(c.id);
+  if(tiene){
+    m.equipado[c.slot] = (m.equipado[c.slot] === c.id) ? (c.slot === 'fondo' ? c.id : null) : c.id;
+    jxSonido('tap'); jxVibrar(12); guardar(); jxRenderCloset(); pintarJuegos();
+    return;
+  }
+  if(j.monedas < c.precio){ jxSonido('mal'); avisar('Te faltan ' + (c.precio - j.monedas) + ' monedas 🪙'); return; }
+  const ok = await confirmar('¿Comprar ' + c.nombre + '?', { detalle:'Cuesta ' + c.precio + ' monedas', textoOk:'Comprar' });
+  if(!ok) return;
+  j.monedas -= c.precio; j.comprados.push(c.id); m.equipado[c.slot] = c.id;
+  jxSonido('compra'); jxVibrar(25); jxActualizarCoins(); guardar(); jxRenderCloset(); pintarJuegos();
+  avisar('¡' + c.nombre + ' desbloqueado! ✨');
+}
+
+/* ============================================================
+   CELEBRACIÓN AL GANAR
+   ============================================================ */
+function jxCelebrar(opc){
+  jxSonido('gana'); jxVibrar([20,40,20]); jxConfeti(150);
+  const cel = document.getElementById('jxCelebra');
+  cel.innerHTML =
+    '<div class="jx-celebra-caja">' +
+      '<div class="jx-celebra-gato">' + jxPetHTML() + '</div>' +
+      (opc.subioNivel ? '<div class="jx-nivelup">¡Subió a nivel ' + opc.nivel + '! 🎉</div>' : '') +
+      '<h3>' + (opc.titulo || '¡Resuelto!') + '</h3>' +
+      '<p>' + (opc.sub || '¡Bien jugado!') + '</p>' +
+      '<div class="jx-premios">' +
+        '<div class="jx-premio">+' + opc.monedas + ' 🪙</div>' +
+        '<div class="jx-premio">+' + opc.xp + ' XP</div>' +
+      '</div>' +
+      '<button class="jx-btn rosa" id="jxCelNext">' + (opc.textoNext || 'Seguir jugando') + '</button>' +
+    '</div>';
+  cel.classList.add('on'); cel.setAttribute('aria-hidden', 'false');
+  document.getElementById('jxCelNext').onclick = () => {
+    cel.classList.remove('on'); cel.setAttribute('aria-hidden', 'true');
+    if(opc.onNext) opc.onNext();
   };
-});
-document.getElementById('jxBtnTienda').onclick = jxAbrirTienda;
-document.getElementById('jxBtnNombre').onclick = jxRenombrar;
+}
 
 /* ============================================================
    SUDOKU
    ============================================================ */
-let sudokuEstado = null;
-let sudokuTimer = null;
-let sudokuDif = 'facil';
+let sudokuEstado = null, sudokuTimer = null, sudokuDif = 'facil';
 
-function sdShuffle(a){ for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-function sdOk(g, r, c, n){
-  for(let i = 0; i < 9; i++){ if(g[r][i] === n || g[i][c] === n) return false; }
-  const br = Math.floor(r / 3) * 3, bc = Math.floor(c / 3) * 3;
-  for(let i = 0; i < 3; i++) for(let j = 0; j < 3; j++) if(g[br + i][bc + j] === n) return false;
+function sdShuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function sdOk(g,r,c,n){
+  for(let i=0;i<9;i++){ if(g[r][i]===n||g[i][c]===n) return false; }
+  const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
+  for(let i=0;i<3;i++)for(let j=0;j<3;j++) if(g[br+i][bc+j]===n) return false;
   return true;
 }
 function sdGenerar(){
-  const g = Array.from({ length:9 }, () => Array(9).fill(0));
+  const g=Array.from({length:9},()=>Array(9).fill(0));
   (function fill(p){
-    if(p === 81) return true;
-    const r = Math.floor(p / 9), c = p % 9;
+    if(p===81) return true;
+    const r=Math.floor(p/9),c=p%9;
     for(const n of sdShuffle([1,2,3,4,5,6,7,8,9])){
-      if(sdOk(g, r, c, n)){ g[r][c] = n; if(fill(p + 1)) return true; g[r][c] = 0; }
+      if(sdOk(g,r,c,n)){ g[r][c]=n; if(fill(p+1)) return true; g[r][c]=0; }
     }
     return false;
   })(0);
   return g;
 }
-function sdContar(g, limite){
-  let count = 0;
+function sdContar(g,limite){
+  let count=0;
   (function solve(){
-    if(count >= limite) return;
-    let r = -1, c = -1;
-    for(let i = 0; i < 81 && r < 0; i++){ if(g[Math.floor(i / 9)][i % 9] === 0){ r = Math.floor(i / 9); c = i % 9; } }
-    if(r < 0){ count++; return; }
-    for(let n = 1; n <= 9 && count < limite; n++){ if(sdOk(g, r, c, n)){ g[r][c] = n; solve(); g[r][c] = 0; } }
+    if(count>=limite) return;
+    let r=-1,c=-1;
+    for(let i=0;i<81 && r<0;i++){ if(g[Math.floor(i/9)][i%9]===0){ r=Math.floor(i/9); c=i%9; } }
+    if(r<0){ count++; return; }
+    for(let n=1;n<=9 && count<limite;n++){ if(sdOk(g,r,c,n)){ g[r][c]=n; solve(); g[r][c]=0; } }
   })();
   return count;
 }
 function sdNuevoPuzzle(dif){
-  const sol = sdGenerar();
-  const pz = sol.map(r => r.slice());
-  const quitar = { facil:42, medio:50, dificil:54 }[dif];
-  let q = 0;
+  const sol=sdGenerar();
+  const pz=sol.map(r=>r.slice());
+  const quitar={facil:42,medio:50,dificil:54}[dif];
+  let q=0;
   for(const idx of sdShuffle([...Array(81).keys()])){
-    if(q >= quitar) break;
-    const r = Math.floor(idx / 9), c = idx % 9;
-    if(pz[r][c] === 0) continue;
-    const g = pz[r][c]; pz[r][c] = 0;
-    if(sdContar(pz.map(x => x.slice()), 2) !== 1){ pz[r][c] = g; } else q++;
+    if(q>=quitar) break;
+    const r=Math.floor(idx/9),c=idx%9;
+    if(pz[r][c]===0) continue;
+    const g=pz[r][c]; pz[r][c]=0;
+    if(sdContar(pz.map(x=>x.slice()),2)!==1){ pz[r][c]=g; } else q++;
   }
-  return { puzzle:pz, sol };
+  return {puzzle:pz, sol};
 }
-function sdValido(r, c, n){
-  const g = sudokuEstado.valores;
-  for(let i = 0; i < 9; i++){ if(i !== c && g[r][i] === n) return false; if(i !== r && g[i][c] === n) return false; }
-  const br = Math.floor(r / 3) * 3, bc = Math.floor(c / 3) * 3;
-  for(let i = 0; i < 3; i++) for(let j = 0; j < 3; j++){ const rr = br + i, cc = bc + j; if((rr !== r || cc !== c) && g[rr][cc] === n) return false; }
+function sdValido(r,c,n){
+  const g=sudokuEstado.valores;
+  for(let i=0;i<9;i++){ if(i!==c&&g[r][i]===n) return false; if(i!==r&&g[i][c]===n) return false; }
+  const br=Math.floor(r/3)*3,bc=Math.floor(c/3)*3;
+  for(let i=0;i<3;i++)for(let j=0;j<3;j++){ const rr=br+i,cc=bc+j; if((rr!==r||cc!==c)&&g[rr][cc]===n) return false; }
   return true;
 }
-function sdRender(){
-  const grid = document.getElementById('jxSudokuGrid');
-  grid.innerHTML = '';
-  const st = sudokuEstado;
-  for(let i = 0; i < 81; i++){
-    const r = Math.floor(i / 9), c = i % 9;
-    const cell = document.createElement('div');
-    cell.className = 'jx-sc';
-    if((c + 1) % 3 === 0 && c !== 8) cell.classList.add('bd-r');
-    if((r + 1) % 3 === 0 && r !== 8) cell.classList.add('bd-b');
-    const v = st.valores[r][c];
-    if(st.dado[r][c]){ cell.classList.add('fija'); cell.textContent = v || ''; }
-    else{ cell.textContent = v || ''; cell.onclick = () => { st.sel = [r, c]; sdPintarSel(); }; }
-    grid.appendChild(cell);
-  }
-  sdPintarSel();
+function sdNombreDif(d){ return {facil:'Fácil',medio:'Medio',dificil:'Difícil'}[d]; }
+function sdTiempo(seg){ return Math.floor(seg/60)+':'+String(seg%60).padStart(2,'0'); }
+
+function sdMostrar(){
+  const el = document.getElementById('jxScreenSudoku');
+  el.innerHTML =
+    '<div class="jx-juego-top"><div class="jx-seg" id="sdSeg">' +
+      '<button data-dif="facil">Fácil</button><button data-dif="medio">Medio</button><button data-dif="dificil">Difícil</button>' +
+    '</div></div>' +
+    '<div class="jx-hud">' +
+      '<span class="pill" id="sdEstado">Listo</span>' +
+      '<span class="pill">⏱️ <span id="sdTiempo">0:00</span></span>' +
+      '<span class="pill">✗ <span id="sdErrores">0</span></span>' +
+    '</div>' +
+    '<div class="jx-board-wrap"><div class="jx-sudoku" id="sdGrid"></div></div>' +
+    '<div class="jx-pad" id="sdPad"></div>' +
+    '<div class="jx-pad2"><button id="sdBorrar">⌫ Borrar</button><button id="sdPista">💡 Pista</button></div>' +
+    '<div class="jx-ctrl"><button class="jx-btn" id="sdNuevo">Nuevo juego</button></div>';
+
+  el.querySelectorAll('#sdSeg button').forEach(b => {
+    b.classList.toggle('activo', b.dataset.dif === sudokuDif);
+    b.onclick = () => { sudokuDif = b.dataset.dif; el.querySelectorAll('#sdSeg button').forEach(x => x.classList.toggle('activo', x === b)); sdNuevo(); };
+  });
+  const pad = document.getElementById('sdPad');
+  for(let n=1;n<=9;n++){ const btn=document.createElement('button'); btn.dataset.n=n; btn.innerHTML=n+'<span class="cnt"></span>'; btn.onclick=()=>sdPoner(n); pad.appendChild(btn); }
+  document.getElementById('sdBorrar').onclick = () => sdPoner(0);
+  document.getElementById('sdPista').onclick = sdPista;
+  document.getElementById('sdNuevo').onclick = sdNuevo;
+
+  if(!sdCargarLocal()) sdNuevo(); else { sdRender(); sdArrancarTimer(); }
 }
-function sdPintarSel(){
-  const st = sudokuEstado;
-  const cells = document.getElementById('jxSudokuGrid').children;
-  for(let i = 0; i < 81; i++){
-    const r = Math.floor(i / 9), c = i % 9, cell = cells[i];
-    cell.classList.remove('sel', 'par', 'error');
-    const v = st.valores[r][c];
-    cell.textContent = v || '';
-    if(st.sel){
-      const sr = st.sel[0], sc = st.sel[1], sv = st.valores[sr][sc];
-      if(sr === r && sc === c) cell.classList.add('sel');
-      else if(sr === r || sc === c || (Math.floor(sr / 3) === Math.floor(r / 3) && Math.floor(sc / 3) === Math.floor(c / 3))) cell.classList.add('par');
-      else if(sv && v === sv) cell.classList.add('par');
-    }
-    if(v && !st.dado[r][c] && !sdValido(r, c, v)) cell.classList.add('error');
-  }
-}
-function sdPoner(n){
-  const st = sudokuEstado;
-  if(!st || st.terminado || !st.sel) return;
-  const r = st.sel[0], c = st.sel[1];
-  if(st.dado[r][c]) return;
-  st.valores[r][c] = n;
-  sdGuardarLocal();
-  sdPintarSel();
-  sdChequearFin();
-}
-function sdChequearFin(){
-  const st = sudokuEstado;
-  for(let r = 0; r < 9; r++) for(let c = 0; c < 9; c++){ const v = st.valores[r][c]; if(!v || !sdValido(r, c, v)) return; }
-  st.terminado = true;
-  clearInterval(sudokuTimer);
-  document.getElementById('jxSudokuEstado').textContent = '¡Resuelto! 🎉';
-  datos.juegos.sudoku.resueltos = (datos.juegos.sudoku.resueltos || 0) + 1;
-  const premio = { facil:[12,15], medio:[22,25], dificil:[36,40] }[st.dif];
-  jxRecompensar(premio[0], premio[1], '¡Sudoku ' + ({ facil:'fácil', medio:'medio', dificil:'difícil' }[st.dif]) + ' resuelto!');
-  sdLimpiarLocal();
-}
-function sdTiempoTexto(seg){ return Math.floor(seg / 60) + ':' + String(seg % 60).padStart(2, '0'); }
-function sdArrancarTimer(){
-  clearInterval(sudokuTimer);
-  sudokuTimer = setInterval(() => {
-    if(!sudokuEstado || sudokuEstado.terminado) return;
-    document.getElementById('jxSudokuTiempo').textContent = '⏱️ ' + sdTiempoTexto(Math.floor((Date.now() - sudokuEstado.inicio) / 1000));
-  }, 1000);
-}
-function sdNombreDif(d){ return { facil:'Fácil', medio:'Medio', dificil:'Difícil' }[d]; }
 function sdNuevo(){
-  const estado = document.getElementById('jxSudokuEstado');
-  estado.textContent = 'Generando…';
-  document.getElementById('jxSudokuTiempo').textContent = '⏱️ 0:00';
+  const est = document.getElementById('sdEstado'); if(est) est.textContent = 'Generando…';
+  const tEl = document.getElementById('sdTiempo'); if(tEl) tEl.textContent = '0:00';
   setTimeout(() => {
     const r = sdNuevoPuzzle(sudokuDif);
     sudokuEstado = {
-      dif: sudokuDif,
+      dif: sudokuDif, sol: r.sol,
       dado: r.puzzle.map(row => row.map(v => v !== 0)),
       valores: r.puzzle.map(row => row.slice()),
-      sel: null, terminado: false, inicio: Date.now(),
+      sel: null, terminado: false, inicio: Date.now(), errores: 0, pistas: 3,
     };
-    estado.textContent = 'Dificultad: ' + sdNombreDif(sudokuDif);
+    if(document.getElementById('sdEstado')) document.getElementById('sdEstado').textContent = sdNombreDif(sudokuDif);
     sdRender(); sdArrancarTimer(); sdGuardarLocal();
-  }, 30);
+  }, 24);
+}
+function sdRender(){
+  const grid = document.getElementById('sdGrid'); if(!grid) return;
+  const st = sudokuEstado;
+  grid.innerHTML = '';
+  for(let i=0;i<81;i++){
+    const r=Math.floor(i/9), c=i%9;
+    const cell=document.createElement('div');
+    cell.className='jx-sc';
+    if((c+1)%3===0 && c!==8) cell.classList.add('cr2');
+    if((r+1)%3===0 && r!==8) cell.classList.add('cb2');
+    const v=st.valores[r][c];
+    if(st.dado[r][c]){ cell.classList.add('fija'); cell.textContent=v||''; }
+    else{ cell.textContent=v||''; cell.onclick=()=>{ st.sel=[r,c]; jxSonido('tap'); sdPintar(); }; }
+    grid.appendChild(cell);
+  }
+  sdPintar();
+}
+function sdPintar(){
+  const st=sudokuEstado, grid=document.getElementById('sdGrid'); if(!grid) return;
+  const cells=grid.children;
+  const sv = st.sel ? st.valores[st.sel[0]][st.sel[1]] : 0;
+  for(let i=0;i<81;i++){
+    const r=Math.floor(i/9),c=i%9,cell=cells[i],v=st.valores[r][c];
+    cell.classList.remove('sel','par','mismo','error');
+    cell.textContent=v||'';
+    if(st.sel){
+      const sr=st.sel[0],sc=st.sel[1];
+      if(sr===r&&sc===c) cell.classList.add('sel');
+      else if(sr===r||sc===c||(Math.floor(sr/3)===Math.floor(r/3)&&Math.floor(sc/3)===Math.floor(c/3))) cell.classList.add('par');
+      if(sv&&v===sv&&!(sr===r&&sc===c)) cell.classList.add('mismo');
+    }
+    if(v&&!st.dado[r][c]&&!sdValido(r,c,v)) cell.classList.add('error');
+  }
+  // contador del pad
+  const cont = {};
+  for(let n=1;n<=9;n++) cont[n]=0;
+  for(let r=0;r<9;r++)for(let c=0;c<9;c++){ const v=st.valores[r][c]; if(v) cont[v]++; }
+  document.querySelectorAll('#sdPad button').forEach(b => {
+    const n=+b.dataset.n; b.querySelector('.cnt').textContent = (9-cont[n])>0 ? (9-cont[n]) : '';
+    b.classList.toggle('lleno', cont[n] >= 9);
+  });
+  document.getElementById('sdErrores').textContent = st.errores;
+}
+function sdPoner(n){
+  const st=sudokuEstado; if(!st||st.terminado||!st.sel) return;
+  const r=st.sel[0],c=st.sel[1];
+  if(st.dado[r][c]) return;
+  if(n!==0 && !sdValido(r,c,n) && n!==st.sol[r][c]){ st.errores++; jxSonido('mal'); jxVibrar(20); }
+  else if(n!==0) jxSonido('tap');
+  st.valores[r][c]=n;
+  sdGuardarLocal(); sdPintar(); sdChequear();
+}
+function sdPista(){
+  const st=sudokuEstado; if(!st||st.terminado) return;
+  if(st.pistas<=0){ avisar('No quedan pistas en este tablero'); return; }
+  const vacias=[];
+  for(let r=0;r<9;r++)for(let c=0;c<9;c++) if(!st.dado[r][c] && st.valores[r][c]!==st.sol[r][c]) vacias.push([r,c]);
+  if(!vacias.length) return;
+  const [r,c]=vacias[Math.floor(Math.random()*vacias.length)];
+  st.valores[r][c]=st.sol[r][c]; st.sel=[r,c]; st.pistas--;
+  jxSonido('bien'); sdGuardarLocal(); sdPintar(); sdChequear();
+  document.getElementById('sdPista').textContent='💡 Pista ('+st.pistas+')';
+}
+function sdChequear(){
+  const st=sudokuEstado;
+  for(let r=0;r<9;r++)for(let c=0;c<9;c++){ const v=st.valores[r][c]; if(!v||!sdValido(r,c,v)) return; }
+  st.terminado=true; clearInterval(sudokuTimer);
+  const seg=Math.floor((Date.now()-st.inicio)/1000);
+  document.getElementById('sdEstado').textContent='¡Resuelto! 🎉';
+  asegurarJuegos();
+  datos.juegos.sudoku.resueltos++;
+  const prev=datos.juegos.sudoku.mejor[st.dif];
+  let record='';
+  if(prev==null||seg<prev){ datos.juegos.sudoku.mejor[st.dif]=seg; record=' · ¡nuevo récord!'; }
+  const base={facil:[12,15],medio:[22,25],dificil:[36,40]}[st.dif];
+  const r=jxRecompensar(base[0], base[1], { desde: document.getElementById('sdGrid') });
+  sdLimpiarLocal();
+  jxCelebrar({ titulo:'¡Sudoku resuelto!', sub:sdNombreDif(st.dif)+' en '+sdTiempo(seg)+record,
+    monedas:base[0], xp:base[1], subioNivel:r.subioNivel, nivel:r.nivel, onNext:sdNuevo });
+}
+function sdArrancarTimer(){
+  clearInterval(sudokuTimer);
+  sudokuTimer=setInterval(()=>{
+    if(!sudokuEstado||sudokuEstado.terminado) return;
+    const t=document.getElementById('sdTiempo'); if(t) t.textContent=sdTiempo(Math.floor((Date.now()-sudokuEstado.inicio)/1000));
+  },1000);
 }
 function sdGuardarLocal(){
   if(!sudokuEstado) return;
   try{ localStorage.setItem('jxSudoku', JSON.stringify({
-    dif: sudokuEstado.dif, dado: sudokuEstado.dado, valores: sudokuEstado.valores,
-    inicio: sudokuEstado.inicio, terminado: sudokuEstado.terminado,
+    dif:sudokuEstado.dif, sol:sudokuEstado.sol, dado:sudokuEstado.dado, valores:sudokuEstado.valores,
+    inicio:sudokuEstado.inicio, terminado:sudokuEstado.terminado, errores:sudokuEstado.errores, pistas:sudokuEstado.pistas,
   })); }catch(e){}
 }
 function sdLimpiarLocal(){ try{ localStorage.removeItem('jxSudoku'); }catch(e){} }
 function sdCargarLocal(){
   try{
-    const raw = localStorage.getItem('jxSudoku'); if(!raw) return false;
-    const s = JSON.parse(raw); if(!s || !s.valores || !s.dado) return false;
-    sudokuDif = s.dif || 'facil';
-    sudokuEstado = { dif: sudokuDif, dado: s.dado, valores: s.valores, sel: null, terminado: !!s.terminado, inicio: s.inicio || Date.now() };
-    document.querySelectorAll('#jxSudokuDif .jx-dif').forEach(b => b.classList.toggle('activo', b.dataset.dif === sudokuDif));
-    document.getElementById('jxSudokuEstado').textContent = sudokuEstado.terminado ? '¡Resuelto! 🎉' : ('Dificultad: ' + sdNombreDif(sudokuDif));
-    sdRender(); if(!sudokuEstado.terminado) sdArrancarTimer();
+    const raw=localStorage.getItem('jxSudoku'); if(!raw) return false;
+    const s=JSON.parse(raw); if(!s||!s.valores||!s.sol||s.terminado) return false;
+    sudokuDif=s.dif||'facil';
+    sudokuEstado={ dif:sudokuDif, sol:s.sol, dado:s.dado, valores:s.valores, sel:null, terminado:false,
+      inicio:s.inicio||Date.now(), errores:s.errores||0, pistas:(s.pistas==null?3:s.pistas) };
+    const seg=document.getElementById('sdSeg');
+    if(seg) seg.querySelectorAll('button').forEach(b=>b.classList.toggle('activo',b.dataset.dif===sudokuDif));
+    if(document.getElementById('sdEstado')) document.getElementById('sdEstado').textContent=sdNombreDif(sudokuDif);
     return true;
   }catch(e){ return false; }
 }
-(function sdInit(){
-  const num = document.getElementById('jxSudokuNum');
-  for(let n = 1; n <= 9; n++){ const b = document.createElement('button'); b.textContent = n; b.onclick = () => sdPoner(n); num.appendChild(b); }
-  const del = document.createElement('button'); del.className = 'borrar'; del.textContent = 'Borrar'; del.onclick = () => sdPoner(0); num.appendChild(del);
-  document.querySelectorAll('#jxSudokuDif .jx-dif').forEach(b => {
-    b.onclick = () => { sudokuDif = b.dataset.dif; document.querySelectorAll('#jxSudokuDif .jx-dif').forEach(x => x.classList.toggle('activo', x === b)); sdNuevo(); };
-  });
-  document.getElementById('jxSudokuNuevo').onclick = sdNuevo;
-  document.getElementById('jxSudokuComprobar').onclick = () => {
-    const st = sudokuEstado; if(!st) return;
-    let llenas = true, errores = 0;
-    for(let r = 0; r < 9; r++) for(let c = 0; c < 9; c++){ const v = st.valores[r][c]; if(!v) llenas = false; else if(!sdValido(r, c, v)) errores++; }
-    sdPintarSel();
-    if(errores > 0) avisar('Hay ' + errores + ' número(s) en conflicto');
-    else if(!llenas) avisar('¡Vas bien! Aún faltan casillas');
-    else avisar('¡Perfecto!');
-  };
-  document.addEventListener('keydown', e => {
-    if(document.getElementById('popup').classList.contains('visible')) return;
-    if(/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
-    if(document.getElementById('jxPanelSudoku').classList.contains('oculto')) return;
-    if(!sudokuEstado) return;
-    if(e.key >= '1' && e.key <= '9') sdPoner(+e.key);
-    else if(e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') sdPoner(0);
-  });
-  if(!sdCargarLocal()) sdNuevo();
-})();
+document.addEventListener('keydown', e => {
+  if(!document.getElementById('jxApp')?.classList.contains('abierta')) return;
+  if(jxPantalla!=='sudoku') return;
+  if(document.getElementById('popup')?.classList.contains('visible')) return;
+  if(/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if(e.key>='1'&&e.key<='9') sdPoner(+e.key);
+  else if(e.key==='Backspace'||e.key==='Delete'||e.key==='0') sdPoner(0);
+});
 
 /* ============================================================
-   ZIP: una sola línea que une 1→2→3… y llena toda la grilla
+   ZIP — una sola línea que une 1→2→3… llenando la grilla
    ============================================================ */
-let zipEstado = null;
-let zipSize = 5;
+let zipEstado = null, zipSize = 5, zipTimer = null;
 
-function zipVecinos(i, n){
-  const r = Math.floor(i / n), c = i % n, v = [];
-  if(r > 0) v.push(i - n);
-  if(r < n - 1) v.push(i + n);
-  if(c > 0) v.push(i - 1);
-  if(c < n - 1) v.push(i + 1);
+function zipVecinos(i,n){
+  const r=Math.floor(i/n),c=i%n,v=[];
+  if(r>0)v.push(i-n); if(r<n-1)v.push(i+n); if(c>0)v.push(i-1); if(c<n-1)v.push(i+1);
   return v;
 }
 function zipHamilton(n){
-  let path = [];
-  for(let r = 0; r < n; r++){
-    const fila = [];
-    for(let c = 0; c < n; c++) fila.push(r * n + c);
-    if(r % 2 === 1) fila.reverse();
-    path = path.concat(fila);
-  }
-  const iter = n * n * 40;
-  for(let k = 0; k < iter; k++){
-    if(Math.random() < 0.5) path.reverse();
-    const tail = path[path.length - 1];
-    const vec = zipVecinos(tail, n).filter(x => x !== path[path.length - 2]);
+  let path=[];
+  for(let r=0;r<n;r++){ const fila=[]; for(let c=0;c<n;c++) fila.push(r*n+c); if(r%2===1) fila.reverse(); path=path.concat(fila); }
+  const iter=n*n*40;
+  for(let k=0;k<iter;k++){
+    if(Math.random()<0.5) path.reverse();
+    const tail=path[path.length-1];
+    const vec=zipVecinos(tail,n).filter(x=>x!==path[path.length-2]);
     if(!vec.length) continue;
-    const nb = vec[Math.floor(Math.random() * vec.length)];
-    const j = path.indexOf(nb);
-    if(j < 0 || j >= path.length - 1) continue;
-    path = path.slice(0, j + 1).concat(path.slice(j + 1).reverse());
+    const nb=vec[Math.floor(Math.random()*vec.length)];
+    const j=path.indexOf(nb);
+    if(j<0||j>=path.length-1) continue;
+    path=path.slice(0,j+1).concat(path.slice(j+1).reverse());
   }
   return path;
 }
+function zipMostrar(){
+  const el=document.getElementById('jxScreenZip');
+  el.innerHTML =
+    '<div class="jx-juego-top"><div class="jx-seg" id="zipSeg">' +
+      '<button data-size="5">5×5</button><button data-size="6">6×6</button><button data-size="7">7×7</button>' +
+    '</div></div>' +
+    '<p class="jx-tip">Arrastra desde el <b>1</b> y pasa por todos los números en orden, llenando cada casilla con una sola línea.</p>' +
+    '<div class="jx-hud">' +
+      '<span class="pill" id="zipEstado">Une 1 → fin</span>' +
+      '<span class="pill">⏱️ <span id="zipTiempo">0:00</span></span>' +
+      '<span class="pill" id="zipProg">0/0</span>' +
+    '</div>' +
+    '<div class="jx-board-wrap"><div class="jx-zip" id="jxZip"></div></div>' +
+    '<div class="jx-ctrl"><button class="jx-btn" id="zipNuevo">Nuevo</button>' +
+      '<button class="jx-btn ghost" id="zipDeshacer">↶ Deshacer</button>' +
+      '<button class="jx-btn ghost" id="zipReset">Reiniciar</button></div>';
+
+  el.querySelectorAll('#zipSeg button').forEach(b => {
+    b.classList.toggle('activo', +b.dataset.size === zipSize);
+    b.onclick = () => { zipSize = +b.dataset.size; el.querySelectorAll('#zipSeg button').forEach(x => x.classList.toggle('activo', x === b)); zipNuevo(); };
+  });
+  document.getElementById('zipNuevo').onclick = zipNuevo;
+  document.getElementById('zipDeshacer').onclick = () => { if(zipEstado&&zipEstado.ruta.length){ zipEstado.ruta.pop(); zipEstado.maxNum=zipMaxNum(); zipPintar(); jxSonido('tap'); } };
+  document.getElementById('zipReset').onclick = () => { if(zipEstado){ zipEstado.ruta=[]; zipEstado.maxNum=0; zipPintar(); } };
+  zipEnlazarPuntero();
+  zipNuevo();
+}
 function zipNuevo(){
-  const n = zipSize, total = n * n;
-  const path = zipHamilton(n);
-  const K = Math.max(4, Math.min(9, Math.round(n * 1.2)));
-  const internos = new Set();
-  while(internos.size < K - 2){ internos.add(1 + Math.floor(Math.random() * (total - 2))); }
-  const pos = [0, ...[...internos].sort((a, b) => a - b), total - 1];
-  const numeros = {};
-  pos.forEach((p, idx) => { numeros[path[p]] = idx + 1; });
-  zipEstado = { n, numeros, ruta: [], maxNum: 0, dibujando: false, K };
+  const n=zipSize, total=n*n;
+  const path=zipHamilton(n);
+  const K=Math.max(4,Math.min(9,Math.round(n*1.2)));
+  const internos=new Set();
+  while(internos.size<K-2){ internos.add(1+Math.floor(Math.random()*(total-2))); }
+  const pos=[0,...[...internos].sort((a,b)=>a-b),total-1];
+  const numeros={};
+  pos.forEach((p,idx)=>{ numeros[path[p]]=idx+1; });
+  zipEstado={ n, numeros, ruta:[], maxNum:0, dibujando:false, K, inicio:Date.now(), terminado:false };
   zipRender();
-  document.getElementById('jxZipEstado').textContent = 'Une 1 → ' + K + ' llenando toda la grilla';
+  const est=document.getElementById('zipEstado'); if(est) est.textContent='Une 1 → '+K;
+  zipArrancarTimer();
 }
 function zipRender(){
-  const cont = document.getElementById('jxZip');
-  const st = zipEstado, n = st.n;
-  cont.innerHTML = '';
-  const grid = document.createElement('div');
-  grid.className = 'jx-zip-grid';
-  grid.style.gridTemplateColumns = 'repeat(' + n + ',1fr)';
-  for(let i = 0; i < n * n; i++){
-    const cell = document.createElement('div');
-    cell.className = 'jx-zc';
-    cell.dataset.i = i;
-    if(st.numeros[i]){ cell.classList.add('num'); if(st.numeros[i] === 1) cell.classList.add('inicio'); cell.textContent = st.numeros[i]; }
+  const cont=document.getElementById('jxZip'); const st=zipEstado, n=st.n;
+  cont.innerHTML='';
+  const grid=document.createElement('div'); grid.className='jx-zip-grid';
+  grid.style.gridTemplateColumns='repeat('+n+',1fr)';
+  for(let i=0;i<n*n;i++){
+    const cell=document.createElement('div'); cell.className='jx-zc'; cell.dataset.i=i;
+    if(st.numeros[i]){ cell.classList.add('num'); if(st.numeros[i]===1) cell.classList.add('inicio'); cell.innerHTML='<span class="nbadge">'+st.numeros[i]+'</span>'; }
     grid.appendChild(cell);
   }
   cont.appendChild(grid);
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('viewBox', '0 0 ' + n + ' ' + n);
-  svg.setAttribute('preserveAspectRatio', 'none');
-  const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-  poly.setAttribute('id', 'jxZipLine');
-  poly.setAttribute('style', 'fill:none;stroke:var(--rosa);stroke-width:0.34;stroke-linecap:round;stroke-linejoin:round;opacity:.55');
-  svg.appendChild(poly);
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('class','jx-zip-svg'); svg.id='jxZipSvg';
+  const glow=document.createElementNS('http://www.w3.org/2000/svg','polyline'); glow.id='jxZipGlow';
+  glow.setAttribute('fill','none'); glow.setAttribute('stroke','rgba(201,142,155,.30)'); glow.setAttribute('stroke-linecap','round'); glow.setAttribute('stroke-linejoin','round');
+  const line=document.createElementNS('http://www.w3.org/2000/svg','polyline'); line.id='jxZipLine';
+  line.setAttribute('fill','none'); line.setAttribute('stroke','url(#jxZipGrad)'); line.setAttribute('stroke-linecap','round'); line.setAttribute('stroke-linejoin','round');
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  defs.innerHTML='<linearGradient id="jxZipGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d8c08f"/><stop offset="1" stop-color="#c98e9b"/></linearGradient>';
+  const head=document.createElementNS('http://www.w3.org/2000/svg','circle'); head.id='jxZipHead'; head.setAttribute('fill','#c98e9b'); head.setAttribute('r','0');
+  svg.append(defs,glow,line,head);
   cont.appendChild(svg);
-  zipPintarRuta();
+  requestAnimationFrame(zipDibujarLinea);
 }
-function zipPintarRuta(){
-  const st = zipEstado, n = st.n;
-  const cells = document.getElementById('jxZip').querySelectorAll('.jx-zc');
-  cells.forEach(c => c.classList.remove('en-ruta'));
-  st.ruta.forEach(i => cells[i].classList.add('en-ruta'));
-  const poly = document.getElementById('jxZipLine');
-  if(poly){
-    poly.setAttribute('points', st.ruta.map(i => {
-      const r = Math.floor(i / n), c = i % n;
-      return (c + 0.5) + ',' + (r + 0.5);
-    }).join(' '));
+function zipCentros(){
+  const cont=document.getElementById('jxZip'); const st=zipEstado;
+  const cells=cont.querySelectorAll('.jx-zc');
+  const w=cont.clientWidth, h=cont.clientHeight;
+  const svg=document.getElementById('jxZipSvg'); if(svg) svg.setAttribute('viewBox','0 0 '+w+' '+h);
+  return { cells, w, h };
+}
+function zipDibujarLinea(){
+  const st=zipEstado; if(!st) return;
+  const { cells } = zipCentros();
+  if(!cells.length) return;
+  const ancho=cells[0].offsetWidth;
+  const pts=st.ruta.map(i=>{ const e=cells[i]; return (e.offsetLeft+e.offsetWidth/2)+','+(e.offsetTop+e.offsetHeight/2); }).join(' ');
+  const line=document.getElementById('jxZipLine'), glow=document.getElementById('jxZipGlow'), head=document.getElementById('jxZipHead');
+  if(line){ line.setAttribute('points',pts); line.setAttribute('stroke-width', ancho*0.40); }
+  if(glow){ glow.setAttribute('points',pts); glow.setAttribute('stroke-width', ancho*0.66); }
+  if(head){
+    if(st.ruta.length){ const e=cells[st.ruta[st.ruta.length-1]]; head.setAttribute('cx',e.offsetLeft+e.offsetWidth/2); head.setAttribute('cy',e.offsetTop+e.offsetHeight/2); head.setAttribute('r',ancho*0.16); }
+    else head.setAttribute('r','0');
   }
 }
-function zipMaxNum(){
-  const st = zipEstado; let mx = 0;
-  st.ruta.forEach(i => { if(st.numeros[i]) mx = Math.max(mx, st.numeros[i]); });
-  return mx;
+function zipPintar(){
+  const st=zipEstado, cont=document.getElementById('jxZip');
+  const cells=cont.querySelectorAll('.jx-zc');
+  cells.forEach(c=>c.classList.remove('en-ruta'));
+  st.ruta.forEach(i=>cells[i].classList.add('en-ruta'));
+  zipDibujarLinea();
+  const prog=document.getElementById('zipProg'); if(prog) prog.textContent=st.ruta.length+'/'+(st.n*st.n);
 }
+function zipMaxNum(){ const st=zipEstado; let mx=0; st.ruta.forEach(i=>{ if(st.numeros[i]) mx=Math.max(mx,st.numeros[i]); }); return mx; }
 function zipIntentar(i){
-  const st = zipEstado;
-  if(st.ruta.length === 0){
-    if(st.numeros[i] === 1){ st.ruta.push(i); st.maxNum = 1; zipPintarRuta(); }
-    return;
-  }
-  const last = st.ruta[st.ruta.length - 1];
-  if(i === last) return;
-  if(st.ruta.length >= 2 && i === st.ruta[st.ruta.length - 2]){
-    st.ruta.pop(); st.maxNum = zipMaxNum(); zipPintarRuta(); return;
-  }
+  const st=zipEstado; if(st.terminado) return;
+  if(st.ruta.length===0){ if(st.numeros[i]===1){ st.ruta.push(i); st.maxNum=1; jxSonido('tap'); zipPintar(); } return; }
+  const last=st.ruta[st.ruta.length-1];
+  if(i===last) return;
+  if(st.ruta.length>=2 && i===st.ruta[st.ruta.length-2]){ st.ruta.pop(); st.maxNum=zipMaxNum(); zipPintar(); return; }
   if(st.ruta.includes(i)) return;
-  if(!zipVecinos(i, st.n).includes(last)) return;
-  const num = st.numeros[i];
-  if(num && num !== st.maxNum + 1) return;
-  st.ruta.push(i);
-  if(num) st.maxNum = num;
-  zipPintarRuta();
-  if(st.ruta.length === st.n * st.n) zipGanar();
+  if(!zipVecinos(i,st.n).includes(last)) return;
+  const num=st.numeros[i];
+  if(num && num!==st.maxNum+1){ jxSonido('mal'); return; }
+  st.ruta.push(i); if(num) st.maxNum=num;
+  jxSonido('tap');
+  zipPintar();
+  if(st.ruta.length===st.n*st.n) zipGanar();
 }
 function zipGanar(){
-  const st = zipEstado;
-  document.getElementById('jxZipEstado').textContent = '¡Resuelto! 🎉';
-  datos.juegos.zip.resueltos = (datos.juegos.zip.resueltos || 0) + 1;
-  const premio = 10 + (st.n - 5) * 6;
-  jxRecompensar(premio, premio, '¡Zip ' + st.n + '×' + st.n + ' resuelto!');
-  setTimeout(zipNuevo, 1500);
+  const st=zipEstado; st.terminado=true; clearInterval(zipTimer);
+  const seg=Math.floor((Date.now()-st.inicio)/1000);
+  document.getElementById('zipEstado').textContent='¡Resuelto! 🎉';
+  asegurarJuegos();
+  datos.juegos.zip.resueltos++;
+  const premio=10+(st.n-5)*6;
+  const r=jxRecompensar(premio, premio, { desde: document.getElementById('jxZip') });
+  jxCelebrar({ titulo:'¡Zip resuelto!', sub:st.n+'×'+st.n+' en '+sdTiempo(seg),
+    monedas:premio, xp:premio, subioNivel:r.subioNivel, nivel:r.nivel, onNext:zipNuevo });
 }
-(function zipInit(){
-  const cont = document.getElementById('jxZip');
-  function celdaEn(x, y){
-    const el = document.elementFromPoint(x, y);
-    if(!el) return -1;
-    const cell = el.closest('.jx-zc');
-    if(!cell || !cont.contains(cell)) return -1;
+function zipArrancarTimer(){
+  clearInterval(zipTimer);
+  zipTimer=setInterval(()=>{
+    if(!zipEstado||zipEstado.terminado) return;
+    const t=document.getElementById('zipTiempo'); if(t) t.textContent=sdTiempo(Math.floor((Date.now()-zipEstado.inicio)/1000));
+  },1000);
+}
+let zipPunteroListo=false;
+function zipEnlazarPuntero(){
+  if(zipPunteroListo) return; zipPunteroListo=true;
+  const sc=document.getElementById('jxScreenZip');
+  function celdaEn(x,y){
+    const el=document.elementFromPoint(x,y); if(!el) return -1;
+    const cell=el.closest('.jx-zc'); const cont=document.getElementById('jxZip');
+    if(!cell||!cont||!cont.contains(cell)) return -1;
     return +cell.dataset.i;
   }
-  cont.addEventListener('pointerdown', e => {
-    if(!zipEstado) return;
-    const i = celdaEn(e.clientX, e.clientY);
-    if(i < 0) return;
+  sc.addEventListener('pointerdown', e => {
+    if(!zipEstado||jxPantalla!=='zip') return;
+    const i=celdaEn(e.clientX,e.clientY); if(i<0) return;
     e.preventDefault();
-    if(i !== (zipEstado.ruta[zipEstado.ruta.length - 1])) zipIntentar(i);
-    zipEstado.dibujando = true;
-    if(cont.setPointerCapture){ try{ cont.setPointerCapture(e.pointerId); }catch(err){} }
-  });
-  cont.addEventListener('pointermove', e => {
-    if(!zipEstado || !zipEstado.dibujando) return;
-    const i = celdaEn(e.clientX, e.clientY);
-    if(i >= 0) zipIntentar(i);
-  });
-  const fin = () => { if(zipEstado) zipEstado.dibujando = false; };
-  cont.addEventListener('pointerup', fin);
-  cont.addEventListener('pointercancel', fin);
-  document.querySelectorAll('#jxZipDif .jx-dif').forEach(b => {
-    b.onclick = () => { zipSize = +b.dataset.size; document.querySelectorAll('#jxZipDif .jx-dif').forEach(x => x.classList.toggle('activo', x === b)); zipNuevo(); };
-  });
-  document.getElementById('jxZipNuevo').onclick = zipNuevo;
-  document.getElementById('jxZipReiniciar').onclick = () => { if(zipEstado){ zipEstado.ruta = []; zipEstado.maxNum = 0; zipPintarRuta(); } };
-  zipNuevo();
-})();
+    if(i!==zipEstado.ruta[zipEstado.ruta.length-1]) zipIntentar(i);
+    zipEstado.dibujando=true;
+  }, { passive:false });
+  sc.addEventListener('pointermove', e => {
+    if(!zipEstado||!zipEstado.dibujando) return;
+    const i=celdaEn(e.clientX,e.clientY); if(i>=0) zipIntentar(i);
+  }, { passive:false });
+  const fin=()=>{ if(zipEstado) zipEstado.dibujando=false; };
+  sc.addEventListener('pointerup',fin); sc.addEventListener('pointercancel',fin);
+}
+window.addEventListener('resize', () => { if(jxPantalla==='zip' && zipEstado) zipDibujarLinea(); });
 
+/* ============================================================
+   ARRANQUE
+   ============================================================ */
+document.getElementById('jxLaunch').onclick = () => { jxSonido('tap'); jxAbrirApp(); };
+document.getElementById('jxBack').onclick = () => { jxSonido('tap'); jxAtras(); };
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && document.getElementById('jxApp')?.classList.contains('abierta') && !document.getElementById('popup')?.classList.contains('visible')){
+    if(document.getElementById('jxCelebra').classList.contains('on')) return;
+    jxAtras();
+  }
+});
 asegurarJuegos();
 pintarJuegos();
-
 </script>
 </body>
 </html>
