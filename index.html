@@ -937,7 +937,7 @@
   .jx-snake-wrap{display:flex;justify-content:center;}
   #jxSnakeCv{width:min(94vw,400px);aspect-ratio:1;background:var(--crema-oscuro);border-radius:18px;touch-action:none;box-shadow:0 12px 30px var(--sombra);}
 
-  /* Detective */
+  /* Detective — Criminal Case */
   .jx-card.detective{background:linear-gradient(150deg,#5f6b8a,#3c4360);}
   .dt-list{display:flex;flex-direction:column;gap:14px;}
   .dt-caso-card{position:relative;display:flex;gap:14px;align-items:center;text-align:left;width:100%;border:1px solid var(--crema-oscuro);background:var(--blanco);border-radius:20px;padding:16px;cursor:pointer;font-family:inherit;color:inherit;box-shadow:0 8px 22px var(--sombra);transition:transform .15s, box-shadow .2s;overflow:hidden;}
@@ -949,55 +949,85 @@
   .dt-caso-emo.big{font-size:2.8rem;}
   .dt-caso-info{flex:1;min-width:0;}
   .dt-caso-tit{font-family:'Playfair Display',serif;font-size:1.18rem;color:var(--tinta);line-height:1.15;}
-  .dt-ok{color:var(--verde);}
-  .dt-caso-meta{font-size:.78rem;color:var(--gris);margin:4px 0;}
-  .dt-tag{display:inline-block;border-radius:999px;padding:2px 9px;font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:#fff;}
-  .dt-tag.robo{background:#b9985a;}
-  .dt-tag.infidelidad{background:#c98e9b;}
-  .dt-tag.desaparicion{background:#8a9a7b;}
-  .dt-tag.misterio{background:#5f6b8a;}
-  .dt-caso-cli{font-size:.82rem;color:var(--gris);font-weight:300;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .dt-back{margin-bottom:14px;}
-  .dt-caso-head,.dt-lugar-head{display:flex;gap:14px;align-items:center;margin-bottom:14px;}
-  .dt-caso-head h3,.dt-lugar-head h3{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.4rem;line-height:1.1;}
-  .dt-banner{background:var(--blanco);border:1px solid var(--crema-oscuro);border-left:4px solid var(--dorado);border-radius:0 16px 16px 0;padding:16px 18px;margin-bottom:18px;box-shadow:0 8px 20px var(--sombra-tenue);}
-  .dt-banner b{font-family:'Playfair Display',serif;color:var(--dorado);}
-  .dt-banner p{font-weight:300;color:var(--tinta);margin-top:6px;line-height:1.5;}
-  .dt-cli{font-style:italic;color:var(--gris);font-size:.9rem;}
-  .dt-sec-tit{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.02rem;margin:18px 2px 10px;}
-  .dt-chips{display:flex;flex-wrap:wrap;gap:10px;}
-  .dt-chip{border:1.5px solid var(--dorado-claro);background:var(--blanco);color:var(--tinta);border-radius:14px;padding:11px 16px;cursor:pointer;font-family:'Jost',sans-serif;font-size:.95rem;transition:transform .12s, border-color .2s;box-shadow:0 4px 12px var(--sombra-tenue);}
-  .dt-chip:active{transform:scale(.95);}
-  .dt-chip:hover{border-color:var(--dorado);}
-  .dt-evidencias{display:flex;flex-direction:column;gap:10px;}
-  .dt-ev{display:flex;gap:12px;align-items:flex-start;background:var(--crema);border:1px dashed var(--dorado-claro);border-radius:14px;padding:12px 14px;}
-  .dt-ev span{font-size:1.5rem;}
-  .dt-ev b{font-family:'Playfair Display',serif;color:var(--tinta);display:block;}
-  .dt-ev p{font-weight:300;color:var(--gris);font-size:.9rem;margin-top:2px;line-height:1.45;}
-  .dt-vacio{color:var(--gris);font-weight:300;font-style:italic;padding:8px 2px;}
-  .dt-resolver{width:100%;margin-top:24px;}
-  .dt-desc{color:var(--gris);font-weight:300;line-height:1.55;margin-bottom:6px;}
-  .dt-puntos{display:flex;flex-direction:column;gap:12px;margin-top:6px;}
-  .dt-punto{border:1px solid var(--crema-oscuro);background:var(--blanco);border-radius:16px;padding:14px 16px;cursor:pointer;transition:transform .12s, border-color .2s;box-shadow:0 4px 12px var(--sombra-tenue);}
-  .dt-punto:active{transform:scale(.98);}
-  .dt-punto.hallazgo{border-color:var(--verde);background:rgba(138,154,123,.10);cursor:default;}
-  .dt-punto.vacio{opacity:.6;cursor:default;}
-  .dt-punto.bloq{opacity:.7;border-style:dashed;cursor:not-allowed;}
-  .dt-punto-cab{display:flex;justify-content:space-between;align-items:center;font-size:1rem;color:var(--tinta);}
-  .dt-punto-est{font-size:1.1rem;}
-  .dt-punto-det{margin-top:10px;font-weight:300;color:var(--tinta);line-height:1.5;font-size:.93rem;border-top:1px dashed var(--crema-oscuro);padding-top:10px;animation:jxAppIn .25s ease;}
-  .dt-pregs{display:flex;flex-direction:column;gap:12px;margin-top:6px;}
+  .dt-ok{color:var(--verde);font-weight:500;}
+  .dt-prog-tag{color:var(--dorado);font-size:.85rem;font-weight:500;}
+  .dt-prog-tag.nuevo{color:var(--rosa);}
+  .dt-caso-meta{font-size:.76rem;color:var(--gris);margin:4px 0;}
+  .dt-tag{display:inline-block;border-radius:999px;padding:2px 9px;font-size:.66rem;letter-spacing:1px;text-transform:uppercase;color:#fff;}
+  .dt-tag.robo{background:#b9985a;}.dt-tag.infidelidad{background:#c98e9b;}.dt-tag.desaparicion{background:#8a9a7b;}.dt-tag.misterio{background:#5f6b8a;}
+  .dt-caso-cli{font-size:.85rem;font-weight:300;}
+  .dt-back{margin-bottom:12px;}
+  .dt-caso-head{display:flex;gap:14px;align-items:center;margin-bottom:12px;}
+  .dt-caso-head h3{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.35rem;line-height:1.1;}
+  .dt-prog{height:8px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;margin-bottom:14px;}
+  .dt-prog > div{height:100%;background:linear-gradient(90deg,var(--dorado-claro),var(--dorado));border-radius:999px;transition:width .5s ease;}
+  .dt-perfil-mini{background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:16px;padding:12px 14px;margin-bottom:16px;box-shadow:0 6px 16px var(--sombra-tenue);}
+  .dt-perfil-mini > b{font-family:'Playfair Display',serif;color:var(--dorado);font-size:.92rem;}
+  .dt-traits{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+  .dt-trait{display:inline-flex;align-items:center;gap:5px;background:var(--rosa-claro);color:var(--tinta);border-radius:999px;padding:5px 12px;font-size:.86rem;font-weight:500;}
+  .dt-trait.sm{background:var(--crema-oscuro);padding:3px 9px;font-size:.74rem;font-weight:400;}
+
+  .dt-etapa{animation:jxAppIn .25s ease;}
+  .dt-et-tit{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.25rem;margin-bottom:4px;}
+  .dt-et-sub{color:var(--gris);font-weight:300;font-size:.92rem;margin-bottom:12px;line-height:1.45;}
+  .dt-et-ctrl{text-align:center;margin-top:14px;}
+  .dt-et-done{background:var(--blanco);border:1px solid var(--crema-oscuro);border-left:4px solid var(--verde);border-radius:0 16px 16px 0;padding:16px 18px;margin-top:16px;text-align:center;box-shadow:0 8px 20px var(--sombra);animation:jxPop .3s ease;}
+  .dt-et-done b{font-family:'Playfair Display',serif;color:var(--verde);font-size:1.1rem;}
+  .dt-et-done p{font-weight:300;color:var(--tinta);margin:8px 0 14px;line-height:1.5;}
+
+  /* Escena de búsqueda */
+  .dt-finds{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+  .dt-find{background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:999px;padding:6px 12px;font-size:.82rem;color:var(--tinta);transition:all .2s;}
+  .dt-find.ok{background:var(--verde);color:#fff;border-color:var(--verde);text-decoration:line-through;opacity:.85;}
+  .dt-escena{position:relative;width:100%;aspect-ratio:100/64;border-radius:18px;overflow:hidden;box-shadow:inset 0 0 60px rgba(0,0,0,.28),0 12px 30px var(--sombra);touch-action:manipulation;cursor:crosshair;}
+  .dt-escena svg{position:absolute;inset:0;width:100%;height:100%;}
+  .dt-obj{position:absolute;transform:translate(-50%,-50%);font-size:1.5rem;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.55));opacity:.92;pointer-events:none;transition:transform .15s;}
+  .dt-obj.decoy{opacity:.8;}
+  .dt-obj.ok{transform:translate(-50%,-50%) scale(1.25);opacity:1;filter:drop-shadow(0 0 6px #8a9a7b);animation:jxPopIn .3s ease;}
+  .dt-miss{position:absolute;width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.7);transform:translate(-50%,-50%);pointer-events:none;animation:dtMiss .5s ease forwards;}
+  @keyframes dtMiss{from{opacity:.9;transform:translate(-50%,-50%) scale(.5)}to{opacity:0;transform:translate(-50%,-50%) scale(1.4)}}
+  .dt-hint{position:absolute;width:42px;height:42px;border-radius:50%;border:3px solid #f4d58a;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 16px #f4d58a;animation:dtHint 1.6s ease forwards;}
+  @keyframes dtHint{0%,80%{opacity:1}100%{opacity:0}}
+
+  /* Análisis (emparejar) */
+  .dt-match-grid{display:flex;gap:12px;}
+  .dt-match-col{flex:1;display:flex;flex-direction:column;gap:10px;}
+  .dt-match{border:1.5px solid var(--dorado-claro);background:var(--blanco);color:var(--tinta);border-radius:14px;padding:13px 12px;cursor:pointer;font-family:'Jost',sans-serif;font-size:.86rem;text-align:left;line-height:1.35;transition:all .15s;min-height:58px;}
+  .dt-match:active{transform:scale(.97);}
+  .dt-match.sel{border-color:var(--rosa);background:var(--rosa-claro);box-shadow:0 0 0 2px var(--rosa-claro);}
+  .dt-match.ok{border-color:var(--verde);background:rgba(138,154,123,.16);color:var(--gris);cursor:default;}
+
+  /* Interrogatorio */
+  .dt-sosp-card{display:flex;gap:14px;align-items:center;background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:18px;padding:14px;margin-bottom:14px;box-shadow:0 8px 20px var(--sombra-tenue);}
+  .dt-sosp-emo{font-size:2.6rem;}
+  .dt-sosp-card b{font-family:'Playfair Display',serif;color:var(--tinta);font-size:1.1rem;}
+  .dt-sosp-card p{font-weight:300;color:var(--gris);font-size:.9rem;margin-top:2px;}
+  .dt-pregs{display:flex;flex-direction:column;gap:12px;}
   .dt-preg{border:1px solid var(--crema-oscuro);background:var(--blanco);border-radius:16px;padding:14px 16px;cursor:pointer;box-shadow:0 4px 12px var(--sombra-tenue);transition:transform .12s;}
   .dt-preg:active{transform:scale(.98);}
-  .dt-preg.bloq{opacity:.65;border-style:dashed;cursor:not-allowed;}
   .dt-preg-q{font-weight:500;color:var(--dorado);}
   .dt-preg-a{margin-top:10px;font-style:italic;font-weight:300;color:var(--tinta);line-height:1.5;border-top:1px dashed var(--crema-oscuro);padding-top:10px;animation:jxAppIn .25s ease;}
-  .dt-veredicto h3{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.5rem;text-align:center;}
-  .dt-vpreg{text-align:center;font-weight:300;color:var(--tinta);margin:8px auto 4px;max-width:420px;line-height:1.5;}
-  .dt-opciones{display:flex;flex-direction:column;gap:12px;margin-top:12px;}
-  .dt-opcion{border:1.5px solid var(--dorado-claro);background:var(--crema);color:var(--tinta);border-radius:16px;padding:15px 18px;cursor:pointer;font-family:'Jost',sans-serif;font-size:1rem;text-align:left;line-height:1.4;transition:transform .12s, border-color .2s, background .2s;}
-  .dt-opcion:active{transform:scale(.97);}
-  .dt-opcion:hover{border-color:var(--rosa);background:var(--rosa-claro);}
+
+  /* Cronología */
+  .dt-crono{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+  .dt-evt{display:flex;gap:12px;align-items:center;background:rgba(138,154,123,.14);border:1px solid var(--verde);border-radius:14px;padding:12px 14px;font-weight:300;color:var(--tinta);line-height:1.4;animation:jxAppIn .25s ease;}
+  .dt-evt-n{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--verde);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:.9rem;}
+  .dt-evt-ops{display:flex;flex-direction:column;gap:10px;}
+  .dt-evt-op{border:1.5px solid var(--dorado-claro);background:var(--blanco);color:var(--tinta);border-radius:14px;padding:13px 16px;cursor:pointer;font-family:'Jost',sans-serif;font-size:.92rem;text-align:left;line-height:1.4;transition:all .15s;}
+  .dt-evt-op:active{transform:scale(.97);}
+  .dt-evt-op:hover{border-color:var(--dorado);}
+  .dt-vacio{color:var(--gris);font-weight:300;font-style:italic;}
+
+  /* Arresto */
+  .dt-perfil-box{background:linear-gradient(135deg,var(--blanco),var(--crema));border:1px solid var(--dorado-claro);border-radius:18px;padding:16px 18px;margin-bottom:16px;box-shadow:0 8px 22px var(--sombra);}
+  .dt-perfil-box > b{font-family:'Playfair Display',serif;color:var(--dorado);}
+  .dt-arrest{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .dt-arrest-card{border:1.5px solid var(--crema-oscuro);background:var(--blanco);border-radius:18px;padding:16px 10px;cursor:pointer;text-align:center;box-shadow:0 6px 16px var(--sombra);transition:transform .14s, border-color .2s;}
+  .dt-arrest-card:active{transform:scale(.96);}
+  .dt-arrest-card:hover{border-color:var(--rosa);}
+  .dt-arrest-card .dt-sosp-emo{font-size:2.6rem;display:block;}
+  .dt-arrest-card b{font-family:'Playfair Display',serif;display:block;margin:6px 0;color:var(--tinta);}
+  .dt-arrest-perfil{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}
 
   /* Celebración + confeti */
   #jxConfeti{position:absolute;inset:0;width:100%;height:100%;z-index:7;pointer-events:none;display:none;}
@@ -5105,220 +5135,217 @@ window.addEventListener('resize', () => {
 });
 
 /* ============================================================
-   DETECTIVE — resuelve casos tocando pistas e interrogando
+   DETECTIVE — Criminal Case: capítulos, escenas de búsqueda,
+   análisis, interrogatorios, cronología y arresto por perfil.
    ============================================================ */
+const DT_ESCENAS = {
+  salon: `<svg viewBox="0 0 100 64" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="40" fill="#e7d8bd"/><rect y="40" width="100" height="24" fill="#caa978"/>
+    <rect x="0" y="0" width="14" height="40" fill="#c98e9b" opacity=".5"/><rect x="86" y="0" width="14" height="40" fill="#c98e9b" opacity=".5"/>
+    <g stroke="#b9985a" stroke-width=".6" opacity=".5"><line x1="14" y1="20" x2="86" y2="20"/></g>
+    <rect x="22" y="34" width="56" height="6" fill="#fff" opacity=".85"/><rect x="22" y="40" width="56" height="14" fill="#d8a2af"/>
+    <ellipse cx="50" cy="9" rx="9" ry="4" fill="#f4d58a"/><line x1="50" y1="0" x2="50" y2="6" stroke="#b9985a" stroke-width="1"/>
+    <g fill="#f4d58a"><circle cx="45" cy="11" r="1.6"/><circle cx="50" cy="13" r="1.6"/><circle cx="55" cy="11" r="1.6"/></g>
+    <circle cx="20" cy="10" r="4" fill="#c98e9b"/><circle cx="80" cy="9" r="4" fill="#8a9a7b"/><line x1="20" y1="14" x2="20" y2="24" stroke="#b9985a" stroke-width=".5"/><line x1="80" y1="13" x2="80" y2="24" stroke="#b9985a" stroke-width=".5"/>
+  </svg>`,
+  biblioteca: `<svg viewBox="0 0 100 64" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="64" fill="#3b2f24"/><rect y="46" width="100" height="18" fill="#5a4632"/>
+    <g><rect x="4" y="6" width="30" height="40" fill="#4a3a2a"/><rect x="66" y="6" width="30" height="40" fill="#4a3a2a"/>
+    <g fill="#8a6f4e"><rect x="6" y="9" width="26" height="2.4"/><rect x="6" y="15" width="26" height="2.4"/><rect x="6" y="21" width="26" height="2.4"/><rect x="6" y="27" width="26" height="2.4"/><rect x="6" y="33" width="26" height="2.4"/><rect x="6" y="39" width="26" height="2.4"/>
+    <rect x="68" y="9" width="26" height="2.4"/><rect x="68" y="15" width="26" height="2.4"/><rect x="68" y="21" width="26" height="2.4"/><rect x="68" y="27" width="26" height="2.4"/><rect x="68" y="33" width="26" height="2.4"/><rect x="68" y="39" width="26" height="2.4"/></g></g>
+    <rect x="40" y="10" width="20" height="16" rx="1" fill="#1c2630"/><rect x="40" y="10" width="20" height="16" rx="1" fill="#2a3a48" opacity=".7"/>
+    <rect x="36" y="40" width="28" height="10" rx="1" fill="#6b4f36"/><ellipse cx="50" cy="56" rx="30" ry="5" fill="#7a3b3b" opacity=".5"/>
+    <rect x="70" y="34" width="2" height="12" fill="#3a2c1f"/><ellipse cx="71" cy="32" rx="5" ry="3.5" fill="#f4d58a"/>
+  </svg>`,
+  jardin: `<svg viewBox="0 0 100 64" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="40" fill="#26304a"/><rect y="40" width="100" height="24" fill="#3a4a38"/>
+    <circle cx="82" cy="11" r="6" fill="#f3eecf"/><circle cx="79" cy="9" r="6" fill="#26304a"/>
+    <g fill="#fff"><circle cx="20" cy="8" r=".5"/><circle cx="35" cy="14" r=".5"/><circle cx="55" cy="6" r=".5"/><circle cx="64" cy="16" r=".5"/><circle cx="10" cy="20" r=".5"/></g>
+    <ellipse cx="18" cy="40" rx="20" ry="9" fill="#2f4030"/><ellipse cx="84" cy="40" rx="20" ry="9" fill="#2f4030"/>
+    <ellipse cx="50" cy="52" rx="14" ry="6" fill="#557089"/><rect x="48.5" y="40" width="3" height="12" fill="#6b7c8a"/><ellipse cx="50" cy="40" rx="6" ry="2.5" fill="#7fa0b5"/>
+    <rect x="10" y="34" width="1.6" height="14" fill="#2a2118"/><circle cx="10.8" cy="33" r="2.4" fill="#f4d58a"/>
+    <rect x="88" y="34" width="1.6" height="14" fill="#2a2118"/><circle cx="88.8" cy="33" r="2.4" fill="#f4d58a"/>
+    <path d="M40 64 L46 44 H54 L60 64 Z" fill="#cdbf9e" opacity=".5"/>
+  </svg>`,
+  museo: `<svg viewBox="0 0 100 64" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="64" fill="#e9e7e0"/><rect y="44" width="100" height="20" fill="#cfccc2"/>
+    <g fill="#dad7cd"><rect x="6" y="4" width="9" height="42"/><rect x="44" y="4" width="9" height="42"/><rect x="85" y="4" width="9" height="42"/></g>
+    <rect x="0" y="4" width="100" height="4" fill="#d2cfc4"/>
+    <rect x="60" y="20" width="20" height="26" fill="#bfe2ef" opacity=".5" stroke="#9fb6c0" stroke-width="1"/>
+    <rect x="66" y="40" width="8" height="10" fill="#9aa1a8"/><path d="M70 26 l4 7 -4 3 -4 -3 z" fill="#7fd0e8"/>
+    <ellipse cx="30" cy="52" rx="10" ry="3" fill="#b7b4aa"/><rect x="28.5" y="40" width="3" height="12" fill="#a8a59b"/><rect x="24" y="36" width="12" height="5" rx="1" fill="#8a9aa5"/>
+    <g stroke="#b9985a" stroke-width="1"><line x1="18" y1="46" x2="44" y2="46"/></g><circle cx="18" cy="46" r="1.6" fill="#d8c08f"/><circle cx="44" cy="46" r="1.6" fill="#d8c08f"/>
+  </svg>`,
+  callejon: `<svg viewBox="0 0 100 64" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="64" fill="#20242c"/><rect width="48" height="50" fill="#3a3026"/><rect x="52" width="48" height="50" fill="#33372f"/>
+    <g stroke="#2a2219" stroke-width=".5" opacity=".6"><line x1="0" y1="12" x2="48" y2="12"/><line x1="0" y1="24" x2="48" y2="24"/><line x1="0" y1="36" x2="48" y2="36"/><line x1="52" y1="12" x2="100" y2="12"/><line x1="52" y1="24" x2="100" y2="24"/><line x1="52" y1="36" x2="100" y2="36"/></g>
+    <rect y="50" width="100" height="14" fill="#15171c"/><ellipse cx="62" cy="58" rx="16" ry="4" fill="#2a2e36"/>
+    <rect x="6" y="36" width="20" height="16" rx="1" fill="#5a6b54"/><rect x="6" y="33" width="20" height="4" rx="1" fill="#6b7c63"/>
+    <rect x="86" y="6" width="2" height="34" fill="#11141a"/><path d="M80 8 h14 v5 h-14 z" fill="#11141a"/><ellipse cx="87" cy="20" rx="10" ry="14" fill="#f4d58a" opacity=".18"/>
+    <rect x="74" y="44" width="9" height="8" fill="#6b5a3f"/><rect x="83" y="46" width="7" height="6" fill="#5a4a32"/>
+  </svg>`,
+};
+
+const DT_TRAIT_EMO = { bebida:'🍵', mano:'✋', perfume:'🌸', calzado:'👞', cabello:'💇', altura:'📏', fuma:'🚬', guante:'🧤' };
+function dtTraitEmoji(k){ return DT_TRAIT_EMO[k] || '🔹'; }
+
 const DT_CASOS = [
   {
-    id:'collar', titulo:'El collar de la abuela', emoji:'📿', tipo:'robo', dificultad:'Media',
-    cliente:'la abuela Rosa',
-    intro:'En la cena familiar desapareció mi collar de perlas. Estaba en mi joyero y éramos pocos en casa.',
-    objetivo:'Descubre quién tomó el collar de perlas.',
-    pistas:{
-      ventana:{nombre:'Ventana cerrada', emoji:'🪟', texto:'La ventana estaba cerrada por dentro: el ladrón estaba dentro de la casa.'},
-      perla:{nombre:'Perla suelta', emoji:'⚪', texto:'Una perla del collar quedó bajo la alfombra del dormitorio.'},
-      guante:{nombre:'Guante perfumado', emoji:'🧤', texto:'Un guante con un perfume floral muy fuerte, olvidado en el sofá.'},
-      recibo:{nombre:'Recibo de empeño', emoji:'🧾', texto:'Un recibo de una casa de empeño por un collar de perlas, a las 22:00.'},
-    },
-    lugares:[
-      {id:'dormitorio', nombre:'Dormitorio', emoji:'🛏️', desc:'El cuarto de la abuela, donde estaba el joyero.', puntos:[
-        {nombre:'La ventana', emoji:'🪟', revela:'ventana', texto:''},
-        {nombre:'Bajo la alfombra', emoji:'🟫', revela:'perla', texto:''},
-        {nombre:'El joyero', emoji:'💎', texto:'El joyero fue abierto sin forzarlo: alguien conocía dónde estaba la llave.'},
-      ]},
-      {id:'living', nombre:'Living', emoji:'🛋️', desc:'Donde la familia estuvo conversando.', puntos:[
-        {nombre:'El sofá', emoji:'🛋️', revela:'guante', texto:''},
-        {nombre:'La tele', emoji:'📺', texto:'La tele quedó encendida en un partido. Nada útil.'},
-      ]},
-      {id:'cocina', nombre:'Cocina', emoji:'🍽️', desc:'La cocina, con el basurero del día.', puntos:[
-        {nombre:'El basurero', emoji:'🗑️', revela:'recibo', texto:''},
-        {nombre:'El lavaplatos', emoji:'🚰', texto:'Solo platos sucios de la cena.'},
-      ]},
-    ],
+    id:'pastel', titulo:'El pastel saboteado', emoji:'🎂', tipo:'misterio', dificultad:'Fácil',
+    cliente:'la cumpleañera Dani',
+    intro:'En mi fiesta alguien arruinó el pastel a propósito antes de soplar las velas. ¿Quién fue, detective?',
+    resolucion:'Tomi confesó: tiró sal al pastel por una broma envidiosa. Caso cerrado.',
+    culpable:'tomi',
     sospechosos:[
-      {id:'tomas', nombre:'Tomás (sobrino)', emoji:'🧑', desc:'El sobrino, fanático de los partidos.', preguntas:[
-        {p:'¿Dónde estabas a las 22:00?', a:'En el living, viendo el partido con el tío. No me moví de ahí.'},
-        {p:'¿Usas perfume floral?', a:'Para nada, a mí me cargan los perfumes dulces.'},
-      ]},
-      {id:'sofia', nombre:'Sofía (prima)', emoji:'👩', desc:'La prima, siempre muy arreglada.', preguntas:[
-        {p:'¿Usas perfume fuerte?', a:'Sí, uno floral que me encanta. Lo uso todos los días.'},
-        {p:'¿Dónde estuviste a las 22:00?', a:'Eh… salí un rato a hacer un trámite, ya volví.'},
-      ]},
-      {id:'beto', nombre:'Tío Beto', emoji:'👨', desc:'El tío, hablando por teléfono toda la noche.', preguntas:[
-        {p:'¿Qué hacías durante la cena?', a:'Hablé una hora por teléfono con mi jefe, queda registrado en la llamada.'},
-      ]},
+      {id:'tomi', nombre:'Tomi', emoji:'🧒', desc:'El primo bromista.', perfil:{bebida:'Jugo', mano:'Zurdo'}},
+      {id:'flor', nombre:'Flor', emoji:'👧', desc:'La mejor amiga.', perfil:{bebida:'Bebida', mano:'Diestro'}},
+      {id:'rita', nombre:'Tía Rita', emoji:'👩', desc:'Repartía el pastel.', perfil:{bebida:'Jugo', mano:'Diestro'}},
     ],
-    veredicto:{ pregunta:'¿Quién tomó el collar de la abuela?', opciones:[
-      {texto:'Tomás, el sobrino.', correcta:false, explica:''},
-      {texto:'Sofía, la prima.', correcta:true, explica:'El guante con su perfume floral, la perla en el cuarto y el recibo de empeño a las 22:00, justo cuando salió sin coartada, la delatan.'},
-      {texto:'El tío Beto.', correcta:false, explica:''},
-    ]},
-    recompensa:{monedas:30, xp:30},
-  },
-
-  {
-    id:'camila', titulo:'¿Camila tiene razón?', emoji:'💔', tipo:'infidelidad', dificultad:'Media',
-    cliente:'tu amiga Camila',
-    intro:'Mi pololo Andrés anda rarísimo: llega tarde, esconde el teléfono y huele a perfume nuevo. ¿Me está engañando? Investiga porfa.',
-    objetivo:'Determina si Andrés es infiel… o si hay otra explicación.',
-    pistas:{
-      anillo:{nombre:'Recibo de joyería', emoji:'💍', texto:'Un recibo de joyería por un anillo, guardado en la guantera.'},
-      salon:{nombre:'Folleto de salón', emoji:'🎪', texto:'Un folleto de un salón de eventos para fiestas.'},
-      lista:{nombre:'Lista escrita', emoji:'📝', texto:'Una lista: reservar salón, comprar anillo, avisar a los papás de Camila, encargar la torta.'},
-      fecha:{nombre:'Fecha marcada', emoji:'📅', texto:'En su libreta hay una fecha encerrada en corazones: el aniversario con Camila.'},
-      testigo:{nombre:'Testimonio de la vecina', emoji:'👵', texto:'La vecina lo vio planeando algo con un señor de traje del salón de eventos.'},
-    },
-    lugares:[
-      {id:'auto', nombre:'El auto de Andrés', emoji:'🚗', desc:'Su auto, donde guarda de todo.', puntos:[
-        {nombre:'La guantera', emoji:'🧰', revela:'anillo', texto:''},
-        {nombre:'El asiento', emoji:'💺', revela:'salon', texto:''},
-        {nombre:'El cenicero', emoji:'🚬', texto:'Vacío y limpio. Andrés no fuma.'},
-      ]},
-      {id:'mochila', nombre:'Su mochila', emoji:'🎒', desc:'La mochila que lleva a todos lados.', puntos:[
-        {nombre:'El bolsillo', emoji:'👜', revela:'lista', texto:''},
-        {nombre:'La libreta', emoji:'📔', revela:'fecha', texto:''},
-      ]},
+    etapas:[
+      {tipo:'escena', titulo:'La mesa de la fiesta', escena:'salon',
+        objetos:[
+          {nombre:'Vaso de jugo', emoji:'🧃', x:30, y:30},
+          {nombre:'Cuchillo', emoji:'🔪', x:64, y:44},
+          {nombre:'Servilleta', emoji:'🧻', x:46, y:50},
+          {nombre:'Globo', emoji:'🎈', x:80, y:16},
+          {nombre:'Sal', emoji:'🧂', x:38, y:46},
+        ],
+        decoys:[{e:'🍰', x:50, y:42},{e:'🍴', x:58, y:48},{e:'🎁', x:18, y:46}],
+        alFinal:{ texto:'Junto al pastel quedó un vaso de jugo: quien lo saboteó bebía jugo.', perfil:{bebida:'Jugo'} } },
+      {tipo:'analisis', titulo:'Analiza la escena', sub:'Une cada pista con lo que revela.',
+        pares:[
+          {a:'🧂 Sal sobre el pastel', b:'Fue saboteado a propósito'},
+          {a:'✋ Mancha de jugo a la izquierda del plato', b:'El culpable es zurdo'},
+          {a:'🧃 Vaso de jugo a medio tomar', b:'El culpable bebía jugo'},
+        ],
+        alFinal:{ texto:'La mancha quedó a la izquierda: el culpable es zurdo.', perfil:{mano:'Zurdo'} } },
+      {tipo:'cronologia', titulo:'¿Qué pasó en la fiesta?',
+        eventos:[
+          'Dani sopló las velas… no, primero llegó el pastel a la mesa.',
+          'Se apagaron las luces para sacar el pastel.',
+          'Alguien se acercó a la mesa a oscuras.',
+          'Al prender la luz, el pastel estaba lleno de sal.',
+        ] },
+      {tipo:'arresto'},
     ],
-    sospechosos:[
-      {id:'beto', nombre:'Beto (su amigo)', emoji:'🧑', desc:'El mejor amigo de Andrés, pésimo guardando secretos.', preguntas:[
-        {p:'¿Por qué Andrés llega tarde?', a:'Anda en algo secreto… me hizo jurar que no diría nada.'},
-        {p:'¿Y el perfume nuevo?', a:'Lo ayudé a elegir uno. No era para él, era un regalo.'},
-        {p:'¿Hay otra persona?', a:'Jajaja, hay alguien muy especial en sus planes… pero no es lo que Camila cree.'},
-      ]},
-      {id:'vecina', nombre:'La vecina', emoji:'👵', desc:'Siempre mirando por la ventana.', preguntas:[
-        {p:'¿Vio a Andrés con alguien?', a:'Con un señor de traje, miraban planos de un salón. Parecían organizar una fiesta.', revela:'testigo'},
-      ]},
-    ],
-    veredicto:{ pregunta:'¿Qué le dices a Camila?', opciones:[
-      {texto:'Sí, te está engañando.', correcta:false, explica:''},
-      {texto:'Es inocente: te está organizando una sorpresa.', correcta:true, explica:'El anillo, el salón, la lista que menciona a tus papás y el aniversario lo confirman: Andrés prepara una propuesta. ¡No le arruines la sorpresa!'},
-      {texto:'No hay pruebas suficientes.', correcta:false, explica:''},
-    ]},
-    recompensa:{monedas:35, xp:35},
-  },
-
-  {
-    id:'rodrigo', titulo:'El cliente celoso', emoji:'🔍', tipo:'infidelidad', dificultad:'Difícil',
-    cliente:'un cliente, Rodrigo',
-    intro:'Sospecho que mi pareja, Vale, me miente. Dice que trabaja hasta tarde casi todas las semanas. Necesito la verdad, detective.',
-    objetivo:'Determina si Vale dice la verdad o esconde una infidelidad.',
-    pistas:{
-      chat:{nombre:'Mensajes ocultos', emoji:'💬', texto:'Mensajes con un contacto: nos vemos en el hotel de siempre, el martes.'},
-      app:{nombre:'App de citas', emoji:'📱', texto:'Una app de citas instalada y activa hace poco.'},
-      hotel:{nombre:'Cargo de hotel', emoji:'🏨', texto:'En la tarjeta hay un cargo de un hotel, el martes a las 21:00.'},
-      cena:{nombre:'Cena para dos', emoji:'🍷', texto:'Una cena para dos personas el jueves, día que dijo estar sola en casa.'},
-      compa:{nombre:'La desmiente', emoji:'👩‍💼', texto:'Su compañera dice que Vale se fue del trabajo a las 18:00 el martes, no trabajó tarde.'},
-    },
-    lugares:[
-      {id:'telefono', nombre:'El teléfono', emoji:'📱', desc:'Capturas que dejó el cliente.', puntos:[
-        {nombre:'Los chats', emoji:'💬', revela:'chat', texto:''},
-        {nombre:'Las apps', emoji:'📲', revela:'app', requiere:'chat', texto:''},
-        {nombre:'La galería', emoji:'🖼️', texto:'Una foto en un restaurante un martes, etiquetada trabajando hasta tarde.'},
-      ]},
-      {id:'tarjeta', nombre:'La tarjeta de crédito', emoji:'💳', desc:'El estado de cuenta del mes.', puntos:[
-        {nombre:'Los gastos del martes', emoji:'🏨', revela:'hotel', texto:''},
-        {nombre:'Los gastos del jueves', emoji:'🍷', revela:'cena', texto:''},
-      ]},
-    ],
-    sospechosos:[
-      {id:'vale', nombre:'Vale (la pareja)', emoji:'🧑', desc:'Responde tranquila, pero algo no calza.', preguntas:[
-        {p:'¿Dónde estuviste el martes en la noche?', a:'Trabajando hasta tarde, sola en la oficina.'},
-        {p:'¿Conoces el Hotel Luna?', a:'No, jamás en mi vida fui a ese hotel.'},
-      ]},
-      {id:'compa', nombre:'Su compañera', emoji:'👩‍💼', desc:'Trabaja en la misma oficina que Vale.', preguntas:[
-        {p:'¿Vale trabajó hasta tarde el martes?', a:'No, se fue a las 18:00 como siempre. Nadie se quedó.', revela:'compa'},
-      ]},
-    ],
-    veredicto:{ pregunta:'¿Cuál es tu conclusión sobre Vale?', opciones:[
-      {texto:'Vale dice la verdad, no pasa nada.', correcta:false, explica:''},
-      {texto:'Hay infidelidad: las pruebas y mentiras lo confirman.', correcta:true, explica:'El cargo del hotel el martes coincide con el chat; su compañera la desmiente y la cena del jueves contradice su versión. Vale miente.'},
-      {texto:'No se puede saber con esto.', correcta:false, explica:''},
-    ]},
-    recompensa:{monedas:45, xp:45},
-  },
-
-  {
-    id:'pelusa', titulo:'Pelusa no aparece', emoji:'🐱', tipo:'desaparicion', dificultad:'Fácil',
-    cliente:'Emi, la niña del barrio',
-    intro:'Mi gatita Pelusa se escapó esta mañana y no la encuentro. ¡Ayúdame a hallarla, detective!',
-    objetivo:'Sigue el rastro y descubre dónde está Pelusa.',
-    pistas:{
-      hueco:{nombre:'Hueco en la reja', emoji:'🕳️', texto:'Hay un hueco en la reja que da hacia la calle. Por ahí salió.'},
-      plato:{nombre:'Comida intacta', emoji:'🍽️', texto:'Su plato sigue lleno: Pelusa no volvió a comer, sigue afuera.'},
-      lana:{nombre:'Trozo de lana', emoji:'🧶', texto:'Un trozo de lana de su collar quedó enganchado en un poste de la calle.'},
-      panadero:{nombre:'El panadero la vio', emoji:'🥖', texto:'El panadero la vio ir hacia la plaza siguiendo a un gato café.'},
-      maullido:{nombre:'Maullidos en la plaza', emoji:'🔊', texto:'Vecinos oyeron maullidos en el árbol grande de la plaza.'},
-    },
-    lugares:[
-      {id:'patio', nombre:'El patio', emoji:'🌳', desc:'El patio de la casa de Emi.', puntos:[
-        {nombre:'La reja', emoji:'🚪', revela:'hueco', texto:''},
-        {nombre:'El plato de comida', emoji:'🍽️', revela:'plato', texto:''},
-        {nombre:'El árbol del patio', emoji:'🌳', texto:'Pelos blancos en el tronco: trepó, pero ya no está aquí.'},
-      ]},
-      {id:'calle', nombre:'La calle', emoji:'🛣️', desc:'La calle frente a la casa.', puntos:[
-        {nombre:'El poste', emoji:'📍', revela:'lana', texto:''},
-        {nombre:'La panadería', emoji:'🥖', revela:'panadero', texto:''},
-      ]},
-      {id:'plaza', nombre:'La plaza', emoji:'⛲', desc:'La plaza del barrio.', puntos:[
-        {nombre:'La banca', emoji:'🪑', revela:'maullido', texto:''},
-        {nombre:'La fuente', emoji:'⛲', texto:'Solo palomas tomando agua.'},
-      ]},
-    ],
-    sospechosos:[
-      {id:'panadero', nombre:'El panadero', emoji:'🧑‍🍳', desc:'Atiende desde temprano y ve todo el barrio.', preguntas:[
-        {p:'¿Viste a una gatita blanca?', a:'Sí, iba hacia la plaza siguiendo a un gato café. Bien apurada.'},
-      ]},
-      {id:'senora', nombre:'Una señora de la plaza', emoji:'👵', desc:'Pasea por la plaza cada mañana.', preguntas:[
-        {p:'¿Algo raro en la plaza?', a:'Hay un gatito atascado en el árbol grande hace rato, maúlla y maúlla.'},
-      ]},
-    ],
-    veredicto:{ pregunta:'¿Dónde está Pelusa?', opciones:[
-      {texto:'Volvió a casa sola.', correcta:false, explica:''},
-      {texto:'Atascada en el árbol grande de la plaza.', correcta:true, explica:'El hueco en la reja, la lana en el poste y los testigos llevan a la plaza, donde Pelusa maúlla atascada en el árbol grande.'},
-      {texto:'Alguien se la llevó.', correcta:false, explica:''},
-    ]},
     recompensa:{monedas:25, xp:25},
   },
 
   {
-    id:'carta', titulo:'La carta secreta', emoji:'💌', tipo:'misterio', dificultad:'Media',
-    cliente:'tu compañera Javi',
-    intro:'Apareció una carta de amor anónima en mi casillero. Letra preciosa, sin firma. ¿Quién la dejó? ¡Muero por saber!',
-    objetivo:'Descubre quién escribió la carta secreta.',
-    pistas:{
-      tinta:{nombre:'Tinta azul de pluma', emoji:'🖋️', texto:'La carta está escrita con una pluma de tinta azul especial, no con lápiz.'},
-      sello:{nombre:'Sello de gato', emoji:'🐱', texto:'El sobre tiene un sello con un gatito, igual al de tu mascota.'},
-      entrada:{nombre:'Entrada de cine', emoji:'🎬', texto:'Una entrada de cine de ayer cayó dentro del casillero.'},
-      letra:{nombre:'La misma letra', emoji:'📓', texto:'Un cuaderno con la misma letra bonita de la carta.'},
-    },
-    lugares:[
-      {id:'casillero', nombre:'El casillero', emoji:'🔐', desc:'Donde apareció la carta de Javi.', puntos:[
-        {nombre:'La carta', emoji:'💌', revela:'tinta', texto:''},
-        {nombre:'El sobre', emoji:'✉️', revela:'sello', texto:''},
-        {nombre:'El piso del casillero', emoji:'📄', revela:'entrada', texto:''},
-      ]},
-      {id:'sala', nombre:'La sala de clases', emoji:'🏫', desc:'La sala donde están todos.', puntos:[
-        {nombre:'Los pupitres', emoji:'📓', revela:'letra', texto:''},
-        {nombre:'El basurero', emoji:'🗑️', texto:'Un borrador arrugado de una carta… la misma letra. Quien la escribió se sienta aquí.'},
-      ]},
-    ],
+    id:'belmonte', titulo:'Crimen en la Mansión Belmonte', emoji:'🏛️', tipo:'misterio', dificultad:'Media',
+    cliente:'la familia Belmonte',
+    intro:'Durante la fiesta, Don Augusto apareció sin vida en su biblioteca. Todos eran invitados… uno es culpable.',
+    resolucion:'Clara confesó entre lágrimas: discutieron por la herencia y todo se salió de control. El té, su mano zurda y su perfume floral la delataron.',
+    culpable:'clara',
     sospechosos:[
-      {id:'mateo', nombre:'Mateo', emoji:'🧑', desc:'El más conversador del curso.', preguntas:[
-        {p:'¿Escribes con pluma?', a:'No, puro lápiz pasta. Las plumas se me chorrean.'},
-      ]},
-      {id:'lucas', nombre:'Lucas', emoji:'🧑‍🎓', desc:'Tímido, siempre dibujando en su cuaderno.', preguntas:[
-        {p:'¿Te gusta el cine?', a:'Sí, justo fui ayer a la función de la tarde.'},
-        {p:'¿Tienes mascota?', a:'Un gato. Le puse el mismo nombre que tu gatita… qué coincidencia, jeje.'},
-      ]},
-      {id:'ana', nombre:'Ana', emoji:'👩‍🎓', desc:'Volvió hoy de un viaje.', preguntas:[
-        {p:'¿Dónde estuviste estos días?', a:'De viaje con mi familia, llegué recién hoy en la mañana.'},
-      ]},
+      {id:'clara', nombre:'Clara', emoji:'👩', desc:'La sobrina de Don Augusto.', perfil:{bebida:'Té', mano:'Zurdo', perfume:'Floral'}},
+      {id:'renata', nombre:'Renata', emoji:'🎤', desc:'La cantante invitada.', perfil:{bebida:'Vino', mano:'Diestro', perfume:'Floral'}},
+      {id:'mauricio', nombre:'Mauricio', emoji:'🤵', desc:'El mayordomo.', perfil:{bebida:'Café', mano:'Diestro', perfume:'Ninguno'}},
+      {id:'hugo', nombre:'Hugo', emoji:'🧔', desc:'El socio de negocios.', perfil:{bebida:'Whisky', mano:'Zurdo', perfume:'Ninguno'}},
     ],
-    veredicto:{ pregunta:'¿Quién escribió la carta secreta?', opciones:[
-      {texto:'Mateo.', correcta:false, explica:''},
-      {texto:'Lucas.', correcta:true, explica:'La pluma azul, el sello del gato con el nombre de tu mascota, la entrada de cine de ayer y la letra de su cuaderno lo delatan: fue Lucas.'},
-      {texto:'Ana.', correcta:false, explica:''},
-    ]},
-    recompensa:{monedas:30, xp:30},
+    etapas:[
+      {tipo:'escena', titulo:'La biblioteca', escena:'biblioteca',
+        objetos:[
+          {nombre:'Taza de té', emoji:'🍵', x:40, y:46},
+          {nombre:'Pluma', emoji:'🖋️', x:52, y:44},
+          {nombre:'Llave', emoji:'🔑', x:24, y:58},
+          {nombre:'Lupa', emoji:'🔍', x:72, y:40},
+          {nombre:'Vela', emoji:'🕯️', x:71, y:30},
+          {nombre:'Libro caído', emoji:'📕', x:50, y:58},
+        ],
+        decoys:[{e:'📗', x:14, y:20},{e:'📘', x:88, y:24},{e:'🕰️', x:50, y:16},{e:'🗝️', x:30, y:42}],
+        alFinal:{ texto:'Una taza de té con marca de labial: el culpable bebía té.', perfil:{bebida:'Té'} } },
+      {tipo:'interrogatorio', titulo:'Interroga al mayordomo', sospechoso:'mauricio',
+        dialogo:[
+          {p:'¿Quién estuvo en la biblioteca?', a:'Varios entraron y salieron. Yo serví café toda la noche.'},
+          {p:'¿Vio algo raro?', a:'La señorita Clara discutía con Don Augusto por la herencia.'},
+        ] },
+      {tipo:'analisis', titulo:'Pruebas en el laboratorio', sub:'Une cada prueba con su conclusión.',
+        pares:[
+          {a:'💄 Labial en la taza', b:'Bebía té'},
+          {a:'✋ Huella inclinada a la izquierda', b:'Es zurdo'},
+          {a:'🧣 Pañuelo con aroma dulce', b:'Usa perfume floral'},
+        ],
+        alFinal:{ texto:'La huella en el escritorio se inclina a la izquierda: el culpable es zurdo.', perfil:{mano:'Zurdo'} } },
+      {tipo:'escena', titulo:'El jardín de la mansión', escena:'jardin',
+        objetos:[
+          {nombre:'Pañuelo', emoji:'🧣', x:30, y:48},
+          {nombre:'Guante', emoji:'🧤', x:66, y:50},
+          {nombre:'Copa rota', emoji:'🍷', x:52, y:54},
+          {nombre:'Zapato', emoji:'👠', x:20, y:56},
+          {nombre:'Carta', emoji:'✉️', x:74, y:44},
+        ],
+        decoys:[{e:'🌹', x:42, y:46},{e:'🍃', x:84, y:52},{e:'🔦', x:12, y:44}],
+        alFinal:{ texto:'Un pañuelo con perfume floral cayó en el jardín: el culpable usa perfume floral.', perfil:{perfume:'Floral'} } },
+      {tipo:'cronologia', titulo:'La noche del crimen',
+        eventos:[
+          'La fiesta comenzó y todos brindaron en el salón.',
+          'Don Augusto se retiró a la biblioteca a tomar su té.',
+          'Clara entró a discutir con él por la herencia.',
+          'Se escuchó un golpe y la luz de la biblioteca se apagó.',
+          'Mauricio encontró a Don Augusto sin vida.',
+        ] },
+      {tipo:'arresto'},
+    ],
+    recompensa:{monedas:45, xp:45},
+  },
+
+  {
+    id:'diamante', titulo:'El robo del Diamante Azul', emoji:'💎', tipo:'robo', dificultad:'Difícil',
+    cliente:'el Museo Real',
+    intro:'El Diamante Azul desapareció de su vitrina durante la gala. Las cámaras fallaron. Atrapa al ladrón.',
+    resolucion:'Nadia, la acróbata, lo confesó: entró por el tragaluz con sus botas, su pelo rojo quedó en la rejilla y por su altura alcanzó la vitrina. El Diamante Azul volvió a casa.',
+    culpable:'nadia',
+    sospechosos:[
+      {id:'nadia', nombre:'Nadia', emoji:'🤸', desc:'Acróbata del espectáculo.', perfil:{altura:'Alta', cabello:'Pelirrojo', calzado:'Botas'}},
+      {id:'gunter', nombre:'Günter', emoji:'💂', desc:'El guardia de seguridad.', perfil:{altura:'Alta', cabello:'Castaño', calzado:'Zapatos'}},
+      {id:'celeste', nombre:'Celeste', emoji:'👩‍🎨', desc:'La curadora del museo.', perfil:{altura:'Baja', cabello:'Pelirrojo', calzado:'Tacones'}},
+      {id:'bruno', nombre:'Bruno', emoji:'🕴️', desc:'Un coleccionista invitado.', perfil:{altura:'Alta', cabello:'Pelirrojo', calzado:'Zapatos'}},
+    ],
+    etapas:[
+      {tipo:'escena', titulo:'La sala del diamante', escena:'museo',
+        objetos:[
+          {nombre:'Vitrina rota', emoji:'🔨', x:66, y:42},
+          {nombre:'Mechón de pelo', emoji:'🧶', x:30, y:30},
+          {nombre:'Guante', emoji:'🧤', x:24, y:48},
+          {nombre:'Cuerda', emoji:'🪢', x:50, y:20},
+          {nombre:'Linterna', emoji:'🔦', x:78, y:50},
+        ],
+        decoys:[{e:'🏺', x:30, y:50},{e:'🖼️', x:12, y:24},{e:'🗿', x:88, y:46}],
+        alFinal:{ texto:'En la rejilla del tragaluz quedó un mechón de pelo pelirrojo.', perfil:{cabello:'Pelirrojo'} } },
+      {tipo:'interrogatorio', titulo:'Interroga al guardia', sospechoso:'gunter',
+        dialogo:[
+          {p:'¿Cómo entró el ladrón?', a:'Imposible por la puerta. Solo se ve revuelto el tragaluz del techo.'},
+          {p:'¿Notó algo?', a:'Una sombra muy ágil saltó entre las vigas. Yo jamás treparía eso.'},
+        ] },
+      {tipo:'analisis', titulo:'Huellas en el piso', sub:'Une cada rastro con lo que indica.',
+        pares:[
+          {a:'👣 Huella de suela gruesa', b:'Usa botas'},
+          {a:'🧶 Pelo rojo en la rejilla', b:'Es pelirrojo'},
+          {a:'📏 Marca alta en la vitrina', b:'Es de estatura alta'},
+        ],
+        alFinal:{ texto:'Las marcas de suela son de botas pesadas.', perfil:{calzado:'Botas'} } },
+      {tipo:'escena', titulo:'El callejón de escape', escena:'callejon',
+        objetos:[
+          {nombre:'Bota con barro', emoji:'🥾', x:24, y:54},
+          {nombre:'Antifaz', emoji:'🎭', x:62, y:40},
+          {nombre:'Soga', emoji:'🪢', x:80, y:30},
+          {nombre:'Recibo', emoji:'🧾', x:40, y:50},
+          {nombre:'Llave', emoji:'🔑', x:70, y:52},
+        ],
+        decoys:[{e:'🗑️', x:14, y:44},{e:'📦', x:84, y:48},{e:'🐀', x:50, y:58}],
+        alFinal:{ texto:'Una marca alta en la pared: el ladrón es de estatura alta.', perfil:{altura:'Alta'} } },
+      {tipo:'cronologia', titulo:'Cómo ocurrió el robo',
+        eventos:[
+          'La gala comenzó y el diamante brillaba en su vitrina.',
+          'Las luces se atenuaron para el espectáculo.',
+          'Una figura ágil bajó por el tragaluz con una cuerda.',
+          'Rompió la vitrina y tomó el Diamante Azul.',
+          'Escapó por el callejón antes de que volviera la luz.',
+        ] },
+      {tipo:'arresto'},
+    ],
+    recompensa:{monedas:60, xp:60},
   },
 ];
 
@@ -5326,149 +5353,202 @@ let dt = null, dtVista = 'lista';
 function dtTipoNombre(t){ return {robo:'Robo', infidelidad:'Infidelidad', desaparicion:'Desaparición', misterio:'Misterio'}[t] || t; }
 function dtCasoDelDia(){ const h=new Date(); const n=h.getFullYear()*10000+(h.getMonth()+1)*100+h.getDate(); return DT_CASOS[n % DT_CASOS.length].id; }
 function dtEsResuelto(id){ asegurarJuegos(); return datos.juegos.detective.resueltos.includes(id); }
-function dtClaveLocal(id){ return 'jxDet_' + id; }
-function dtGuardarProgreso(){ if(!dt) return; try{ localStorage.setItem(dtClaveLocal(dt.caso.id), JSON.stringify({ pistas:[...dt.pistas], explorados:[...dt.explorados], preguntas:[...dt.preguntas] })); }catch(e){} }
-function dtCargarProgreso(id){ try{ const raw=localStorage.getItem(dtClaveLocal(id)); if(!raw) return; const s=JSON.parse(raw); dt.pistas=new Set(s.pistas||[]); dt.explorados=new Set(s.explorados||[]); dt.preguntas=new Set(s.preguntas||[]); }catch(e){} }
-function dtLimpiarProgreso(id){ try{ localStorage.removeItem(dtClaveLocal(id)); }catch(e){} }
+function dtProgreso(id){ try{ const s=JSON.parse(localStorage.getItem('jxCC_'+id)); return s && s.etapaIdx ? s.etapaIdx : 0; }catch(e){ return 0; } }
+function dtGuardar(){ if(!dt) return; try{ localStorage.setItem('jxCC_'+dt.caso.id, JSON.stringify({ etapaIdx:dt.etapaIdx, pruebas:[...dt.pruebas], perfil:dt.perfil })); }catch(e){} }
+function dtCargar(id){ try{ const s=JSON.parse(localStorage.getItem('jxCC_'+id)); if(s){ dt.etapaIdx=Math.min(s.etapaIdx||0, dt.caso.etapas.length-1); dt.pruebas=new Set(s.pruebas||[]); dt.perfil=s.perfil||{}; } }catch(e){} }
+function dtLimpiar(id){ try{ localStorage.removeItem('jxCC_'+id); }catch(e){} }
 
 function dtMostrar(){ asegurarJuegos(); dtVista='lista'; dtRender(); }
-function dtAbrirCaso(id){
+function dtAbrir(id){
   const caso=DT_CASOS.find(c=>c.id===id); if(!caso) return;
-  dt={ caso, pistas:new Set(), explorados:new Set(), preguntas:new Set(), lugarActual:null, sospActual:null };
-  dtCargarProgreso(id);
-  dtVista='caso'; dtRender();
+  dt={ caso, etapaIdx:0, pruebas:new Set(), perfil:{}, fase:null };
+  if(dtEsResuelto(id)) dtLimpiar(id); else dtCargar(id);
+  dtVista='caso'; jxSonido('tap'); dtRender();
 }
 function dtRender(){
   const el=document.getElementById('jxScreenDetective'); if(!el) return;
-  if(dtVista==='lista') el.innerHTML=dtHtmlLista();
-  else if(dtVista==='caso') el.innerHTML=dtHtmlCaso();
-  else if(dtVista==='lugar') el.innerHTML=dtHtmlLugar();
-  else if(dtVista==='sospechoso') el.innerHTML=dtHtmlSospechoso();
-  else if(dtVista==='veredicto') el.innerHTML=dtHtmlVeredicto();
-  dtBind(); el.scrollTop=0;
+  if(dtVista==='lista'){
+    el.innerHTML=dtHtmlLista();
+    el.querySelectorAll('[data-abrir]').forEach(b=>b.onclick=()=>dtAbrir(b.dataset.abrir));
+    el.scrollTop=0; return;
+  }
+  const c=dt.caso, et=c.etapas[dt.etapaIdx];
+  el.innerHTML = dtChrome(c) + '<div class="dt-etapa" id="dtEtapa"></div>';
+  el.querySelector('[data-salir]').onclick=()=>{ dtGuardar(); dtVista='lista'; dtRender(); };
+  dtRenderEtapa(et);
+  el.scrollTop=0;
 }
-function dtBind(){
-  const el=document.getElementById('jxScreenDetective'); if(!el) return;
-  el.querySelectorAll('[data-abrir]').forEach(b=>b.onclick=()=>{ jxSonido('tap'); dtAbrirCaso(b.dataset.abrir); });
-  el.querySelectorAll('[data-volver]').forEach(b=>b.onclick=()=>{ jxSonido('tap'); dtVista=b.dataset.volver; dtRender(); });
-  el.querySelectorAll('[data-lugar]').forEach(b=>b.onclick=()=>{ jxSonido('tap'); dt.lugarActual=b.dataset.lugar; dtVista='lugar'; dtRender(); });
-  el.querySelectorAll('[data-sosp]').forEach(b=>b.onclick=()=>{ jxSonido('tap'); dt.sospActual=b.dataset.sosp; dtVista='sospechoso'; dtRender(); });
-  el.querySelectorAll('[data-veredicto]').forEach(b=>b.onclick=()=>{ jxSonido('tap'); dtVista='veredicto'; dtRender(); });
-  el.querySelectorAll('[data-punto]').forEach(b=>b.onclick=()=>dtDescubrir(parseInt(b.dataset.punto,10)));
-  el.querySelectorAll('[data-preg]').forEach(b=>b.onclick=()=>dtPreguntar(parseInt(b.dataset.preg,10)));
-  el.querySelectorAll('[data-op]').forEach(b=>b.onclick=()=>dtResolver(parseInt(b.dataset.op,10)));
+function dtChrome(c){
+  const total=c.etapas.length, pct=Math.round(dt.etapaIdx/total*100);
+  const traits=Object.entries(dt.perfil).map(([k,v])=>'<span class="dt-trait sm">'+dtTraitEmoji(k)+' '+v+'</span>').join('');
+  const perfil = traits ? '<div class="dt-perfil-mini"><b>🎯 Perfil del culpable</b><div class="dt-traits">'+traits+'</div></div>' : '';
+  return '<button class="jx-btn ghost dt-back" data-salir>‹ Casos</button>'+
+    '<div class="dt-caso-head"><span class="dt-caso-emo big">'+c.emoji+'</span><div><h3>'+c.titulo+'</h3>'+
+      '<div class="dt-caso-meta">Capítulo '+(dt.etapaIdx+1)+' de '+total+' · '+c.dificultad+'</div></div></div>'+
+    '<div class="dt-prog"><div style="width:'+pct+'%"></div></div>'+perfil;
 }
 function dtHtmlLista(){
   asegurarJuegos();
   const hoy=dtCasoDelDia();
   const cards=DT_CASOS.map(c=>{
-    const resuelto=dtEsResuelto(c.id), esDia=c.id===hoy;
+    const resuelto=dtEsResuelto(c.id), esDia=c.id===hoy, prog=dtProgreso(c.id);
+    const estado = resuelto ? '<span class="dt-ok">✓ Resuelto</span>' : (prog>0 ? '<span class="dt-prog-tag">▶ Capítulo '+(prog+1)+'</span>' : '<span class="dt-prog-tag nuevo">Nuevo</span>');
     return '<button class="dt-caso-card'+(esDia?' dia':'')+'" data-abrir="'+c.id+'">'+
       (esDia?'<span class="dt-ribbon">🌟 Caso del día</span>':'')+
       '<div class="dt-caso-emo">'+c.emoji+'</div>'+
-      '<div class="dt-caso-info"><div class="dt-caso-tit">'+c.titulo+(resuelto?' <span class="dt-ok">✓</span>':'')+'</div>'+
-      '<div class="dt-caso-meta"><span class="dt-tag '+c.tipo+'">'+dtTipoNombre(c.tipo)+'</span> · '+c.dificultad+'</div>'+
-      '<div class="dt-caso-cli">'+c.intro+'</div></div></button>';
+      '<div class="dt-caso-info"><div class="dt-caso-tit">'+c.titulo+'</div>'+
+      '<div class="dt-caso-meta"><span class="dt-tag '+c.tipo+'">'+dtTipoNombre(c.tipo)+'</span> · '+c.dificultad+' · '+c.etapas.length+' capítulos</div>'+
+      '<div class="dt-caso-cli">'+estado+'</div></div></button>';
   }).join('');
-  return '<p class="jx-tip">Elige un caso, reúne pruebas tocando pistas e interroga a los sospechosos. Cuando estés segura, da tu veredicto.</p><div class="dt-list">'+cards+'</div>';
+  return '<p class="jx-tip">Resuelve casos por capítulos: busca pistas en las escenas, analízalas, interroga sospechosos, ordena la cronología y arresta al culpable según su perfil.</p><div class="dt-list">'+cards+'</div>';
 }
-function dtHtmlCaso(){
-  const c=dt.caso, total=Object.keys(c.pistas).length;
-  const lugares=c.lugares.map(l=>{
-    const expl=l.puntos.filter((p,i)=>dt.explorados.has(l.id+':'+i)).length;
-    return '<button class="dt-chip" data-lugar="'+l.id+'">'+l.emoji+' '+l.nombre+(expl===l.puntos.length?' <span class="dt-ok">✓</span>':'')+'</button>';
-  }).join('');
-  const sosp=c.sospechosos.map(s=>'<button class="dt-chip" data-sosp="'+s.id+'">'+s.emoji+' '+s.nombre+'</button>').join('');
-  let pruebas=[...dt.pistas].map(id=>'<div class="dt-ev"><span>'+c.pistas[id].emoji+'</span><div><b>'+c.pistas[id].nombre+'</b><p>'+c.pistas[id].texto+'</p></div></div>').join('');
-  if(!pruebas) pruebas='<p class="dt-vacio">Aún no tienes pruebas. Toca los lugares para investigar.</p>';
-  return '<button class="jx-btn ghost dt-back" data-volver="lista">‹ Casos</button>'+
-    '<div class="dt-caso-head"><span class="dt-caso-emo big">'+c.emoji+'</span><div><h3>'+c.titulo+'</h3>'+
-      '<div class="dt-caso-meta"><span class="dt-tag '+c.tipo+'">'+dtTipoNombre(c.tipo)+'</span> · '+c.dificultad+'</div></div></div>'+
-    '<div class="dt-banner"><b>📋 Tu encargo</b><p>'+c.objetivo+'</p><p class="dt-cli">“'+c.intro+'” — '+c.cliente+'</p></div>'+
-    '<div class="dt-sec-tit">🔍 Investiga los lugares</div><div class="dt-chips">'+lugares+'</div>'+
-    '<div class="dt-sec-tit">🗣️ Interroga</div><div class="dt-chips">'+sosp+'</div>'+
-    '<div class="dt-sec-tit">🧾 Pruebas reunidas ('+dt.pistas.size+'/'+total+')</div><div class="dt-evidencias">'+pruebas+'</div>'+
-    '<button class="jx-btn rosa dt-resolver" data-veredicto="1">⚖️ Resolver el caso</button>';
+function dtRenderEtapa(et){
+  if(et.tipo==='escena') dtEscenaRender(et);
+  else if(et.tipo==='analisis') dtAnalisisRender(et);
+  else if(et.tipo==='interrogatorio') dtInterroRender(et);
+  else if(et.tipo==='cronologia') dtCronoRender(et);
+  else if(et.tipo==='arresto') dtArrestoRender(et);
 }
-function dtHtmlLugar(){
-  const l=dt.caso.lugares.find(x=>x.id===dt.lugarActual);
-  const puntos=l.puntos.map((p,i)=>{
-    const key=l.id+':'+i, explorado=dt.explorados.has(key), bloqueado=p.requiere && !dt.pistas.has(p.requiere);
-    let clase='', estado='';
-    if(bloqueado){ clase='bloq'; estado='🔒'; }
-    else if(explorado){ clase=p.revela?'hallazgo':'vacio'; estado=p.revela?'✓':'·'; }
-    let det='';
-    if(explorado && !bloqueado) det='<div class="dt-punto-det">'+(p.revela?('🔎 '+dt.caso.pistas[p.revela].nombre+': '+dt.caso.pistas[p.revela].texto):p.texto)+'</div>';
-    return '<div class="dt-punto '+clase+'" data-punto="'+i+'"><div class="dt-punto-cab"><span>'+p.emoji+' '+p.nombre+'</span><span class="dt-punto-est">'+estado+'</span></div>'+det+'</div>';
-  }).join('');
-  return '<button class="jx-btn ghost dt-back" data-volver="caso">‹ Volver al caso</button>'+
-    '<div class="dt-lugar-head"><span class="dt-caso-emo big">'+l.emoji+'</span><h3>'+l.nombre+'</h3></div>'+
-    '<p class="dt-desc">'+l.desc+'</p><p class="jx-tip">Toca cada lugar para inspeccionarlo.</p>'+
-    '<div class="dt-puntos">'+puntos+'</div>';
-}
-function dtHtmlSospechoso(){
-  const s=dt.caso.sospechosos.find(x=>x.id===dt.sospActual);
-  const qs=s.preguntas.map((q,i)=>{
-    const key=s.id+':'+i, hecha=dt.preguntas.has(key), bloq=q.requiere && !dt.pistas.has(q.requiere);
-    return '<div class="dt-preg '+(bloq?'bloq':'')+'" data-preg="'+i+'"><div class="dt-preg-q">'+(bloq?'🔒 ':'❓ ')+q.p+'</div>'+(hecha&&!bloq?'<div class="dt-preg-a">“'+q.a+'”</div>':'')+'</div>';
-  }).join('');
-  return '<button class="jx-btn ghost dt-back" data-volver="caso">‹ Volver al caso</button>'+
-    '<div class="dt-lugar-head"><span class="dt-caso-emo big">'+s.emoji+'</span><h3>'+s.nombre+'</h3></div>'+
-    '<p class="dt-desc">'+s.desc+'</p><p class="jx-tip">Toca una pregunta para interrogar.</p>'+
-    '<div class="dt-pregs">'+qs+'</div>';
-}
-function dtHtmlVeredicto(){
-  const c=dt.caso;
-  const ops=c.veredicto.opciones.map((o,i)=>'<button class="dt-opcion" data-op="'+i+'">'+o.texto+'</button>').join('');
-  return '<button class="jx-btn ghost dt-back" data-volver="caso">‹ Volver al caso</button>'+
-    '<div class="dt-veredicto"><h3>⚖️ Tu veredicto</h3><p class="dt-vpreg">'+c.veredicto.pregunta+'</p>'+
-    '<div class="dt-sec-tit" style="text-align:center">Pruebas '+dt.pistas.size+'/'+Object.keys(c.pistas).length+'</div>'+
-    '<p class="jx-tip">Si te equivocas, puedes seguir investigando sin perder nada.</p>'+
-    '<div class="dt-opciones">'+ops+'</div></div>';
-}
-function dtDescubrir(idx){
-  const lugar=dt.caso.lugares.find(l=>l.id===dt.lugarActual); if(!lugar) return;
-  const p=lugar.puntos[idx]; if(!p) return;
-  if(p.requiere && !dt.pistas.has(p.requiere)){ jxSonido('mal'); avisar('🔒 Te falta descubrir algo antes de revisar esto'); return; }
-  const key=dt.lugarActual+':'+idx;
-  if(dt.explorados.has(key)) return;
-  dt.explorados.add(key);
-  if(p.revela){ dt.pistas.add(p.revela); jxSonido('bien'); jxVibrar(15); avisar('🔎 Nueva prueba: '+dt.caso.pistas[p.revela].nombre); }
-  else jxSonido('tap');
-  dtGuardarProgreso(); dtRender();
-}
-function dtPreguntar(idx){
-  const s=dt.caso.sospechosos.find(x=>x.id===dt.sospActual); if(!s) return;
-  const q=s.preguntas[idx]; if(!q) return;
-  if(q.requiere && !dt.pistas.has(q.requiere)){ jxSonido('mal'); avisar('🔒 Aún no sabes qué preguntar aquí'); return; }
-  const key=dt.sospActual+':'+idx;
-  if(!dt.preguntas.has(key)){
-    dt.preguntas.add(key);
-    if(q.revela){ dt.pistas.add(q.revela); jxSonido('bien'); avisar('🔎 Nueva prueba: '+dt.caso.pistas[q.revela].nombre); }
-    else jxSonido('tap');
-    dtGuardarProgreso();
+function dtAvanzar(et){
+  if(et.alFinal){
+    if(et.alFinal.pista) dt.pruebas.add(et.alFinal.pista);
+    if(et.alFinal.perfil) Object.assign(dt.perfil, et.alFinal.perfil);
   }
-  dtRender();
+  dt.fase=null; dt.etapaIdx++;
+  jxRecompensar(3, 4, {});
+  dtGuardar(); dtRender();
 }
-function dtResolver(idx){
-  const op=dt.caso.veredicto.opciones[idx]; if(!op) return;
-  if(op.correcta) dtResolverExito(op);
-  else{ jxSonido('mal'); jxVibrar(30); avisar('🔎 Mmm… eso no calza con las pruebas. Sigue investigando.'); }
+function dtDone(et, texto){
+  const cont=document.getElementById('dtEtapa');
+  cont.insertAdjacentHTML('beforeend', '<div class="dt-et-done"><b>'+(texto||'¡Capítulo completado! ⭐')+'</b>'+(et.alFinal&&et.alFinal.texto?'<p>'+et.alFinal.texto+'</p>':'')+'<button class="jx-btn rosa" id="dtNext">Continuar ›</button></div>');
+  document.getElementById('dtNext').onclick=()=>dtAvanzar(et);
 }
-function dtResolverExito(op){
-  const caso=dt.caso;
-  asegurarJuegos();
-  const yaResuelto=dtEsResuelto(caso.id);
-  if(!yaResuelto) datos.juegos.detective.resueltos.push(caso.id);
-  let monedas=caso.recompensa.monedas, xp=caso.recompensa.xp, extra='';
-  if(yaResuelto){ monedas=Math.ceil(monedas*0.25); xp=Math.ceil(xp*0.25); }
-  if(caso.id===dtCasoDelDia() && datos.juegos.detective.bonusDiario!==jxHoyClave()){
-    datos.juegos.detective.bonusDiario=jxHoyClave();
-    monedas+=20; xp+=15; extra=' · ¡bonus caso del día 🌟!';
-  }
-  dtLimpiarProgreso(caso.id);
+
+/* ----- ESCENA (búsqueda de objetos) ----- */
+function dtEscenaRender(et){
+  const cont=document.getElementById('dtEtapa');
+  if(!dt.fase || dt.fase.tipo!=='escena') dt.fase={ tipo:'escena', enc:new Set(), inicio:Date.now(), pistas:0 };
+  const f=dt.fase;
+  const lista=et.objetos.map((o,i)=>'<span class="dt-find'+(f.enc.has(i)?' ok':'')+'">'+o.emoji+' '+o.nombre+'</span>').join('');
+  const objs=et.objetos.map((o,i)=>'<span class="dt-obj'+(f.enc.has(i)?' ok':'')+'" style="left:'+o.x+'%;top:'+o.y+'%">'+o.emoji+'</span>').join('');
+  const decoys=(et.decoys||[]).map(d=>'<span class="dt-obj decoy" style="left:'+d.x+'%;top:'+d.y+'%">'+d.e+'</span>').join('');
+  const completo=f.enc.size===et.objetos.length;
+  cont.innerHTML=
+    '<h3 class="dt-et-tit">'+et.titulo+'</h3>'+
+    '<p class="dt-et-sub">Encuentra estos objetos en la escena ('+f.enc.size+'/'+et.objetos.length+'):</p>'+
+    '<div class="dt-finds">'+lista+'</div>'+
+    '<div class="dt-escena" id="dtEsc">'+(DT_ESCENAS[et.escena]||'')+decoys+objs+'</div>'+
+    (completo?'':'<div class="dt-et-ctrl"><button class="jx-btn ghost" id="dtPista">💡 Pista ('+(3-f.pistas)+')</button></div>');
+  const esc=document.getElementById('dtEsc');
+  esc.addEventListener('pointerdown', e=>dtEscenaTap(et,e));
+  if(!completo) document.getElementById('dtPista').onclick=()=>dtEscenaPista(et);
+  if(completo){ if(!f.celebrado){ f.celebrado=true; jxSonido('gana'); jxConfeti(50); } dtDone(et, '¡Escena despejada! ⭐'); }
+}
+function dtEscenaTap(et, e){
+  const f=dt.fase; if(f.enc.size===et.objetos.length) return;
+  const esc=document.getElementById('dtEsc'), r=esc.getBoundingClientRect();
+  const px=(e.clientX-r.left)/r.width*100, py=(e.clientY-r.top)/r.height*100;
+  let mejor=-1, dmin=99;
+  et.objetos.forEach((o,i)=>{ if(f.enc.has(i)) return; const d=Math.hypot(o.x-px,o.y-py); if(d<dmin){ dmin=d; mejor=i; } });
+  if(mejor>=0 && dmin<9){ f.enc.add(mejor); jxSonido('bien'); jxVibrar(12); dtEscenaRender(et); }
+  else{ jxSonido('tap'); const m=document.createElement('div'); m.className='dt-miss'; m.style.left=px+'%'; m.style.top=py+'%'; esc.appendChild(m); setTimeout(()=>m.remove(),500); }
+}
+function dtEscenaPista(et){
+  const f=dt.fase; if(f.pistas>=3){ avisar('No quedan pistas'); return; }
+  const falta=et.objetos.map((o,i)=>i).filter(i=>!f.enc.has(i)); if(!falta.length) return;
+  const o=et.objetos[falta[Math.floor(Math.random()*falta.length)]];
+  f.pistas++;
+  const esc=document.getElementById('dtEsc');
+  const m=document.createElement('div'); m.className='dt-hint'; m.style.left=o.x+'%'; m.style.top=o.y+'%'; esc.appendChild(m);
+  setTimeout(()=>m.remove(),1600);
+  document.getElementById('dtPista').textContent='💡 Pista ('+(3-f.pistas)+')';
+}
+
+/* ----- ANALISIS (emparejar) ----- */
+function dtAnalisisRender(et){
+  const cont=document.getElementById('dtEtapa');
+  if(!dt.fase || dt.fase.tipo!=='analisis') dt.fase={ tipo:'analisis', sel:null, hechos:new Set(), orden:sdShuffle(et.pares.map((p,i)=>i)) };
+  const f=dt.fase;
+  const izq=et.pares.map((p,i)=>'<button class="dt-match'+(f.hechos.has(i)?' ok':'')+((f.sel&&f.sel.l==='a'&&f.sel.i===i)?' sel':'')+'" data-l="a" data-i="'+i+'">'+p.a+'</button>').join('');
+  const der=f.orden.map(i=>'<button class="dt-match'+(f.hechos.has(i)?' ok':'')+((f.sel&&f.sel.l==='b'&&f.sel.i===i)?' sel':'')+'" data-l="b" data-i="'+i+'">'+et.pares[i].b+'</button>').join('');
+  const completo=f.hechos.size===et.pares.length;
+  cont.innerHTML='<h3 class="dt-et-tit">'+et.titulo+'</h3><p class="dt-et-sub">'+(et.sub||'Une cada prueba con lo que revela.')+'</p>'+
+    '<div class="dt-match-grid"><div class="dt-match-col">'+izq+'</div><div class="dt-match-col">'+der+'</div></div>';
+  cont.querySelectorAll('.dt-match').forEach(b=>{ if(!b.classList.contains('ok')) b.onclick=()=>dtMatchTap(et,b.dataset.l,+b.dataset.i); });
+  if(completo){ if(!f.celebrado){ f.celebrado=true; jxSonido('gana'); } dtDone(et,'¡Pruebas analizadas! ⭐'); }
+}
+function dtMatchTap(et, l, i){
+  const f=dt.fase;
+  if(!f.sel){ f.sel={l,i}; jxSonido('tap'); dtAnalisisRender(et); return; }
+  if(f.sel.l===l){ f.sel={l,i}; dtAnalisisRender(et); return; }
+  const idxA = l==='a'? i : f.sel.i, idxB = l==='b'? i : f.sel.i;
+  if(idxA===idxB){ f.hechos.add(idxA); f.sel=null; jxSonido('bien'); jxVibrar(12); dtAnalisisRender(et); }
+  else{ f.sel=null; jxSonido('mal'); jxVibrar(22); dtAnalisisRender(et); avisar('Eso no calza, prueba otra vez'); }
+}
+
+/* ----- INTERROGATORIO ----- */
+function dtInterroRender(et){
+  const cont=document.getElementById('dtEtapa');
+  if(!dt.fase || dt.fase.tipo!=='interro') dt.fase={ tipo:'interro', vistas:new Set() };
+  const f=dt.fase;
+  const s = et.sospechoso ? dt.caso.sospechosos.find(x=>x.id===et.sospechoso) : null;
+  const qs=et.dialogo.map((d,i)=>'<div class="dt-preg" data-q="'+i+'"><div class="dt-preg-q">❓ '+d.p+'</div>'+(f.vistas.has(i)?'<div class="dt-preg-a">“'+d.a+'”</div>':'')+'</div>').join('');
+  cont.innerHTML='<h3 class="dt-et-tit">'+et.titulo+'</h3>'+
+    (s?'<div class="dt-sosp-card"><span class="dt-sosp-emo">'+s.emoji+'</span><div><b>'+s.nombre+'</b><p>'+s.desc+'</p></div></div>':'')+
+    '<p class="dt-et-sub">Toca cada pregunta para interrogar.</p><div class="dt-pregs">'+qs+'</div>';
+  cont.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{ f.vistas.add(+b.dataset.q); jxSonido('tap'); dtInterroRender(et); });
+  if(f.vistas.size===et.dialogo.length) dtDone(et,'¡Interrogatorio listo! ⭐');
+}
+
+/* ----- CRONOLOGIA ----- */
+function dtCronoRender(et){
+  const cont=document.getElementById('dtEtapa');
+  if(!dt.fase || dt.fase.tipo!=='crono') dt.fase={ tipo:'crono', orden:[], opciones:sdShuffle(et.eventos.map((e,i)=>i)) };
+  const f=dt.fase;
+  const restantes=f.opciones.filter(i=>!f.orden.includes(i));
+  const colocados=f.orden.map((i,pos)=>'<div class="dt-evt"><span class="dt-evt-n">'+(pos+1)+'</span><span>'+et.eventos[i]+'</span></div>').join('');
+  const ops=restantes.map(i=>'<button class="dt-evt-op" data-i="'+i+'">'+et.eventos[i]+'</button>').join('');
+  cont.innerHTML='<h3 class="dt-et-tit">'+et.titulo+'</h3><p class="dt-et-sub">Ordena los hechos en la secuencia correcta de lo que pasó.</p>'+
+    '<div class="dt-crono">'+(colocados||'<p class="dt-vacio">Toca el primer hecho abajo.</p>')+'</div>'+
+    (ops?'<div class="dt-evt-ops">'+ops+'</div>':'');
+  cont.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>dtCronoTap(et,+b.dataset.i));
+  if(!restantes.length){ if(!f.celebrado){ f.celebrado=true; jxSonido('gana'); jxConfeti(40); } dtDone(et,'¡Cronología reconstruida! ⭐'); }
+}
+function dtCronoTap(et, i){
+  const f=dt.fase;
+  if(i===f.orden.length){ f.orden.push(i); jxSonido('bien'); jxVibrar(10); dtCronoRender(et); }
+  else{ jxSonido('mal'); jxVibrar(25); avisar('Ese no es el siguiente hecho. Piensa en el orden.'); }
+}
+
+/* ----- ARRESTO ----- */
+function dtArrestoRender(et){
+  const cont=document.getElementById('dtEtapa');
+  const traits=Object.entries(dt.perfil).map(([k,v])=>'<span class="dt-trait">'+dtTraitEmoji(k)+' '+v+'</span>').join('');
+  const sosp=dt.caso.sospechosos.map(s=>{
+    const p=Object.entries(s.perfil).map(([k,v])=>'<span class="dt-trait sm">'+v+'</span>').join('');
+    return '<button class="dt-arrest-card" data-arr="'+s.id+'"><span class="dt-sosp-emo">'+s.emoji+'</span><b>'+s.nombre+'</b><div class="dt-arrest-perfil">'+p+'</div></button>';
+  }).join('');
+  cont.innerHTML='<h3 class="dt-et-tit">⚖️ El arresto</h3>'+
+    '<div class="dt-perfil-box"><b>Perfil del culpable según las pruebas</b><div class="dt-traits">'+traits+'</div></div>'+
+    '<p class="dt-et-sub">Toca al sospechoso que coincide con TODO el perfil.</p><div class="dt-arrest">'+sosp+'</div>';
+  cont.querySelectorAll('[data-arr]').forEach(b=>b.onclick=()=>dtArrestar(b.dataset.arr));
+}
+function dtArrestar(id){
+  const s=dt.caso.sospechosos.find(x=>x.id===id);
+  const coincide=Object.entries(dt.perfil).every(([k,v])=>s.perfil[k]===v);
+  if(coincide && id===dt.caso.culpable) dtCasoResuelto();
+  else{ jxSonido('mal'); jxVibrar(40); avisar('🔎 Esa persona no coincide con el perfil. Revisa las pruebas.'); }
+}
+function dtCasoResuelto(){
+  const c=dt.caso; asegurarJuegos();
+  const ya=datos.juegos.detective.resueltos.includes(c.id);
+  if(!ya) datos.juegos.detective.resueltos.push(c.id);
+  let monedas=c.recompensa.monedas, xp=c.recompensa.xp, extra='';
+  if(ya){ monedas=Math.ceil(monedas*0.3); xp=Math.ceil(xp*0.3); }
+  if(c.id===dtCasoDelDia() && datos.juegos.detective.bonusDiario!==jxHoyClave()){ datos.juegos.detective.bonusDiario=jxHoyClave(); monedas+=25; xp+=20; extra=' · ¡bonus del día 🌟!'; }
+  dtLimpiar(c.id);
   const r=jxRecompensar(monedas, xp, { desde: document.getElementById('jxScreenDetective') });
-  jxCelebrar({ titulo:'¡Caso resuelto! 🕵️', sub:op.explica+extra, monedas, xp, subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Volver a los casos', onNext:()=>{ dtVista='lista'; dtRender(); } });
+  jxCelebrar({ titulo:'¡Caso resuelto! 🕵️', sub:c.resolucion+extra, monedas, xp, subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Volver a los casos', onNext:()=>{ dtVista='lista'; dtRender(); } });
 }
 
 /* ============================================================
