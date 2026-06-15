@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#5f6655">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -219,7 +219,7 @@
   .boton.chico{padding:8px 20px;font-size:.88rem;margin-top:10px;box-shadow:none;}
 
   .campo{
-    width:100%;border:1px solid var(--dorado-claro);border-radius:14px;padding:13px 16px;
+    width:100%;max-width:100%;min-width:0;border:1px solid var(--dorado-claro);border-radius:14px;padding:13px 16px;
     font-family:'Jost',sans-serif;font-size:1rem;margin-top:10px;background:var(--crema);
     color:var(--tinta);resize:vertical;transition:border-color .2s, box-shadow .2s;
   }
@@ -332,7 +332,7 @@
   .cancion .de-quien.catalina{color:var(--rosa);}
   .cancion iframe{width:100%;height:80px;border:none;border-radius:12px;margin-top:10px;}
   .cancion iframe.apple-music-frame{height:175px;background:var(--blanco);}
-  .cancion a.enlace{display:inline-block;margin-top:8px;color:var(--dorado);text-decoration:none;font-size:.92rem;border-bottom:1px solid var(--dorado-claro);}
+  .cancion a.enlace{display:inline-block;margin-top:8px;color:var(--dorado);text-decoration:none;font-size:.92rem;border-bottom:1px solid var(--dorado-claro);overflow-wrap:anywhere;word-break:break-word;max-width:100%;}
   .btn-destacar{border:none;background:none;cursor:pointer;font-size:1.1rem;color:var(--dorado-claro);padding:2px 6px;}
   .cancion.destacada .btn-destacar{color:var(--dorado);}
 
@@ -540,7 +540,7 @@
     background:var(--blanco);border-radius:24px 24px 0 0;
     max-width:480px;width:100%;padding:28px 24px 34px;
     box-shadow:0 -12px 44px rgba(0,0,0,.28);
-    max-height:88vh;overflow-y:auto;text-align:left;
+    max-height:88vh;overflow-y:auto;overflow-x:hidden;text-align:left;
     animation:subirPopup .32s cubic-bezier(.21,1.02,.55,1) both;
   }
   @media (min-width:600px){
@@ -918,6 +918,86 @@
   .jx-tq.gana{background:var(--rosa-claro);animation:jxBump .5s ease;}
   .jx-tq.x{color:var(--rosa);}
   .jx-tq.o{color:var(--dorado);}
+
+  /* 2048 */
+  .jx-card.dosmil{background:linear-gradient(150deg,#e0b25f,#cf7f3c);}
+  .jx-card.snake{background:linear-gradient(150deg,#7faf6f,#4f7a4a);}
+  .jx-2048{position:relative;width:min(94vw,400px);aspect-ratio:1;margin:0 auto;background:var(--crema-oscuro);border-radius:18px;padding:10px;touch-action:none;box-shadow:0 12px 30px var(--sombra);}
+  .jx-2048-bg{position:absolute;inset:10px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:10px;}
+  .jx-2048-bg div{background:rgba(255,255,255,.45);border-radius:12px;}
+  body.oscuro .jx-2048-bg div{background:rgba(255,255,255,.06);}
+  .jx-2048-tiles{position:absolute;inset:10px;}
+  .jx-tile{position:absolute;top:0;left:0;transition:transform .12s ease;will-change:transform;}
+  .jx-til-in{width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:12px;font-family:'Playfair Display',serif;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.12);}
+  .jx-til-in.pop{animation:jxPopIn .16s ease;}
+  .jx-til-in.nuevo{animation:jxNuevoIn .18s cubic-bezier(.3,1.3,.6,1);}
+  @keyframes jxPopIn{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+  @keyframes jxNuevoIn{0%{transform:scale(0)}100%{transform:scale(1)}}
+  /* Snake */
+  .jx-snake-wrap{display:flex;justify-content:center;}
+  #jxSnakeCv{width:min(94vw,400px);aspect-ratio:1;background:var(--crema-oscuro);border-radius:18px;touch-action:none;box-shadow:0 12px 30px var(--sombra);}
+
+  /* Detective */
+  .jx-card.detective{background:linear-gradient(150deg,#5f6b8a,#3c4360);}
+  .dt-list{display:flex;flex-direction:column;gap:14px;}
+  .dt-caso-card{position:relative;display:flex;gap:14px;align-items:center;text-align:left;width:100%;border:1px solid var(--crema-oscuro);background:var(--blanco);border-radius:20px;padding:16px;cursor:pointer;font-family:inherit;color:inherit;box-shadow:0 8px 22px var(--sombra);transition:transform .15s, box-shadow .2s;overflow:hidden;}
+  .dt-caso-card:active{transform:scale(.98);}
+  .dt-caso-card:hover{transform:translateY(-2px);box-shadow:0 14px 30px var(--sombra);}
+  .dt-caso-card.dia{border-color:var(--dorado);box-shadow:0 0 0 2px rgba(216,192,143,.4),0 12px 28px var(--sombra);}
+  .dt-ribbon{position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--dorado),var(--rosa));color:#fff;font-size:.66rem;letter-spacing:1px;padding:4px 12px;border-bottom-left-radius:12px;}
+  .dt-caso-emo{font-size:2.4rem;flex-shrink:0;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2));}
+  .dt-caso-emo.big{font-size:2.8rem;}
+  .dt-caso-info{flex:1;min-width:0;}
+  .dt-caso-tit{font-family:'Playfair Display',serif;font-size:1.18rem;color:var(--tinta);line-height:1.15;}
+  .dt-ok{color:var(--verde);}
+  .dt-caso-meta{font-size:.78rem;color:var(--gris);margin:4px 0;}
+  .dt-tag{display:inline-block;border-radius:999px;padding:2px 9px;font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:#fff;}
+  .dt-tag.robo{background:#b9985a;}
+  .dt-tag.infidelidad{background:#c98e9b;}
+  .dt-tag.desaparicion{background:#8a9a7b;}
+  .dt-tag.misterio{background:#5f6b8a;}
+  .dt-caso-cli{font-size:.82rem;color:var(--gris);font-weight:300;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .dt-back{margin-bottom:14px;}
+  .dt-caso-head,.dt-lugar-head{display:flex;gap:14px;align-items:center;margin-bottom:14px;}
+  .dt-caso-head h3,.dt-lugar-head h3{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.4rem;line-height:1.1;}
+  .dt-banner{background:var(--blanco);border:1px solid var(--crema-oscuro);border-left:4px solid var(--dorado);border-radius:0 16px 16px 0;padding:16px 18px;margin-bottom:18px;box-shadow:0 8px 20px var(--sombra-tenue);}
+  .dt-banner b{font-family:'Playfair Display',serif;color:var(--dorado);}
+  .dt-banner p{font-weight:300;color:var(--tinta);margin-top:6px;line-height:1.5;}
+  .dt-cli{font-style:italic;color:var(--gris);font-size:.9rem;}
+  .dt-sec-tit{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.02rem;margin:18px 2px 10px;}
+  .dt-chips{display:flex;flex-wrap:wrap;gap:10px;}
+  .dt-chip{border:1.5px solid var(--dorado-claro);background:var(--blanco);color:var(--tinta);border-radius:14px;padding:11px 16px;cursor:pointer;font-family:'Jost',sans-serif;font-size:.95rem;transition:transform .12s, border-color .2s;box-shadow:0 4px 12px var(--sombra-tenue);}
+  .dt-chip:active{transform:scale(.95);}
+  .dt-chip:hover{border-color:var(--dorado);}
+  .dt-evidencias{display:flex;flex-direction:column;gap:10px;}
+  .dt-ev{display:flex;gap:12px;align-items:flex-start;background:var(--crema);border:1px dashed var(--dorado-claro);border-radius:14px;padding:12px 14px;}
+  .dt-ev span{font-size:1.5rem;}
+  .dt-ev b{font-family:'Playfair Display',serif;color:var(--tinta);display:block;}
+  .dt-ev p{font-weight:300;color:var(--gris);font-size:.9rem;margin-top:2px;line-height:1.45;}
+  .dt-vacio{color:var(--gris);font-weight:300;font-style:italic;padding:8px 2px;}
+  .dt-resolver{width:100%;margin-top:24px;}
+  .dt-desc{color:var(--gris);font-weight:300;line-height:1.55;margin-bottom:6px;}
+  .dt-puntos{display:flex;flex-direction:column;gap:12px;margin-top:6px;}
+  .dt-punto{border:1px solid var(--crema-oscuro);background:var(--blanco);border-radius:16px;padding:14px 16px;cursor:pointer;transition:transform .12s, border-color .2s;box-shadow:0 4px 12px var(--sombra-tenue);}
+  .dt-punto:active{transform:scale(.98);}
+  .dt-punto.hallazgo{border-color:var(--verde);background:rgba(138,154,123,.10);cursor:default;}
+  .dt-punto.vacio{opacity:.6;cursor:default;}
+  .dt-punto.bloq{opacity:.7;border-style:dashed;cursor:not-allowed;}
+  .dt-punto-cab{display:flex;justify-content:space-between;align-items:center;font-size:1rem;color:var(--tinta);}
+  .dt-punto-est{font-size:1.1rem;}
+  .dt-punto-det{margin-top:10px;font-weight:300;color:var(--tinta);line-height:1.5;font-size:.93rem;border-top:1px dashed var(--crema-oscuro);padding-top:10px;animation:jxAppIn .25s ease;}
+  .dt-pregs{display:flex;flex-direction:column;gap:12px;margin-top:6px;}
+  .dt-preg{border:1px solid var(--crema-oscuro);background:var(--blanco);border-radius:16px;padding:14px 16px;cursor:pointer;box-shadow:0 4px 12px var(--sombra-tenue);transition:transform .12s;}
+  .dt-preg:active{transform:scale(.98);}
+  .dt-preg.bloq{opacity:.65;border-style:dashed;cursor:not-allowed;}
+  .dt-preg-q{font-weight:500;color:var(--dorado);}
+  .dt-preg-a{margin-top:10px;font-style:italic;font-weight:300;color:var(--tinta);line-height:1.5;border-top:1px dashed var(--crema-oscuro);padding-top:10px;animation:jxAppIn .25s ease;}
+  .dt-veredicto h3{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.5rem;text-align:center;}
+  .dt-vpreg{text-align:center;font-weight:300;color:var(--tinta);margin:8px auto 4px;max-width:420px;line-height:1.5;}
+  .dt-opciones{display:flex;flex-direction:column;gap:12px;margin-top:12px;}
+  .dt-opcion{border:1.5px solid var(--dorado-claro);background:var(--crema);color:var(--tinta);border-radius:16px;padding:15px 18px;cursor:pointer;font-family:'Jost',sans-serif;font-size:1rem;text-align:left;line-height:1.4;transition:transform .12s, border-color .2s, background .2s;}
+  .dt-opcion:active{transform:scale(.97);}
+  .dt-opcion:hover{border-color:var(--rosa);background:var(--rosa-claro);}
 
   /* Celebración + confeti */
   #jxConfeti{position:absolute;inset:0;width:100%;height:100%;z-index:7;pointer-events:none;display:none;}
@@ -1326,6 +1406,9 @@
       <section class="jx-screen" id="jxScreenZip"></section>
       <section class="jx-screen" id="jxScreenMemo"></section>
       <section class="jx-screen" id="jxScreenTriqui"></section>
+      <section class="jx-screen" id="jxScreenDosmil"></section>
+      <section class="jx-screen" id="jxScreenSnake"></section>
+      <section class="jx-screen" id="jxScreenDetective"></section>
       <section class="jx-screen" id="jxScreenCloset"></section>
     </div>
   </div>
@@ -2723,6 +2806,7 @@ function pedirFormulario(titulo, campos, opciones = {}){
       input.className = 'campo';
       if(campo.placeholder) input.placeholder = campo.placeholder;
       if(campo.valor) input.value = campo.valor;
+      input.addEventListener('focus', () => setTimeout(() => { try{ input.scrollIntoView({ block:'center', behavior:'smooth' }); }catch(e){} }, 260));
       entradas[campo.nombre] = { input, campo };
       caja.appendChild(input);
     });
@@ -3806,6 +3890,9 @@ function jxDefaultJuegos(){
     zip: { resueltos:0 },
     memo: { resueltos:0 },
     triqui: { ganados:0 },
+    dosmil: { record:0, partidas:0 },
+    snake: { record:0, partidas:0 },
+    detective: { resueltos:[], bonusDiario:'' },
     diario: { ultimo:null, racha:0 },
   };
 }
@@ -3832,6 +3919,15 @@ function asegurarJuegos(){
   if(typeof j.memo.resueltos !== 'number') j.memo.resueltos = 0;
   if(!j.triqui || typeof j.triqui !== 'object') j.triqui = {};
   if(typeof j.triqui.ganados !== 'number') j.triqui.ganados = 0;
+  if(!j.dosmil || typeof j.dosmil !== 'object') j.dosmil = {};
+  if(typeof j.dosmil.record !== 'number') j.dosmil.record = 0;
+  if(typeof j.dosmil.partidas !== 'number') j.dosmil.partidas = 0;
+  if(!j.snake || typeof j.snake !== 'object') j.snake = {};
+  if(typeof j.snake.record !== 'number') j.snake.record = 0;
+  if(typeof j.snake.partidas !== 'number') j.snake.partidas = 0;
+  if(!j.detective || typeof j.detective !== 'object') j.detective = {};
+  if(!Array.isArray(j.detective.resueltos)) j.detective.resueltos = [];
+  if(typeof j.detective.bonusDiario !== 'string') j.detective.bonusDiario = '';
   if(!j.diario || typeof j.diario !== 'object') j.diario = { ultimo:null, racha:0 };
 }
 
@@ -3988,6 +4084,9 @@ const JX_PANTALLAS = {
   zip:    { el:'jxScreenZip',    titulo:'Zip',             render:() => zipMostrar() },
   memo:   { el:'jxScreenMemo',   titulo:'Memorice',        render:() => memoMostrar() },
   triqui: { el:'jxScreenTriqui', titulo:'Tres en raya',    render:() => triquiMostrar() },
+  dosmil: { el:'jxScreenDosmil', titulo:'2048', render:() => dmMostrar() },
+  snake:  { el:'jxScreenSnake',  titulo:'Snake', render:() => snMostrar() },
+  detective: { el:'jxScreenDetective', titulo:'Detective', render:() => dtMostrar() },
   closet: { el:'jxScreenCloset', titulo:'Clóset de Michi', render:() => jxRenderCloset() },
 };
 let jxPantalla = 'hub';
@@ -4022,6 +4121,7 @@ function jxCerrarApp(){
   if(sudokuTimer) clearInterval(sudokuTimer);
   if(zipTimer) clearInterval(zipTimer);
   if(memoTimer) clearInterval(memoTimer);
+  if(snLoop) cancelAnimationFrame(snLoop);
   pintarJuegos();
 }
 function jxAtras(){ if(jxPantalla === 'hub') jxCerrarApp(); else jxIr('hub'); }
@@ -4054,7 +4154,7 @@ function jxRenderHub(){
   const j = datos.juegos, m = j.mascota, nivel = jxNivel();
   const xpPct = (m.xp % JX_NIVEL_XP) / JX_NIVEL_XP * 100;
   const disp = jxDiarioDisponible();
-  const partidas = j.sudoku.resueltos + j.zip.resueltos + j.memo.resueltos + j.triqui.ganados;
+  const partidas = j.sudoku.resueltos + j.zip.resueltos + j.memo.resueltos + j.triqui.ganados + j.dosmil.partidas + j.snake.partidas;
   const el = document.getElementById('jxScreenHub');
   el.innerHTML =
     '<div class="jx-pet-stage" style="background:' + jxFondoCss() + '">' +
@@ -4085,6 +4185,16 @@ function jxRenderHub(){
       '<button class="jx-card triqui" data-ir="triqui"><div class="sheen"></div><div class="jx-card-emo">⭕</div>' +
         '<div><div class="jx-card-nom">Tres en raya</div><div class="jx-card-desc">Contra Michi o de a dos</div></div>' +
         '<span class="jx-card-stat">✔ ' + j.triqui.ganados + '</span></button>' +
+      '<button class="jx-card dosmil" data-ir="dosmil"><div class="sheen"></div><div class="jx-card-emo">🧮</div>' +
+        '<div><div class="jx-card-nom">2048</div><div class="jx-card-desc">Une y llega a 2048</div></div>' +
+        '<span class="jx-card-stat">★ ' + j.dosmil.record + '</span></button>' +
+      '<button class="jx-card snake" data-ir="snake"><div class="sheen"></div><div class="jx-card-emo">🐍</div>' +
+        '<div><div class="jx-card-nom">Snake</div><div class="jx-card-desc">Crece sin chocar</div></div>' +
+        '<span class="jx-card-stat">★ ' + j.snake.record + '</span></button>' +
+      '<button class="jx-card detective full" data-ir="detective"><div class="sheen"></div><div class="jx-card-emo">🕵️</div>' +
+        '<div style="flex:1"><div class="jx-card-nom">Detective</div>' +
+        '<div class="jx-card-desc">Resuelve casos: pistas, sospechosos y veredicto</div></div>' +
+        '<span class="jx-card-stat">✔ ' + j.detective.resueltos.length + '</span></button>' +
       '<button class="jx-card closet full" data-ir="closet"><div class="sheen"></div><div class="jx-card-emo">👗</div>' +
         '<div style="flex:1"><div class="jx-card-nom">Clóset de ' + m.nombre + '</div>' +
         '<div class="jx-card-desc">Viste y decora a tu gatito con lo que ganas</div></div></button>' +
@@ -4739,6 +4849,626 @@ function triquiFin(g){
     const r=jxRecompensar(6,6,{desde:document.getElementById('triGrid')});
     jxCelebrar({ titulo:'¡Ganó '+quien+'!', sub:'Tres en raya', monedas:6, xp:6, subioNivel:r.subioNivel, nivel:r.nivel, onNext:triquiNuevo });
   }
+}
+
+/* ============================================================
+   UTIL: deslizar (swipe) para 2048 y Snake
+   ============================================================ */
+function jxSwipe(el, cb){
+  let sx=0, sy=0, activo=false;
+  el.addEventListener('pointerdown', e => { sx=e.clientX; sy=e.clientY; activo=true; }, { passive:true });
+  el.addEventListener('pointerup', e => {
+    if(!activo) return; activo=false;
+    const dx=e.clientX-sx, dy=e.clientY-sy, ax=Math.abs(dx), ay=Math.abs(dy);
+    if(Math.max(ax,ay) < 22) return;
+    cb(ax>ay ? (dx>0?'right':'left') : (dy>0?'down':'up'));
+  }, { passive:true });
+}
+
+/* ============================================================
+   2048
+   ============================================================ */
+let dm = null;
+const DM_GAP = 10;
+function dmLineas(dir){
+  const ls=[];
+  for(let i=0;i<4;i++){ const l=[]; for(let k=0;k<4;k++){ let r,c;
+    if(dir==='left'){ r=i; c=k; } else if(dir==='right'){ r=i; c=3-k; }
+    else if(dir==='up'){ r=k; c=i; } else { r=3-k; c=i; }
+    l.push([r,c]); } ls.push(l); }
+  return ls;
+}
+function dmColor(v){
+  const m={2:'#efe2cd',4:'#ecd6ad',8:'#ecb877',16:'#e89b52',32:'#e07e44',64:'#d65f3a',128:'#e6c067',256:'#e3b94f',512:'#dcae39',1024:'#c98e9b',2048:'#c084b0'};
+  return m[v] || '#8a5fa6';
+}
+function dmGrillaVacia(){ return [[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null]]; }
+function dmMetricas(){ const layer=document.getElementById('dmTiles'); const W=layer?layer.clientWidth:320; return (W-3*DM_GAP)/4; }
+function dmMostrar(){
+  asegurarJuegos();
+  const el=document.getElementById('jxScreenDosmil');
+  el.innerHTML =
+    '<div class="jx-hud"><span class="pill">Puntos <b id="dmScore">0</b></span><span class="pill">★ Récord <b id="dmRecord">'+datos.juegos.dosmil.record+'</b></span></div>' +
+    '<p class="jx-tip">Desliza para mover. Une números iguales y llega a <b>2048</b>… ¡o más!</p>' +
+    '<div class="jx-2048" id="jxDosmil"><div class="jx-2048-bg"></div><div class="jx-2048-tiles" id="dmTiles"></div></div>' +
+    '<div class="jx-ctrl"><button class="jx-btn" id="dmNuevo">Nuevo juego</button></div>';
+  const bg=el.querySelector('.jx-2048-bg'); for(let i=0;i<16;i++) bg.appendChild(document.createElement('div'));
+  jxSwipe(document.getElementById('jxDosmil'), dmMover);
+  document.getElementById('dmNuevo').onclick=dmNuevo;
+  if(!dmCargarLocal()) dmNuevo();
+}
+function dmNuevo(){
+  dm={ tiles:[], grid:dmGrillaVacia(), score:0, record:datos.juegos.dosmil.record, over:false, won:false, bloqueo:false, nextId:1 };
+  const layer=document.getElementById('dmTiles'); if(layer) layer.innerHTML='';
+  dmSpawn(); dmSpawn(); dmRender(); dmGuardarLocal();
+}
+function dmSpawn(){
+  const libres=[]; for(let r=0;r<4;r++)for(let c=0;c<4;c++) if(!dm.grid[r][c]) libres.push([r,c]);
+  if(!libres.length) return;
+  const [r,c]=libres[Math.floor(Math.random()*libres.length)];
+  const t={ id:dm.nextId++, val:Math.random()<0.9?2:4, r, c, nuevo:true };
+  dm.grid[r][c]=t; dm.tiles.push(t);
+}
+function dmReconstruirGrid(){ dm.grid=dmGrillaVacia(); dm.tiles.forEach(t=>{ dm.grid[t.r][t.c]=t; }); }
+function dmPosicionar(){
+  const cell=dmMetricas();
+  dm.tiles.forEach(t=>{ if(t.el) t.el.style.transform='translate('+(t.c*(cell+DM_GAP))+'px,'+(t.r*(cell+DM_GAP))+'px)'; });
+}
+function dmRender(){
+  const cell=dmMetricas(), layer=document.getElementById('dmTiles'); if(!layer) return;
+  dm.tiles.forEach(t=>{
+    if(!t.el){ t.el=document.createElement('div'); t.el.className='jx-tile'; t.el.innerHTML='<div class="jx-til-in"></div>'; layer.appendChild(t.el); }
+    t.el.style.width=cell+'px'; t.el.style.height=cell+'px';
+    t.el.style.transform='translate('+(t.c*(cell+DM_GAP))+'px,'+(t.r*(cell+DM_GAP))+'px)';
+    const inner=t.el.firstChild;
+    inner.textContent=t.val;
+    inner.style.background=dmColor(t.val);
+    inner.style.color=t.val>=8?'#fff':'#5a544a';
+    inner.style.fontSize=(t.val>=1000?cell*0.30:t.val>=100?cell*0.36:cell*0.44)+'px';
+    inner.classList.remove('pop','nuevo'); void inner.offsetWidth;
+    if(t.nuevo){ inner.classList.add('nuevo'); t.nuevo=false; }
+    else if(t._pop){ inner.classList.add('pop'); t._pop=false; }
+  });
+  const sc=document.getElementById('dmScore'); if(sc) sc.textContent=dm.score;
+  const rc=document.getElementById('dmRecord'); if(rc) rc.textContent=Math.max(dm.record, datos.juegos.dosmil.record);
+}
+function dmMover(dir){
+  if(!dm || dm.bloqueo || dm.over) return;
+  const lineas=dmLineas(dir);
+  let moved=false, gained=0;
+  dm.tiles.forEach(t=>{ t._absorb=false; t._pop=false; });
+  for(const linea of lineas){
+    const seq=[];
+    for(const par of linea){ const t=dm.grid[par[0]][par[1]]; if(t) seq.push(t); }
+    let slot=0;
+    for(let i=0;i<seq.length;i++){
+      const t=seq[i], dest=linea[slot];
+      if(i+1<seq.length && seq[i+1].val===t.val){
+        const otra=seq[i+1];
+        t.r=dest[0]; t.c=dest[1]; t.val*=2; t._pop=true; gained+=t.val;
+        otra.r=dest[0]; otra.c=dest[1]; otra._absorb=true;
+        moved=true; i++; slot++;
+      }else{
+        if(t.r!==dest[0]||t.c!==dest[1]) moved=true;
+        t.r=dest[0]; t.c=dest[1]; slot++;
+      }
+    }
+  }
+  if(!moved) return;
+  dmPosicionar();
+  dm.score+=gained; if(dm.score>dm.record) dm.record=dm.score;
+  const sEl=document.getElementById('dmScore'); if(sEl) sEl.textContent=dm.score;
+  jxSonido('tap'); jxVibrar(8);
+  dm.bloqueo=true;
+  setTimeout(()=>{
+    dm.tiles.filter(t=>t._absorb).forEach(t=>{ if(t.el) t.el.remove(); });
+    dm.tiles=dm.tiles.filter(t=>!t._absorb);
+    dmReconstruirGrid(); dmSpawn(); dm.bloqueo=false; dmRender(); dmGuardarLocal();
+    if(!dm.won && dm.tiles.some(t=>t.val>=2048)){ dm.won=true; dmCelebrar2048(); }
+    else if(dmSinMov()) dmFin();
+  }, 130);
+}
+function dmSinMov(){
+  for(let r=0;r<4;r++)for(let c=0;c<4;c++){
+    if(!dm.grid[r][c]) return false;
+    const v=dm.grid[r][c].val;
+    if(c<3 && dm.grid[r][c+1] && dm.grid[r][c+1].val===v) return false;
+    if(r<3 && dm.grid[r+1][c] && dm.grid[r+1][c].val===v) return false;
+  }
+  return true;
+}
+function dmFin(){
+  dm.over=true; dmLimpiarLocal();
+  asegurarJuegos(); datos.juegos.dosmil.partidas++;
+  let record='';
+  if(dm.score>datos.juegos.dosmil.record){ datos.juegos.dosmil.record=dm.score; record=' · ¡nuevo récord! ★'; }
+  const monedas=Math.max(4, Math.floor(dm.score/120));
+  const r=jxRecompensar(monedas, Math.floor(monedas*0.8), { desde: document.getElementById('jxDosmil') });
+  jxCelebrar({ titulo:'¡Fin del 2048!', sub:'Puntos: '+dm.score+record, monedas, xp:Math.floor(monedas*0.8), subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Jugar de nuevo', onNext:dmNuevo });
+}
+function dmCelebrar2048(){
+  const bonus=80; asegurarJuegos();
+  const r=jxRecompensar(bonus, 60, { desde: document.getElementById('jxDosmil') });
+  jxCelebrar({ titulo:'¡Llegaste a 2048! 🏆', sub:'Bonus enorme · puedes seguir sumando', monedas:bonus, xp:60, subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Seguir jugando', onNext:()=>{} });
+}
+function dmGuardarLocal(){ if(!dm) return; try{ localStorage.setItem('jx2048', JSON.stringify({ tiles:dm.tiles.map(t=>({id:t.id,val:t.val,r:t.r,c:t.c})), score:dm.score, won:dm.won, nextId:dm.nextId })); }catch(e){} }
+function dmLimpiarLocal(){ try{ localStorage.removeItem('jx2048'); }catch(e){} }
+function dmCargarLocal(){
+  try{
+    const raw=localStorage.getItem('jx2048'); if(!raw) return false;
+    const s=JSON.parse(raw); if(!s||!s.tiles||!s.tiles.length) return false;
+    dm={ tiles:s.tiles.map(t=>({id:t.id,val:t.val,r:t.r,c:t.c})), grid:dmGrillaVacia(), score:s.score||0, record:datos.juegos.dosmil.record, over:false, won:!!s.won, bloqueo:false, nextId:s.nextId||1 };
+    dm.nextId=Math.max(dm.nextId, ...dm.tiles.map(t=>t.id+1));
+    dmReconstruirGrid();
+    const layer=document.getElementById('dmTiles'); if(layer) layer.innerHTML='';
+    dmRender();
+    return true;
+  }catch(e){ return false; }
+}
+
+/* ============================================================
+   SNAKE
+   ============================================================ */
+let sn=null, snLoop=null, snLast=0, snAcc=0;
+const SN_N=17;
+function snMostrar(){
+  asegurarJuegos();
+  const el=document.getElementById('jxScreenSnake');
+  el.innerHTML =
+    '<div class="jx-hud"><span class="pill">🍓 <b id="snScore">0</b></span><span class="pill">★ Récord <b id="snRecord">'+datos.juegos.snake.record+'</b></span></div>' +
+    '<p class="jx-tip">Desliza para girar. Come 🍓 y crece sin chocar contigo ni con los bordes.</p>' +
+    '<div class="jx-snake-wrap"><canvas id="jxSnakeCv"></canvas></div>' +
+    '<div class="jx-ctrl"><button class="jx-btn" id="snNuevo">Empezar de nuevo</button></div>';
+  jxSwipe(document.getElementById('jxSnakeCv'), snGirar);
+  document.getElementById('snNuevo').onclick=snNuevo;
+  snNuevo();
+}
+function snNuevo(){
+  if(snLoop) cancelAnimationFrame(snLoop);
+  const mid=Math.floor(SN_N/2);
+  sn={ cuerpo:[{x:mid,y:mid},{x:mid-1,y:mid},{x:mid-2,y:mid}], dir:{x:1,y:0}, pendiente:{x:1,y:0}, comida:null, score:0, over:false, intervalo:200 };
+  snComida(); snDibujar();
+  const s=document.getElementById('snScore'); if(s) s.textContent='0';
+  snLast=0; snAcc=0; snLoop=requestAnimationFrame(snStep);
+}
+function snComida(){
+  const libres=[];
+  for(let y=0;y<SN_N;y++)for(let x=0;x<SN_N;x++) if(!sn.cuerpo.some(s=>s.x===x&&s.y===y)) libres.push({x,y});
+  sn.comida = libres.length ? libres[Math.floor(Math.random()*libres.length)] : null;
+}
+function snGirar(dir){
+  if(!sn||sn.over) return;
+  const d={left:{x:-1,y:0},right:{x:1,y:0},up:{x:0,y:-1},down:{x:0,y:1}}[dir];
+  if(!d) return;
+  if(d.x===-sn.dir.x && d.y===-sn.dir.y) return;
+  sn.pendiente=d;
+}
+function snStep(ts){
+  snLoop=requestAnimationFrame(snStep);
+  if(!sn||sn.over||jxPantalla!=='snake') return;
+  if(!snLast) snLast=ts;
+  snAcc+=ts-snLast; snLast=ts;
+  if(snAcc>=sn.intervalo){ snAcc=0; snTick(); }
+}
+function snTick(){
+  sn.dir=sn.pendiente;
+  const cab={x:sn.cuerpo[0].x+sn.dir.x, y:sn.cuerpo[0].y+sn.dir.y};
+  if(cab.x<0||cab.y<0||cab.x>=SN_N||cab.y>=SN_N||sn.cuerpo.some(s=>s.x===cab.x&&s.y===cab.y)){ snFin(); return; }
+  sn.cuerpo.unshift(cab);
+  if(sn.comida && cab.x===sn.comida.x && cab.y===sn.comida.y){
+    sn.score++; jxSonido('bien');
+    const sc=document.getElementById('snScore'); if(sc) sc.textContent=sn.score;
+    if(sn.score>datos.juegos.snake.record){ const rEl=document.getElementById('snRecord'); if(rEl) rEl.textContent=sn.score; }
+    sn.intervalo=Math.max(80, 200-sn.score*6); snComida();
+  } else { sn.cuerpo.pop(); }
+  snDibujar();
+}
+function snDibujar(){
+  const cv=document.getElementById('jxSnakeCv'); if(!cv) return;
+  const dpr=Math.min(2,window.devicePixelRatio||1), W=cv.clientWidth||320;
+  cv.width=W*dpr; cv.height=W*dpr;
+  const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+  const cell=W/SN_N;
+  ctx.clearRect(0,0,W,W);
+  if(sn.comida){ ctx.font=(cell*0.95)+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('🍓',(sn.comida.x+0.5)*cell,(sn.comida.y+0.56)*cell); }
+  sn.cuerpo.forEach((s,i)=>{
+    ctx.fillStyle = i===0 ? '#b9985a' : '#c98e9b';
+    const pad=cell*0.10, x=s.x*cell+pad, y=s.y*cell+pad, w=cell-2*pad, r=Math.min(8,w*0.32);
+    ctx.beginPath();
+    if(ctx.roundRect) ctx.roundRect(x,y,w,w,r); else ctx.rect(x,y,w,w);
+    ctx.fill();
+  });
+}
+function snFin(){
+  sn.over=true; if(snLoop) cancelAnimationFrame(snLoop);
+  jxSonido('mal'); jxVibrar(40);
+  asegurarJuegos(); datos.juegos.snake.partidas++;
+  let record='';
+  if(sn.score>datos.juegos.snake.record){ datos.juegos.snake.record=sn.score; record=' · ¡nuevo récord! ★'; }
+  const monedas=Math.max(3, sn.score*2);
+  const r=jxRecompensar(monedas, monedas, { desde: document.getElementById('jxSnakeCv') });
+  jxCelebrar({ titulo:'¡Chocaste! 🐍', sub:'Comiste '+sn.score+' 🍓'+record, monedas, xp:monedas, subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Otra vez', onNext:snNuevo });
+}
+
+/* Teclado + resize para 2048 y Snake */
+document.addEventListener('keydown', e => {
+  if(!document.getElementById('jxApp')?.classList.contains('abierta')) return;
+  if(document.getElementById('popup')?.classList.contains('visible')) return;
+  const k={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'}[e.key];
+  if(!k) return;
+  if(jxPantalla==='dosmil'){ e.preventDefault(); dmMover(k); }
+  else if(jxPantalla==='snake'){ e.preventDefault(); snGirar(k); }
+});
+window.addEventListener('resize', () => {
+  if(jxPantalla==='dosmil' && dm) dmRender();
+  else if(jxPantalla==='snake' && sn) snDibujar();
+});
+
+/* ============================================================
+   DETECTIVE — resuelve casos tocando pistas e interrogando
+   ============================================================ */
+const DT_CASOS = [
+  {
+    id:'collar', titulo:'El collar de la abuela', emoji:'📿', tipo:'robo', dificultad:'Media',
+    cliente:'la abuela Rosa',
+    intro:'En la cena familiar desapareció mi collar de perlas. Estaba en mi joyero y éramos pocos en casa.',
+    objetivo:'Descubre quién tomó el collar de perlas.',
+    pistas:{
+      ventana:{nombre:'Ventana cerrada', emoji:'🪟', texto:'La ventana estaba cerrada por dentro: el ladrón estaba dentro de la casa.'},
+      perla:{nombre:'Perla suelta', emoji:'⚪', texto:'Una perla del collar quedó bajo la alfombra del dormitorio.'},
+      guante:{nombre:'Guante perfumado', emoji:'🧤', texto:'Un guante con un perfume floral muy fuerte, olvidado en el sofá.'},
+      recibo:{nombre:'Recibo de empeño', emoji:'🧾', texto:'Un recibo de una casa de empeño por un collar de perlas, a las 22:00.'},
+    },
+    lugares:[
+      {id:'dormitorio', nombre:'Dormitorio', emoji:'🛏️', desc:'El cuarto de la abuela, donde estaba el joyero.', puntos:[
+        {nombre:'La ventana', emoji:'🪟', revela:'ventana', texto:''},
+        {nombre:'Bajo la alfombra', emoji:'🟫', revela:'perla', texto:''},
+        {nombre:'El joyero', emoji:'💎', texto:'El joyero fue abierto sin forzarlo: alguien conocía dónde estaba la llave.'},
+      ]},
+      {id:'living', nombre:'Living', emoji:'🛋️', desc:'Donde la familia estuvo conversando.', puntos:[
+        {nombre:'El sofá', emoji:'🛋️', revela:'guante', texto:''},
+        {nombre:'La tele', emoji:'📺', texto:'La tele quedó encendida en un partido. Nada útil.'},
+      ]},
+      {id:'cocina', nombre:'Cocina', emoji:'🍽️', desc:'La cocina, con el basurero del día.', puntos:[
+        {nombre:'El basurero', emoji:'🗑️', revela:'recibo', texto:''},
+        {nombre:'El lavaplatos', emoji:'🚰', texto:'Solo platos sucios de la cena.'},
+      ]},
+    ],
+    sospechosos:[
+      {id:'tomas', nombre:'Tomás (sobrino)', emoji:'🧑', desc:'El sobrino, fanático de los partidos.', preguntas:[
+        {p:'¿Dónde estabas a las 22:00?', a:'En el living, viendo el partido con el tío. No me moví de ahí.'},
+        {p:'¿Usas perfume floral?', a:'Para nada, a mí me cargan los perfumes dulces.'},
+      ]},
+      {id:'sofia', nombre:'Sofía (prima)', emoji:'👩', desc:'La prima, siempre muy arreglada.', preguntas:[
+        {p:'¿Usas perfume fuerte?', a:'Sí, uno floral que me encanta. Lo uso todos los días.'},
+        {p:'¿Dónde estuviste a las 22:00?', a:'Eh… salí un rato a hacer un trámite, ya volví.'},
+      ]},
+      {id:'beto', nombre:'Tío Beto', emoji:'👨', desc:'El tío, hablando por teléfono toda la noche.', preguntas:[
+        {p:'¿Qué hacías durante la cena?', a:'Hablé una hora por teléfono con mi jefe, queda registrado en la llamada.'},
+      ]},
+    ],
+    veredicto:{ pregunta:'¿Quién tomó el collar de la abuela?', opciones:[
+      {texto:'Tomás, el sobrino.', correcta:false, explica:''},
+      {texto:'Sofía, la prima.', correcta:true, explica:'El guante con su perfume floral, la perla en el cuarto y el recibo de empeño a las 22:00, justo cuando salió sin coartada, la delatan.'},
+      {texto:'El tío Beto.', correcta:false, explica:''},
+    ]},
+    recompensa:{monedas:30, xp:30},
+  },
+
+  {
+    id:'camila', titulo:'¿Camila tiene razón?', emoji:'💔', tipo:'infidelidad', dificultad:'Media',
+    cliente:'tu amiga Camila',
+    intro:'Mi pololo Andrés anda rarísimo: llega tarde, esconde el teléfono y huele a perfume nuevo. ¿Me está engañando? Investiga porfa.',
+    objetivo:'Determina si Andrés es infiel… o si hay otra explicación.',
+    pistas:{
+      anillo:{nombre:'Recibo de joyería', emoji:'💍', texto:'Un recibo de joyería por un anillo, guardado en la guantera.'},
+      salon:{nombre:'Folleto de salón', emoji:'🎪', texto:'Un folleto de un salón de eventos para fiestas.'},
+      lista:{nombre:'Lista escrita', emoji:'📝', texto:'Una lista: reservar salón, comprar anillo, avisar a los papás de Camila, encargar la torta.'},
+      fecha:{nombre:'Fecha marcada', emoji:'📅', texto:'En su libreta hay una fecha encerrada en corazones: el aniversario con Camila.'},
+      testigo:{nombre:'Testimonio de la vecina', emoji:'👵', texto:'La vecina lo vio planeando algo con un señor de traje del salón de eventos.'},
+    },
+    lugares:[
+      {id:'auto', nombre:'El auto de Andrés', emoji:'🚗', desc:'Su auto, donde guarda de todo.', puntos:[
+        {nombre:'La guantera', emoji:'🧰', revela:'anillo', texto:''},
+        {nombre:'El asiento', emoji:'💺', revela:'salon', texto:''},
+        {nombre:'El cenicero', emoji:'🚬', texto:'Vacío y limpio. Andrés no fuma.'},
+      ]},
+      {id:'mochila', nombre:'Su mochila', emoji:'🎒', desc:'La mochila que lleva a todos lados.', puntos:[
+        {nombre:'El bolsillo', emoji:'👜', revela:'lista', texto:''},
+        {nombre:'La libreta', emoji:'📔', revela:'fecha', texto:''},
+      ]},
+    ],
+    sospechosos:[
+      {id:'beto', nombre:'Beto (su amigo)', emoji:'🧑', desc:'El mejor amigo de Andrés, pésimo guardando secretos.', preguntas:[
+        {p:'¿Por qué Andrés llega tarde?', a:'Anda en algo secreto… me hizo jurar que no diría nada.'},
+        {p:'¿Y el perfume nuevo?', a:'Lo ayudé a elegir uno. No era para él, era un regalo.'},
+        {p:'¿Hay otra persona?', a:'Jajaja, hay alguien muy especial en sus planes… pero no es lo que Camila cree.'},
+      ]},
+      {id:'vecina', nombre:'La vecina', emoji:'👵', desc:'Siempre mirando por la ventana.', preguntas:[
+        {p:'¿Vio a Andrés con alguien?', a:'Con un señor de traje, miraban planos de un salón. Parecían organizar una fiesta.', revela:'testigo'},
+      ]},
+    ],
+    veredicto:{ pregunta:'¿Qué le dices a Camila?', opciones:[
+      {texto:'Sí, te está engañando.', correcta:false, explica:''},
+      {texto:'Es inocente: te está organizando una sorpresa.', correcta:true, explica:'El anillo, el salón, la lista que menciona a tus papás y el aniversario lo confirman: Andrés prepara una propuesta. ¡No le arruines la sorpresa!'},
+      {texto:'No hay pruebas suficientes.', correcta:false, explica:''},
+    ]},
+    recompensa:{monedas:35, xp:35},
+  },
+
+  {
+    id:'rodrigo', titulo:'El cliente celoso', emoji:'🔍', tipo:'infidelidad', dificultad:'Difícil',
+    cliente:'un cliente, Rodrigo',
+    intro:'Sospecho que mi pareja, Vale, me miente. Dice que trabaja hasta tarde casi todas las semanas. Necesito la verdad, detective.',
+    objetivo:'Determina si Vale dice la verdad o esconde una infidelidad.',
+    pistas:{
+      chat:{nombre:'Mensajes ocultos', emoji:'💬', texto:'Mensajes con un contacto: nos vemos en el hotel de siempre, el martes.'},
+      app:{nombre:'App de citas', emoji:'📱', texto:'Una app de citas instalada y activa hace poco.'},
+      hotel:{nombre:'Cargo de hotel', emoji:'🏨', texto:'En la tarjeta hay un cargo de un hotel, el martes a las 21:00.'},
+      cena:{nombre:'Cena para dos', emoji:'🍷', texto:'Una cena para dos personas el jueves, día que dijo estar sola en casa.'},
+      compa:{nombre:'La desmiente', emoji:'👩‍💼', texto:'Su compañera dice que Vale se fue del trabajo a las 18:00 el martes, no trabajó tarde.'},
+    },
+    lugares:[
+      {id:'telefono', nombre:'El teléfono', emoji:'📱', desc:'Capturas que dejó el cliente.', puntos:[
+        {nombre:'Los chats', emoji:'💬', revela:'chat', texto:''},
+        {nombre:'Las apps', emoji:'📲', revela:'app', requiere:'chat', texto:''},
+        {nombre:'La galería', emoji:'🖼️', texto:'Una foto en un restaurante un martes, etiquetada trabajando hasta tarde.'},
+      ]},
+      {id:'tarjeta', nombre:'La tarjeta de crédito', emoji:'💳', desc:'El estado de cuenta del mes.', puntos:[
+        {nombre:'Los gastos del martes', emoji:'🏨', revela:'hotel', texto:''},
+        {nombre:'Los gastos del jueves', emoji:'🍷', revela:'cena', texto:''},
+      ]},
+    ],
+    sospechosos:[
+      {id:'vale', nombre:'Vale (la pareja)', emoji:'🧑', desc:'Responde tranquila, pero algo no calza.', preguntas:[
+        {p:'¿Dónde estuviste el martes en la noche?', a:'Trabajando hasta tarde, sola en la oficina.'},
+        {p:'¿Conoces el Hotel Luna?', a:'No, jamás en mi vida fui a ese hotel.'},
+      ]},
+      {id:'compa', nombre:'Su compañera', emoji:'👩‍💼', desc:'Trabaja en la misma oficina que Vale.', preguntas:[
+        {p:'¿Vale trabajó hasta tarde el martes?', a:'No, se fue a las 18:00 como siempre. Nadie se quedó.', revela:'compa'},
+      ]},
+    ],
+    veredicto:{ pregunta:'¿Cuál es tu conclusión sobre Vale?', opciones:[
+      {texto:'Vale dice la verdad, no pasa nada.', correcta:false, explica:''},
+      {texto:'Hay infidelidad: las pruebas y mentiras lo confirman.', correcta:true, explica:'El cargo del hotel el martes coincide con el chat; su compañera la desmiente y la cena del jueves contradice su versión. Vale miente.'},
+      {texto:'No se puede saber con esto.', correcta:false, explica:''},
+    ]},
+    recompensa:{monedas:45, xp:45},
+  },
+
+  {
+    id:'pelusa', titulo:'Pelusa no aparece', emoji:'🐱', tipo:'desaparicion', dificultad:'Fácil',
+    cliente:'Emi, la niña del barrio',
+    intro:'Mi gatita Pelusa se escapó esta mañana y no la encuentro. ¡Ayúdame a hallarla, detective!',
+    objetivo:'Sigue el rastro y descubre dónde está Pelusa.',
+    pistas:{
+      hueco:{nombre:'Hueco en la reja', emoji:'🕳️', texto:'Hay un hueco en la reja que da hacia la calle. Por ahí salió.'},
+      plato:{nombre:'Comida intacta', emoji:'🍽️', texto:'Su plato sigue lleno: Pelusa no volvió a comer, sigue afuera.'},
+      lana:{nombre:'Trozo de lana', emoji:'🧶', texto:'Un trozo de lana de su collar quedó enganchado en un poste de la calle.'},
+      panadero:{nombre:'El panadero la vio', emoji:'🥖', texto:'El panadero la vio ir hacia la plaza siguiendo a un gato café.'},
+      maullido:{nombre:'Maullidos en la plaza', emoji:'🔊', texto:'Vecinos oyeron maullidos en el árbol grande de la plaza.'},
+    },
+    lugares:[
+      {id:'patio', nombre:'El patio', emoji:'🌳', desc:'El patio de la casa de Emi.', puntos:[
+        {nombre:'La reja', emoji:'🚪', revela:'hueco', texto:''},
+        {nombre:'El plato de comida', emoji:'🍽️', revela:'plato', texto:''},
+        {nombre:'El árbol del patio', emoji:'🌳', texto:'Pelos blancos en el tronco: trepó, pero ya no está aquí.'},
+      ]},
+      {id:'calle', nombre:'La calle', emoji:'🛣️', desc:'La calle frente a la casa.', puntos:[
+        {nombre:'El poste', emoji:'📍', revela:'lana', texto:''},
+        {nombre:'La panadería', emoji:'🥖', revela:'panadero', texto:''},
+      ]},
+      {id:'plaza', nombre:'La plaza', emoji:'⛲', desc:'La plaza del barrio.', puntos:[
+        {nombre:'La banca', emoji:'🪑', revela:'maullido', texto:''},
+        {nombre:'La fuente', emoji:'⛲', texto:'Solo palomas tomando agua.'},
+      ]},
+    ],
+    sospechosos:[
+      {id:'panadero', nombre:'El panadero', emoji:'🧑‍🍳', desc:'Atiende desde temprano y ve todo el barrio.', preguntas:[
+        {p:'¿Viste a una gatita blanca?', a:'Sí, iba hacia la plaza siguiendo a un gato café. Bien apurada.'},
+      ]},
+      {id:'senora', nombre:'Una señora de la plaza', emoji:'👵', desc:'Pasea por la plaza cada mañana.', preguntas:[
+        {p:'¿Algo raro en la plaza?', a:'Hay un gatito atascado en el árbol grande hace rato, maúlla y maúlla.'},
+      ]},
+    ],
+    veredicto:{ pregunta:'¿Dónde está Pelusa?', opciones:[
+      {texto:'Volvió a casa sola.', correcta:false, explica:''},
+      {texto:'Atascada en el árbol grande de la plaza.', correcta:true, explica:'El hueco en la reja, la lana en el poste y los testigos llevan a la plaza, donde Pelusa maúlla atascada en el árbol grande.'},
+      {texto:'Alguien se la llevó.', correcta:false, explica:''},
+    ]},
+    recompensa:{monedas:25, xp:25},
+  },
+
+  {
+    id:'carta', titulo:'La carta secreta', emoji:'💌', tipo:'misterio', dificultad:'Media',
+    cliente:'tu compañera Javi',
+    intro:'Apareció una carta de amor anónima en mi casillero. Letra preciosa, sin firma. ¿Quién la dejó? ¡Muero por saber!',
+    objetivo:'Descubre quién escribió la carta secreta.',
+    pistas:{
+      tinta:{nombre:'Tinta azul de pluma', emoji:'🖋️', texto:'La carta está escrita con una pluma de tinta azul especial, no con lápiz.'},
+      sello:{nombre:'Sello de gato', emoji:'🐱', texto:'El sobre tiene un sello con un gatito, igual al de tu mascota.'},
+      entrada:{nombre:'Entrada de cine', emoji:'🎬', texto:'Una entrada de cine de ayer cayó dentro del casillero.'},
+      letra:{nombre:'La misma letra', emoji:'📓', texto:'Un cuaderno con la misma letra bonita de la carta.'},
+    },
+    lugares:[
+      {id:'casillero', nombre:'El casillero', emoji:'🔐', desc:'Donde apareció la carta de Javi.', puntos:[
+        {nombre:'La carta', emoji:'💌', revela:'tinta', texto:''},
+        {nombre:'El sobre', emoji:'✉️', revela:'sello', texto:''},
+        {nombre:'El piso del casillero', emoji:'📄', revela:'entrada', texto:''},
+      ]},
+      {id:'sala', nombre:'La sala de clases', emoji:'🏫', desc:'La sala donde están todos.', puntos:[
+        {nombre:'Los pupitres', emoji:'📓', revela:'letra', texto:''},
+        {nombre:'El basurero', emoji:'🗑️', texto:'Un borrador arrugado de una carta… la misma letra. Quien la escribió se sienta aquí.'},
+      ]},
+    ],
+    sospechosos:[
+      {id:'mateo', nombre:'Mateo', emoji:'🧑', desc:'El más conversador del curso.', preguntas:[
+        {p:'¿Escribes con pluma?', a:'No, puro lápiz pasta. Las plumas se me chorrean.'},
+      ]},
+      {id:'lucas', nombre:'Lucas', emoji:'🧑‍🎓', desc:'Tímido, siempre dibujando en su cuaderno.', preguntas:[
+        {p:'¿Te gusta el cine?', a:'Sí, justo fui ayer a la función de la tarde.'},
+        {p:'¿Tienes mascota?', a:'Un gato. Le puse el mismo nombre que tu gatita… qué coincidencia, jeje.'},
+      ]},
+      {id:'ana', nombre:'Ana', emoji:'👩‍🎓', desc:'Volvió hoy de un viaje.', preguntas:[
+        {p:'¿Dónde estuviste estos días?', a:'De viaje con mi familia, llegué recién hoy en la mañana.'},
+      ]},
+    ],
+    veredicto:{ pregunta:'¿Quién escribió la carta secreta?', opciones:[
+      {texto:'Mateo.', correcta:false, explica:''},
+      {texto:'Lucas.', correcta:true, explica:'La pluma azul, el sello del gato con el nombre de tu mascota, la entrada de cine de ayer y la letra de su cuaderno lo delatan: fue Lucas.'},
+      {texto:'Ana.', correcta:false, explica:''},
+    ]},
+    recompensa:{monedas:30, xp:30},
+  },
+];
+
+let dt = null, dtVista = 'lista';
+function dtTipoNombre(t){ return {robo:'Robo', infidelidad:'Infidelidad', desaparicion:'Desaparición', misterio:'Misterio'}[t] || t; }
+function dtCasoDelDia(){ const h=new Date(); const n=h.getFullYear()*10000+(h.getMonth()+1)*100+h.getDate(); return DT_CASOS[n % DT_CASOS.length].id; }
+function dtEsResuelto(id){ asegurarJuegos(); return datos.juegos.detective.resueltos.includes(id); }
+function dtClaveLocal(id){ return 'jxDet_' + id; }
+function dtGuardarProgreso(){ if(!dt) return; try{ localStorage.setItem(dtClaveLocal(dt.caso.id), JSON.stringify({ pistas:[...dt.pistas], explorados:[...dt.explorados], preguntas:[...dt.preguntas] })); }catch(e){} }
+function dtCargarProgreso(id){ try{ const raw=localStorage.getItem(dtClaveLocal(id)); if(!raw) return; const s=JSON.parse(raw); dt.pistas=new Set(s.pistas||[]); dt.explorados=new Set(s.explorados||[]); dt.preguntas=new Set(s.preguntas||[]); }catch(e){} }
+function dtLimpiarProgreso(id){ try{ localStorage.removeItem(dtClaveLocal(id)); }catch(e){} }
+
+function dtMostrar(){ asegurarJuegos(); dtVista='lista'; dtRender(); }
+function dtAbrirCaso(id){
+  const caso=DT_CASOS.find(c=>c.id===id); if(!caso) return;
+  dt={ caso, pistas:new Set(), explorados:new Set(), preguntas:new Set(), lugarActual:null, sospActual:null };
+  dtCargarProgreso(id);
+  dtVista='caso'; dtRender();
+}
+function dtRender(){
+  const el=document.getElementById('jxScreenDetective'); if(!el) return;
+  if(dtVista==='lista') el.innerHTML=dtHtmlLista();
+  else if(dtVista==='caso') el.innerHTML=dtHtmlCaso();
+  else if(dtVista==='lugar') el.innerHTML=dtHtmlLugar();
+  else if(dtVista==='sospechoso') el.innerHTML=dtHtmlSospechoso();
+  else if(dtVista==='veredicto') el.innerHTML=dtHtmlVeredicto();
+  dtBind(); el.scrollTop=0;
+}
+function dtBind(){
+  const el=document.getElementById('jxScreenDetective'); if(!el) return;
+  el.querySelectorAll('[data-abrir]').forEach(b=>b.onclick=()=>{ jxSonido('tap'); dtAbrirCaso(b.dataset.abrir); });
+  el.querySelectorAll('[data-volver]').forEach(b=>b.onclick=()=>{ jxSonido('tap'); dtVista=b.dataset.volver; dtRender(); });
+  el.querySelectorAll('[data-lugar]').forEach(b=>b.onclick=()=>{ jxSonido('tap'); dt.lugarActual=b.dataset.lugar; dtVista='lugar'; dtRender(); });
+  el.querySelectorAll('[data-sosp]').forEach(b=>b.onclick=()=>{ jxSonido('tap'); dt.sospActual=b.dataset.sosp; dtVista='sospechoso'; dtRender(); });
+  el.querySelectorAll('[data-veredicto]').forEach(b=>b.onclick=()=>{ jxSonido('tap'); dtVista='veredicto'; dtRender(); });
+  el.querySelectorAll('[data-punto]').forEach(b=>b.onclick=()=>dtDescubrir(parseInt(b.dataset.punto,10)));
+  el.querySelectorAll('[data-preg]').forEach(b=>b.onclick=()=>dtPreguntar(parseInt(b.dataset.preg,10)));
+  el.querySelectorAll('[data-op]').forEach(b=>b.onclick=()=>dtResolver(parseInt(b.dataset.op,10)));
+}
+function dtHtmlLista(){
+  asegurarJuegos();
+  const hoy=dtCasoDelDia();
+  const cards=DT_CASOS.map(c=>{
+    const resuelto=dtEsResuelto(c.id), esDia=c.id===hoy;
+    return '<button class="dt-caso-card'+(esDia?' dia':'')+'" data-abrir="'+c.id+'">'+
+      (esDia?'<span class="dt-ribbon">🌟 Caso del día</span>':'')+
+      '<div class="dt-caso-emo">'+c.emoji+'</div>'+
+      '<div class="dt-caso-info"><div class="dt-caso-tit">'+c.titulo+(resuelto?' <span class="dt-ok">✓</span>':'')+'</div>'+
+      '<div class="dt-caso-meta"><span class="dt-tag '+c.tipo+'">'+dtTipoNombre(c.tipo)+'</span> · '+c.dificultad+'</div>'+
+      '<div class="dt-caso-cli">'+c.intro+'</div></div></button>';
+  }).join('');
+  return '<p class="jx-tip">Elige un caso, reúne pruebas tocando pistas e interroga a los sospechosos. Cuando estés segura, da tu veredicto.</p><div class="dt-list">'+cards+'</div>';
+}
+function dtHtmlCaso(){
+  const c=dt.caso, total=Object.keys(c.pistas).length;
+  const lugares=c.lugares.map(l=>{
+    const expl=l.puntos.filter((p,i)=>dt.explorados.has(l.id+':'+i)).length;
+    return '<button class="dt-chip" data-lugar="'+l.id+'">'+l.emoji+' '+l.nombre+(expl===l.puntos.length?' <span class="dt-ok">✓</span>':'')+'</button>';
+  }).join('');
+  const sosp=c.sospechosos.map(s=>'<button class="dt-chip" data-sosp="'+s.id+'">'+s.emoji+' '+s.nombre+'</button>').join('');
+  let pruebas=[...dt.pistas].map(id=>'<div class="dt-ev"><span>'+c.pistas[id].emoji+'</span><div><b>'+c.pistas[id].nombre+'</b><p>'+c.pistas[id].texto+'</p></div></div>').join('');
+  if(!pruebas) pruebas='<p class="dt-vacio">Aún no tienes pruebas. Toca los lugares para investigar.</p>';
+  return '<button class="jx-btn ghost dt-back" data-volver="lista">‹ Casos</button>'+
+    '<div class="dt-caso-head"><span class="dt-caso-emo big">'+c.emoji+'</span><div><h3>'+c.titulo+'</h3>'+
+      '<div class="dt-caso-meta"><span class="dt-tag '+c.tipo+'">'+dtTipoNombre(c.tipo)+'</span> · '+c.dificultad+'</div></div></div>'+
+    '<div class="dt-banner"><b>📋 Tu encargo</b><p>'+c.objetivo+'</p><p class="dt-cli">“'+c.intro+'” — '+c.cliente+'</p></div>'+
+    '<div class="dt-sec-tit">🔍 Investiga los lugares</div><div class="dt-chips">'+lugares+'</div>'+
+    '<div class="dt-sec-tit">🗣️ Interroga</div><div class="dt-chips">'+sosp+'</div>'+
+    '<div class="dt-sec-tit">🧾 Pruebas reunidas ('+dt.pistas.size+'/'+total+')</div><div class="dt-evidencias">'+pruebas+'</div>'+
+    '<button class="jx-btn rosa dt-resolver" data-veredicto="1">⚖️ Resolver el caso</button>';
+}
+function dtHtmlLugar(){
+  const l=dt.caso.lugares.find(x=>x.id===dt.lugarActual);
+  const puntos=l.puntos.map((p,i)=>{
+    const key=l.id+':'+i, explorado=dt.explorados.has(key), bloqueado=p.requiere && !dt.pistas.has(p.requiere);
+    let clase='', estado='';
+    if(bloqueado){ clase='bloq'; estado='🔒'; }
+    else if(explorado){ clase=p.revela?'hallazgo':'vacio'; estado=p.revela?'✓':'·'; }
+    let det='';
+    if(explorado && !bloqueado) det='<div class="dt-punto-det">'+(p.revela?('🔎 '+dt.caso.pistas[p.revela].nombre+': '+dt.caso.pistas[p.revela].texto):p.texto)+'</div>';
+    return '<div class="dt-punto '+clase+'" data-punto="'+i+'"><div class="dt-punto-cab"><span>'+p.emoji+' '+p.nombre+'</span><span class="dt-punto-est">'+estado+'</span></div>'+det+'</div>';
+  }).join('');
+  return '<button class="jx-btn ghost dt-back" data-volver="caso">‹ Volver al caso</button>'+
+    '<div class="dt-lugar-head"><span class="dt-caso-emo big">'+l.emoji+'</span><h3>'+l.nombre+'</h3></div>'+
+    '<p class="dt-desc">'+l.desc+'</p><p class="jx-tip">Toca cada lugar para inspeccionarlo.</p>'+
+    '<div class="dt-puntos">'+puntos+'</div>';
+}
+function dtHtmlSospechoso(){
+  const s=dt.caso.sospechosos.find(x=>x.id===dt.sospActual);
+  const qs=s.preguntas.map((q,i)=>{
+    const key=s.id+':'+i, hecha=dt.preguntas.has(key), bloq=q.requiere && !dt.pistas.has(q.requiere);
+    return '<div class="dt-preg '+(bloq?'bloq':'')+'" data-preg="'+i+'"><div class="dt-preg-q">'+(bloq?'🔒 ':'❓ ')+q.p+'</div>'+(hecha&&!bloq?'<div class="dt-preg-a">“'+q.a+'”</div>':'')+'</div>';
+  }).join('');
+  return '<button class="jx-btn ghost dt-back" data-volver="caso">‹ Volver al caso</button>'+
+    '<div class="dt-lugar-head"><span class="dt-caso-emo big">'+s.emoji+'</span><h3>'+s.nombre+'</h3></div>'+
+    '<p class="dt-desc">'+s.desc+'</p><p class="jx-tip">Toca una pregunta para interrogar.</p>'+
+    '<div class="dt-pregs">'+qs+'</div>';
+}
+function dtHtmlVeredicto(){
+  const c=dt.caso;
+  const ops=c.veredicto.opciones.map((o,i)=>'<button class="dt-opcion" data-op="'+i+'">'+o.texto+'</button>').join('');
+  return '<button class="jx-btn ghost dt-back" data-volver="caso">‹ Volver al caso</button>'+
+    '<div class="dt-veredicto"><h3>⚖️ Tu veredicto</h3><p class="dt-vpreg">'+c.veredicto.pregunta+'</p>'+
+    '<div class="dt-sec-tit" style="text-align:center">Pruebas '+dt.pistas.size+'/'+Object.keys(c.pistas).length+'</div>'+
+    '<p class="jx-tip">Si te equivocas, puedes seguir investigando sin perder nada.</p>'+
+    '<div class="dt-opciones">'+ops+'</div></div>';
+}
+function dtDescubrir(idx){
+  const lugar=dt.caso.lugares.find(l=>l.id===dt.lugarActual); if(!lugar) return;
+  const p=lugar.puntos[idx]; if(!p) return;
+  if(p.requiere && !dt.pistas.has(p.requiere)){ jxSonido('mal'); avisar('🔒 Te falta descubrir algo antes de revisar esto'); return; }
+  const key=dt.lugarActual+':'+idx;
+  if(dt.explorados.has(key)) return;
+  dt.explorados.add(key);
+  if(p.revela){ dt.pistas.add(p.revela); jxSonido('bien'); jxVibrar(15); avisar('🔎 Nueva prueba: '+dt.caso.pistas[p.revela].nombre); }
+  else jxSonido('tap');
+  dtGuardarProgreso(); dtRender();
+}
+function dtPreguntar(idx){
+  const s=dt.caso.sospechosos.find(x=>x.id===dt.sospActual); if(!s) return;
+  const q=s.preguntas[idx]; if(!q) return;
+  if(q.requiere && !dt.pistas.has(q.requiere)){ jxSonido('mal'); avisar('🔒 Aún no sabes qué preguntar aquí'); return; }
+  const key=dt.sospActual+':'+idx;
+  if(!dt.preguntas.has(key)){
+    dt.preguntas.add(key);
+    if(q.revela){ dt.pistas.add(q.revela); jxSonido('bien'); avisar('🔎 Nueva prueba: '+dt.caso.pistas[q.revela].nombre); }
+    else jxSonido('tap');
+    dtGuardarProgreso();
+  }
+  dtRender();
+}
+function dtResolver(idx){
+  const op=dt.caso.veredicto.opciones[idx]; if(!op) return;
+  if(op.correcta) dtResolverExito(op);
+  else{ jxSonido('mal'); jxVibrar(30); avisar('🔎 Mmm… eso no calza con las pruebas. Sigue investigando.'); }
+}
+function dtResolverExito(op){
+  const caso=dt.caso;
+  asegurarJuegos();
+  const yaResuelto=dtEsResuelto(caso.id);
+  if(!yaResuelto) datos.juegos.detective.resueltos.push(caso.id);
+  let monedas=caso.recompensa.monedas, xp=caso.recompensa.xp, extra='';
+  if(yaResuelto){ monedas=Math.ceil(monedas*0.25); xp=Math.ceil(xp*0.25); }
+  if(caso.id===dtCasoDelDia() && datos.juegos.detective.bonusDiario!==jxHoyClave()){
+    datos.juegos.detective.bonusDiario=jxHoyClave();
+    monedas+=20; xp+=15; extra=' · ¡bonus caso del día 🌟!';
+  }
+  dtLimpiarProgreso(caso.id);
+  const r=jxRecompensar(monedas, xp, { desde: document.getElementById('jxScreenDetective') });
+  jxCelebrar({ titulo:'¡Caso resuelto! 🕵️', sub:op.explica+extra, monedas, xp, subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Volver a los casos', onNext:()=>{ dtVista='lista'; dtRender(); } });
 }
 
 /* ============================================================
