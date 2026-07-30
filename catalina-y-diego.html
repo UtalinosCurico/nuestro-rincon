@@ -979,15 +979,54 @@
   .dt-finds{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
   .dt-find{background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:999px;padding:6px 12px;font-size:.82rem;color:var(--tinta);transition:all .2s;}
   .dt-find.ok{background:var(--verde);color:#fff;border-color:var(--verde);text-decoration:line-through;opacity:.85;}
-  .dt-escena{position:relative;width:100%;aspect-ratio:100/64;border-radius:18px;overflow:hidden;box-shadow:inset 0 0 60px rgba(0,0,0,.28),0 12px 30px var(--sombra);touch-action:manipulation;cursor:crosshair;}
+  .dt-escena{position:relative;width:100%;aspect-ratio:200/132;border-radius:18px;overflow:hidden;box-shadow:inset 0 0 70px rgba(0,0,0,.42),0 14px 34px var(--sombra);touch-action:manipulation;cursor:crosshair;}
   .dt-escena svg{position:absolute;inset:0;width:100%;height:100%;}
+  .dt-escena::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 38%,transparent 55%,rgba(0,0,0,.4) 100%);z-index:4;}
+  .dt-esc-layer{position:absolute;inset:0;z-index:5;}
   .dt-obj{position:absolute;transform:translate(-50%,-50%);font-size:1.5rem;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.55));opacity:.92;pointer-events:none;transition:transform .15s;}
   .dt-obj.decoy{opacity:.8;}
   .dt-obj.ok{transform:translate(-50%,-50%) scale(1.25);opacity:1;filter:drop-shadow(0 0 6px #8a9a7b);animation:jxPopIn .3s ease;}
   .dt-miss{position:absolute;width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.7);transform:translate(-50%,-50%);pointer-events:none;animation:dtMiss .5s ease forwards;}
   @keyframes dtMiss{from{opacity:.9;transform:translate(-50%,-50%) scale(.5)}to{opacity:0;transform:translate(-50%,-50%) scale(1.4)}}
-  .dt-hint{position:absolute;width:42px;height:42px;border-radius:50%;border:3px solid #f4d58a;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 16px #f4d58a;animation:dtHint 1.6s ease forwards;}
+  .dt-hint{position:absolute;width:42px;height:42px;border-radius:50%;border:3px solid #f4d58a;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 16px #f4d58a;animation:dtHint 1.6s ease forwards;z-index:6;}
   @keyframes dtHint{0%,80%{opacity:1}100%{opacity:0}}
+  .dt-obj{z-index:5;}
+  .dt-obj:not(.ok){animation:dtObjPulse 2.4s ease-in-out infinite;}
+  @keyframes dtObjPulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.12)}}
+  /* Figuras de sospechosos en la escena */
+  .dt-fig{position:absolute;transform:translate(-50%,-100%);bottom:auto;display:flex;flex-direction:column;align-items:center;background:none;border:none;cursor:pointer;padding:0;z-index:6;filter:drop-shadow(0 4px 5px rgba(0,0,0,.5));transition:transform .15s;}
+  .dt-fig:active{transform:translate(-50%,-100%) scale(.92);}
+  .dt-fig:hover{transform:translate(-50%,-105%);}
+  .dt-fig-cuerpo{width:20px;height:26px;border-radius:10px 10px 7px 7px;margin-top:-4px;box-shadow:inset 0 -4px 6px rgba(0,0,0,.25);}
+  .dt-fig-cara{font-size:1.35rem;line-height:1;order:-1;}
+  .dt-fig-nom{font-size:.6rem;color:#fff;background:rgba(0,0,0,.5);border-radius:999px;padding:1px 7px;margin-top:3px;white-space:nowrap;font-weight:500;}
+  .dt-fig-badge{position:absolute;top:-6px;right:-6px;font-size:.8rem;background:var(--blanco);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.3);}
+  .dt-fig.hablado{filter:drop-shadow(0 4px 5px rgba(0,0,0,.5)) saturate(.7);opacity:.92;}
+  .dt-esc-hud{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+  .dt-esc-hud .pill{background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:999px;padding:5px 12px;font-size:.8rem;color:var(--tinta);box-shadow:0 3px 8px var(--sombra-tenue);}
+  .dt-hint-btn{background:var(--dorado);color:#fff;border:none;border-radius:999px;padding:6px 14px;font-family:'Jost',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;box-shadow:0 4px 10px var(--sombra);}
+  .dt-clue-regla.coartada{color:var(--gris);background:transparent;font-weight:400;font-style:italic;}
+  /* Ambiente animado por escena */
+  .dt-flama{transform-origin:center;animation:dtFlama 1.6s ease-in-out infinite;}
+  @keyframes dtFlama{0%,100%{opacity:.9;transform:scaleY(1) scaleX(1)}50%{opacity:1;transform:scaleY(1.15) scaleX(.9)}}
+  .dt-luc circle,.dt-spark circle{animation:dtLuc 3s ease-in-out infinite;}
+  .dt-luc circle:nth-child(2){animation-delay:.7s}.dt-luc circle:nth-child(3){animation-delay:1.4s}.dt-luc circle:nth-child(4){animation-delay:2.1s}
+  @keyframes dtLuc{0%,100%{opacity:.15}50%{opacity:1}}
+  .dt-flicker{animation:dtFlicker 4s steps(1) infinite;}
+  @keyframes dtFlicker{0%,100%{opacity:.85}8%{opacity:.3}10%{opacity:.9}45%{opacity:.85}47%{opacity:.45}49%{opacity:.85}}
+  .dt-beam{animation:dtBeam 5s ease-in-out infinite;}
+  @keyframes dtBeam{0%,100%{opacity:.85}50%{opacity:1}}
+  .dt-laser line{animation:dtLaser 3s ease-in-out infinite;}
+  @keyframes dtLaser{0%,100%{opacity:.35}50%{opacity:.7}}
+  .dt-escena.amb-lluvia::before,.dt-escena.amb-velas::before,.dt-escena.amb-luna::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;}
+  .dt-escena.amb-lluvia::before{background-image:repeating-linear-gradient(105deg,transparent 0 6px,rgba(180,200,230,.16) 6px 7px);background-size:14px 100%;animation:dtRain .5s linear infinite;}
+  @keyframes dtRain{from{background-position:0 0}to{background-position:-14px 60px}}
+  .dt-escena.amb-velas::before{background:radial-gradient(60% 50% at 50% 60%,rgba(255,180,80,.12),transparent 70%);animation:dtVela 3s ease-in-out infinite;}
+  @keyframes dtVela{0%,100%{opacity:.6}50%{opacity:1}}
+  .dt-escena.amb-luna::before{background:radial-gradient(40% 30% at 79% 20%,rgba(220,230,255,.18),transparent 70%);}
+  @media (prefers-reduced-motion: reduce){
+    .dt-flama,.dt-luc circle,.dt-spark circle,.dt-flicker,.dt-beam,.dt-laser line,.dt-obj:not(.ok),.dt-escena.amb-lluvia::before,.dt-escena.amb-velas::before{animation:none !important;}
+  }
 
   /* Análisis (emparejar) */
   .dt-match-grid{display:flex;gap:12px;}
@@ -1028,6 +1067,40 @@
   .dt-arrest-card .dt-sosp-emo{font-size:2.6rem;display:block;}
   .dt-arrest-card b{font-family:'Playfair Display',serif;display:block;margin:6px 0;color:var(--tinta);}
   .dt-arrest-perfil{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}
+  /* Detective — deducción */
+  .dt-pasos{display:flex;gap:6px;margin-bottom:14px;}
+  .dt-pasos span{flex:1;text-align:center;font-size:.68rem;color:var(--gris);background:var(--crema-oscuro);border-radius:999px;padding:5px 4px;letter-spacing:.3px;transition:all .2s;}
+  .dt-pasos span.on{background:var(--dorado);color:#fff;font-weight:600;}
+  .dt-brief{background:linear-gradient(135deg,var(--blanco),var(--crema));border:1px solid var(--dorado-claro);border-left:4px solid var(--dorado);border-radius:0 16px 16px 0;padding:14px 16px;margin-bottom:16px;box-shadow:0 8px 20px var(--sombra-tenue);}
+  .dt-brief-cli{display:inline-block;font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--dorado);font-weight:600;margin-bottom:6px;}
+  .dt-brief p{font-weight:300;font-style:italic;color:var(--tinta);line-height:1.55;}
+  .dt-susp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px;}
+  .dt-susp{position:relative;border:1.5px solid var(--crema-oscuro);background:var(--blanco);border-radius:18px;padding:12px;box-shadow:0 6px 16px var(--sombra-tenue);transition:transform .14s, border-color .2s, opacity .2s;}
+  .dt-susp.clickable{cursor:pointer;}
+  .dt-susp.clickable:hover{border-color:var(--rosa);}
+  .dt-susp.clickable:active{transform:scale(.97);}
+  .dt-susp.descartado{opacity:.55;filter:grayscale(.7);border-color:var(--crema-oscuro);background:var(--crema);}
+  .dt-susp.descartado .dt-susp-top, .dt-susp.descartado .dt-traits{text-decoration:line-through;}
+  .dt-susp-x{position:absolute;top:8px;right:10px;font-size:1.1rem;color:#c0392b;font-weight:700;}
+  .dt-susp-top{display:flex;gap:10px;align-items:center;margin-bottom:8px;}
+  .dt-susp-emo{font-size:2rem;flex-shrink:0;}
+  .dt-susp-id b{font-family:'Playfair Display',serif;color:var(--tinta);font-size:1.02rem;display:block;line-height:1.1;}
+  .dt-susp-id small{color:var(--gris);font-weight:300;font-size:.76rem;}
+  .dt-trait.bien{background:rgba(138,154,123,.22);color:#5a7045;box-shadow:inset 0 0 0 1px rgba(138,154,123,.5);}
+  .dt-trait.mal{background:rgba(192,57,43,.14);color:#b3402f;box-shadow:inset 0 0 0 1px rgba(192,57,43,.4);}
+  .dt-clues{display:flex;flex-direction:column;gap:10px;}
+  .dt-clue{display:flex;gap:12px;align-items:flex-start;background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:14px;padding:12px 14px;box-shadow:0 4px 12px var(--sombra-tenue);animation:jxAppIn .25s ease;}
+  .dt-clue.oculta{opacity:.5;border-style:dashed;}
+  .dt-clue-emo{font-size:1.5rem;flex-shrink:0;}
+  .dt-clue b{font-family:'Playfair Display',serif;color:var(--tinta);font-size:.96rem;}
+  .dt-clue p{font-weight:300;color:var(--tinta);font-size:.86rem;line-height:1.4;margin:3px 0;}
+  .dt-clue-regla{display:inline-block;font-size:.78rem;font-weight:600;color:var(--dorado);background:var(--crema);border-radius:999px;padding:3px 10px;margin-top:3px;}
+  .dt-clue-mini{margin:10px 0 0;padding-left:18px;}
+  .dt-clue-mini li{font-size:.82rem;color:var(--tinta);font-weight:300;line-height:1.5;}
+  .dt-clue-mini i{color:var(--dorado);font-style:normal;font-weight:500;}
+  .jx-btn.off{opacity:.55;cursor:not-allowed;}
+  .sacude{animation:dtSacude .4s ease;}
+  @keyframes dtSacude{0%,100%{transform:none}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
 
   /* Celebración + confeti */
   #jxConfeti{position:absolute;inset:0;width:100%;height:100%;z-index:7;pointer-events:none;display:none;}
@@ -1052,6 +1125,7 @@
   .jx-monedita{position:fixed;z-index:200;font-size:1.4rem;pointer-events:none;transition:transform .8s cubic-bezier(.5,0,.6,1),opacity .8s;}
 
   /* Closet */
+  .jx-closet-saldo{position:absolute;left:14px;top:14px;z-index:2;background:rgba(255,255,255,.9);border-radius:999px;padding:6px 13px;font-family:'Playfair Display',serif;font-weight:700;color:var(--tinta);font-size:.92rem;box-shadow:0 4px 10px rgba(0,0,0,.14);font-variant-numeric:tabular-nums;}
   .jx-closet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px;margin-top:6px;}
   .jx-it{
     border:1.5px solid var(--crema-oscuro);border-radius:18px;padding:14px 8px 10px;text-align:center;cursor:pointer;
@@ -1805,6 +1879,14 @@ let guardandoRemoto = false;
 let ultimoGuardadoRemoto = null;
 let ultimoEstadoNube = 'idle';
 
+/* CANDADO DE ARRANQUE — la regla más importante de todo el archivo.
+   Mientras no sepamos qué hay guardado en Neon, este dispositivo tiene
+   puros valores por defecto en memoria. Si en ese momento se le permite
+   subir, borra el contenido real de la otra persona. Por eso NADA sube
+   hasta que la primera lectura de Neon haya respondido. */
+let cargaInicialLista = false;
+let reintentoCargaInicial = 0;
+
 function guardar(){
   try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
   pintarStats();
@@ -1822,22 +1904,41 @@ function programarGuardadoRemoto(){
   if(location.protocol === 'file:') return;
   guardadoPendiente = true;
   clearTimeout(temporizadorGuardado);
+  if(!cargaInicialLista){
+    // Queda anotado como pendiente y subirá solo cuando termine la carga inicial.
+    estadoNube('', '&#9729;&#65039; Esperando la nube&hellip;');
+    return;
+  }
   temporizadorGuardado = setTimeout(guardarRemoto, 700);
 }
 
 async function guardarRemoto(){
+  if(!cargaInicialLista) return;   // segundo cerrojo, por si alguien llama directo
+  if(guardandoRemoto){ programarGuardadoRemoto(); return; }
   guardadoPendiente = false;
   guardandoRemoto = true;
   ultimoEstadoNube = 'sync';
   estadoNube('', '&#9729;&#65039; Sincronizando&hellip;');
+  const instantanea = JSON.stringify(datos);
   try{
     const respuesta = await fetch(API_ESTADO, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ data: datos }),
     });
+    if(respuesta.status === 409){
+      // El servidor frenó un guardado que habría borrado el contenido.
+      // No reintentamos: recuperamos lo bueno desde la nube.
+      const detalle = await respuesta.json().catch(() => ({}));
+      console.warn('Guardado rechazado por seguridad:', detalle.motivo || '');
+      ultimoEstadoNube = 'error';
+      estadoNube('error', '&#128274; Guardado bloqueado para no borrar contenido', true);
+      ultimaCadenaRemota = null;      // fuerza releer y repintar
+      await cargarRemoto({ inicial: true });
+      return;
+    }
     if(!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
-    ultimaCadenaRemota = JSON.stringify(datos);
+    ultimaCadenaRemota = instantanea;
     ultimoGuardadoRemoto = new Date();
     ultimoEstadoNube = 'ok';
     actualizarTextoGuardado();
@@ -1845,33 +1946,60 @@ async function guardarRemoto(){
     ultimoEstadoNube = 'error';
     estadoNube('error', '&#9888;&#65039; Sin conexi&oacute;n &mdash; guardado solo aqu&iacute;', true);
     console.warn('No se pudo sincronizar con Neon. Se mantiene copia local.', error);
+    // Reintentar: el cambio no puede quedarse solo en este teléfono.
+    guardadoPendiente = true;
+    clearTimeout(temporizadorGuardado);
+    temporizadorGuardado = setTimeout(guardarRemoto, 8000);
   }finally{
     guardandoRemoto = false;
   }
 }
 
-async function cargarRemoto(){
-  if(location.protocol === 'file:') return;
-  if(guardadoPendiente) return; // no pisar cambios locales que aún no suben
-  if(guardandoRemoto) return;
+async function cargarRemoto(opciones = {}){
+  const inicial = opciones.inicial === true;
+  if(location.protocol === 'file:'){ cargaInicialLista = true; return; }
+  // En la carga inicial ignoramos los cerrojos: justamente lo que queremos
+  // es leer Neon antes de que este dispositivo escriba nada.
+  if(!inicial && guardadoPendiente) return; // no pisar cambios locales que aún no suben
+  if(!inicial && guardandoRemoto) return;
   try{
-    const respuesta = await fetch(API_ESTADO, { headers: { 'Accept': 'application/json' } });
+    const respuesta = await fetch(API_ESTADO, { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
     if(!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
     const remoto = await respuesta.json();
     if(remoto && remoto.data && typeof remoto.data === 'object' && Object.keys(remoto.data).length){
       const cadena = JSON.stringify(remoto.data);
-      if(cadena === ultimaCadenaRemota) return; // nada nuevo en la nube
-      ultimaCadenaRemota = cadena;
-      datos = Object.assign(datos, remoto.data);
-      try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
-      repintarTodo();
-      if(remoto.updatedAt) ultimoGuardadoRemoto = new Date(remoto.updatedAt);
-      ultimoEstadoNube = 'ok';
-      estadoNube('ok', '&#10003; Cambios recibidos desde la nube', true);
+      if(cadena !== ultimaCadenaRemota){
+        ultimaCadenaRemota = cadena;
+        datos = Object.assign(datos, remoto.data);
+        try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
+        repintarTodo();
+        if(remoto.updatedAt) ultimoGuardadoRemoto = new Date(remoto.updatedAt);
+        ultimoEstadoNube = 'ok';
+        estadoNube('ok', '&#10003; Cambios recibidos desde la nube', true);
+      }
     }
+    if(inicial) abrirCandadoDeArranque();
   }catch(error){
     console.warn('No se pudo cargar desde Neon. Se usa la copia local.', error);
+    if(inicial){
+      // No abrimos el candado: preferimos no sincronizar antes que borrar.
+      // Reintentamos con espera creciente hasta que la nube responda.
+      reintentoCargaInicial++;
+      const espera = Math.min(30000, 1000 * Math.pow(2, reintentoCargaInicial));
+      estadoNube('error', '&#9888;&#65039; Sin conexi&oacute;n &mdash; guardado solo aqu&iacute;', true);
+      setTimeout(() => cargarRemoto({ inicial: true }), espera);
+    }
   }
+}
+
+/* Se llama una sola vez, cuando ya sabemos qué hay en Neon.
+   Recién ahí este dispositivo tiene permiso de escribir. */
+function abrirCandadoDeArranque(){
+  if(cargaInicialLista) return;
+  cargaInicialLista = true;
+  pintarPreguntaDia();            // ahora sí puede elegir y persistir la pregunta del día
+  if(guardadoPendiente) programarGuardadoRemoto();
+  else actualizarTextoGuardado();
 }
 
 function repintarTodo(){
@@ -1898,7 +2026,7 @@ function repintarTodo(){
   pintarJuegos();
 }
 
-setTimeout(cargarRemoto, 0);
+setTimeout(() => cargarRemoto({ inicial: true }), 0);
 
 // Refresco automático: si el otro guardó algo, aparece solo
 setInterval(() => {
@@ -3294,8 +3422,10 @@ async function responderPreguntaDia(quien){
   guardar();
 }
 
+// Pintado inicial en modo lectura: NUNCA elige ni guarda pregunta nueva antes
+// de que Neon haya respondido (eso era lo que borraba la página entera).
+// La elección real la dispara abrirCandadoDeArranque().
 pintarPreguntaDia({ guardarSiCambia: false });
-setTimeout(() => pintarPreguntaDia(), 1500);
 setInterval(() => pintarPreguntaDia(), 60000);
 
 /* ============================================================
@@ -3891,21 +4021,106 @@ if('serviceWorker' in navigator){
    datos.juegos, así que se sincroniza con Neon como el resto.
    ============================================================ */
 const JX_COSMETICOS = [
+  // ── Ropa (se dibuja sobre el cuerpo) ──
+  { id:'ropa:sueter',   slot:'ropa', nombre:'Suéter',     emoji:'🧶', precio:35 },
+  { id:'ropa:rayas',    slot:'ropa', nombre:'Polera',     emoji:'👕', precio:40 },
+  { id:'ropa:vestido',  slot:'ropa', nombre:'Vestido',    emoji:'👗', precio:60 },
+  { id:'ropa:tutu',     slot:'ropa', nombre:'Tutú',       emoji:'🩰', precio:70 },
+  { id:'ropa:pijama',   slot:'ropa', nombre:'Pijama',     emoji:'🌙', precio:55 },
+  { id:'ropa:abrigo',   slot:'ropa', nombre:'Abriguito',  emoji:'🧥', precio:80 },
+  { id:'ropa:capa',     slot:'ropa', nombre:'Capa heroica', emoji:'🦸', precio:95 },
+  { id:'ropa:esmoquin', slot:'ropa', nombre:'Esmoquin',   emoji:'🤵', precio:120 },
+  // ── Sombreros (emoji sobre la cabeza) ──
   { id:'sombrero:flor',     slot:'sombrero',  donde:'arriba', nombre:'Flor',      emoji:'🌸',  precio:30 },
   { id:'sombrero:mono',     slot:'sombrero',  donde:'arriba', nombre:'Moñito',    emoji:'🎀',  precio:35 },
   { id:'sombrero:gorro',    slot:'sombrero',  donde:'arriba', nombre:'Gorrito',   emoji:'🧢',  precio:50 },
+  { id:'sombrero:vaquero',  slot:'sombrero',  donde:'arriba', nombre:'Vaquero',   emoji:'🤠',  precio:60 },
+  { id:'sombrero:birrete',  slot:'sombrero',  donde:'arriba', nombre:'Birrete',   emoji:'🎓',  precio:65 },
   { id:'sombrero:sombrero', slot:'sombrero',  donde:'arriba', nombre:'Sombrero',  emoji:'🎩',  precio:70 },
   { id:'sombrero:corona',   slot:'sombrero',  donde:'arriba', nombre:'Corona',    emoji:'👑',  precio:120 },
+  // ── Accesorios (emoji en ojos/cuello) ──
   { id:'accesorio:lentes',  slot:'accesorio', donde:'ojos',   nombre:'Lentes',    emoji:'🕶️', precio:35 },
+  { id:'accesorio:gafas',   slot:'accesorio', donde:'ojos',   nombre:'Gafas',     emoji:'👓',  precio:30 },
   { id:'accesorio:bufanda', slot:'accesorio', donde:'cuello', nombre:'Bufanda',   emoji:'🧣',  precio:45 },
   { id:'accesorio:collar',  slot:'accesorio', donde:'cuello', nombre:'Collar',    emoji:'💐',  precio:40 },
   { id:'accesorio:corazon', slot:'accesorio', donde:'cuello', nombre:'Corazón',   emoji:'💖',  precio:55 },
-  { id:'fondo:pradera',     slot:'fondo', nombre:'Pradera',   emoji:'🌿', precio:0,  css:'linear-gradient(180deg,#dff0d8,#bcd9a3)' },
-  { id:'fondo:corazones',   slot:'fondo', nombre:'Amor',      emoji:'💕', precio:55, css:'linear-gradient(180deg,#f7dbe6,#ecd0d8)' },
-  { id:'fondo:atardecer',   slot:'fondo', nombre:'Atardecer', emoji:'🌅', precio:65, css:'linear-gradient(180deg,#ffd9a0,#f3a9a0)' },
-  { id:'fondo:noche',       slot:'fondo', nombre:'Noche',     emoji:'🌙', precio:60, css:'linear-gradient(180deg,#2b2f4a,#4a4f72)' },
-  { id:'fondo:playa',       slot:'fondo', nombre:'Playa',     emoji:'🏖️', precio:80, css:'linear-gradient(180deg,#bfe9f2,#f5e6c5)' },
+  { id:'accesorio:medalla', slot:'accesorio', donde:'cuello', nombre:'Medalla',   emoji:'🏅',  precio:50 },
+  // ── Escenarios (fondo decorado con SVG) ──
+  { id:'fondo:pradera',   slot:'fondo', nombre:'Pradera',     emoji:'🌿', precio:0 },
+  { id:'fondo:corazones', slot:'fondo', nombre:'Jardín de amor', emoji:'💕', precio:55 },
+  { id:'fondo:atardecer', slot:'fondo', nombre:'Atardecer',   emoji:'🌅', precio:65 },
+  { id:'fondo:noche',     slot:'fondo', nombre:'Noche estrellada', emoji:'🌙', precio:60 },
+  { id:'fondo:playa',     slot:'fondo', nombre:'Playa',       emoji:'🏖️', precio:80 },
+  { id:'fondo:bosque',    slot:'fondo', nombre:'Bosque',      emoji:'🌲', precio:70 },
+  { id:'fondo:ciudad',    slot:'fondo', nombre:'Ciudad',      emoji:'🌃', precio:90 },
+  { id:'fondo:nieve',     slot:'fondo', nombre:'Nevada',      emoji:'❄️', precio:75 },
+  { id:'fondo:arcoiris',  slot:'fondo', nombre:'Arcoíris',    emoji:'🌈', precio:100 },
 ];
+
+/* Ropa dibujada como SVG sobre el cuerpo del gatito (viewBox 200×210). */
+const JX_ROPA_SVG = {
+  'ropa:sueter': { cuerpo:`<g>
+    <path d="M62 158 q38 -10 76 0 q5 28 -1 42 q-37 11 -74 0 q-6 -16 -1 -42z" fill="#7fb0c4"/>
+    <path d="M64 158 q36 -8 72 0 q-5 9 -36 10 q-31 -1 -36 -10z" fill="#5b8aa6"/>
+    <g stroke="#5b8aa6" stroke-width="2" opacity=".55" fill="none"><path d="M66 176 q34 7 68 0"/><path d="M66 186 q34 7 68 0"/></g></g>` },
+  'ropa:rayas': { cuerpo:`<g>
+    <path d="M62 158 q38 -10 76 0 q5 28 -1 42 q-37 11 -74 0 q-6 -16 -1 -42z" fill="#f6f2e8"/>
+    <g stroke="#365a8a" stroke-width="4" opacity=".9" fill="none"><path d="M64 168 q36 7 72 0"/><path d="M63 180 q37 8 74 0"/><path d="M63 192 q37 8 74 0"/></g>
+    <path d="M64 158 q36 -8 72 0 q-5 9 -36 10 q-31 -1 -36 -10z" fill="#c98e9b"/></g>` },
+  'ropa:vestido': { cuerpo:`<g>
+    <path d="M70 156 q30 -7 60 0 l12 48 q-42 13 -84 0z" fill="#e8a3c0"/>
+    <path d="M72 156 q28 -6 56 0 l2 15 q-30 7 -60 0z" fill="#d579a4"/>
+    <g fill="#fff" opacity=".85"><circle cx="88" cy="186" r="2"/><circle cx="100" cy="194" r="2"/><circle cx="112" cy="186" r="2"/><circle cx="100" cy="178" r="2"/></g>
+    <rect x="74" y="170" width="52" height="5" rx="2" fill="#b85c8a"/></g>` },
+  'ropa:tutu': { cuerpo:`<g>
+    <rect x="74" y="158" width="52" height="24" rx="9" fill="#d579a4"/>
+    <path d="M56 184 q44 -18 88 0 q-7 13 -20 15 q-8 -10 -10 -2 q-6 9 -14 1 q-8 8 -14 -1 q-2 -8 -10 2 q-13 -2 -20 -15z" fill="#f6b9d4"/>
+    <path d="M56 184 q44 -16 88 0" stroke="#e896bf" stroke-width="2" fill="none"/></g>` },
+  'ropa:pijama': { cuerpo:`<g>
+    <path d="M60 156 q40 -9 80 0 q8 32 1 50 q-41 12 -82 0 q-7 -18 1 -50z" fill="#a9c2e8"/>
+    <path d="M62 156 q38 -8 76 0 q-5 9 -38 10 q-33 -1 -38 -10z" fill="#8aa8d6"/>
+    <line x1="100" y1="168" x2="100" y2="202" stroke="#8aa8d6" stroke-width="2"/>
+    <g fill="#fff" opacity=".9"><circle cx="100" cy="174" r="1.6"/><circle cx="100" cy="184" r="1.6"/><circle cx="100" cy="194" r="1.6"/></g>
+    <g fill="#fff" opacity=".7"><path d="M78 178 l1.4 3 3 .4 -2.2 2.2 .6 3.2 -2.8 -1.6 -2.8 1.6 .6 -3.2 -2.2 -2.2 3 -.4z"/><path d="M120 188 l1.2 2.6 2.6 .3 -1.9 1.9 .5 2.7 -2.4 -1.3 -2.4 1.3 .5 -2.7 -1.9 -1.9 2.6 -.3z"/></g></g>` },
+  'ropa:abrigo': { cuerpo:`<g>
+    <path d="M60 158 q40 -9 80 0 q7 30 1 48 q-41 12 -82 0 q-6 -18 1 -48z" fill="#8a6f4e"/>
+    <path d="M100 160 v44" stroke="#6f583c" stroke-width="2"/>
+    <ellipse cx="100" cy="160" rx="34" ry="9" fill="#f3ece0"/>
+    <g fill="#5a4632"><circle cx="92" cy="178" r="2.4"/><circle cx="92" cy="190" r="2.4"/><circle cx="108" cy="178" r="2.4"/><circle cx="108" cy="190" r="2.4"/></g></g>` },
+  'ropa:capa': { atras:`<path d="M68 150 q32 -8 64 0 l20 58 q-52 16 -104 0z" fill="#c0392b"/>`,
+    cuerpo:`<g><path d="M84 150 l16 16 16 -16 q-16 -6 -32 0z" fill="#a32d22"/>
+    <circle cx="100" cy="178" r="11" fill="#f4d35e"/>
+    <path d="M100 170 l2.6 5.6 6 .6 -4.6 4.2 1.3 6 -5.3 -3.1 -5.3 3.1 1.3 -6 -4.6 -4.2 6 -.6z" fill="#e0a93b"/></g>` },
+  'ropa:esmoquin': { cuerpo:`<g>
+    <path d="M64 156 q36 -8 72 0 q6 30 0 48 q-36 12 -72 0 q-6 -18 0 -48z" fill="#2b2b33"/>
+    <path d="M90 156 h20 l-4 46 h-12z" fill="#f6f2e8"/>
+    <path d="M90 156 l10 14 -14 6z" fill="#1a1a20"/><path d="M110 156 l-10 14 14 6z" fill="#1a1a20"/>
+    <path d="M92 168 q8 -5 16 0 q-8 6 -16 0z" fill="#7a1f2b"/>
+    <g fill="#2b2b33"><circle cx="100" cy="184" r="1.8"/><circle cx="100" cy="192" r="1.8"/></g></g>` },
+};
+function jxRopaSVG(id){ return JX_ROPA_SVG[id] || {}; }
+
+/* Escenarios: gradiente + decoración SVG (se vuelve fondo CSS, sin tocar el DOM). */
+const JX_ESCENAS = {
+  'fondo:pradera':   { grad:'linear-gradient(180deg,#dff0d8,#bcd9a3)',
+    deco:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><circle cx="82" cy="16" r="11" fill="#fff4c2" opacity=".8"/><g fill="#fff" opacity=".85"><ellipse cx="24" cy="22" rx="11" ry="5"/><ellipse cx="32" cy="20" rx="8" ry="4"/><ellipse cx="62" cy="30" rx="9" ry="4"/></g><path d="M0 78 q25 -12 50 0 t50 0 v22 H0z" fill="#a6cd86" opacity=".7"/><path d="M0 88 q30 -8 50 0 t50 0 v12 H0z" fill="#8fbd6e" opacity=".8"/><g fill="#f4b8d0"><circle cx="14" cy="90" r="2"/><circle cx="86" cy="92" r="2"/></g><g fill="#fff2a8"><circle cx="14" cy="90" r="1"/><circle cx="86" cy="92" r="1"/></g></svg>` },
+  'fondo:corazones': { grad:'linear-gradient(180deg,#f7dbe6,#ecd0d8)',
+    deco:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><g fill="#e89ab8"><path d="M16 20c-2.5-4-9-2.5-9 2.5 0 4.5 9 10 9 10s9-5.5 9-10c0-5-6.5-6.5-9-2.5z" opacity=".5"/><path d="M78 14c-2-3.2-7.2-2-7.2 2 0 3.6 7.2 8 7.2 8s7.2-4.4 7.2-8c0-4-5.2-5.2-7.2-2z" opacity=".45"/><path d="M64 60c-2.4-3.8-8.6-2.4-8.6 2.4 0 4.3 8.6 9.5 8.6 9.5s8.6-5.2 8.6-9.5c0-4.8-6.2-6.2-8.6-2.4z" opacity=".35"/><path d="M24 64c-1.8-2.9-6.5-1.8-6.5 1.8 0 3.3 6.5 7.2 6.5 7.2s6.5-3.9 6.5-7.2c0-3.6-4.7-4.7-6.5-1.8z" opacity=".4"/></g></svg>` },
+  'fondo:atardecer': { grad:'linear-gradient(180deg,#ffd9a0,#f3a9a0)',
+    deco:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><circle cx="50" cy="46" r="20" fill="#ffefc0" opacity=".75"/><circle cx="50" cy="46" r="13" fill="#fff" opacity=".5"/><path d="M0 64 H100" stroke="#e7897f" stroke-width="1" opacity=".5"/><g stroke="#fff" stroke-width="1.2" fill="none" opacity=".7"><path d="M16 24 q4 -4 8 0 q4 -4 8 0"/><path d="M70 18 q3 -3 6 0 q3 -3 6 0"/></g><g fill="#f3a9a0" opacity=".5"><path d="M0 70 q25 -6 50 0 t50 0 v30 H0z"/></g></svg>` },
+  'fondo:noche':     { grad:'linear-gradient(180deg,#2b2f4a,#4a4f72)',
+    deco:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><path d="M80 12a11 11 0 1 0 6 20 13 13 0 1 1-6-20z" fill="#f3eecf" opacity=".9"/><g fill="#fff"><circle cx="18" cy="16" r="1"/><circle cx="34" cy="26" r=".8"/><circle cx="50" cy="14" r="1.1"/><circle cx="64" cy="30" r=".7"/><circle cx="12" cy="40" r=".8"/><circle cx="26" cy="52" r="1"/><circle cx="46" cy="44" r=".7"/><circle cx="90" cy="48" r=".9"/><circle cx="72" cy="56" r=".8"/></g><path d="M0 80 q25 -8 50 0 t50 0 v20 H0z" fill="#1f233a" opacity=".7"/></svg>` },
+  'fondo:playa':     { grad:'linear-gradient(180deg,#bfe9f2,#f5e6c5)',
+    deco:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><circle cx="80" cy="18" r="10" fill="#fff2b0" opacity=".85"/><path d="M0 58 q12 -5 24 0 t24 0 t24 0 t24 0 v8 H0z" fill="#7fc8da" opacity=".6"/><path d="M0 64 q12 -4 24 0 t24 0 t24 0 t24 0 v10 H0z" fill="#5fb3cc" opacity=".55"/><path d="M0 72 h100 v28 H0z" fill="#f0dca8" opacity=".7"/><g stroke="#6b8f3a" stroke-width="2" fill="none"><path d="M16 72 q-2 -16 -8 -22 M16 72 q0 -16 4 -24"/></g><path d="M8 50 q8 -6 16 -2 q-10 -1 -16 2z M20 48 q8 -7 17 -2 q-11 -1 -17 2z" fill="#6b8f3a"/></svg>` },
+  'fondo:bosque':    { grad:'linear-gradient(180deg,#cfe8c5,#8fb87f)',
+    deco:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><circle cx="80" cy="16" r="9" fill="#fff4c2" opacity=".6"/><g fill="#5a7d4e" opacity=".8"><path d="M16 72 l-9 0 6 -10 -5 0 6 -10 -4 0 6 -11 6 11 -4 0 6 10 -5 0 6 10 -9 0z"/><path d="M84 76 l-7 0 5 -8 -4 0 5 -8 -3 0 4 -9 4 9 -3 0 5 8 -4 0 5 8 -7 0z"/></g><g fill="#46663c" opacity=".7"><path d="M30 80 l-6 0 4 -7 -3 0 4 -7 -3 0 4 -8 4 8 -3 0 4 7 -3 0 4 7 -6 0z"/></g><path d="M0 84 q25 -6 50 0 t50 0 v16 H0z" fill="#6f9a5e" opacity=".7"/></svg>` },
+  'fondo:ciudad':    { grad:'linear-gradient(180deg,#1d2235,#3a3f63)',
+    deco:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><circle cx="20" cy="18" r="8" fill="#f3eecf" opacity=".85"/><g fill="#fff" opacity=".8"><circle cx="60" cy="14" r=".8"/><circle cx="74" cy="22" r=".7"/><circle cx="88" cy="12" r=".9"/><circle cx="44" cy="20" r=".6"/></g><g fill="#2a2f4a"><rect x="6" y="62" width="14" height="38"/><rect x="22" y="50" width="12" height="50"/><rect x="36" y="68" width="14" height="32"/><rect x="52" y="44" width="13" height="56"/><rect x="67" y="60" width="12" height="40"/><rect x="81" y="52" width="14" height="48"/></g><g fill="#ffe08a" opacity=".85"><rect x="9" y="66" width="3" height="3"/><rect x="14" y="72" width="3" height="3"/><rect x="25" y="55" width="3" height="3"/><rect x="29" y="64" width="3" height="3"/><rect x="55" y="50" width="3" height="3"/><rect x="59" y="60" width="3" height="3"/><rect x="70" y="66" width="3" height="3"/><rect x="84" y="58" width="3" height="3"/><rect x="89" y="68" width="3" height="3"/></g></svg>` },
+  'fondo:nieve':     { grad:'linear-gradient(180deg,#e8f2fb,#c4d8ec)',
+    deco:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><circle cx="80" cy="16" r="9" fill="#fff" opacity=".7"/><g fill="#fff"><circle cx="14" cy="20" r="1.6"/><circle cx="30" cy="34" r="1.2"/><circle cx="48" cy="18" r="1.4"/><circle cx="64" cy="40" r="1.2"/><circle cx="22" cy="50" r="1.3"/><circle cx="54" cy="54" r="1.1"/><circle cx="86" cy="46" r="1.3"/><circle cx="40" cy="62" r="1.2"/><circle cx="72" cy="60" r="1.1"/></g><path d="M0 80 q25 -10 50 0 t50 0 v20 H0z" fill="#fff" opacity=".85"/><path d="M0 88 q30 -6 50 0 t50 0 v12 H0z" fill="#eaf2fb"/></svg>` },
+  'fondo:arcoiris':  { grad:'linear-gradient(180deg,#cdeefc,#eaf6ff)',
+    deco:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke-width="5" opacity=".55"><path d="M2 96 a48 48 0 0 1 96 0" stroke="#f29b9b"/><path d="M9 96 a41 41 0 0 1 82 0" stroke="#f6c98a"/><path d="M16 96 a34 34 0 0 1 68 0" stroke="#f3e08a"/><path d="M23 96 a27 27 0 0 1 54 0" stroke="#9fce8a"/><path d="M30 96 a20 20 0 0 1 40 0" stroke="#8ab6e0"/></g><g fill="#fff" opacity=".9"><ellipse cx="16" cy="86" rx="12" ry="6"/><ellipse cx="84" cy="86" rx="12" ry="6"/></g></svg>` },
+};
 const JX_TITULOS = ['Gatito tierno','Michi curioso','Michi juguetón','Michi valiente','Michi sabio','Michi estrella','Michi leyenda'];
 const JX_NIVEL_XP = 120;
 
@@ -3914,7 +4129,7 @@ function jxCosmetico(id){ return JX_COSMETICOS.find(c => c.id === id); }
 function jxDefaultJuegos(){
   return {
     monedas: 0,
-    mascota: { nombre:'Michi', xp:0, equipado:{ sombrero:null, accesorio:null, fondo:'fondo:pradera' } },
+    mascota: { nombre:'Michi', xp:0, equipado:{ ropa:null, sombrero:null, accesorio:null, fondo:'fondo:pradera' } },
     comprados: ['fondo:pradera'],
     sudoku: { resueltos:0, mejor:{} },
     zip: { resueltos:0 },
@@ -3935,9 +4150,10 @@ function asegurarJuegos(){
   if(typeof m.nombre !== 'string' || !m.nombre) m.nombre = 'Michi';
   if(typeof m.xp !== 'number') m.xp = 0;
   if(!m.equipado || typeof m.equipado !== 'object') m.equipado = {};
+  if(!('ropa' in m.equipado)) m.equipado.ropa = null;
   if(!('sombrero' in m.equipado)) m.equipado.sombrero = null;
   if(!('accesorio' in m.equipado)) m.equipado.accesorio = null;
-  if(!m.equipado.fondo) m.equipado.fondo = 'fondo:pradera';
+  if(!m.equipado.fondo || !JX_ESCENAS[m.equipado.fondo]) m.equipado.fondo = 'fondo:pradera';
   if(!Array.isArray(j.comprados)) j.comprados = [];
   if(!j.comprados.includes('fondo:pradera')) j.comprados.push('fondo:pradera');
   if(!j.sudoku || typeof j.sudoku !== 'object') j.sudoku = {};
@@ -3963,12 +4179,15 @@ function asegurarJuegos(){
 
 function jxNivel(){ asegurarJuegos(); return Math.floor(datos.juegos.mascota.xp / JX_NIVEL_XP) + 1; }
 
-function jxGatoSVG(){
+function jxGatoSVG(ropaId){
+  const r = jxRopaSVG(ropaId);
   return `<svg viewBox="0 0 200 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Gatito">
     <path d="M150 176 q42 -6 36 -50 q-3 -22 -22 -20 q14 6 12 24 q-2 28 -36 32 z" fill="#e7d2a6"/>
+    ${r.atras||''}
     <ellipse cx="100" cy="170" rx="52" ry="38" fill="#efdcb4"/>
     <ellipse cx="78" cy="198" rx="15" ry="10" fill="#f3e6c8"/>
     <ellipse cx="122" cy="198" rx="15" ry="10" fill="#f3e6c8"/>
+    ${r.cuerpo||''}
     <path d="M55 72 L48 30 L90 58 Z" fill="#efdcb4"/>
     <path d="M145 72 L152 30 L110 58 Z" fill="#efdcb4"/>
     <path d="M60 64 L56 42 L80 57 Z" fill="#ecd3d8"/>
@@ -3994,12 +4213,13 @@ function jxPetHTML(){
   let acc = '';
   if(m.equipado.sombrero){ const c = jxCosmetico(m.equipado.sombrero); if(c) acc += '<span class="jx-acc ' + c.donde + '">' + c.emoji + '</span>'; }
   if(m.equipado.accesorio){ const c = jxCosmetico(m.equipado.accesorio); if(c) acc += '<span class="jx-acc ' + c.donde + '">' + c.emoji + '</span>'; }
-  return jxGatoSVG() + acc;
+  return jxGatoSVG(m.equipado.ropa) + acc;
 }
-function jxFondoCss(){
+function jxFondoCss(fondoId){
   asegurarJuegos();
-  const f = jxCosmetico(datos.juegos.mascota.equipado.fondo) || jxCosmetico('fondo:pradera');
-  return f.css;
+  const e = JX_ESCENAS[fondoId || datos.juegos.mascota.equipado.fondo] || JX_ESCENAS['fondo:pradera'];
+  const uri = 'data:image/svg+xml,' + encodeURIComponent(e.deco);
+  return "url('" + uri + "') center/cover no-repeat, " + e.grad;
 }
 
 /* ===== Sonido suave (WebAudio) + vibración ===== */
@@ -4223,7 +4443,7 @@ function jxRenderHub(){
         '<span class="jx-card-stat">★ ' + j.snake.record + '</span></button>' +
       '<button class="jx-card detective full" data-ir="detective"><div class="sheen"></div><div class="jx-card-emo">🕵️</div>' +
         '<div style="flex:1"><div class="jx-card-nom">Detective</div>' +
-        '<div class="jx-card-desc">Resuelve casos: pistas, sospechosos y veredicto</div></div>' +
+        '<div class="jx-card-desc">Investiga, deduce con lógica y atrapa al culpable</div></div>' +
         '<span class="jx-card-stat">✔ ' + j.detective.resueltos.length + '</span></button>' +
       '<button class="jx-card closet full" data-ir="closet"><div class="sheen"></div><div class="jx-card-emo">👗</div>' +
         '<div style="flex:1"><div class="jx-card-nom">Clóset de ' + m.nombre + '</div>' +
@@ -4296,10 +4516,12 @@ function jxRenderCloset(){
     return '<div class="jx-sec-tit">' + titulo + '</div><div class="jx-closet-grid">' + items + '</div>';
   };
   el.innerHTML =
-    '<div class="jx-pet-stage" style="background:' + jxFondoCss() + ';margin-bottom:18px">' +
+    '<div class="jx-pet-stage" style="background:' + jxFondoCss() + ';margin-bottom:14px">' +
+      '<span class="jx-closet-saldo">🪙 ' + j.monedas + '</span>' +
       '<div class="jx-pet-holder">' + jxPetHTML() + '</div>' +
       '<div class="jx-pet-nombre">' + m.nombre + '</div></div>' +
-    cat('sombrero', 'Sombreros') + cat('accesorio', 'Accesorios') + cat('fondo', 'Escenarios');
+    '<p class="jx-tip">Toca una prenda para ponérsela. Gana monedas jugando y desbloquea más estilos para ' + m.nombre + ' 💛</p>' +
+    cat('ropa', '👗 Ropa') + cat('sombrero', '🎩 Sombreros') + cat('accesorio', '🕶️ Accesorios') + cat('fondo', '🌅 Escenarios');
   el.querySelectorAll('[data-quitar]').forEach(it => it.onclick = () => { m.equipado[it.dataset.quitar] = null; jxSonido('tap'); guardar(); jxRenderCloset(); pintarJuegos(); });
   el.querySelectorAll('[data-id]').forEach(it => it.onclick = () => jxTocarItem(jxCosmetico(it.dataset.id)));
 }
@@ -5135,233 +5357,257 @@ window.addEventListener('resize', () => {
 });
 
 /* ============================================================
-   DETECTIVE — Criminal Case: capítulos, escenas de búsqueda,
-   análisis, interrogatorios, cronología y arresto por perfil.
+   DETECTIVE — Misterio por capas.
+   Escenas ilustradas y animadas. Investigas buscando PRUEBAS
+   físicas y INTERROGANDO a los sospechosos (ambas dan pistas).
+   Cada pista es una deducción lógica; descarta a quienes la
+   contradicen hasta dejar al culpable. Atención a las mentiras.
    ============================================================ */
 const DT_ESCENAS = {
-  salon: `<svg viewBox="0 0 100 64" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <rect width="100" height="40" fill="#e7d8bd"/><rect y="40" width="100" height="24" fill="#caa978"/>
-    <rect x="0" y="0" width="14" height="40" fill="#c98e9b" opacity=".5"/><rect x="86" y="0" width="14" height="40" fill="#c98e9b" opacity=".5"/>
-    <g stroke="#b9985a" stroke-width=".6" opacity=".5"><line x1="14" y1="20" x2="86" y2="20"/></g>
-    <rect x="22" y="34" width="56" height="6" fill="#fff" opacity=".85"/><rect x="22" y="40" width="56" height="14" fill="#d8a2af"/>
-    <ellipse cx="50" cy="9" rx="9" ry="4" fill="#f4d58a"/><line x1="50" y1="0" x2="50" y2="6" stroke="#b9985a" stroke-width="1"/>
-    <g fill="#f4d58a"><circle cx="45" cy="11" r="1.6"/><circle cx="50" cy="13" r="1.6"/><circle cx="55" cy="11" r="1.6"/></g>
-    <circle cx="20" cy="10" r="4" fill="#c98e9b"/><circle cx="80" cy="9" r="4" fill="#8a9a7b"/><line x1="20" y1="14" x2="20" y2="24" stroke="#b9985a" stroke-width=".5"/><line x1="80" y1="13" x2="80" y2="24" stroke="#b9985a" stroke-width=".5"/>
+  biblioteca: `<svg viewBox="0 0 200 132" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bibW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4c3a26"/><stop offset="1" stop-color="#2c2012"/></linearGradient>
+      <radialGradient id="bibG" cx="0.5" cy="0.6" r="0.55"><stop offset="0" stop-color="#ffce78" stop-opacity=".55"/><stop offset="1" stop-color="#ffce78" stop-opacity="0"/></radialGradient>
+      <linearGradient id="bibWin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2740"/><stop offset="1" stop-color="#0e1626"/></linearGradient>
+    </defs>
+    <rect width="200" height="132" fill="url(#bibW)"/>
+    <rect y="98" width="200" height="34" fill="#34261a"/>
+    <polygon points="48,98 152,98 184,132 16,132" fill="#6e2f30" opacity=".55"/>
+    <polygon points="70,98 130,98 145,132 55,132" fill="#8a3a3b" opacity=".4"/>
+    <g><rect x="2" y="10" width="50" height="88" fill="#241a10"/><rect x="148" y="10" width="50" height="88" fill="#241a10"/>
+      <g fill="#7a5c3a"><rect x="5" y="14" width="44" height="3"/><rect x="5" y="30" width="44" height="3"/><rect x="5" y="46" width="44" height="3"/><rect x="5" y="62" width="44" height="3"/><rect x="5" y="78" width="44" height="3"/>
+        <rect x="151" y="14" width="44" height="3"/><rect x="151" y="30" width="44" height="3"/><rect x="151" y="46" width="44" height="3"/><rect x="151" y="62" width="44" height="3"/><rect x="151" y="78" width="44" height="3"/></g>
+      <g><rect x="7" y="18" width="4" height="11" fill="#9a4d3a"/><rect x="12" y="18" width="3" height="11" fill="#3a6b6b"/><rect x="16" y="17" width="5" height="12" fill="#caa64a"/><rect x="22" y="18" width="3" height="11" fill="#7a3b5a"/><rect x="26" y="18" width="4" height="11" fill="#4a6b3a"/><rect x="31" y="17" width="4" height="12" fill="#9a4d3a"/><rect x="36" y="18" width="3" height="11" fill="#3a5b7a"/><rect x="40" y="18" width="5" height="11" fill="#caa64a"/>
+        <rect x="7" y="34" width="5" height="11" fill="#3a6b6b"/><rect x="13" y="33" width="4" height="12" fill="#caa64a"/><rect x="18" y="34" width="3" height="11" fill="#9a4d3a"/><rect x="22" y="34" width="4" height="11" fill="#7a3b5a"/><rect x="27" y="33" width="4" height="12" fill="#4a6b3a"/><rect x="32" y="34" width="3" height="11" fill="#3a5b7a"/><rect x="36" y="34" width="5" height="11" fill="#9a4d3a"/><rect x="42" y="34" width="3" height="11" fill="#caa64a"/>
+        <rect x="153" y="18" width="4" height="11" fill="#4a6b3a"/><rect x="158" y="17" width="5" height="12" fill="#caa64a"/><rect x="164" y="18" width="3" height="11" fill="#9a4d3a"/><rect x="168" y="18" width="4" height="11" fill="#3a6b6b"/><rect x="173" y="17" width="4" height="12" fill="#7a3b5a"/><rect x="178" y="18" width="3" height="11" fill="#caa64a"/><rect x="182" y="18" width="5" height="11" fill="#3a5b7a"/><rect x="188" y="18" width="4" height="11" fill="#9a4d3a"/></g>
+    </g>
+    <rect x="78" y="20" width="44" height="54" rx="2" fill="#0c1422"/><rect x="80" y="22" width="40" height="50" rx="1" fill="url(#bibWin)"/>
+    <line x1="100" y1="22" x2="100" y2="72" stroke="#0c1422" stroke-width="2"/><line x1="80" y1="47" x2="120" y2="47" stroke="#0c1422" stroke-width="2"/>
+    <circle cx="110" cy="34" r="7" fill="#e9e6c8" opacity=".9"/><circle cx="107" cy="32" r="7" fill="#13203a"/>
+    <g class="dt-rain" stroke="#9fb6d8" stroke-width="1" opacity=".5"><line x1="84" y1="24" x2="82" y2="30"/><line x1="92" y1="26" x2="90" y2="32"/><line x1="104" y1="24" x2="102" y2="30"/><line x1="114" y1="28" x2="112" y2="34"/></g>
+    <rect x="64" y="78" width="72" height="9" rx="1" fill="#5a3f26"/><rect x="68" y="87" width="5" height="14" fill="#43301c"/><rect x="127" y="87" width="5" height="14" fill="#43301c"/>
+    <ellipse cx="100" cy="86" rx="60" ry="26" fill="url(#bibG)"/>
+    <rect x="120" y="70" width="2.4" height="9" fill="#d8c8a0"/><ellipse class="dt-flama" cx="121.2" cy="68" rx="2.2" ry="3.6" fill="#ffcf6a"/>
+    <rect x="74" y="73" width="14" height="5" rx="1" fill="#6b4a2c"/>
+    <rect x="156" y="40" width="22" height="26" rx="1" fill="#1c2a1c"/><rect x="159" y="43" width="16" height="20" fill="#39513a"/>
   </svg>`,
-  biblioteca: `<svg viewBox="0 0 100 64" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <rect width="100" height="64" fill="#3b2f24"/><rect y="46" width="100" height="18" fill="#5a4632"/>
-    <g><rect x="4" y="6" width="30" height="40" fill="#4a3a2a"/><rect x="66" y="6" width="30" height="40" fill="#4a3a2a"/>
-    <g fill="#8a6f4e"><rect x="6" y="9" width="26" height="2.4"/><rect x="6" y="15" width="26" height="2.4"/><rect x="6" y="21" width="26" height="2.4"/><rect x="6" y="27" width="26" height="2.4"/><rect x="6" y="33" width="26" height="2.4"/><rect x="6" y="39" width="26" height="2.4"/>
-    <rect x="68" y="9" width="26" height="2.4"/><rect x="68" y="15" width="26" height="2.4"/><rect x="68" y="21" width="26" height="2.4"/><rect x="68" y="27" width="26" height="2.4"/><rect x="68" y="33" width="26" height="2.4"/><rect x="68" y="39" width="26" height="2.4"/></g></g>
-    <rect x="40" y="10" width="20" height="16" rx="1" fill="#1c2630"/><rect x="40" y="10" width="20" height="16" rx="1" fill="#2a3a48" opacity=".7"/>
-    <rect x="36" y="40" width="28" height="10" rx="1" fill="#6b4f36"/><ellipse cx="50" cy="56" rx="30" ry="5" fill="#7a3b3b" opacity=".5"/>
-    <rect x="70" y="34" width="2" height="12" fill="#3a2c1f"/><ellipse cx="71" cy="32" rx="5" ry="3.5" fill="#f4d58a"/>
+  jardin: `<svg viewBox="0 0 200 132" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="jarSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16203f"/><stop offset=".6" stop-color="#283a5e"/><stop offset="1" stop-color="#3a4a52"/></linearGradient>
+      <radialGradient id="jarMoon" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fffceb"/><stop offset=".7" stop-color="#f3eecb"/><stop offset="1" stop-color="#f3eecb" stop-opacity="0"/></radialGradient>
+      <radialGradient id="jarLamp" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffdf9a" stop-opacity=".8"/><stop offset="1" stop-color="#ffdf9a" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect width="200" height="132" fill="url(#jarSky)"/>
+    <circle cx="158" cy="26" r="22" fill="url(#jarMoon)"/><circle cx="160" cy="24" r="12" fill="#f7f2d4"/><circle cx="156" cy="22" r="12" fill="#283a5e" opacity=".25"/>
+    <g fill="#fff"><circle cx="24" cy="16" r=".9"/><circle cx="48" cy="28" r=".7"/><circle cx="80" cy="14" r="1"/><circle cx="112" cy="24" r=".7"/><circle cx="40" cy="44" r=".6"/><circle cx="96" cy="40" r=".8"/><circle cx="18" cy="54" r=".7"/></g>
+    <rect y="92" width="200" height="40" fill="#23351f"/>
+    <path d="M0 92 Q60 80 100 92 T200 90 V132 H0Z" fill="#2c4226"/>
+    <ellipse cx="30" cy="92" rx="34" ry="16" fill="#1f3019"/><ellipse cx="172" cy="94" rx="34" ry="16" fill="#1f3019"/>
+    <ellipse cx="100" cy="118" rx="44" ry="11" fill="#3a4a4a" opacity=".5"/>
+    <ellipse cx="100" cy="104" rx="22" ry="7" fill="#5a6e74"/><rect x="96" y="86" width="8" height="18" fill="#6e8189"/><ellipse cx="100" cy="86" rx="11" ry="4" fill="#86a0a8"/><ellipse cx="100" cy="85" rx="7" ry="2.5" fill="#bcd6dd"/>
+    <g class="dt-spark"><circle cx="120" cy="96" r="1.3" fill="#bfe2ef"/><circle cx="78" cy="100" r="1" fill="#bfe2ef"/></g>
+    <rect x="26" y="60" width="3" height="34" fill="#1a140d"/><ellipse cx="27.5" cy="58" rx="5" ry="6" fill="#3a2f1c"/><circle class="dt-flama" cx="27.5" cy="58" r="3.4" fill="#ffdf9a"/><ellipse cx="27.5" cy="58" rx="16" ry="16" fill="url(#jarLamp)"/>
+    <rect x="172" y="60" width="3" height="34" fill="#1a140d"/><ellipse cx="173.5" cy="58" rx="5" ry="6" fill="#3a2f1c"/><circle class="dt-flama" cx="173.5" cy="58" r="3.4" fill="#ffdf9a"/><ellipse cx="173.5" cy="58" rx="16" ry="16" fill="url(#jarLamp)"/>
+    <g class="dt-luc" fill="#fff6b0"><circle cx="60" cy="78" r="1.2"/><circle cx="132" cy="70" r="1"/><circle cx="92" cy="84" r="1.1"/><circle cx="46" cy="96" r="1"/></g>
   </svg>`,
-  jardin: `<svg viewBox="0 0 100 64" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <rect width="100" height="40" fill="#26304a"/><rect y="40" width="100" height="24" fill="#3a4a38"/>
-    <circle cx="82" cy="11" r="6" fill="#f3eecf"/><circle cx="79" cy="9" r="6" fill="#26304a"/>
-    <g fill="#fff"><circle cx="20" cy="8" r=".5"/><circle cx="35" cy="14" r=".5"/><circle cx="55" cy="6" r=".5"/><circle cx="64" cy="16" r=".5"/><circle cx="10" cy="20" r=".5"/></g>
-    <ellipse cx="18" cy="40" rx="20" ry="9" fill="#2f4030"/><ellipse cx="84" cy="40" rx="20" ry="9" fill="#2f4030"/>
-    <ellipse cx="50" cy="52" rx="14" ry="6" fill="#557089"/><rect x="48.5" y="40" width="3" height="12" fill="#6b7c8a"/><ellipse cx="50" cy="40" rx="6" ry="2.5" fill="#7fa0b5"/>
-    <rect x="10" y="34" width="1.6" height="14" fill="#2a2118"/><circle cx="10.8" cy="33" r="2.4" fill="#f4d58a"/>
-    <rect x="88" y="34" width="1.6" height="14" fill="#2a2118"/><circle cx="88.8" cy="33" r="2.4" fill="#f4d58a"/>
-    <path d="M40 64 L46 44 H54 L60 64 Z" fill="#cdbf9e" opacity=".5"/>
+  museo: `<svg viewBox="0 0 200 132" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="musW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3550"/><stop offset="1" stop-color="#1a2236"/></linearGradient>
+      <linearGradient id="musBeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dff0ff" stop-opacity=".5"/><stop offset="1" stop-color="#dff0ff" stop-opacity="0"/></linearGradient>
+    </defs>
+    <rect width="200" height="132" fill="url(#musW)"/>
+    <rect y="96" width="200" height="36" fill="#222a40"/><g stroke="#2c3653" stroke-width="1"><line x1="0" y1="108" x2="200" y2="108"/><line x1="40" y1="96" x2="20" y2="132"/><line x1="100" y1="96" x2="100" y2="132"/><line x1="160" y1="96" x2="180" y2="132"/></g>
+    <g fill="#323d5c"><rect x="10" y="8" width="16" height="90"/><rect x="174" y="8" width="16" height="90"/><rect x="64" y="10" width="13" height="86" opacity=".7"/><rect x="123" y="10" width="13" height="86" opacity=".7"/></g>
+    <rect x="0" y="6" width="200" height="6" fill="#39466a"/>
+    <polygon points="84,6 116,6 132,70 68,70" fill="url(#musBeam)" class="dt-beam"/>
+    <rect x="88" y="60" width="24" height="40" fill="#2c3552"/><rect x="84" y="56" width="32" height="6" fill="#3a466a"/>
+    <rect x="86" y="34" width="28" height="24" rx="1" fill="#bfe2ef" opacity=".18" stroke="#7fa6c8" stroke-width="1"/>
+    <path d="M88 40 l10 -4 6 8 -8 6 z" fill="#9fc4e0" opacity=".4"/><path d="M104 36 l8 5 -3 9 -7 -3z" fill="#9fc4e0" opacity=".3"/>
+    <rect x="40" y="22" width="26" height="34" rx="1" fill="#11182a"/><rect x="43" y="25" width="20" height="28" fill="#2a3a5a"/><path d="M46 48 l6 -12 5 7 4 -5 3 10z" fill="#5a7aa0"/>
+    <rect x="134" y="24" width="24" height="30" rx="1" fill="#11182a"/><rect x="137" y="27" width="18" height="24" fill="#3a2f4a"/>
+    <g class="dt-laser" stroke="#ff6b6b" stroke-width=".6" opacity=".5"><line x1="68" y1="78" x2="132" y2="86"/><line x1="68" y1="86" x2="132" y2="78"/></g>
+    <g class="dt-dust" fill="#dff0ff"><circle cx="92" cy="50" r=".6"/><circle cx="104" cy="44" r=".5"/><circle cx="98" cy="58" r=".5"/></g>
   </svg>`,
-  museo: `<svg viewBox="0 0 100 64" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <rect width="100" height="64" fill="#e9e7e0"/><rect y="44" width="100" height="20" fill="#cfccc2"/>
-    <g fill="#dad7cd"><rect x="6" y="4" width="9" height="42"/><rect x="44" y="4" width="9" height="42"/><rect x="85" y="4" width="9" height="42"/></g>
-    <rect x="0" y="4" width="100" height="4" fill="#d2cfc4"/>
-    <rect x="60" y="20" width="20" height="26" fill="#bfe2ef" opacity=".5" stroke="#9fb6c0" stroke-width="1"/>
-    <rect x="66" y="40" width="8" height="10" fill="#9aa1a8"/><path d="M70 26 l4 7 -4 3 -4 -3 z" fill="#7fd0e8"/>
-    <ellipse cx="30" cy="52" rx="10" ry="3" fill="#b7b4aa"/><rect x="28.5" y="40" width="3" height="12" fill="#a8a59b"/><rect x="24" y="36" width="12" height="5" rx="1" fill="#8a9aa5"/>
-    <g stroke="#b9985a" stroke-width="1"><line x1="18" y1="46" x2="44" y2="46"/></g><circle cx="18" cy="46" r="1.6" fill="#d8c08f"/><circle cx="44" cy="46" r="1.6" fill="#d8c08f"/>
+  callejon: `<svg viewBox="0 0 200 132" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="calSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e1118"/><stop offset="1" stop-color="#1b2030"/></linearGradient>
+      <radialGradient id="calLamp" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#ffd98a" stop-opacity=".7"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect width="200" height="132" fill="url(#calSky)"/>
+    <polygon points="0,0 96,0 70,96 0,96" fill="#3a3026"/><polygon points="104,0 200,0 200,96 130,96" fill="#332b22"/>
+    <g stroke="#241c14" stroke-width=".6" opacity=".6"><line x1="0" y1="24" x2="84" y2="24"/><line x1="0" y1="48" x2="78" y2="48"/><line x1="0" y1="72" x2="72" y2="72"/><line x1="116" y1="24" x2="200" y2="24"/><line x1="122" y1="48" x2="200" y2="48"/><line x1="128" y1="72" x2="200" y2="72"/></g>
+    <rect y="96" width="200" height="36" fill="#10131b"/>
+    <ellipse cx="150" cy="118" rx="40" ry="9" fill="#2a3550" opacity=".6"/><ellipse cx="60" cy="124" rx="30" ry="6" fill="#2a3550" opacity=".4"/>
+    <rect x="150" y="6" width="3" height="40" fill="#0a0c12"/><path d="M138 8 h26 v6 h-26z" fill="#0a0c12"/><ellipse cx="151" cy="30" rx="22" ry="30" fill="url(#calLamp)" class="dt-flicker"/><circle cx="151" cy="16" r="3" fill="#ffe6a0"/>
+    <rect x="8" y="60" width="34" height="36" fill="#46362a"/><rect x="8" y="54" width="34" height="7" fill="#5a4636"/><rect x="14" y="64" width="10" height="10" fill="#2c2018"/>
+    <rect x="176" y="40" width="3" height="56" fill="#1a1f2a"/><g stroke="#1a1f2a" stroke-width="2"><line x1="166" y1="52" x2="188" y2="52"/><line x1="166" y1="68" x2="188" y2="68"/><line x1="166" y1="84" x2="188" y2="84"/></g>
+    <rect x="92" y="40" width="20" height="56" fill="#181c26"/><rect x="94" y="42" width="16" height="54" fill="#221a12"/><path d="M110 42 v54" stroke="#0a0c12" stroke-width="3"/><circle cx="106" cy="70" r="1.4" fill="#caa64a"/>
+    <g class="dt-rain2" stroke="#7f93b8" stroke-width=".7" opacity=".45"><line x1="20" y1="0" x2="14" y2="14"/><line x1="50" y1="0" x2="44" y2="14"/><line x1="80" y1="0" x2="74" y2="14"/><line x1="120" y1="0" x2="114" y2="14"/><line x1="160" y1="0" x2="154" y2="14"/><line x1="190" y1="0" x2="184" y2="14"/></g>
   </svg>`,
-  callejon: `<svg viewBox="0 0 100 64" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <rect width="100" height="64" fill="#20242c"/><rect width="48" height="50" fill="#3a3026"/><rect x="52" width="48" height="50" fill="#33372f"/>
-    <g stroke="#2a2219" stroke-width=".5" opacity=".6"><line x1="0" y1="12" x2="48" y2="12"/><line x1="0" y1="24" x2="48" y2="24"/><line x1="0" y1="36" x2="48" y2="36"/><line x1="52" y1="12" x2="100" y2="12"/><line x1="52" y1="24" x2="100" y2="24"/><line x1="52" y1="36" x2="100" y2="36"/></g>
-    <rect y="50" width="100" height="14" fill="#15171c"/><ellipse cx="62" cy="58" rx="16" ry="4" fill="#2a2e36"/>
-    <rect x="6" y="36" width="20" height="16" rx="1" fill="#5a6b54"/><rect x="6" y="33" width="20" height="4" rx="1" fill="#6b7c63"/>
-    <rect x="86" y="6" width="2" height="34" fill="#11141a"/><path d="M80 8 h14 v5 h-14 z" fill="#11141a"/><ellipse cx="87" cy="20" rx="10" ry="14" fill="#f4d58a" opacity=".18"/>
-    <rect x="74" y="44" width="9" height="8" fill="#6b5a3f"/><rect x="83" y="46" width="7" height="6" fill="#5a4a32"/>
+  salon: `<svg viewBox="0 0 200 132" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="salW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbe9d2"/><stop offset="1" stop-color="#f3d3bd"/></linearGradient></defs>
+    <rect width="200" height="132" fill="url(#salW)"/>
+    <rect y="100" width="200" height="32" fill="#e3b89a"/><rect y="100" width="200" height="3" fill="#caa178"/>
+    <rect x="20" y="22" width="40" height="32" rx="2" fill="#cfeaf6" stroke="#fff" stroke-width="3"/><rect x="140" y="22" width="40" height="32" rx="2" fill="#cfeaf6" stroke="#fff" stroke-width="3"/>
+    <path d="M14 18 Q100 6 186 18" stroke="#c98e9b" stroke-width="2" fill="none"/>
+    <g><circle cx="40" cy="20" r="3" fill="#e3899a"/><circle cx="70" cy="15" r="3" fill="#f0c674"/><circle cx="100" cy="13" r="3" fill="#8fbf8f"/><circle cx="130" cy="15" r="3" fill="#7fb0c4"/><circle cx="160" cy="20" r="3" fill="#c9a6d0"/></g>
+    <circle cx="34" cy="40" r="9" fill="#e3899a"/><line x1="34" y1="49" x2="34" y2="74" stroke="#caa178" stroke-width=".7"/>
+    <circle cx="166" cy="38" r="9" fill="#7fb0c4"/><line x1="166" y1="47" x2="166" y2="72" stroke="#caa178" stroke-width=".7"/>
+    <rect x="64" y="84" width="72" height="8" fill="#fff"/><rect x="64" y="92" width="72" height="14" fill="#d98bb0"/>
+    <path d="M70 84 q30 -16 60 0 z" fill="#f6d8a0"/><rect x="98" y="64" width="2" height="14" fill="#e0a85a"/><ellipse class="dt-flama" cx="99" cy="62" rx="2" ry="3.4" fill="#ffcf6a"/>
+    <path d="M84 84 h32 v0 z" fill="none"/><g fill="#fff"><circle cx="80" cy="88" r="1.4"/><circle cx="100" cy="86" r="1.4"/><circle cx="120" cy="88" r="1.4"/></g>
+    <g class="dt-conf" fill="none"><rect x="50" y="30" width="3" height="3" fill="#e3899a"/><rect x="150" y="40" width="3" height="3" fill="#8fbf8f"/><rect x="90" y="26" width="3" height="3" fill="#f0c674"/><rect x="120" y="34" width="3" height="3" fill="#7fb0c4"/></g>
   </svg>`,
 };
-
-const DT_TRAIT_EMO = { bebida:'🍵', mano:'✋', perfume:'🌸', calzado:'👞', cabello:'💇', altura:'📏', fuma:'🚬', guante:'🧤' };
-function dtTraitEmoji(k){ return DT_TRAIT_EMO[k] || '🔹'; }
+const DT_AMB = { biblioteca:'amb-velas', jardin:'amb-luna', museo:'amb-spot', callejon:'amb-lluvia', salon:'amb-fiesta' };
 
 const DT_CASOS = [
   {
     id:'pastel', titulo:'El pastel saboteado', emoji:'🎂', tipo:'misterio', dificultad:'Fácil',
-    cliente:'la cumpleañera Dani',
-    intro:'En mi fiesta alguien arruinó el pastel a propósito antes de soplar las velas. ¿Quién fue, detective?',
-    resolucion:'Tomi confesó: tiró sal al pastel por una broma envidiosa. Caso cerrado.',
-    culpable:'tomi',
+    escena:'salon', cliente:'la cumpleañera Dani',
+    intro:'En mi fiesta alguien arruinó el pastel a propósito antes de soplar las velas. ¿Quién fue, detective? Busca pruebas y hazlos hablar.',
+    cats:[ {key:'bebida', etiqueta:'Bebía', emoji:'🥤'}, {key:'mano', etiqueta:'Mano', emoji:'✋'} ],
     sospechosos:[
-      {id:'tomi', nombre:'Tomi', emoji:'🧒', desc:'El primo bromista.', perfil:{bebida:'Jugo', mano:'Zurdo'}},
-      {id:'flor', nombre:'Flor', emoji:'👧', desc:'La mejor amiga.', perfil:{bebida:'Bebida', mano:'Diestro'}},
-      {id:'rita', nombre:'Tía Rita', emoji:'👩', desc:'Repartía el pastel.', perfil:{bebida:'Jugo', mano:'Diestro'}},
+      {id:'tomi', nombre:'Tomi',    emoji:'🧒', color:'#6b8f4a', desc:'El primo bromista.',  traits:{bebida:'Jugo',   mano:'Zurdo'},   pos:{x:50,y:62},
+        testimonio:{texto:'Yo ni me acerqué a la mesa del pastel, lo juro.', miente:true}},
+      {id:'flor', nombre:'Flor',    emoji:'👧', color:'#c98e9b', desc:'La mejor amiga.',     traits:{bebida:'Bebida', mano:'Diestro'}, pos:{x:24,y:66},
+        testimonio:{texto:'Yo tomaba bebida cola, ¡el jugo no me gusta!', regla:null}},
+      {id:'rita', nombre:'Tía Rita',emoji:'👩', color:'#9a6fb0', desc:'Repartía el pastel.',  traits:{bebida:'Jugo',   mano:'Diestro'}, pos:{x:76,y:64},
+        testimonio:{texto:'Vi a alguien echarle algo al pastel… ¡con la mano izquierda!', regla:{cat:'mano', val:'Zurdo', tipo:'es'}}},
     ],
-    etapas:[
-      {tipo:'escena', titulo:'La mesa de la fiesta', escena:'salon',
-        objetos:[
-          {nombre:'Vaso de jugo', emoji:'🧃', x:30, y:30},
-          {nombre:'Cuchillo', emoji:'🔪', x:64, y:44},
-          {nombre:'Servilleta', emoji:'🧻', x:46, y:50},
-          {nombre:'Globo', emoji:'🎈', x:80, y:16},
-          {nombre:'Sal', emoji:'🧂', x:38, y:46},
-        ],
-        decoys:[{e:'🍰', x:50, y:42},{e:'🍴', x:58, y:48},{e:'🎁', x:18, y:46}],
-        alFinal:{ texto:'Junto al pastel quedó un vaso de jugo: quien lo saboteó bebía jugo.', perfil:{bebida:'Jugo'} } },
-      {tipo:'analisis', titulo:'Analiza la escena', sub:'Une cada pista con lo que revela.',
-        pares:[
-          {a:'🧂 Sal sobre el pastel', b:'Fue saboteado a propósito'},
-          {a:'✋ Mancha de jugo a la izquierda del plato', b:'El culpable es zurdo'},
-          {a:'🧃 Vaso de jugo a medio tomar', b:'El culpable bebía jugo'},
-        ],
-        alFinal:{ texto:'La mancha quedó a la izquierda: el culpable es zurdo.', perfil:{mano:'Zurdo'} } },
-      {tipo:'cronologia', titulo:'¿Qué pasó en la fiesta?',
-        eventos:[
-          'Dani sopló las velas… no, primero llegó el pastel a la mesa.',
-          'Se apagaron las luces para sacar el pastel.',
-          'Alguien se acercó a la mesa a oscuras.',
-          'Al prender la luz, el pastel estaba lleno de sal.',
-        ] },
-      {tipo:'arresto'},
+    culpable:'tomi',
+    pistas:[
+      {x:30,y:46, emoji:'🧃', nombre:'Vaso de jugo', texto:'Junto al pastel quedó un vaso de jugo a medio tomar.', regla:{cat:'bebida', val:'Jugo', tipo:'es'} },
     ],
-    recompensa:{monedas:25, xp:25},
+    decoys:[{e:'🎈',x:18,y:30},{e:'🎁',x:84,y:74},{e:'🔪',x:64,y:74}],
+    resolucion:'¡Tomi! Bebía jugo (su vaso lo delató) y la tía Rita lo vio actuar con la zurda. Su coartada era mentira.',
+    recompensa:{monedas:30, xp:30},
   },
-
   {
     id:'belmonte', titulo:'Crimen en la Mansión Belmonte', emoji:'🏛️', tipo:'misterio', dificultad:'Media',
-    cliente:'la familia Belmonte',
-    intro:'Durante la fiesta, Don Augusto apareció sin vida en su biblioteca. Todos eran invitados… uno es culpable.',
-    resolucion:'Clara confesó entre lágrimas: discutieron por la herencia y todo se salió de control. El té, su mano zurda y su perfume floral la delataron.',
-    culpable:'clara',
+    escena:'biblioteca', cliente:'la familia Belmonte',
+    intro:'Durante la fiesta, Don Augusto apareció sin vida en su biblioteca. Cuatro invitados estaban cerca. Reúne pruebas y testimonios.',
+    cats:[ {key:'bebida', etiqueta:'Bebía', emoji:'🥤'}, {key:'mano', etiqueta:'Mano', emoji:'✋'}, {key:'perfume', etiqueta:'Aroma', emoji:'🌸'} ],
     sospechosos:[
-      {id:'clara', nombre:'Clara', emoji:'👩', desc:'La sobrina de Don Augusto.', perfil:{bebida:'Té', mano:'Zurdo', perfume:'Floral'}},
-      {id:'renata', nombre:'Renata', emoji:'🎤', desc:'La cantante invitada.', perfil:{bebida:'Vino', mano:'Diestro', perfume:'Floral'}},
-      {id:'mauricio', nombre:'Mauricio', emoji:'🤵', desc:'El mayordomo.', perfil:{bebida:'Café', mano:'Diestro', perfume:'Ninguno'}},
-      {id:'hugo', nombre:'Hugo', emoji:'🧔', desc:'El socio de negocios.', perfil:{bebida:'Whisky', mano:'Zurdo', perfume:'Ninguno'}},
+      {id:'clara',    nombre:'Clara',    emoji:'👩', color:'#b06a86', desc:'La sobrina.',           traits:{bebida:'Té',     mano:'Zurdo',   perfume:'Floral'}, pos:{x:30,y:60},
+        testimonio:{texto:'Yo estuve toda la noche en el jardín, jamás entré aquí.', miente:true}},
+      {id:'renata',   nombre:'Renata',   emoji:'🎤', color:'#9a6fb0', desc:'La cantante.',          traits:{bebida:'Vino',   mano:'Diestro', perfume:'Floral'}, pos:{x:52,y:66},
+        testimonio:{texto:'El culpable olía a perfume floral… igual que yo, sí.', regla:{cat:'perfume', val:'Floral', tipo:'es'}}},
+      {id:'mauricio', nombre:'Mauricio', emoji:'🤵', color:'#4a5a6a', desc:'El mayordomo.',         traits:{bebida:'Café',   mano:'Diestro', perfume:'Ninguno'}, pos:{x:72,y:60},
+        testimonio:{texto:'Yo era el único que bebía café esa noche, sirviéndolo a todos.', regla:{cat:'bebida', val:'Café', tipo:'no'}}},
+      {id:'hugo',     nombre:'Hugo',     emoji:'🧔', color:'#7a5c3a', desc:'El socio.',             traits:{bebida:'Whisky', mano:'Zurdo',   perfume:'Ninguno'}, pos:{x:88,y:68},
+        testimonio:{texto:'Estuve fumando en la terraza. No sé nada.', regla:null}},
     ],
-    etapas:[
-      {tipo:'escena', titulo:'La biblioteca', escena:'biblioteca',
-        objetos:[
-          {nombre:'Taza de té', emoji:'🍵', x:40, y:46},
-          {nombre:'Pluma', emoji:'🖋️', x:52, y:44},
-          {nombre:'Llave', emoji:'🔑', x:24, y:58},
-          {nombre:'Lupa', emoji:'🔍', x:72, y:40},
-          {nombre:'Vela', emoji:'🕯️', x:71, y:30},
-          {nombre:'Libro caído', emoji:'📕', x:50, y:58},
-        ],
-        decoys:[{e:'📗', x:14, y:20},{e:'📘', x:88, y:24},{e:'🕰️', x:50, y:16},{e:'🗝️', x:30, y:42}],
-        alFinal:{ texto:'Una taza de té con marca de labial: el culpable bebía té.', perfil:{bebida:'Té'} } },
-      {tipo:'interrogatorio', titulo:'Interroga al mayordomo', sospechoso:'mauricio',
-        dialogo:[
-          {p:'¿Quién estuvo en la biblioteca?', a:'Varios entraron y salieron. Yo serví café toda la noche.'},
-          {p:'¿Vio algo raro?', a:'La señorita Clara discutía con Don Augusto por la herencia.'},
-        ] },
-      {tipo:'analisis', titulo:'Pruebas en el laboratorio', sub:'Une cada prueba con su conclusión.',
-        pares:[
-          {a:'💄 Labial en la taza', b:'Bebía té'},
-          {a:'✋ Huella inclinada a la izquierda', b:'Es zurdo'},
-          {a:'🧣 Pañuelo con aroma dulce', b:'Usa perfume floral'},
-        ],
-        alFinal:{ texto:'La huella en el escritorio se inclina a la izquierda: el culpable es zurdo.', perfil:{mano:'Zurdo'} } },
-      {tipo:'escena', titulo:'El jardín de la mansión', escena:'jardin',
-        objetos:[
-          {nombre:'Pañuelo', emoji:'🧣', x:30, y:48},
-          {nombre:'Guante', emoji:'🧤', x:66, y:50},
-          {nombre:'Copa rota', emoji:'🍷', x:52, y:54},
-          {nombre:'Zapato', emoji:'👠', x:20, y:56},
-          {nombre:'Carta', emoji:'✉️', x:74, y:44},
-        ],
-        decoys:[{e:'🌹', x:42, y:46},{e:'🍃', x:84, y:52},{e:'🔦', x:12, y:44}],
-        alFinal:{ texto:'Un pañuelo con perfume floral cayó en el jardín: el culpable usa perfume floral.', perfil:{perfume:'Floral'} } },
-      {tipo:'cronologia', titulo:'La noche del crimen',
-        eventos:[
-          'La fiesta comenzó y todos brindaron en el salón.',
-          'Don Augusto se retiró a la biblioteca a tomar su té.',
-          'Clara entró a discutir con él por la herencia.',
-          'Se escuchó un golpe y la luz de la biblioteca se apagó.',
-          'Mauricio encontró a Don Augusto sin vida.',
-        ] },
-      {tipo:'arresto'},
+    culpable:'clara',
+    pistas:[
+      {x:120,y:74, emoji:'🖋️', nombre:'Pluma caída', texto:'La pluma cayó al lado IZQUIERDO del escritorio: el culpable es zurdo.', regla:{cat:'mano', val:'Zurdo', tipo:'es'} },
     ],
-    recompensa:{monedas:45, xp:45},
+    decoys:[{e:'📕',x:50,y:80},{e:'🔑',x:24,y:84},{e:'🕯️',x:60,y:50}],
+    resolucion:'¡Clara! Zurda (la pluma), de perfume floral (lo dijo Renata) y no bebía café (Mauricio). Su coartada del jardín era falsa: su taza de té estaba aquí.',
+    recompensa:{monedas:55, xp:55},
   },
-
+  {
+    id:'carta', titulo:'La carta de amor anónima', emoji:'💌', tipo:'misterio', dificultad:'Media',
+    escena:'jardin', cliente:'Catalina',
+    intro:'Alguien dejó una carta de amor anónima con un girasol. Hay 4 admiradores posibles. Descubre quién es el admirador secreto.',
+    cats:[ {key:'mano', etiqueta:'Mano', emoji:'✋'}, {key:'tinta', etiqueta:'Tinta', emoji:'🖊️'}, {key:'flor', etiqueta:'Flor', emoji:'🌼'} ],
+    sospechosos:[
+      {id:'diego', nombre:'Diego', emoji:'🧑', color:'#4a6b8a', desc:'El de la sonrisa tímida.', traits:{mano:'Diestro', tinta:'Azul',  flor:'Girasol'}, pos:{x:50,y:64},
+        testimonio:{texto:'¿Yo? No… no sé nada de esa carta. (se sonroja)', miente:true}},
+      {id:'mateo', nombre:'Mateo', emoji:'🧑‍🦱', color:'#8a5a3a', desc:'El poeta del curso.',     traits:{mano:'Zurdo',   tinta:'Azul',  flor:'Rosa'}, pos:{x:26,y:68},
+        testimonio:{texto:'Yo lo vi dejar un girasol, ¡no una rosa como las que YO regalo!', regla:{cat:'flor', val:'Girasol', tipo:'es'}}},
+      {id:'benja', nombre:'Benja', emoji:'👦', color:'#5a7a4a', desc:'El deportista.',           traits:{mano:'Diestro', tinta:'Negra', flor:'Girasol'}, pos:{x:72,y:62},
+        testimonio:{texto:'Yo solo escribo con lapicera negra, mira.', regla:null}},
+      {id:'pablo', nombre:'Pablo', emoji:'🧑‍🎤', color:'#9a6fb0', desc:'El músico.',              traits:{mano:'Diestro', tinta:'Azul',  flor:'Rosa'}, pos:{x:88,y:70},
+        testimonio:{texto:'Estaba ensayando con la banda toda la tarde.', regla:null}},
+    ],
+    culpable:'diego',
+    pistas:[
+      {x:40,y:78, emoji:'✍️', nombre:'Trazo de la letra', texto:'La inclinación de la letra es claramente de alguien DIESTRO.', regla:{cat:'mano', val:'Diestro', tipo:'es'} },
+      {x:62,y:74, emoji:'🖊️', nombre:'Mancha de tinta', texto:'La tinta de la carta es AZUL.', regla:{cat:'tinta', val:'Azul', tipo:'es'} },
+    ],
+    decoys:[{e:'🌹',x:18,y:80},{e:'✉️',x:80,y:50},{e:'🔦',x:30,y:50}],
+    resolucion:'¡Era Diego! Diestro, tinta azul y el girasol que delató Mateo. Confesó sonrojado que la carta siempre fue para Cata 💛',
+    recompensa:{monedas:55, xp:55},
+  },
   {
     id:'diamante', titulo:'El robo del Diamante Azul', emoji:'💎', tipo:'robo', dificultad:'Difícil',
-    cliente:'el Museo Real',
-    intro:'El Diamante Azul desapareció de su vitrina durante la gala. Las cámaras fallaron. Atrapa al ladrón.',
-    resolucion:'Nadia, la acróbata, lo confesó: entró por el tragaluz con sus botas, su pelo rojo quedó en la rejilla y por su altura alcanzó la vitrina. El Diamante Azul volvió a casa.',
-    culpable:'nadia',
+    escena:'museo', cliente:'el Museo Real',
+    intro:'El Diamante Azul desapareció durante la gala. Las cámaras fallaron. Cuatro personas pudieron hacerlo. Atrapa al ladrón.',
+    cats:[ {key:'cabello', etiqueta:'Cabello', emoji:'💇'}, {key:'calzado', etiqueta:'Calzado', emoji:'👞'}, {key:'altura', etiqueta:'Altura', emoji:'📏'} ],
     sospechosos:[
-      {id:'nadia', nombre:'Nadia', emoji:'🤸', desc:'Acróbata del espectáculo.', perfil:{altura:'Alta', cabello:'Pelirrojo', calzado:'Botas'}},
-      {id:'gunter', nombre:'Günter', emoji:'💂', desc:'El guardia de seguridad.', perfil:{altura:'Alta', cabello:'Castaño', calzado:'Zapatos'}},
-      {id:'celeste', nombre:'Celeste', emoji:'👩‍🎨', desc:'La curadora del museo.', perfil:{altura:'Baja', cabello:'Pelirrojo', calzado:'Tacones'}},
-      {id:'bruno', nombre:'Bruno', emoji:'🕴️', desc:'Un coleccionista invitado.', perfil:{altura:'Alta', cabello:'Pelirrojo', calzado:'Zapatos'}},
+      {id:'nadia',   nombre:'Nadia',   emoji:'🤸', color:'#b06a86', desc:'La acróbata.',     traits:{cabello:'Pelirrojo', calzado:'Botas',   altura:'Alta'}, pos:{x:40,y:62},
+        testimonio:{texto:'Estuve en el escenario toda la gala, ¡pregúntenle a quien quieran!', miente:true}},
+      {id:'gunter',  nombre:'Günter',  emoji:'💂', color:'#4a5a6a', desc:'El guardia.',      traits:{cabello:'Castaño',   calzado:'Botas',   altura:'Alta'}, pos:{x:62,y:66},
+        testimonio:{texto:'Dejó huellas de botas pesadas. Yo uso botas reglamentarias también.', regla:{cat:'calzado', val:'Botas', tipo:'es'}}},
+      {id:'celeste', nombre:'Celeste', emoji:'👩‍🎨', color:'#9a6fb0', desc:'La curadora.',     traits:{cabello:'Pelirrojo', calzado:'Tacones', altura:'Baja'}, pos:{x:80,y:60},
+        testimonio:{texto:'Yo soy bajita, jamás alcanzaría esa vitrina.', regla:null}},
+      {id:'bruno',   nombre:'Bruno',   emoji:'🕴️', color:'#3a4a5a', desc:'El coleccionista.', traits:{cabello:'Pelirrojo', calzado:'Zapatos', altura:'Alta'}, pos:{x:92,y:70},
+        testimonio:{texto:'Vine de zapatos de gala, no podría trepar nada.', regla:null}},
     ],
-    etapas:[
-      {tipo:'escena', titulo:'La sala del diamante', escena:'museo',
-        objetos:[
-          {nombre:'Vitrina rota', emoji:'🔨', x:66, y:42},
-          {nombre:'Mechón de pelo', emoji:'🧶', x:30, y:30},
-          {nombre:'Guante', emoji:'🧤', x:24, y:48},
-          {nombre:'Cuerda', emoji:'🪢', x:50, y:20},
-          {nombre:'Linterna', emoji:'🔦', x:78, y:50},
-        ],
-        decoys:[{e:'🏺', x:30, y:50},{e:'🖼️', x:12, y:24},{e:'🗿', x:88, y:46}],
-        alFinal:{ texto:'En la rejilla del tragaluz quedó un mechón de pelo pelirrojo.', perfil:{cabello:'Pelirrojo'} } },
-      {tipo:'interrogatorio', titulo:'Interroga al guardia', sospechoso:'gunter',
-        dialogo:[
-          {p:'¿Cómo entró el ladrón?', a:'Imposible por la puerta. Solo se ve revuelto el tragaluz del techo.'},
-          {p:'¿Notó algo?', a:'Una sombra muy ágil saltó entre las vigas. Yo jamás treparía eso.'},
-        ] },
-      {tipo:'analisis', titulo:'Huellas en el piso', sub:'Une cada rastro con lo que indica.',
-        pares:[
-          {a:'👣 Huella de suela gruesa', b:'Usa botas'},
-          {a:'🧶 Pelo rojo en la rejilla', b:'Es pelirrojo'},
-          {a:'📏 Marca alta en la vitrina', b:'Es de estatura alta'},
-        ],
-        alFinal:{ texto:'Las marcas de suela son de botas pesadas.', perfil:{calzado:'Botas'} } },
-      {tipo:'escena', titulo:'El callejón de escape', escena:'callejon',
-        objetos:[
-          {nombre:'Bota con barro', emoji:'🥾', x:24, y:54},
-          {nombre:'Antifaz', emoji:'🎭', x:62, y:40},
-          {nombre:'Soga', emoji:'🪢', x:80, y:30},
-          {nombre:'Recibo', emoji:'🧾', x:40, y:50},
-          {nombre:'Llave', emoji:'🔑', x:70, y:52},
-        ],
-        decoys:[{e:'🗑️', x:14, y:44},{e:'📦', x:84, y:48},{e:'🐀', x:50, y:58}],
-        alFinal:{ texto:'Una marca alta en la pared: el ladrón es de estatura alta.', perfil:{altura:'Alta'} } },
-      {tipo:'cronologia', titulo:'Cómo ocurrió el robo',
-        eventos:[
-          'La gala comenzó y el diamante brillaba en su vitrina.',
-          'Las luces se atenuaron para el espectáculo.',
-          'Una figura ágil bajó por el tragaluz con una cuerda.',
-          'Rompió la vitrina y tomó el Diamante Azul.',
-          'Escapó por el callejón antes de que volviera la luz.',
-        ] },
-      {tipo:'arresto'},
+    culpable:'nadia',
+    pistas:[
+      {x:30,y:52, emoji:'🧶', nombre:'Mechón de pelo', texto:'En la rejilla del tragaluz quedó un mechón de pelo PELIRROJO.', regla:{cat:'cabello', val:'Pelirrojo', tipo:'es'} },
+      {x:50,y:78, emoji:'📏', nombre:'Marca en la vitrina', texto:'La marca de fuerza en la vitrina está MUY ALTA.', regla:{cat:'altura', val:'Alta', tipo:'es'} },
     ],
-    recompensa:{monedas:60, xp:60},
+    decoys:[{e:'🔦',x:80,y:50},{e:'🪢',x:18,y:48},{e:'🏺',x:68,y:50}],
+    resolucion:'¡Nadia, la acróbata! Pelirroja (el mechón), alta (la marca) y de botas (lo dijo Günter): la única que encaja. Su coartada del escenario era falsa.',
+    recompensa:{monedas:65, xp:65},
+  },
+  {
+    id:'callejon', titulo:'El ladrón del callejón', emoji:'🌃', tipo:'robo', dificultad:'Difícil',
+    escena:'callejon', cliente:'la joyería de la esquina',
+    intro:'Robaron la joyería y el ladrón huyó por el callejón lluvioso. 5 sospechosos y cada pista descarta a alguien. Solo la lógica lo atrapa.',
+    cats:[ {key:'altura', etiqueta:'Altura', emoji:'📏'}, {key:'calzado', etiqueta:'Calzado', emoji:'👞'}, {key:'guante', etiqueta:'Guantes', emoji:'🧤'}, {key:'cabello', etiqueta:'Cabello', emoji:'💇'} ],
+    sospechosos:[
+      {id:'vic', nombre:'Vic', emoji:'🕴️', color:'#3a4150', desc:'El silencioso.',  traits:{altura:'Alta', calzado:'Botas',   guante:'Sí', cabello:'Moreno'}, pos:{x:42,y:60},
+        testimonio:{texto:'Yo ni pasé por este callejón en toda la noche.', miente:true}},
+      {id:'rex', nombre:'Rex', emoji:'🧔', color:'#7a5c3a', desc:'El fortachón.',  traits:{altura:'Alta', calzado:'Botas',   guante:'No', cabello:'Rubio'}, pos:{x:60,y:64},
+        testimonio:{texto:'Mira mis manos: nunca uso guantes.', regla:null}},
+      {id:'sam', nombre:'Sam', emoji:'🧑', color:'#5a6a4a', desc:'El bajito.',     traits:{altura:'Baja', calzado:'Botas',   guante:'Sí', cabello:'Moreno'}, pos:{x:76,y:58},
+        testimonio:{texto:'Soy muy bajo, no llego ni a la vitrina.', regla:null}},
+      {id:'leo', nombre:'Leo', emoji:'👨', color:'#4a5a6a', desc:'El elegante.',   traits:{altura:'Alta', calzado:'Zapatos', guante:'Sí', cabello:'Moreno'}, pos:{x:88,y:66},
+        testimonio:{texto:'Vine de zapatos finos, no de botas.', regla:null}},
+      {id:'ona', nombre:'Ona', emoji:'👱', color:'#b06a86', desc:'La cómplice dudosa.', traits:{altura:'Alta', calzado:'Botas', guante:'Sí', cabello:'Rubio'}, pos:{x:30,y:70},
+        testimonio:{texto:'El pelo del que entró era MORENO… no rubio como el mío.', regla:{cat:'cabello', val:'Moreno', tipo:'es'}}},
+    ],
+    culpable:'vic',
+    pistas:[
+      {x:50,y:50, emoji:'📏', nombre:'Marca alta en la pared', texto:'Una marca de mano muy ALTA en la pared.', regla:{cat:'altura', val:'Alta', tipo:'es'} },
+      {x:24,y:80, emoji:'🥾', nombre:'Huella de bota', texto:'Huellas con barro de BOTAS gruesas.', regla:{cat:'calzado', val:'Botas', tipo:'es'} },
+      {x:68,y:78, emoji:'🧤', nombre:'Guante perdido', texto:'No hay huellas dactilares: usaba GUANTES.', regla:{cat:'guante', val:'Sí', tipo:'es'} },
+    ],
+    decoys:[{e:'🗑️',x:14,y:60},{e:'🔑',x:82,y:80},{e:'📦',x:90,y:52}],
+    resolucion:'¡Vic! Alto, con botas, guantes (las pruebas) y pelo moreno (lo soltó Ona). El único que sobrevive a las 4 pistas. Su coartada era mentira.',
+    recompensa:{monedas:75, xp:75},
   },
 ];
 
 let dt = null, dtVista = 'lista';
-function dtTipoNombre(t){ return {robo:'Robo', infidelidad:'Infidelidad', desaparicion:'Desaparición', misterio:'Misterio'}[t] || t; }
+function dtTipoNombre(t){ return {robo:'Robo', infidelidad:'Caso del corazón', desaparicion:'Desaparición', misterio:'Misterio'}[t] || t; }
+function dtCatEmoji(caso, key){ const c=(caso.cats||[]).find(x=>x.key===key); return c?c.emoji:'🔹'; }
+function dtCatEtiqueta(caso, key){ const c=(caso.cats||[]).find(x=>x.key===key); return c?c.etiqueta:key; }
 function dtCasoDelDia(){ const h=new Date(); const n=h.getFullYear()*10000+(h.getMonth()+1)*100+h.getDate(); return DT_CASOS[n % DT_CASOS.length].id; }
 function dtEsResuelto(id){ asegurarJuegos(); return datos.juegos.detective.resueltos.includes(id); }
-function dtProgreso(id){ try{ const s=JSON.parse(localStorage.getItem('jxCC_'+id)); return s && s.etapaIdx ? s.etapaIdx : 0; }catch(e){ return 0; } }
-function dtGuardar(){ if(!dt) return; try{ localStorage.setItem('jxCC_'+dt.caso.id, JSON.stringify({ etapaIdx:dt.etapaIdx, pruebas:[...dt.pruebas], perfil:dt.perfil })); }catch(e){} }
-function dtCargar(id){ try{ const s=JSON.parse(localStorage.getItem('jxCC_'+id)); if(s){ dt.etapaIdx=Math.min(s.etapaIdx||0, dt.caso.etapas.length-1); dt.pruebas=new Set(s.pruebas||[]); dt.perfil=s.perfil||{}; } }catch(e){} }
-function dtLimpiar(id){ try{ localStorage.removeItem('jxCC_'+id); }catch(e){} }
+function dtProgresoTag(id){ try{ const s=JSON.parse(localStorage.getItem('jxDD_'+id)); if(s&&s.fase&&s.fase!=='brief') return s.fase; }catch(e){} return null; }
+function dtGuardar(){ if(!dt) return; try{ localStorage.setItem('jxDD_'+dt.caso.id, JSON.stringify({ fase:dt.fase, enc:[...dt.enc], interr:[...dt.interr], desc:[...dt.desc] })); }catch(e){} }
+function dtCargar(id){ try{ const s=JSON.parse(localStorage.getItem('jxDD_'+id)); if(s){ dt.fase=s.fase||'brief'; dt.enc=new Set(s.enc||[]); dt.interr=new Set(s.interr||[]); dt.desc=new Set(s.desc||[]); } }catch(e){} }
+function dtLimpiar(id){ try{ localStorage.removeItem('jxDD_'+id); }catch(e){} }
+
+/* ── Núcleo lógico ── */
+function dtContradice(regla, susp){ if(!regla) return false; const v=susp.traits[regla.cat]; return regla.tipo==='no' ? (v===regla.val) : (v!==regla.val); }
+function dtCluesPrueba(){ return dt.caso.pistas.filter((p,i)=>dt.enc.has(i)).map(p=>({tipo:'prueba', nombre:p.nombre, emoji:p.emoji, texto:p.texto, regla:p.regla})); }
+function dtCluesTestimonio(){ return dt.caso.sospechosos.filter(s=>dt.interr.has(s.id) && s.testimonio && s.testimonio.regla).map(s=>({tipo:'testimonio', nombre:s.nombre+' declaró', emoji:s.emoji, texto:'“'+s.testimonio.texto+'”', regla:s.testimonio.regla})); }
+function dtReglasActivas(){ return dtCluesPrueba().concat(dtCluesTestimonio()); }
+function dtContradicho(susp){ return dtReglasActivas().some(c=>dtContradice(c.regla, susp)); }
+function dtReglaQueDescarta(susp){ return dtReglasActivas().find(c=>dtContradice(c.regla, susp)); }
+function dtVivos(){ return dt.caso.sospechosos.filter(s=>!dt.desc.has(s.id)); }
+function dtHechos(){ const out=[]; dtReglasActivas().forEach(c=>{ if(c.regla && c.regla.tipo==='es') out.push({cat:c.regla.cat, val:c.regla.val}); }); return out; }
 
 function dtMostrar(){ asegurarJuegos(); dtVista='lista'; dtRender(); }
 function dtAbrir(id){
   const caso=DT_CASOS.find(c=>c.id===id); if(!caso) return;
-  dt={ caso, etapaIdx:0, pruebas:new Set(), perfil:{}, fase:null };
+  dt={ caso, fase:'brief', enc:new Set(), interr:new Set(), desc:new Set() };
   if(dtEsResuelto(id)) dtLimpiar(id); else dtCargar(id);
   dtVista='caso'; jxSonido('tap'); dtRender();
 }
@@ -5372,172 +5618,170 @@ function dtRender(){
     el.querySelectorAll('[data-abrir]').forEach(b=>b.onclick=()=>dtAbrir(b.dataset.abrir));
     el.scrollTop=0; return;
   }
-  const c=dt.caso, et=c.etapas[dt.etapaIdx];
-  el.innerHTML = dtChrome(c) + '<div class="dt-etapa" id="dtEtapa"></div>';
+  el.innerHTML = dtChrome() + '<div class="dt-etapa" id="dtEtapa"></div>';
   el.querySelector('[data-salir]').onclick=()=>{ dtGuardar(); dtVista='lista'; dtRender(); };
-  dtRenderEtapa(et);
+  if(dt.fase==='brief') dtBriefRender();
+  else if(dt.fase==='investigar') dtInvestigarRender();
+  else dtDeducirRender();
   el.scrollTop=0;
 }
-function dtChrome(c){
-  const total=c.etapas.length, pct=Math.round(dt.etapaIdx/total*100);
-  const traits=Object.entries(dt.perfil).map(([k,v])=>'<span class="dt-trait sm">'+dtTraitEmoji(k)+' '+v+'</span>').join('');
-  const perfil = traits ? '<div class="dt-perfil-mini"><b>🎯 Perfil del culpable</b><div class="dt-traits">'+traits+'</div></div>' : '';
+function dtChrome(){
+  const c=dt.caso, pasos={brief:0,investigar:1,deducir:2}, pct=Math.round((pasos[dt.fase]||0)/2*100);
+  const etapaNom={brief:'El caso', investigar:'En la escena', deducir:'Deducción'}[dt.fase];
   return '<button class="jx-btn ghost dt-back" data-salir>‹ Casos</button>'+
     '<div class="dt-caso-head"><span class="dt-caso-emo big">'+c.emoji+'</span><div><h3>'+c.titulo+'</h3>'+
-      '<div class="dt-caso-meta">Capítulo '+(dt.etapaIdx+1)+' de '+total+' · '+c.dificultad+'</div></div></div>'+
-    '<div class="dt-prog"><div style="width:'+pct+'%"></div></div>'+perfil;
+      '<div class="dt-caso-meta">'+etapaNom+' · '+c.dificultad+'</div></div></div>'+
+    '<div class="dt-prog"><div style="width:'+pct+'%"></div></div>'+
+    '<div class="dt-pasos"><span class="'+(dt.fase==='brief'?'on':'')+'">📂 El caso</span><span class="'+(dt.fase==='investigar'?'on':'')+'">🔍 Escena</span><span class="'+(dt.fase==='deducir'?'on':'')+'">🧠 Deducir</span></div>';
 }
 function dtHtmlLista(){
   asegurarJuegos();
   const hoy=dtCasoDelDia();
   const cards=DT_CASOS.map(c=>{
-    const resuelto=dtEsResuelto(c.id), esDia=c.id===hoy, prog=dtProgreso(c.id);
-    const estado = resuelto ? '<span class="dt-ok">✓ Resuelto</span>' : (prog>0 ? '<span class="dt-prog-tag">▶ Capítulo '+(prog+1)+'</span>' : '<span class="dt-prog-tag nuevo">Nuevo</span>');
+    const resuelto=dtEsResuelto(c.id), esDia=c.id===hoy, prog=dtProgresoTag(c.id);
+    const estado = resuelto ? '<span class="dt-ok">✓ Resuelto</span>' : (prog ? '<span class="dt-prog-tag">▶ Continuar</span>' : '<span class="dt-prog-tag nuevo">Nuevo</span>');
     return '<button class="dt-caso-card'+(esDia?' dia':'')+'" data-abrir="'+c.id+'">'+
       (esDia?'<span class="dt-ribbon">🌟 Caso del día</span>':'')+
       '<div class="dt-caso-emo">'+c.emoji+'</div>'+
       '<div class="dt-caso-info"><div class="dt-caso-tit">'+c.titulo+'</div>'+
-      '<div class="dt-caso-meta"><span class="dt-tag '+c.tipo+'">'+dtTipoNombre(c.tipo)+'</span> · '+c.dificultad+' · '+c.etapas.length+' capítulos</div>'+
+      '<div class="dt-caso-meta"><span class="dt-tag '+c.tipo+'">'+dtTipoNombre(c.tipo)+'</span> · '+c.dificultad+' · '+c.sospechosos.length+' sospechosos</div>'+
       '<div class="dt-caso-cli">'+estado+'</div></div></button>';
   }).join('');
-  return '<p class="jx-tip">Resuelve casos por capítulos: busca pistas en las escenas, analízalas, interroga sospechosos, ordena la cronología y arresta al culpable según su perfil.</p><div class="dt-list">'+cards+'</div>';
-}
-function dtRenderEtapa(et){
-  if(et.tipo==='escena') dtEscenaRender(et);
-  else if(et.tipo==='analisis') dtAnalisisRender(et);
-  else if(et.tipo==='interrogatorio') dtInterroRender(et);
-  else if(et.tipo==='cronologia') dtCronoRender(et);
-  else if(et.tipo==='arresto') dtArrestoRender(et);
-}
-function dtAvanzar(et){
-  if(et.alFinal){
-    if(et.alFinal.pista) dt.pruebas.add(et.alFinal.pista);
-    if(et.alFinal.perfil) Object.assign(dt.perfil, et.alFinal.perfil);
-  }
-  dt.fase=null; dt.etapaIdx++;
-  jxRecompensar(3, 4, {});
-  dtGuardar(); dtRender();
-}
-function dtDone(et, texto){
-  const cont=document.getElementById('dtEtapa');
-  cont.insertAdjacentHTML('beforeend', '<div class="dt-et-done"><b>'+(texto||'¡Capítulo completado! ⭐')+'</b>'+(et.alFinal&&et.alFinal.texto?'<p>'+et.alFinal.texto+'</p>':'')+'<button class="jx-btn rosa" id="dtNext">Continuar ›</button></div>');
-  document.getElementById('dtNext').onclick=()=>dtAvanzar(et);
+  return '<p class="jx-tip">🕵️ Investiga la escena: busca <b>pruebas</b> e <b>interroga</b> a los sospechosos. Junta las pistas y descarta a quienes las contradicen. ¡Cuidado con las coartadas falsas!</p><div class="dt-list">'+cards+'</div>';
 }
 
-/* ----- ESCENA (búsqueda de objetos) ----- */
-function dtEscenaRender(et){
-  const cont=document.getElementById('dtEtapa');
-  if(!dt.fase || dt.fase.tipo!=='escena') dt.fase={ tipo:'escena', enc:new Set(), inicio:Date.now(), pistas:0 };
-  const f=dt.fase;
-  const lista=et.objetos.map((o,i)=>'<span class="dt-find'+(f.enc.has(i)?' ok':'')+'">'+o.emoji+' '+o.nombre+'</span>').join('');
-  const objs=et.objetos.map((o,i)=>'<span class="dt-obj'+(f.enc.has(i)?' ok':'')+'" style="left:'+o.x+'%;top:'+o.y+'%">'+o.emoji+'</span>').join('');
-  const decoys=(et.decoys||[]).map(d=>'<span class="dt-obj decoy" style="left:'+d.x+'%;top:'+d.y+'%">'+d.e+'</span>').join('');
-  const completo=f.enc.size===et.objetos.length;
-  cont.innerHTML=
-    '<h3 class="dt-et-tit">'+et.titulo+'</h3>'+
-    '<p class="dt-et-sub">Encuentra estos objetos en la escena ('+f.enc.size+'/'+et.objetos.length+'):</p>'+
-    '<div class="dt-finds">'+lista+'</div>'+
-    '<div class="dt-escena" id="dtEsc">'+(DT_ESCENAS[et.escena]||'')+decoys+objs+'</div>'+
-    (completo?'':'<div class="dt-et-ctrl"><button class="jx-btn ghost" id="dtPista">💡 Pista ('+(3-f.pistas)+')</button></div>');
-  const esc=document.getElementById('dtEsc');
-  esc.addEventListener('pointerdown', e=>dtEscenaTap(et,e));
-  if(!completo) document.getElementById('dtPista').onclick=()=>dtEscenaPista(et);
-  if(completo){ if(!f.celebrado){ f.celebrado=true; jxSonido('gana'); jxConfeti(50); } dtDone(et, '¡Escena despejada! ⭐'); }
+/* ── Tarjeta de sospechoso ── */
+function dtSuspCard(s, opc){
+  opc=opc||{};
+  const c=dt.caso;
+  const chips=c.cats.map(cat=>{
+    const v=s.traits[cat.key];
+    let cls='dt-trait sm';
+    if(opc.marcar){
+      const contra=dtReglasActivas().some(p=>p.regla && p.regla.cat===cat.key && dtContradice(p.regla,s));
+      const apoya=dtHechos().some(h=>h.cat===cat.key && h.val===v);
+      if(contra) cls+=' mal'; else if(apoya) cls+=' bien';
+    }
+    return '<span class="'+cls+'">'+cat.emoji+' '+v+'</span>';
+  }).join('');
+  const desc = dt.desc.has(s.id);
+  return '<div class="dt-susp'+(desc?' descartado':'')+(opc.btn?' clickable':'')+'"'+(opc.btn?' data-susp="'+s.id+'"':'')+'>'+
+    (desc?'<span class="dt-susp-x">✕</span>':'')+
+    '<div class="dt-susp-top"><span class="dt-susp-emo">'+s.emoji+'</span><div class="dt-susp-id"><b>'+s.nombre+'</b><small>'+s.desc+'</small></div></div>'+
+    '<div class="dt-traits">'+chips+'</div></div>';
 }
-function dtEscenaTap(et, e){
-  const f=dt.fase; if(f.enc.size===et.objetos.length) return;
-  const esc=document.getElementById('dtEsc'), r=esc.getBoundingClientRect();
+
+/* ── Fase 1: El caso ── */
+function dtBriefRender(){
+  const cont=document.getElementById('dtEtapa'), c=dt.caso;
+  const susp=c.sospechosos.map(s=>dtSuspCard(s,{})).join('');
+  cont.innerHTML=
+    '<div class="dt-brief"><span class="dt-brief-cli">Cliente: '+c.cliente+'</span><p>“'+c.intro+'”</p></div>'+
+    '<h3 class="dt-et-tit">Los sospechosos</h3>'+
+    '<p class="dt-et-sub">Memoriza sus rasgos: las pistas y los testimonios hablarán de ellos.</p>'+
+    '<div class="dt-susp-grid">'+susp+'</div>'+
+    '<div class="dt-et-ctrl"><button class="jx-btn rosa" id="dtAInvestigar">🔍 Ir a la escena</button></div>';
+  document.getElementById('dtAInvestigar').onclick=()=>{ dt.fase='investigar'; jxSonido('tap'); dtGuardar(); dtRender(); };
+}
+
+/* ── Fase 2: La escena (buscar pruebas + interrogar) ── */
+function dtInvestigarRender(){
+  const cont=document.getElementById('dtEtapa'), c=dt.caso;
+  if(dt._invHint==null) dt._invHint=0;
+  const totalP=c.pistas.length, hechasP=dt.enc.size;
+  const totalS=c.sospechosos.length, hechasS=dt.interr.size;
+  const completo = hechasP===totalP && hechasS===totalS;
+  const objs=c.pistas.map((p,i)=>'<span class="dt-obj'+(dt.enc.has(i)?' ok':'')+'" style="left:'+p.x+'%;top:'+p.y+'%">'+p.emoji+'</span>').join('');
+  const decoys=(c.decoys||[]).map(d=>'<span class="dt-obj decoy" style="left:'+d.x+'%;top:'+d.y+'%">'+d.e+'</span>').join('');
+  const figs=c.sospechosos.map(s=>'<button class="dt-fig'+(dt.interr.has(s.id)?' hablado':'')+'" data-fig="'+s.id+'" style="left:'+s.pos.x+'%;top:'+s.pos.y+'%">'+
+      '<span class="dt-fig-cuerpo" style="background:'+(s.color||'#5b6b8a')+'"></span>'+
+      '<span class="dt-fig-cara">'+s.emoji+'</span>'+
+      '<span class="dt-fig-nom">'+s.nombre+'</span>'+
+      '<span class="dt-fig-badge">'+(dt.interr.has(s.id)?'💬':'❓')+'</span></button>').join('');
+  const clues=dtReglasActivas();
+  const exped = clues.length ? clues.map(p=>'<div class="dt-clue"><span class="dt-clue-emo">'+p.emoji+'</span><div><b>'+p.nombre+'</b><p>'+p.texto+'</p>'+(p.regla?'<span class="dt-clue-regla">'+dtReglaTexto(c,p.regla)+'</span>':'<span class="dt-clue-regla coartada">coartada — sin dato útil</span>')+'</div></div>').join('')
+    : '<p class="dt-vacio">Aún no tienes pistas. Busca pruebas 🔍 e interroga 💬.</p>';
+  cont.innerHTML=
+    '<div class="dt-escena '+(DT_AMB[c.escena]||'')+'" id="dtEsc">'+(DT_ESCENAS[c.escena]||'')+'<div class="dt-esc-layer" id="dtEscLayer">'+decoys+objs+figs+'</div></div>'+
+    '<div class="dt-esc-hud"><span class="pill">🔍 Pruebas '+hechasP+'/'+totalP+'</span><span class="pill">💬 Interrogados '+hechasS+'/'+totalS+'</span>'+
+      (completo?'':'<button class="dt-hint-btn" id="dtPista">💡 ('+(3-dt._invHint)+')</button>')+'</div>'+
+    '<p class="dt-et-sub" style="margin-top:10px">Toca los objetos sospechosos para examinarlos y a las personas para interrogarlas.</p>'+
+    '<h3 class="dt-et-tit">📋 Expediente</h3><div class="dt-clues">'+exped+'</div>'+
+    (completo?'<div class="dt-et-ctrl"><button class="jx-btn rosa" id="dtADeducir">🧠 Pasar a deducir</button></div>':'<p class="dt-et-sub" style="text-align:center;margin-top:12px">Encuentra todas las pruebas e interroga a todos para deducir.</p>');
+  const esc=document.getElementById('dtEsc');
+  esc.addEventListener('pointerdown', e=>dtInvestigarTap(e));
+  cont.querySelectorAll('[data-fig]').forEach(b=>b.addEventListener('click', e=>{ e.stopPropagation(); dtInterrogar(b.dataset.fig); }));
+  if(!completo && document.getElementById('dtPista')) document.getElementById('dtPista').onclick=()=>dtInvestigarPista();
+  if(completo){ const b=document.getElementById('dtADeducir'); if(b) b.onclick=()=>{ dt.fase='deducir'; jxSonido('tap'); dtGuardar(); dtRender(); }; }
+}
+function dtReglaTexto(c, r){
+  const et=dtCatEtiqueta(c, r.cat).toLowerCase();
+  return r.tipo==='no' ? '⇒ el culpable NO: '+et+' “'+r.val+'”' : '⇒ el culpable: '+et+' = “'+r.val+'”';
+}
+function dtInterrogar(id){
+  const s=dt.caso.sospechosos.find(x=>x.id===id); if(!s) return;
+  const primera=!dt.interr.has(id);
+  if(primera){ dt.interr.add(id); jxSonido('bien'); jxVibrar(12); jxRecompensar(3,4,{}); dtGuardar(); }
+  else jxSonido('tap');
+  dtTestimonioPopup(s);
+  if(primera) dtInvestigarRender();
+}
+function dtTestimonioPopup(s){
+  avisar('💬 '+s.nombre+': “'+s.testimonio.texto+'”');
+}
+function dtInvestigarTap(e){
+  const c=dt.caso; if(e.target.closest('[data-fig]')) return;
+  if(dt.enc.size===c.pistas.length) return;
+  const esc=document.getElementById('dtEscLayer'), r=esc.getBoundingClientRect();
   const px=(e.clientX-r.left)/r.width*100, py=(e.clientY-r.top)/r.height*100;
   let mejor=-1, dmin=99;
-  et.objetos.forEach((o,i)=>{ if(f.enc.has(i)) return; const d=Math.hypot(o.x-px,o.y-py); if(d<dmin){ dmin=d; mejor=i; } });
-  if(mejor>=0 && dmin<9){ f.enc.add(mejor); jxSonido('bien'); jxVibrar(12); dtEscenaRender(et); }
+  c.pistas.forEach((p,i)=>{ if(dt.enc.has(i)) return; const d=Math.hypot(p.x-px,p.y-py); if(d<dmin){ dmin=d; mejor=i; } });
+  if(mejor>=0 && dmin<11){ dt.enc.add(mejor); jxSonido('bien'); jxVibrar(12); jxRecompensar(3,4,{}); dtGuardar(); dtInvestigarRender(); }
   else{ jxSonido('tap'); const m=document.createElement('div'); m.className='dt-miss'; m.style.left=px+'%'; m.style.top=py+'%'; esc.appendChild(m); setTimeout(()=>m.remove(),500); }
 }
-function dtEscenaPista(et){
-  const f=dt.fase; if(f.pistas>=3){ avisar('No quedan pistas'); return; }
-  const falta=et.objetos.map((o,i)=>i).filter(i=>!f.enc.has(i)); if(!falta.length) return;
-  const o=et.objetos[falta[Math.floor(Math.random()*falta.length)]];
-  f.pistas++;
-  const esc=document.getElementById('dtEsc');
-  const m=document.createElement('div'); m.className='dt-hint'; m.style.left=o.x+'%'; m.style.top=o.y+'%'; esc.appendChild(m);
-  setTimeout(()=>m.remove(),1600);
-  document.getElementById('dtPista').textContent='💡 Pista ('+(3-f.pistas)+')';
+function dtInvestigarPista(){
+  const c=dt.caso; if(dt._invHint>=3){ avisar('No quedan pistas'); return; }
+  const faltaP=c.pistas.map((p,i)=>i).filter(i=>!dt.enc.has(i));
+  const faltaS=c.sospechosos.filter(s=>!dt.interr.has(s.id));
+  dt._invHint++;
+  const b=document.getElementById('dtPista'); if(b) b.textContent='💡 ('+(3-dt._invHint)+')';
+  if(faltaP.length){
+    const p=c.pistas[faltaP[Math.floor(Math.random()*faltaP.length)]];
+    const esc=document.getElementById('dtEscLayer');
+    const m=document.createElement('div'); m.className='dt-hint'; m.style.left=p.x+'%'; m.style.top=p.y+'%'; esc.appendChild(m);
+    setTimeout(()=>m.remove(),1600);
+  }else if(faltaS.length){
+    avisar('💡 Te falta interrogar a '+faltaS.map(s=>s.nombre).join(', '));
+  }
 }
 
-/* ----- ANALISIS (emparejar) ----- */
-function dtAnalisisRender(et){
-  const cont=document.getElementById('dtEtapa');
-  if(!dt.fase || dt.fase.tipo!=='analisis') dt.fase={ tipo:'analisis', sel:null, hechos:new Set(), orden:sdShuffle(et.pares.map((p,i)=>i)) };
-  const f=dt.fase;
-  const izq=et.pares.map((p,i)=>'<button class="dt-match'+(f.hechos.has(i)?' ok':'')+((f.sel&&f.sel.l==='a'&&f.sel.i===i)?' sel':'')+'" data-l="a" data-i="'+i+'">'+p.a+'</button>').join('');
-  const der=f.orden.map(i=>'<button class="dt-match'+(f.hechos.has(i)?' ok':'')+((f.sel&&f.sel.l==='b'&&f.sel.i===i)?' sel':'')+'" data-l="b" data-i="'+i+'">'+et.pares[i].b+'</button>').join('');
-  const completo=f.hechos.size===et.pares.length;
-  cont.innerHTML='<h3 class="dt-et-tit">'+et.titulo+'</h3><p class="dt-et-sub">'+(et.sub||'Une cada prueba con lo que revela.')+'</p>'+
-    '<div class="dt-match-grid"><div class="dt-match-col">'+izq+'</div><div class="dt-match-col">'+der+'</div></div>';
-  cont.querySelectorAll('.dt-match').forEach(b=>{ if(!b.classList.contains('ok')) b.onclick=()=>dtMatchTap(et,b.dataset.l,+b.dataset.i); });
-  if(completo){ if(!f.celebrado){ f.celebrado=true; jxSonido('gana'); } dtDone(et,'¡Pruebas analizadas! ⭐'); }
+/* ── Fase 3: Deducción ── */
+function dtDeducirRender(){
+  const cont=document.getElementById('dtEtapa'), c=dt.caso;
+  const hechos=dtHechos().map(h=>'<span class="dt-trait">'+dtCatEmoji(c,h.cat)+' '+h.val+'</span>').join('');
+  const clues=dtReglasActivas().filter(p=>p.regla).map(p=>'<li><b>'+p.nombre+'</b>: <i>'+dtReglaTexto(c,p.regla).replace('⇒ ','')+'</i></li>').join('');
+  const susp=c.sospechosos.map(s=>dtSuspCard(s,{btn:true, marcar:true})).join('');
+  const vivos=dtVivos();
+  const listo = vivos.length===1 && dt.desc.size===c.sospechosos.length-1;
+  cont.innerHTML=
+    '<div class="dt-perfil-box"><b>🎯 Perfil del culpable (según las pruebas y testimonios)</b><div class="dt-traits" style="margin-top:8px">'+(hechos||'<span class="dt-trait sm">—</span>')+'</div>'+
+      (clues?'<ul class="dt-clue-mini">'+clues+'</ul>':'')+'</div>'+
+    '<p class="dt-et-sub">Toca a quienes <b>contradicen</b> alguna pista para descartarlos. Verde = coincide, rojo = lo descarta. Solo podrás acusar cuando quede uno.</p>'+
+    '<div class="dt-susp-grid deducir">'+susp+'</div>'+
+    '<div class="dt-et-ctrl"><button class="jx-btn rosa'+(listo?'':' off')+'" id="dtAcusar"'+(listo?'':' disabled')+'>⚖️ '+(listo?('Acusar a '+vivos[0].nombre):'Descarta hasta que quede 1')+'</button></div>';
+  cont.querySelectorAll('[data-susp]').forEach(b=>b.onclick=()=>dtToggleDescartar(b.dataset.susp));
+  const ac=document.getElementById('dtAcusar'); if(ac && listo) ac.onclick=()=>dtAcusar(vivos[0]);
 }
-function dtMatchTap(et, l, i){
-  const f=dt.fase;
-  if(!f.sel){ f.sel={l,i}; jxSonido('tap'); dtAnalisisRender(et); return; }
-  if(f.sel.l===l){ f.sel={l,i}; dtAnalisisRender(et); return; }
-  const idxA = l==='a'? i : f.sel.i, idxB = l==='b'? i : f.sel.i;
-  if(idxA===idxB){ f.hechos.add(idxA); f.sel=null; jxSonido('bien'); jxVibrar(12); dtAnalisisRender(et); }
-  else{ f.sel=null; jxSonido('mal'); jxVibrar(22); dtAnalisisRender(et); avisar('Eso no calza, prueba otra vez'); }
+function dtToggleDescartar(id){
+  const s=dt.caso.sospechosos.find(x=>x.id===id); if(!s) return;
+  if(dt.desc.has(id)){ dt.desc.delete(id); jxSonido('tap'); jxVibrar(8); dtGuardar(); dtDeducirRender(); return; }
+  const p=dtReglaQueDescarta(s);
+  if(p){ dt.desc.add(id); jxSonido('bien'); jxVibrar(12); dtGuardar(); dtDeducirRender(); avisar('Descartado: '+s.nombre+' contradice “'+p.nombre+'”.'); }
+  else{ jxSonido('mal'); jxVibrar(28); avisar('🔎 Ninguna prueba descarta a '+s.nombre+'. Revisa las pistas.'); const card=document.querySelector('[data-susp="'+id+'"]'); if(card){ card.classList.remove('sacude'); void card.offsetWidth; card.classList.add('sacude'); } }
 }
-
-/* ----- INTERROGATORIO ----- */
-function dtInterroRender(et){
-  const cont=document.getElementById('dtEtapa');
-  if(!dt.fase || dt.fase.tipo!=='interro') dt.fase={ tipo:'interro', vistas:new Set() };
-  const f=dt.fase;
-  const s = et.sospechoso ? dt.caso.sospechosos.find(x=>x.id===et.sospechoso) : null;
-  const qs=et.dialogo.map((d,i)=>'<div class="dt-preg" data-q="'+i+'"><div class="dt-preg-q">❓ '+d.p+'</div>'+(f.vistas.has(i)?'<div class="dt-preg-a">“'+d.a+'”</div>':'')+'</div>').join('');
-  cont.innerHTML='<h3 class="dt-et-tit">'+et.titulo+'</h3>'+
-    (s?'<div class="dt-sosp-card"><span class="dt-sosp-emo">'+s.emoji+'</span><div><b>'+s.nombre+'</b><p>'+s.desc+'</p></div></div>':'')+
-    '<p class="dt-et-sub">Toca cada pregunta para interrogar.</p><div class="dt-pregs">'+qs+'</div>';
-  cont.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{ f.vistas.add(+b.dataset.q); jxSonido('tap'); dtInterroRender(et); });
-  if(f.vistas.size===et.dialogo.length) dtDone(et,'¡Interrogatorio listo! ⭐');
-}
-
-/* ----- CRONOLOGIA ----- */
-function dtCronoRender(et){
-  const cont=document.getElementById('dtEtapa');
-  if(!dt.fase || dt.fase.tipo!=='crono') dt.fase={ tipo:'crono', orden:[], opciones:sdShuffle(et.eventos.map((e,i)=>i)) };
-  const f=dt.fase;
-  const restantes=f.opciones.filter(i=>!f.orden.includes(i));
-  const colocados=f.orden.map((i,pos)=>'<div class="dt-evt"><span class="dt-evt-n">'+(pos+1)+'</span><span>'+et.eventos[i]+'</span></div>').join('');
-  const ops=restantes.map(i=>'<button class="dt-evt-op" data-i="'+i+'">'+et.eventos[i]+'</button>').join('');
-  cont.innerHTML='<h3 class="dt-et-tit">'+et.titulo+'</h3><p class="dt-et-sub">Ordena los hechos en la secuencia correcta de lo que pasó.</p>'+
-    '<div class="dt-crono">'+(colocados||'<p class="dt-vacio">Toca el primer hecho abajo.</p>')+'</div>'+
-    (ops?'<div class="dt-evt-ops">'+ops+'</div>':'');
-  cont.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>dtCronoTap(et,+b.dataset.i));
-  if(!restantes.length){ if(!f.celebrado){ f.celebrado=true; jxSonido('gana'); jxConfeti(40); } dtDone(et,'¡Cronología reconstruida! ⭐'); }
-}
-function dtCronoTap(et, i){
-  const f=dt.fase;
-  if(i===f.orden.length){ f.orden.push(i); jxSonido('bien'); jxVibrar(10); dtCronoRender(et); }
-  else{ jxSonido('mal'); jxVibrar(25); avisar('Ese no es el siguiente hecho. Piensa en el orden.'); }
-}
-
-/* ----- ARRESTO ----- */
-function dtArrestoRender(et){
-  const cont=document.getElementById('dtEtapa');
-  const traits=Object.entries(dt.perfil).map(([k,v])=>'<span class="dt-trait">'+dtTraitEmoji(k)+' '+v+'</span>').join('');
-  const sosp=dt.caso.sospechosos.map(s=>{
-    const p=Object.entries(s.perfil).map(([k,v])=>'<span class="dt-trait sm">'+v+'</span>').join('');
-    return '<button class="dt-arrest-card" data-arr="'+s.id+'"><span class="dt-sosp-emo">'+s.emoji+'</span><b>'+s.nombre+'</b><div class="dt-arrest-perfil">'+p+'</div></button>';
-  }).join('');
-  cont.innerHTML='<h3 class="dt-et-tit">⚖️ El arresto</h3>'+
-    '<div class="dt-perfil-box"><b>Perfil del culpable según las pruebas</b><div class="dt-traits">'+traits+'</div></div>'+
-    '<p class="dt-et-sub">Toca al sospechoso que coincide con TODO el perfil.</p><div class="dt-arrest">'+sosp+'</div>';
-  cont.querySelectorAll('[data-arr]').forEach(b=>b.onclick=()=>dtArrestar(b.dataset.arr));
-}
-function dtArrestar(id){
-  const s=dt.caso.sospechosos.find(x=>x.id===id);
-  const coincide=Object.entries(dt.perfil).every(([k,v])=>s.perfil[k]===v);
-  if(coincide && id===dt.caso.culpable) dtCasoResuelto();
-  else{ jxSonido('mal'); jxVibrar(40); avisar('🔎 Esa persona no coincide con el perfil. Revisa las pruebas.'); }
+function dtAcusar(s){
+  if(s.id===dt.caso.culpable){ dtCasoResuelto(); }
+  else{ jxSonido('mal'); jxVibrar(40); avisar('Te equivocaste de persona. Vuelve a revisar las pruebas.'); }
 }
 function dtCasoResuelto(){
   const c=dt.caso; asegurarJuegos();

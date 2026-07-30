@@ -54,7 +54,7 @@ async function limpiarBackupsAntiguos(sql) {
       FROM rincon_backups
       WHERE estado_id = ${ESTADO_ID}
       ORDER BY created_at DESC
-      OFFSET 30
+      OFFSET 80
     )
   `;
 }
@@ -69,6 +69,28 @@ module.exports = async function handler(req, res) {
     await prepararTablas(sql);
 
     if (req.method === "GET") {
+      // ?id=N devuelve el contenido completo de un respaldo, sin tocar el estado
+      // actual. Sirve para mirar qué había antes de decidir si restaurar.
+      const idPedido = String(req.query?.id || "").trim();
+      if (idPedido) {
+        const fila = await sql`
+          SELECT id::text, motivo, created_at, data
+          FROM rincon_backups
+          WHERE estado_id = ${ESTADO_ID}
+            AND id::text = ${idPedido}
+          LIMIT 1
+        `;
+        if (!fila.length) {
+          return json(res, 404, { error: "No existe ese respaldo." });
+        }
+        return json(res, 200, {
+          id: fila[0].id,
+          motivo: fila[0].motivo,
+          createdAt: fila[0].created_at,
+          data: fila[0].data,
+        });
+      }
+
       const filas = await sql`
         SELECT
           id::text,
@@ -80,7 +102,7 @@ module.exports = async function handler(req, res) {
         FROM rincon_backups
         WHERE estado_id = ${ESTADO_ID}
         ORDER BY created_at DESC
-        LIMIT 12
+        LIMIT 30
       `;
 
       return json(res, 200, {

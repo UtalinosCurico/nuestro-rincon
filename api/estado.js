@@ -46,6 +46,57 @@ async function prepararTabla(sql) {
   `;
 }
 
+/* ------------------------------------------------------------------
+   GUARDA ANTI-BORRADO
+   El 29 de junio de 2026 un dispositivo con localStorage vacío subió su
+   estado por defecto y borró fotos, notas y momentos. Aunque el cliente
+   ya no puede hacerlo, un navegador con el HTML viejo en caché todavía
+   podría: por eso la última palabra la tiene el servidor.
+   Borrar una foto a mano sigue permitido; lo que se bloquea es el
+   colapso masivo y simultáneo de todo el contenido.
+   ------------------------------------------------------------------ */
+const COLECCIONES = [
+  "fotos", "notas", "cartas", "razones", "metas", "suenos", "canciones",
+  "recuerdos", "timeline", "momentosEspeciales", "lugares", "series",
+  "regalosCatalina", "regalosDiego",
+];
+
+function contarContenido(data) {
+  let items = 0;
+  let fotosConImagen = 0;
+
+  for (const clave of COLECCIONES) {
+    const valor = data?.[clave];
+    if (Array.isArray(valor)) items += valor.length;
+  }
+
+  if (Array.isArray(data?.fotos)) {
+    fotosConImagen = data.fotos.filter((f) => f && f.src).length;
+  }
+  if (Array.isArray(data?.timeline)) {
+    fotosConImagen += data.timeline.filter((m) => m && m.foto).length;
+  }
+
+  return { items, fotosConImagen };
+}
+
+function motivoDeBloqueo(dataActual, dataEntrante) {
+  const antes = contarContenido(dataActual);
+  const despues = contarContenido(dataEntrante);
+
+  // Nunca se borran todas las imágenes de una sola vez.
+  if (antes.fotosConImagen > 0 && despues.fotosConImagen === 0) {
+    return `el envío deja 0 imágenes cuando había ${antes.fotosConImagen}`;
+  }
+
+  // Nunca desaparece más del 60% del contenido en una sola operación.
+  if (antes.items >= 8 && despues.items <= antes.items * 0.4) {
+    return `el envío reduce el contenido de ${antes.items} a ${despues.items} elementos`;
+  }
+
+  return null;
+}
+
 async function crearBackupSiCorresponde(sql, dataActual) {
   if (!dataActual || Object.keys(dataActual).length === 0) return;
 
@@ -72,7 +123,7 @@ async function crearBackupSiCorresponde(sql, dataActual) {
       FROM rincon_backups
       WHERE estado_id = ${ESTADO_ID}
       ORDER BY created_at DESC
-      OFFSET 30
+      OFFSET 80
     )
   `;
 }
@@ -116,6 +167,18 @@ module.exports = async function handler(req, res) {
       `;
       const dataActual = actuales[0]?.data || {};
       const dataParaGuardar = { ...dataActual, ...data };
+
+      const forzar = body?.forzar === true;
+      const bloqueo = forzar ? null : motivoDeBloqueo(dataActual, dataParaGuardar);
+      if (bloqueo) {
+        // Guardamos lo que hay antes de rechazar, para no perderlo nunca.
+        await crearBackupSiCorresponde(sql, dataActual);
+        console.warn("[api/estado] guardado rechazado:", bloqueo);
+        return json(res, 409, {
+          error: "Guardado rechazado para proteger el contenido.",
+          motivo: bloqueo,
+        });
+      }
 
       if (JSON.stringify(dataActual) !== JSON.stringify(dataParaGuardar)) {
         await crearBackupSiCorresponde(sql, dataActual);
