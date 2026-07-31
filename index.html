@@ -962,7 +962,7 @@
   }
   /* ===== Clínica kinésica (tycoon) ===== */
   .cl-top{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 12px 30px var(--sombra);margin-bottom:14px;}
-  .cl-lienzo{display:block;width:100%;height:190px;}
+  .cl-lienzo{display:block;width:100%;height:240px;}
   .cl-hud{position:absolute;top:12px;right:14px;text-align:right;text-shadow:0 2px 8px rgba(255,255,255,.6);}
   .cl-plata{font-family:'Playfair Display',serif;font-size:1.9rem;color:#2f4858;line-height:1;}
   .cl-sub{font-size:.76rem;color:#4a6274;margin-top:3px;}
@@ -1040,8 +1040,10 @@
   .cl-repaso-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;}
   .cl-repaso-nav span{font-size:.8rem;color:var(--gris);}
   .cl-nota{text-align:center;font-size:.68rem;color:var(--gris);font-style:italic;margin-top:14px;opacity:.8;}
+  .cl-cargando{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(160deg,#e9f0f4,#d7e3ea);color:#4b7d99;font-size:.9rem;letter-spacing:.3px;}
   .jx-card.clinica{background:linear-gradient(150deg,#6da3c0,#43708c);}
-  @media (max-width:400px){ .cl-lienzo{height:165px;} .cl-plata{font-size:1.6rem;} }
+  @media (max-width:400px){ .cl-lienzo{height:210px;} .cl-plata{font-size:1.6rem;} }
 
   @media (prefers-reduced-motion: reduce){
     .jx-launch-escena svg,.jx-pet-holder svg,.jx-celebra-gato svg,.jx-daily.listo .jx-daily-emo,.jx-nivelup{animation:none !important;}
@@ -4362,6 +4364,7 @@ function jxCerrarApp(){
   if(snLoop) cancelAnimationFrame(snLoop);
   if(jarLoop){ cancelAnimationFrame(jarLoop); jarLoop = null; jarAsentar(); jarGuardar(true); }
   if(clLoop){ cancelAnimationFrame(clLoop); clLoop = null; clAsentar(); clGuardar(true); }
+  c3Destruir();
   pintarJuegos();
 }
 function jxAtras(){ if(jxPantalla === 'hub') jxCerrarApp(); else jxIr('hub'); }
@@ -4919,6 +4922,7 @@ function zipEnlazarPuntero(){
   const fin=()=>{ if(zipEstado) zipEstado.dibujando=false; };
   sc.addEventListener('pointerup',fin); sc.addEventListener('pointercancel',fin);
 }
+window.addEventListener('resize', () => { if(jxPantalla==='clinica') c3Ajustar(); });
 window.addEventListener('resize', () => { if(jxPantalla==='zip' && zipEstado){ zipDibujarParedes(); zipDibujarLinea(); } });
 
 /* ============================================================
@@ -6056,6 +6060,221 @@ const KIN_RANGOS = [
 ];
 
 /* ============================================================
+   CLÍNICA EN 3D — Three.js cargado bajo demanda
+   La librería (182 KB gzip) NO baja con la página: se importa recién
+   cuando se abre la clínica, así el resto del rincón sigue abriendo
+   instantáneo. Toda la geometría es low-poly generada por código: no
+   hay modelos que descargar ni licencias que revisar.
+   ============================================================ */
+let THREE = null, c3Cargando = null;
+let c3Escena = null, c3Cam = null, c3Rend = null, c3Loop = null, c3Reloj = 0;
+let c3Personal = [], c3Pacientes = [], c3Camillas = [];
+
+async function c3Cargar(){
+  if(THREE) return THREE;
+  if(c3Cargando) return c3Cargando;
+  c3Cargando = import('/assets/lib/three.module.min.js')
+    .then(m => { THREE = m; return m; })
+    .catch(e => { c3Cargando = null; throw e; });
+  return c3Cargando;
+}
+
+/* ---------- materiales low-poly, planos y coherentes ---------- */
+function c3Mat(color, opc){
+  return new THREE.MeshLambertMaterial(Object.assign({ color, flatShading:true }, opc || {}));
+}
+
+const C3_PALETA = {
+  piso:0xe6ddd2, muro:0xf3efe7, muroBajo:0xdcd3c6,
+  camilla:0xfdfbf7, patas:0xa6b2ae, sabana:0xbfd8e4,
+  piel:0xe8c3a0, pelo:0x4a3b33, tunica:0x7fae96, ropa:[0xc8956d,0x6d9fc8,0xc86d8f,0x9b7fc8,0xd8b45f],
+  planta:0x6f9c5a, macetero:0xc98f6d, mueble:0xd8c3a5,
+};
+
+function c3Persona(colorRopa, esKine){
+  const g = new THREE.Group();
+  const cuerpo = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.34, 3, 6), c3Mat(esKine ? C3_PALETA.tunica : colorRopa));
+  cuerpo.position.y = 0.42; cuerpo.castShadow = true;
+  const cabeza = new THREE.Mesh(new THREE.IcosahedronGeometry(0.15, 0), c3Mat(C3_PALETA.piel));
+  cabeza.position.y = 0.78; cabeza.castShadow = true;
+  const pelo = new THREE.Mesh(new THREE.SphereGeometry(0.155, 6, 4, 0, Math.PI*2, 0, Math.PI/2), c3Mat(C3_PALETA.pelo));
+  pelo.position.y = 0.80;
+  const piernas = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.15, 0.3, 6), c3Mat(0x53606b));
+  piernas.position.y = 0.15;
+  g.add(cuerpo, cabeza, pelo, piernas);
+  return g;
+}
+
+function c3Camilla(){
+  const g = new THREE.Group();
+  const base = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.1, 1.9), c3Mat(C3_PALETA.camilla));
+  base.position.y = 0.62; base.castShadow = true; base.receiveShadow = true;
+  const sab = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.04, 1.2), c3Mat(C3_PALETA.sabana));
+  sab.position.set(0, 0.69, 0.3);
+  for(const [x, z] of [[-0.3,-0.8],[0.3,-0.8],[-0.3,0.8],[0.3,0.8]]){
+    const p = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.57, 5), c3Mat(C3_PALETA.patas));
+    p.position.set(x, 0.29, z); g.add(p);
+  }
+  g.add(base, sab);
+  return g;
+}
+
+function c3Planta(){
+  const g = new THREE.Group();
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.12, 0.26, 6), c3Mat(C3_PALETA.macetero));
+  m.position.y = 0.13; m.castShadow = true;
+  for(let i = 0; i < 5; i++){
+    const h = new THREE.Mesh(new THREE.IcosahedronGeometry(0.17, 0), c3Mat(C3_PALETA.planta));
+    h.position.set((Math.random()-0.5)*0.22, 0.36 + Math.random()*0.22, (Math.random()-0.5)*0.22);
+    h.scale.setScalar(0.6 + Math.random()*0.5); h.castShadow = true;
+    g.add(h);
+  }
+  g.add(m);
+  return g;
+}
+
+function c3Construir(lienzo){
+  const esc = new THREE.Scene();
+  esc.background = new THREE.Color(0xeef2f0);
+  esc.fog = new THREE.Fog(0xeef2f0, 11, 22);
+
+  // luces: una cálida principal con sombra, más relleno frío
+  esc.add(new THREE.HemisphereLight(0xffffff, 0xc8d4dc, 1.05));
+  const sol = new THREE.DirectionalLight(0xfff2dc, 1.5);
+  sol.position.set(4, 7, 4); sol.castShadow = true;
+  sol.shadow.mapSize.set(1024, 1024);
+  sol.shadow.camera.left = -7; sol.shadow.camera.right = 7;
+  sol.shadow.camera.top = 7; sol.shadow.camera.bottom = -7;
+  esc.add(sol);
+
+  // piso y muros
+  const piso = new THREE.Mesh(new THREE.BoxGeometry(8.6, 0.2, 7.4), c3Mat(C3_PALETA.piso));
+  piso.position.y = -0.1; piso.receiveShadow = true; esc.add(piso);
+  const muroF = new THREE.Mesh(new THREE.BoxGeometry(8.6, 3.2, 0.2), c3Mat(C3_PALETA.muro));
+  muroF.position.set(0, 1.6, -3.7); muroF.receiveShadow = true; esc.add(muroF);
+  const muroI = new THREE.Mesh(new THREE.BoxGeometry(0.2, 3.2, 7.4), c3Mat(C3_PALETA.muroBajo));
+  muroI.position.set(-4.3, 1.6, 0); muroI.receiveShadow = true; esc.add(muroI);
+
+  // ventanal
+  const vent = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.5, 0.06), c3Mat(0xbfe0f0, { transparent:true, opacity:0.75 }));
+  vent.position.set(-1.0, 1.85, -3.56); esc.add(vent);
+
+  // mesón de recepción
+  const meson = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.95, 0.6), c3Mat(C3_PALETA.mueble));
+  meson.position.set(2.9, 0.48, -2.9); meson.castShadow = true; meson.receiveShadow = true; esc.add(meson);
+
+  const p1 = c3Planta(); p1.position.set(-3.6, 0, -2.8); esc.add(p1);
+  const p2 = c3Planta(); p2.position.set(3.6, 0, 1.2); esc.add(p2);
+
+  const cam = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+  const rend = new THREE.WebGLRenderer({ canvas:lienzo, antialias:true, alpha:false });
+  rend.shadowMap.enabled = true;
+  rend.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  return { esc, cam, rend };
+}
+
+/* Reconstruye camillas, personal y sala de espera según el estado real. */
+function c3Poblar(){
+  if(!c3Escena) return;
+  [...c3Camillas, ...c3Personal, ...c3Pacientes].forEach(o => c3Escena.remove(o));
+  c3Camillas = []; c3Personal = []; c3Pacientes = [];
+  const c = clEstado();
+  const salas = clSalas();
+
+  for(let i = 0; i < salas; i++){
+    const x = -2.0 + i * 1.9;
+    const cam = c3Camilla(); cam.position.set(x, 0, -1.3);
+    c3Escena.add(cam); c3Camillas.push(cam);
+
+    if(i < c.personal.length){
+      const k = c3Persona(null, true);
+      k.position.set(x + 0.72, 0, -1.3);
+      k.rotation.y = -Math.PI / 2;
+      k.userData.base = k.position.y;
+      c3Escena.add(k); c3Personal.push(k);
+
+      const p = c3Persona(C3_PALETA.ropa[i % C3_PALETA.ropa.length], false);
+      p.position.set(x, 0.72, -1.2);
+      p.rotation.x = -Math.PI / 2;   // acostado en la camilla
+      p.scale.setScalar(0.92);
+      c3Escena.add(p); c3Pacientes.push(p);
+    }
+  }
+
+  // sala de espera: más gente cuanta más reputación
+  const esperando = Math.min(5, 1 + Math.floor(c.reputacion / 15));
+  for(let i = 0; i < esperando; i++){
+    const s = c3Persona(C3_PALETA.ropa[i % C3_PALETA.ropa.length], false);
+    s.position.set(-3.1 + i * 0.72, 0, 1.7);
+    s.userData.fase = i * 1.3;
+    c3Escena.add(s); c3Pacientes.push(s);
+  }
+}
+
+async function c3Iniciar(lienzo){
+  await c3Cargar();
+  const { esc, cam, rend } = c3Construir(lienzo);
+  c3Escena = esc; c3Cam = cam; c3Rend = rend;
+  c3Poblar();
+  c3Ajustar();
+  c3Animar();
+}
+
+function c3Ajustar(){
+  if(!c3Rend || !c3Cam) return;
+  const l = c3Rend.domElement, r = l.getBoundingClientRect();
+  if(!r.width || !r.height) return;
+  c3Rend.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  c3Rend.setSize(r.width, r.height, false);
+  c3Cam.aspect = r.width / r.height;
+  c3Cam.updateProjectionMatrix();
+}
+
+function c3Animar(){
+  if(c3Loop) cancelAnimationFrame(c3Loop);
+  const paso = (t) => {
+    if(jxPantalla !== 'clinica' || !document.getElementById('jxApp')?.classList.contains('abierta')){
+      c3Loop = null; return;
+    }
+    c3Reloj = t / 1000;
+    // cámara con un vaivén lento, para que la escena respire
+    const a = -0.30 + Math.sin(c3Reloj * 0.13) * 0.17;
+    c3Cam.position.set(Math.sin(a) * 5.9, 3.35 + Math.sin(c3Reloj * 0.2) * 0.14, Math.cos(a) * 5.9);
+    c3Cam.lookAt(-0.1, 0.78, -0.35);
+    // el personal trabaja: leve balanceo
+    c3Personal.forEach((k, i) => { k.position.y = Math.abs(Math.sin(c3Reloj * 1.7 + i)) * 0.045; });
+    // los que esperan se mueven apenas
+    c3Pacientes.forEach(p => {
+      if(p.userData.fase === undefined) return;
+      p.rotation.y = Math.sin(c3Reloj * 0.5 + p.userData.fase) * 0.28;
+    });
+    c3Rend.render(c3Escena, c3Cam);
+    c3Loop = requestAnimationFrame(paso);
+  };
+  c3Loop = requestAnimationFrame(paso);
+}
+
+function c3Detener(){
+  if(c3Loop){ cancelAnimationFrame(c3Loop); c3Loop = null; }
+}
+
+/* Libera la memoria de la GPU: sin esto, abrir y cerrar la clínica
+   muchas veces va dejando texturas y geometrías colgando. */
+function c3Destruir(){
+  c3Detener();
+  if(c3Escena){
+    c3Escena.traverse(o => {
+      if(o.geometry) o.geometry.dispose();
+      if(o.material){ (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.dispose()); }
+    });
+  }
+  if(c3Rend) c3Rend.dispose();
+  c3Escena = null; c3Cam = null; c3Rend = null;
+  c3Personal = []; c3Pacientes = []; c3Camillas = [];
+}
+
+/* ============================================================
    CLÍNICA KINÉSICA — tycoon
    Llegan pacientes, hay que evaluarlos, diagnosticarlos y tratarlos.
    Acertar da plata y reputación; con eso se contrata gente, se compra
@@ -6194,6 +6413,7 @@ function clMostrar(){
   el.innerHTML =
     '<div class="cl-top">' +
       '<canvas id="clLienzo" class="cl-lienzo"></canvas>' +
+      '<div class="cl-cargando" id="cl3dCargando">Cargando la clínica…</div>' +
       '<div class="cl-hud">' +
         '<div class="cl-plata"><span id="clDinero">$0</span></div>' +
         '<div class="cl-sub"><span id="clRenta">0</span>/s · ⭐ <span id="clRep">0</span> reputación</div>' +
@@ -6206,9 +6426,12 @@ function clMostrar(){
     '</div>' +
     '<div class="cl-panel" id="clPanel"></div>';
   clCanvas = document.getElementById('clLienzo');
-  clCtx = clCanvas.getContext('2d');
-  clAjustar();
-  clFiguras = [];
+  const aviso3d = document.getElementById('cl3dCargando');
+  c3Iniciar(clCanvas).then(() => { if(aviso3d) aviso3d.remove(); })
+    .catch(err => {
+      console.warn('No se pudo cargar el 3D', err);
+      if(aviso3d) aviso3d.textContent = 'No se pudo cargar la vista 3D';
+    });
   el.querySelectorAll('.cl-tab').forEach(b => b.onclick = () => {
     el.querySelectorAll('.cl-tab').forEach(x => x.classList.remove('activa'));
     b.classList.add('activa');
@@ -6525,7 +6748,6 @@ function clBucle(){
     const d = document.getElementById('clDinero'); if(d) d.textContent = clPlata(clMostrado);
     const r = document.getElementById('clRenta'); if(r) r.textContent = clPlata(clIngresoPorSegundo());
     const rp = document.getElementById('clRep'); if(rp) rp.textContent = c.reputacion;
-    clPintar(ahora);
     clGuardar(false);
     clLoop = requestAnimationFrame(paso);
   };
