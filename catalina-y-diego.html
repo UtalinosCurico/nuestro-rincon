@@ -4062,46 +4062,66 @@ const JX_COSMETICOS = [
   { id:'fondo:arcoiris',  slot:'fondo', nombre:'Arcoíris',    emoji:'🌈', precio:100 },
 ];
 
-/* Ropa dibujada como SVG sobre el cuerpo del gatito (viewBox 200×210). */
+/* Ropa del gatito (viewBox 200×210).
+   Cada prenda se dibuja MÁS ANCHA que el cuerpo a propósito: un
+   clipPath con la elipse del cuerpo le da la forma exacta. Así la
+   ropa no se puede asomar por los costados, que era el problema de
+   antes (el cuerpo va de x=48 a x=152 y la ropa llegaba solo a 62-138).
+   - cuerpo: se recorta a la silueta.
+   - suelto: se dibuja libre, para lo que debe sobresalir (tutú, capa). */
 const JX_ROPA_SVG = {
   'ropa:sueter': { cuerpo:`<g>
-    <path d="M62 158 q38 -10 76 0 q5 28 -1 42 q-37 11 -74 0 q-6 -16 -1 -42z" fill="#7fb0c4"/>
-    <path d="M64 158 q36 -8 72 0 q-5 9 -36 10 q-31 -1 -36 -10z" fill="#5b8aa6"/>
-    <g stroke="#5b8aa6" stroke-width="2" opacity=".55" fill="none"><path d="M66 176 q34 7 68 0"/><path d="M66 186 q34 7 68 0"/></g></g>` },
+    <rect x="38" y="150" width="124" height="44" fill="#7fb0c4"/>
+    <rect x="38" y="150" width="124" height="13" fill="#5b8aa6"/>
+    <g stroke="#5b8aa6" stroke-width="2.4" opacity=".5" fill="none"><path d="M42 176 q58 7 116 0"/><path d="M42 189 q58 7 116 0"/></g>
+    <rect x="38" y="188" width="124" height="6" fill="#5b8aa6"/></g>` },
+
   'ropa:rayas': { cuerpo:`<g>
-    <path d="M62 158 q38 -10 76 0 q5 28 -1 42 q-37 11 -74 0 q-6 -16 -1 -42z" fill="#f6f2e8"/>
-    <g stroke="#365a8a" stroke-width="4" opacity=".9" fill="none"><path d="M64 168 q36 7 72 0"/><path d="M63 180 q37 8 74 0"/><path d="M63 192 q37 8 74 0"/></g>
-    <path d="M64 158 q36 -8 72 0 q-5 9 -36 10 q-31 -1 -36 -10z" fill="#c98e9b"/></g>` },
+    <rect x="38" y="150" width="124" height="44" fill="#f6f2e8"/>
+    <g stroke="#365a8a" stroke-width="5" opacity=".9" fill="none">
+      <path d="M38 168 h124"/><path d="M38 181 h124"/><path d="M38 194 h124"/></g>
+    <rect x="38" y="150" width="124" height="12" fill="#c98e9b"/></g>` },
+
   'ropa:vestido': { cuerpo:`<g>
-    <path d="M70 156 q30 -7 60 0 l12 48 q-42 13 -84 0z" fill="#e8a3c0"/>
-    <path d="M72 156 q28 -6 56 0 l2 15 q-30 7 -60 0z" fill="#d579a4"/>
-    <g fill="#fff" opacity=".85"><circle cx="88" cy="186" r="2"/><circle cx="100" cy="194" r="2"/><circle cx="112" cy="186" r="2"/><circle cx="100" cy="178" r="2"/></g>
-    <rect x="74" y="170" width="52" height="5" rx="2" fill="#b85c8a"/></g>` },
-  'ropa:tutu': { cuerpo:`<g>
-    <rect x="74" y="158" width="52" height="24" rx="9" fill="#d579a4"/>
-    <path d="M56 184 q44 -18 88 0 q-7 13 -20 15 q-8 -10 -10 -2 q-6 9 -14 1 q-8 8 -14 -1 q-2 -8 -10 2 q-13 -2 -20 -15z" fill="#f6b9d4"/>
-    <path d="M56 184 q44 -16 88 0" stroke="#e896bf" stroke-width="2" fill="none"/></g>` },
+    <rect x="38" y="150" width="124" height="46" fill="#e8a3c0"/>
+    <rect x="38" y="150" width="124" height="14" fill="#d579a4"/>
+    <rect x="38" y="171" width="124" height="5" fill="#b85c8a"/>
+    <g fill="#fff" opacity=".85"><circle cx="82" cy="188" r="2.2"/><circle cx="100" cy="196" r="2.2"/>
+      <circle cx="118" cy="188" r="2.2"/><circle cx="100" cy="182" r="2.2"/></g></g>` },
+
+  'ropa:tutu': {
+    cuerpo:`<g><rect x="38" y="152" width="124" height="30" fill="#d579a4"/>
+      <rect x="38" y="176" width="124" height="4" fill="#b85c8a"/></g>`,
+    suelto:`<g><path d="M48 180 q52 -20 104 0 q-9 16 -24 18 q-9 -12 -12 -2 q-8 11 -17 1 q-9 10 -17 -1 q-3 -10 -12 2 q-15 -2 -24 -18z" fill="#f6b9d4"/>
+      <path d="M48 180 q52 -18 104 0" stroke="#e896bf" stroke-width="2" fill="none"/></g>` },
+
   'ropa:pijama': { cuerpo:`<g>
-    <path d="M60 156 q40 -9 80 0 q8 32 1 50 q-41 12 -82 0 q-7 -18 1 -50z" fill="#a9c2e8"/>
-    <path d="M62 156 q38 -8 76 0 q-5 9 -38 10 q-33 -1 -38 -10z" fill="#8aa8d6"/>
-    <line x1="100" y1="168" x2="100" y2="202" stroke="#8aa8d6" stroke-width="2"/>
-    <g fill="#fff" opacity=".9"><circle cx="100" cy="174" r="1.6"/><circle cx="100" cy="184" r="1.6"/><circle cx="100" cy="194" r="1.6"/></g>
-    <g fill="#fff" opacity=".7"><path d="M78 178 l1.4 3 3 .4 -2.2 2.2 .6 3.2 -2.8 -1.6 -2.8 1.6 .6 -3.2 -2.2 -2.2 3 -.4z"/><path d="M120 188 l1.2 2.6 2.6 .3 -1.9 1.9 .5 2.7 -2.4 -1.3 -2.4 1.3 .5 -2.7 -1.9 -1.9 2.6 -.3z"/></g></g>` },
+    <rect x="38" y="150" width="124" height="44" fill="#a9c2e8"/>
+    <rect x="38" y="150" width="124" height="13" fill="#8aa8d6"/>
+    <line x1="100" y1="163" x2="100" y2="194" stroke="#8aa8d6" stroke-width="2"/>
+    <g fill="#fff" opacity=".9"><circle cx="100" cy="172" r="1.7"/><circle cx="100" cy="183" r="1.7"/><circle cx="100" cy="194" r="1.7"/></g>
+    <g fill="#fff" opacity=".7"><path d="M72 178 l1.5 3.2 3.2 .4 -2.4 2.3 .6 3.4 -3 -1.7 -3 1.7 .6 -3.4 -2.4 -2.3 3.2 -.4z"/>
+      <path d="M126 190 l1.3 2.8 2.8 .3 -2 2 .5 2.9 -2.6 -1.4 -2.6 1.4 .5 -2.9 -2 -2 2.8 -.3z"/></g></g>` },
+
   'ropa:abrigo': { cuerpo:`<g>
-    <path d="M60 158 q40 -9 80 0 q7 30 1 48 q-41 12 -82 0 q-6 -18 1 -48z" fill="#8a6f4e"/>
-    <path d="M100 160 v44" stroke="#6f583c" stroke-width="2"/>
-    <ellipse cx="100" cy="160" rx="34" ry="9" fill="#f3ece0"/>
-    <g fill="#5a4632"><circle cx="92" cy="178" r="2.4"/><circle cx="92" cy="190" r="2.4"/><circle cx="108" cy="178" r="2.4"/><circle cx="108" cy="190" r="2.4"/></g></g>` },
-  'ropa:capa': { atras:`<path d="M68 150 q32 -8 64 0 l20 58 q-52 16 -104 0z" fill="#c0392b"/>`,
-    cuerpo:`<g><path d="M84 150 l16 16 16 -16 q-16 -6 -32 0z" fill="#a32d22"/>
-    <circle cx="100" cy="178" r="11" fill="#f4d35e"/>
-    <path d="M100 170 l2.6 5.6 6 .6 -4.6 4.2 1.3 6 -5.3 -3.1 -5.3 3.1 1.3 -6 -4.6 -4.2 6 -.6z" fill="#e0a93b"/></g>` },
+    <rect x="38" y="152" width="124" height="44" fill="#8a6f4e"/>
+    <path d="M100 158 v38" stroke="#6f583c" stroke-width="2.4"/>
+    <ellipse cx="100" cy="157" rx="46" ry="10" fill="#f3ece0"/>
+    <g fill="#5a4632"><circle cx="90" cy="178" r="2.6"/><circle cx="90" cy="192" r="2.6"/>
+      <circle cx="110" cy="178" r="2.6"/><circle cx="110" cy="192" r="2.6"/></g></g>` },
+
+  'ropa:capa': {
+    atras:`<path d="M66 148 q34 -9 68 0 l22 62 q-56 17 -112 0z" fill="#c0392b"/>`,
+    cuerpo:`<g><path d="M82 148 l18 18 18 -18 q-18 -7 -36 0z" fill="#a32d22"/>
+      <circle cx="100" cy="180" r="12" fill="#f4d35e"/>
+      <path d="M100 171 l2.8 6 6.4 .7 -4.9 4.5 1.4 6.4 -5.7 -3.3 -5.7 3.3 1.4 -6.4 -4.9 -4.5 6.4 -.7z" fill="#e0a93b"/></g>` },
+
   'ropa:esmoquin': { cuerpo:`<g>
-    <path d="M64 156 q36 -8 72 0 q6 30 0 48 q-36 12 -72 0 q-6 -18 0 -48z" fill="#2b2b33"/>
-    <path d="M90 156 h20 l-4 46 h-12z" fill="#f6f2e8"/>
-    <path d="M90 156 l10 14 -14 6z" fill="#1a1a20"/><path d="M110 156 l-10 14 14 6z" fill="#1a1a20"/>
-    <path d="M92 168 q8 -5 16 0 q-8 6 -16 0z" fill="#7a1f2b"/>
-    <g fill="#2b2b33"><circle cx="100" cy="184" r="1.8"/><circle cx="100" cy="192" r="1.8"/></g></g>` },
+    <rect x="38" y="150" width="124" height="45" fill="#2b2b33"/>
+    <path d="M88 150 h24 l-5 45 h-14z" fill="#f6f2e8"/>
+    <path d="M88 150 l12 16 -17 7z" fill="#1a1a20"/><path d="M112 150 l-12 16 17 7z" fill="#1a1a20"/>
+    <path d="M91 166 q9 -6 18 0 q-9 7 -18 0z" fill="#7a1f2b"/>
+    <g fill="#2b2b33"><circle cx="100" cy="184" r="1.9"/><circle cx="100" cy="194" r="1.9"/></g></g>` },
 };
 function jxRopaSVG(id){ return JX_ROPA_SVG[id] || {}; }
 
@@ -4209,15 +4229,19 @@ function asegurarJuegos(){
 
 function jxNivel(){ asegurarJuegos(); return Math.floor(datos.juegos.mascota.xp / JX_NIVEL_XP) + 1; }
 
+let jxClipN = 0;
 function jxGatoSVG(ropaId){
   const r = jxRopaSVG(ropaId);
+  const cid = 'jxCuerpo' + (++jxClipN);   // id único: hay varios gatos en pantalla a la vez
   return `<svg viewBox="0 0 200 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Gatito">
+    <defs><clipPath id="${cid}"><ellipse cx="100" cy="170" rx="52" ry="38"/></clipPath></defs>
     <path d="M150 176 q42 -6 36 -50 q-3 -22 -22 -20 q14 6 12 24 q-2 28 -36 32 z" fill="#e7d2a6"/>
     ${r.atras||''}
     <ellipse cx="100" cy="170" rx="52" ry="38" fill="#efdcb4"/>
     <ellipse cx="78" cy="198" rx="15" ry="10" fill="#f3e6c8"/>
     <ellipse cx="122" cy="198" rx="15" ry="10" fill="#f3e6c8"/>
-    ${r.cuerpo||''}
+    ${r.cuerpo ? `<g clip-path="url(#${cid})">${r.cuerpo}</g>` : ''}
+    ${r.suelto||''}
     <path d="M55 72 L48 30 L90 58 Z" fill="#efdcb4"/>
     <path d="M145 72 L152 30 L110 58 Z" fill="#efdcb4"/>
     <path d="M60 64 L56 42 L80 57 Z" fill="#ecd3d8"/>
