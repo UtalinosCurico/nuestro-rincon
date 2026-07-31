@@ -1049,6 +1049,37 @@
   .cl-sel b{display:block;font-family:"Playfair Display",serif;font-size:.95rem;color:var(--tinta);}
   .cl-sel span{display:block;font-size:.74rem;color:#4b7d99;margin-top:1px;}
   .cl-sel small{display:block;font-size:.66rem;color:var(--gris);margin-top:3px;font-style:italic;}
+  .cl-tiempo{display:flex;align-items:center;gap:9px;margin-top:10px;}
+  .cl-tiempo-barra{flex:1;height:7px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;}
+  .cl-tiempo-barra div{height:100%;background:linear-gradient(90deg,#7fae96,#e0a05a);border-radius:999px;transition:width .3s;}
+  .cl-tiempo span{font-size:.76rem;color:var(--gris);white-space:nowrap;}
+  .cl-tablero{background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:16px;padding:12px 14px;
+    box-shadow:0 4px 12px var(--sombra-tenue);margin-bottom:12px;}
+  .cl-tablero-tit{font-size:.68rem;letter-spacing:1px;text-transform:uppercase;color:#4b7d99;margin-bottom:8px;}
+  .cl-hip{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .cl-hip-nom{flex:1;font-size:.8rem;color:var(--tinta);line-height:1.3;min-width:0;}
+  .cl-hip-barra{width:72px;height:6px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;flex:0 0 72px;}
+  .cl-hip-barra div{height:100%;background:#5b8aa6;border-radius:999px;transition:width .45s;}
+  .cl-hip-pct{font-size:.72rem;color:#4b7d99;width:32px;text-align:right;flex:0 0 32px;}
+  .cl-pistas{display:flex;flex-direction:column;gap:6px;}
+  .cl-pista-item{background:#eaf4ec;border-radius:11px;padding:8px 11px;font-size:.78rem;color:#3f6b4d;line-height:1.45;}
+  .cl-pista-item.vacia{background:var(--crema);color:var(--gris);}
+  .cl-pista-item b{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;opacity:.75;margin-bottom:2px;}
+  .cl-grupos{display:flex;gap:6px;margin-bottom:10px;}
+  .cl-grupo{flex:1;background:var(--blanco);border:1.5px solid var(--crema-oscuro);border-radius:999px;padding:7px 4px;
+    font-family:"Jost",sans-serif;font-size:.76rem;color:var(--gris);cursor:pointer;transition:all .15s;}
+  .cl-grupo.on{background:#5b8aa6;border-color:#5b8aa6;color:#fff;font-weight:600;}
+  .cl-acciones{display:flex;flex-direction:column;gap:7px;margin-bottom:12px;}
+  .cl-acc{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;
+    background:var(--blanco);border:1.5px solid var(--crema-oscuro);border-radius:13px;padding:10px 13px;cursor:pointer;
+    font-family:"Jost",sans-serif;font-size:.85rem;color:var(--tinta);transition:transform .1s,border-color .15s;}
+  .cl-acc:active{transform:scale(.985);}
+  .cl-acc:hover{border-color:#5b8aa6;}
+  .cl-acc small{color:var(--gris);font-size:.72rem;white-space:nowrap;}
+  .cl-acc.ya{opacity:.45;cursor:default;}
+  .cl-btn-derivar{width:100%;margin-top:8px;background:transparent;border:1.5px dashed var(--crema-oscuro);
+    border-radius:14px;padding:11px;font-family:"Jost",sans-serif;font-size:.85rem;color:var(--gris);cursor:pointer;}
+  .cl-opc small{display:block;color:var(--gris);font-size:.72rem;margin-top:3px;}
   .jx-card.clinica{background:linear-gradient(150deg,#6da3c0,#43708c);}
   @media (max-width:400px){ .cl-lienzo{height:210px;} .cl-plata{font-size:1.6rem;} }
 
@@ -5813,6 +5844,17 @@ const KIN_PRUEBAS = [
    luego diagnóstico, luego tratamiento según la fase. */
 const KIN_CASOS = [
   {
+    id:'banderas', pac:'Nelson', nom:'Dolor lumbar con banderas rojas', esp:'trauma', zona:'Lumbar', dif:3, derivar:true,
+    edad:64, ocup:'jubilado', motivo:'Dolor lumbar que no se le pasa con nada',
+    mecanismo:'Sin trauma. Lleva dos meses y va empeorando.',
+    sintomas:['Dolor que no cede con el reposo ni cambia de posición','Ha bajado de peso sin proponérselo','Dolor nocturno que lo despierta'],
+    prueba:null, hallazgo:'El dolor no se modifica con ninguna posición ni movimiento.',
+    fase:'aguda',
+    tto:'Derivar a evaluación médica antes de cualquier tratamiento kinésico.',
+    ttoMal:['Iniciar ejercicio progresivo de tronco','Manipulación lumbar','Ultrasonido y calor local'],
+    dato:'Dolor que no cede con el reposo, baja de peso no buscada y dolor nocturno son banderas rojas: acá lo correcto es derivar, no tratar.',
+  },
+  {
     id:'pinzamiento', pac:'Rodrigo', nom:'Síndrome de pinzamiento subacromial', esp:'trauma', zona:'Hombro', dif:1,
     edad:42, ocup:'pintor', motivo:'Dolor en el hombro derecho al levantar el brazo',
     mecanismo:'Meses trabajando con los brazos sobre la cabeza, sin golpe previo.',
@@ -6065,6 +6107,270 @@ const KIN_RANGOS = [
   { art:'Tobillo', mov:'Dorsiflexión',       grados:20 },
   { art:'Tobillo', mov:'Flexión plantar',    grados:50 },
 ];
+
+/* ============================================================
+   MOTOR DE DIAGNÓSTICO — datos del diferencial
+   ------------------------------------------------------------
+   PENDIENTE DE REVISIÓN por Catalina, igual que el resto del
+   contenido clínico. Ver REVISION-KINESIOLOGIA.md.
+
+   Para cada caso: qué hipótesis compiten (dif) y qué revela cada
+   acción (c). En cada pista, `s` son las hipótesis que la pista
+   apoya y `n` las que vuelve menos probables.
+   La gracia está en las pistas que DISCRIMINAN: si una pista sube
+   todas las hipótesis por igual, no sirve para decidir.
+   ============================================================ */
+
+/* Acciones que se pueden hacer con un paciente. `t` es el tiempo que
+   consume; las imágenes además cuestan plata. */
+const CL_ACC = [
+  { id:'inicio',  g:'anam', n:'¿Cómo y cuándo empezó?',        t:1 },
+  { id:'trauma',  g:'anam', n:'¿Hubo golpe o caída?',          t:1 },
+  { id:'noche',   g:'anam', n:'¿Le duele de noche?',           t:1 },
+  { id:'irradia', g:'anam', n:'¿El dolor se corre a otra parte?', t:1 },
+  { id:'agrava',  g:'anam', n:'¿Qué lo empeora y qué lo alivia?', t:1 },
+  { id:'antec',   g:'anam', n:'Antecedentes de salud',         t:1 },
+  { id:'alarma',  g:'anam', n:'Preguntar por síntomas de alarma', t:1 },
+  { id:'insp',    g:'exam', n:'Inspección',                    t:1 },
+  { id:'palp',    g:'exam', n:'Palpación',                     t:1 },
+  { id:'activo',  g:'exam', n:'Rango de movimiento activo',    t:2 },
+  { id:'pasivo',  g:'exam', n:'Rango de movimiento pasivo',    t:2 },
+  { id:'fuerza',  g:'exam', n:'Fuerza muscular',               t:2 },
+  { id:'neuro',   g:'exam', n:'Tamizaje neurológico',          t:2 },
+  { id:'imgRx',   g:'img',  n:'Radiografía',                   t:3, plata:12000 },
+  { id:'imgEco',  g:'img',  n:'Ecografía',                     t:3, plata:22000 },
+];
+
+const CL_TIEMPO_BASE = 13;   // unidades de tiempo por paciente
+
+/* atajo para escribir menos: p(texto, sube, baja) */
+const p = (t, s, n) => ({ t, s: s ? s.split(' ') : [], n: n ? n.split(' ') : [] });
+
+const KIN_DX = {
+  banderas: {
+    dif:['banderas','lumbago','radiculopatia'],
+    c:{
+      inicio:  p('Dos meses, progresivo, sin ningún esfuerzo que lo explique.','banderas','lumbago'),
+      alarma:  p('BAJA DE PESO no buscada y dolor nocturno que lo despierta.','banderas','lumbago radiculopatia'),
+      agrava:  p('No cede con el reposo ni cambia con la posición.','banderas','lumbago'),
+      trauma:  p('Ningún golpe ni esfuerzo previo.','banderas','lumbago'),
+      neuro:   p('Sin déficit focal por ahora.','banderas lumbago','radiculopatia'),
+      irradia: p('Dolor lumbar profundo, no sigue un dermatoma.','banderas lumbago','radiculopatia'),
+    },
+  },
+  /* ---------- hombro: tres cuadros que se confunden en serio ---------- */
+  pinzamiento: {
+    dif:['pinzamiento','manguito','capsulitis','cervicalgia'],
+    c:{
+      inicio:  p('Progresivo, varios meses, sin un episodio claro.','pinzamiento manguito capsulitis','cervicalgia'),
+      trauma:  p('Ningún golpe ni caída.','pinzamiento manguito capsulitis',''),
+      noche:   p('Sí, sobre todo al acostarse sobre ese lado.','pinzamiento manguito capsulitis','cervicalgia'),
+      agrava:  p('Empeora al trabajar con los brazos sobre la cabeza.','pinzamiento manguito','capsulitis cervicalgia'),
+      irradia: p('Se queda en el hombro, no baja del codo.','pinzamiento manguito capsulitis','cervicalgia'),
+      activo:  p('Arco doloroso entre 60° y 120° de abducción.','pinzamiento manguito','capsulitis'),
+      pasivo:  p('Rango pasivo CONSERVADO en todos los planos.','pinzamiento manguito','capsulitis'),
+      fuerza:  p('Fuerza prácticamente conservada.','pinzamiento','manguito'),
+      neuro:   p('Sin alteraciones neurológicas.','pinzamiento manguito capsulitis','cervicalgia'),
+    },
+  },
+  manguito: {
+    dif:['manguito','pinzamiento','capsulitis','cervicalgia'],
+    c:{
+      inicio:  p('Tras subir bruscamente el volumen de entrenamiento.','manguito pinzamiento','capsulitis'),
+      trauma:  p('Sin trauma, fue por sobrecarga.','manguito pinzamiento capsulitis',''),
+      agrava:  p('Duele justo en el gesto de brazada.','manguito pinzamiento','capsulitis'),
+      activo:  p('Dolor en abducción, sin bloqueo del rango.','manguito pinzamiento','capsulitis'),
+      pasivo:  p('Rango pasivo completo.','manguito pinzamiento','capsulitis'),
+      fuerza:  p('DEBILIDAD clara en abducción resistida.','manguito','pinzamiento capsulitis'),
+      palp:    p('Dolor a la palpación del troquíter.','manguito pinzamiento','cervicalgia'),
+      imgEco:  p('Engrosamiento del tendón supraespinoso, sin rotura completa.','manguito','pinzamiento capsulitis cervicalgia'),
+    },
+  },
+  capsulitis: {
+    dif:['capsulitis','pinzamiento','manguito','cervicalgia'],
+    c:{
+      inicio:  p('Se fue poniendo rígido de a poco durante meses.','capsulitis','manguito'),
+      trauma:  p('Sin trauma.','capsulitis pinzamiento manguito',''),
+      antec:   p('Diabetes tipo 2 en tratamiento.','capsulitis','pinzamiento manguito'),
+      noche:   p('Dolor nocturno que fue cediendo mientras aumentaba la rigidez.','capsulitis','pinzamiento'),
+      activo:  p('Movilidad ACTIVA muy limitada en todos los planos.','capsulitis','pinzamiento manguito'),
+      pasivo:  p('La movilidad PASIVA también está restringida; la rotación externa es la peor.','capsulitis','pinzamiento manguito cervicalgia'),
+      fuerza:  p('Fuerza conservada en lo poco que puede mover.','capsulitis','manguito'),
+      neuro:   p('Sin compromiso neurológico.','capsulitis','cervicalgia'),
+    },
+  },
+  cervicalgia: {
+    dif:['cervicalgia','pinzamiento','radiculopatia','capsulitis'],
+    c:{
+      inicio:  p('Molestia que aparece al final de la jornada, hace meses.','cervicalgia','pinzamiento'),
+      trauma:  p('Sin trauma ni accidente.','cervicalgia pinzamiento','radiculopatia'),
+      agrava:  p('Empeora con posturas sostenidas y mejora al moverse.','cervicalgia','pinzamiento capsulitis'),
+      irradia: p('Molestia difusa de cuello y hombros, NO baja del codo.','cervicalgia','radiculopatia'),
+      neuro:   p('Tamizaje neurológico normal.','cervicalgia','radiculopatia'),
+      activo:  p('Rango cervical algo limitado por dolor, hombro libre.','cervicalgia','pinzamiento capsulitis'),
+      palp:    p('Musculatura cervical y de trapecios sensible.','cervicalgia','pinzamiento'),
+      alarma:  p('Sin banderas rojas.','cervicalgia',''),
+    },
+  },
+
+  /* ---------- codo y muñeca ---------- */
+  epicondilalgia: {
+    dif:['epicondilalgia','tunel','dequervain'],
+    c:{
+      inicio:  p('Progresivo, por uso repetido de herramientas.','epicondilalgia','tunel'),
+      agrava:  p('Duele al apretar la mano o levantar una taza.','epicondilalgia','tunel dequervain'),
+      palp:    p('Dolor puntual en el epicóndilo LATERAL.','epicondilalgia','tunel dequervain'),
+      fuerza:  p('Dolor con la extensión de muñeca resistida.','epicondilalgia','tunel dequervain'),
+      neuro:   p('Sin hormigueos ni alteración de la sensibilidad.','epicondilalgia','tunel'),
+      noche:   p('No despierta de noche.','epicondilalgia dequervain','tunel'),
+    },
+  },
+  tunel: {
+    dif:['tunel','epicondilalgia','cervicalgia'],
+    c:{
+      inicio:  p('Hormigueo progresivo, peor de noche.','tunel','epicondilalgia'),
+      noche:   p('Despierta de noche y necesita sacudir la mano.','tunel','epicondilalgia'),
+      irradia: p('Compromete pulgar, índice, medio y mitad del anular. El meñique NO.','tunel','cervicalgia epicondilalgia'),
+      antec:   p('Embarazo reciente y trabajo prolongado en teclado.','tunel',''),
+      neuro:   p('Alteración de la sensibilidad en el territorio del nervio mediano.','tunel','epicondilalgia'),
+      insp:    p('Leve atrofia de la eminencia tenar.','tunel','cervicalgia epicondilalgia'),
+    },
+  },
+  dequervain: {
+    dif:['dequervain','tunel','epicondilalgia'],
+    c:{
+      inicio:  p('Empezó después de sostener repetidamente a la guagua.','dequervain',''),
+      palp:    p('Dolor e inflamación en la estiloides RADIAL.','dequervain','tunel epicondilalgia'),
+      agrava:  p('Duele al agarrar y al desviar la muñeca.','dequervain','tunel'),
+      neuro:   p('Sin hormigueo ni compromiso sensitivo.','dequervain epicondilalgia','tunel'),
+      insp:    p('Aumento de volumen sobre el primer compartimento dorsal.','dequervain','tunel'),
+    },
+  },
+
+  /* ---------- lumbar: lo importante es separar mecánico de radicular ---------- */
+  lumbago: {
+    dif:['lumbago','radiculopatia','trocanterico'],
+    c:{
+      inicio:  p('Empezó de golpe al levantar una caja.','lumbago radiculopatia',''),
+      trauma:  p('Sin caída; fue el esfuerzo de levantar peso mal.','lumbago radiculopatia',''),
+      irradia: p('El dolor NO baja de la rodilla.','lumbago','radiculopatia'),
+      neuro:   p('Sin déficit neurológico ni alteración de reflejos.','lumbago','radiculopatia'),
+      agrava:  p('Duele con ciertos movimientos y alivia con otros.','lumbago','radiculopatia'),
+      alarma:  p('Sin banderas rojas: no hay fiebre, baja de peso ni compromiso de esfínteres.','lumbago radiculopatia',''),
+      palp:    p('Dolor en la musculatura paravertebral; el trocánter mayor NO duele.','lumbago','radiculopatia trocanterico'),
+    },
+  },
+  radiculopatia: {
+    dif:['radiculopatia','lumbago','trocanterico'],
+    c:{
+      inicio:  p('Instalación progresiva, empeora al estar sentado mucho rato.','radiculopatia','lumbago'),
+      irradia: p('El dolor BAJA de la rodilla siguiendo un dermatoma.','radiculopatia','lumbago trocanterico'),
+      neuro:   p('Hormigueo y debilidad en el territorio de la raíz comprometida.','radiculopatia','lumbago'),
+      agrava:  p('Empeora al toser y al pujar.','radiculopatia','lumbago'),
+      alarma:  p('Sin compromiso de esfínteres ni anestesia en silla de montar.','radiculopatia lumbago',''),
+      fuerza:  p('Debilidad segmentaria concordante con la raíz.','radiculopatia','lumbago trocanterico'),
+    },
+  },
+  trocanterico: {
+    dif:['trocanterico','radiculopatia','lumbago'],
+    c:{
+      inicio:  p('Apareció tras aumentar las caminatas, sin trauma.','trocanterico',''),
+      noche:   p('Duele al dormir sobre ese lado.','trocanterico','lumbago'),
+      palp:    p('Dolor puntual SOBRE el trocánter mayor.','trocanterico','lumbago radiculopatia'),
+      irradia: p('Puede bajar por la cara lateral del muslo, pero no sigue un dermatoma.','trocanterico','radiculopatia'),
+      neuro:   p('Sin déficit neurológico.','trocanterico lumbago','radiculopatia'),
+      agrava:  p('Empeora al subir escaleras y al cruzar la pierna.','trocanterico','lumbago'),
+    },
+  },
+
+  /* ---------- rodilla ---------- */
+  lca: {
+    dif:['lca','menisco','patelofemoral'],
+    c:{
+      inicio:  p('Giro con el pie fijo; sintió un chasquido y se hinchó en pocas horas.','lca','patelofemoral'),
+      trauma:  p('Mecanismo de torsión en cambio de dirección.','lca menisco','patelofemoral'),
+      insp:    p('Derrame articular INSTALADO EN LAS PRIMERAS HORAS.','lca','menisco patelofemoral'),
+      agrava:  p('Sensación de que la rodilla “se va” al apoyar.','lca','patelofemoral'),
+      activo:  p('Limitación por dolor y derrame, sin bloqueo mecánico.','lca','menisco'),
+      fuerza:  p('Inhibición del cuádriceps.','lca menisco',''),
+    },
+  },
+  menisco: {
+    dif:['menisco','lca','patelofemoral'],
+    c:{
+      inicio:  p('Giro con el pie apoyado y la rodilla flectada.','menisco lca','patelofemoral'),
+      insp:    p('Derrame de instalación LENTA, en días.','menisco','lca'),
+      agrava:  p('Se le bloquea la rodilla y siente chasquidos.','menisco','lca patelofemoral'),
+      palp:    p('Dolor en la interlínea articular.','menisco','patelofemoral lca'),
+      activo:  p('Bloqueo mecánico a la extensión completa.','menisco','patelofemoral'),
+    },
+  },
+  patelofemoral: {
+    dif:['patelofemoral','menisco','lca'],
+    c:{
+      inicio:  p('Apareció al subir muy rápido los kilómetros de trote.','patelofemoral','lca menisco'),
+      trauma:  p('Sin trauma ni torsión.','patelofemoral','lca menisco'),
+      agrava:  p('Duele al bajar escaleras y al estar mucho rato sentada.','patelofemoral','menisco'),
+      insp:    p('Sin derrame articular.','patelofemoral','lca menisco'),
+      palp:    p('Dolor peripatelar difuso, interlínea indolora.','patelofemoral','menisco'),
+      activo:  p('Valgo dinámico y mal control de la pelvis en apoyo monopodal.','patelofemoral','menisco lca'),
+    },
+  },
+
+  /* ---------- tobillo y pie ---------- */
+  aquiles: {
+    dif:['aquiles','esguince','fascitis'],
+    c:{
+      inicio:  p('Progresivo, tras subir volumen y cambiar de zapatillas.','aquiles','esguince'),
+      trauma:  p('Sin torcedura ni episodio agudo.','aquiles fascitis','esguince'),
+      agrava:  p('Rigidez matinal en el tendón que cede al entrar en calor.','aquiles','esguince fascitis'),
+      palp:    p('Engrosamiento y dolor en el tercio medio del tendón.','aquiles','fascitis esguince'),
+      insp:    p('Sin hematoma ni inflamación lateral.','aquiles fascitis','esguince'),
+    },
+  },
+  esguince: {
+    dif:['esguince','aquiles','fascitis'],
+    c:{
+      inicio:  p('Se torció el tobillo al caer de un salto.','esguince','aquiles fascitis'),
+      trauma:  p('Inversión forzada con el pie en flexión plantar.','esguince','aquiles fascitis'),
+      insp:    p('Inflamación y hematoma en la cara LATERAL del tobillo.','esguince','aquiles fascitis'),
+      palp:    p('Dolor sobre el ligamento peroneoastragalino anterior.','esguince','aquiles'),
+      imgRx:   p('Sin fractura.','esguince','')
+    },
+  },
+  fascitis: {
+    dif:['fascitis','aquiles','esguince'],
+    c:{
+      inicio:  p('Progresivo, tras muchas horas de pie sobre superficie dura.','fascitis','esguince'),
+      agrava:  p('Duele con los PRIMEROS PASOS de la mañana y mejora al caminar un rato.','fascitis','aquiles esguince'),
+      palp:    p('Dolor puntual en la zona medial del talón.','fascitis','aquiles esguince'),
+      trauma:  p('Sin torcedura.','fascitis aquiles','esguince'),
+      insp:    p('Sin hematoma ni deformidad.','fascitis aquiles','esguince'),
+    },
+  },
+
+  /* ---------- respiratorio y neurológico ---------- */
+  epoc: {
+    dif:['epoc','acv'],
+    c:{
+      inicio:  p('Aumento de la disnea habitual en la última semana.','epoc','acv'),
+      antec:   p('EPOC conocida, ex fumador de larga data.','epoc','acv'),
+      insp:    p('Uso de musculatura accesoria y espiración prolongada.','epoc','acv'),
+      agrava:  p('Tos con secreción difícil de eliminar.','epoc','acv'),
+      neuro:   p('Sin déficit motor.','epoc','acv'),
+    },
+  },
+  acv: {
+    dif:['acv','epoc'],
+    c:{
+      inicio:  p('Instalación brusca hace dos semanas.','acv','epoc'),
+      antec:   p('Accidente cerebrovascular isquémico reciente.','acv','epoc'),
+      neuro:   p('Debilidad de hemicuerpo y pérdida del control motor selectivo.','acv','epoc'),
+      insp:    p('Alteración del control postural; hombro afectado en riesgo.','acv','epoc'),
+      fuerza:  p('Fuerza disminuida en todo el hemicuerpo comprometido.','acv','epoc'),
+    },
+  },
+};
 
 /* ============================================================
    CLÍNICA EN 3D — Three.js cargado bajo demanda
@@ -6704,94 +7010,211 @@ function clPanelRecepcion(cont){
 }
 
 /* ---------- el caso, paso a paso ---------- */
+/* ---------- el caso: investigar, deducir, tratar ----------
+   No hay alternativas que adivinar. Se juntan pistas con tiempo
+   limitado y el tablero muestra cómo se mueven las hipótesis. */
+
+function clAccionesDe(caso){
+  const dx = KIN_DX[caso.id];
+  const lista = CL_ACC.slice();
+  // pruebas ortopédicas de la zona (más un par de otras zonas, para que
+  // elegir la prueba correcta signifique algo)
+  const zona = (caso.zona || '').toLowerCase();
+  const propias = KIN_PRUEBAS.filter(p => zona.startsWith(p.zona.slice(0,4)) || p.id === caso.prueba);
+  const otras = KIN_PRUEBAS.filter(p => !propias.includes(p)).slice(0, 3);
+  [...propias, ...otras].forEach(p => lista.push({ id:'test_'+p.id, g:'test', n:'Prueba de '+p.nom, t:2, prueba:p.id }));
+  return { lista, dif: dx ? dx.dif : [caso.id] };
+}
+
 function clIniciarCaso(){
   const caso = clSiguienteCaso();
   if(!caso){ avisar('No hay casos disponibles todavía'); return; }
-  const distractoras = clMezclar(KIN_PRUEBAS.filter(p => p.id !== caso.prueba)).slice(0, 3);
-  const opcPrueba = caso.prueba
-    ? clMezclar([KIN_PRUEBAS.find(p => p.id === caso.prueba), ...distractoras])
-    : null;
-  const otros = clMezclar(KIN_CASOS.filter(x => x.id !== caso.id)).slice(0, 3);
+  const { lista, dif } = clAccionesDe(caso);
+  const conf = {}; dif.forEach(d => conf[d] = 0);
   clTurno = {
-    caso,
-    paso: caso.prueba ? 'prueba' : 'diagnostico',
-    opcPrueba,
-    opcDx: clMezclar([caso, ...otros]),
-    opcTto: clMezclar([{ txt:caso.tto, ok:true }, ...caso.ttoMal.map(t => ({ txt:t, ok:false }))]),
-    errores: 0,
-    resueltos: [],
+    caso, acciones:lista, dif, conf,
+    hechas:[], pistas:[],
+    tiempo: CL_TIEMPO_BASE + (clTieneEquipo('eco') ? 2 : 0),
+    fase:'investigar', errores:0, grupo:'anam',
   };
   jxSonido('tap');
   clPanel();
 }
 
+/* Reparte 100% entre las hipótesis según lo que se ha juntado. */
+function clConfianzas(){
+  const t = clTurno;
+  const vals = t.dif.map(d => t.conf[d]);
+  const min = Math.min(...vals);
+  const desp = vals.map(v => v - min + 1);
+  const suma = desp.reduce((a,b) => a+b, 0);
+  const r = {};
+  t.dif.forEach((d,i) => r[d] = desp[i] / suma * 100);
+  return r;
+}
+
+function clNombreDx(id){
+  const c = KIN_CASOS.find(x => x.id === id);
+  return c ? c.nom : id;
+}
+
+function clHacerAccion(accId){
+  const t = clTurno, caso = t.caso;
+  if(t.hechas.includes(accId)) return;
+  const acc = t.acciones.find(a => a.id === accId);
+  if(!acc) return;
+  if(t.tiempo < acc.t){ jxSonido('mal'); avisar('⏳ No te queda tiempo para eso'); return; }
+  if(acc.plata){
+    const c = clEstado();
+    if(c.dinero < acc.plata){ jxSonido('mal'); avisar('No alcanza la plata para ese examen'); return; }
+    clAsentar(); c.dinero -= acc.plata;
+  }
+  t.tiempo -= acc.t;
+  t.hechas.push(accId);
+
+  const dx = KIN_DX[caso.id];
+  let pista = null;
+
+  if(acc.g === 'test'){
+    if(acc.prueba === caso.prueba){
+      pista = { t: caso.hallazgo, s:[caso.id], n:t.dif.filter(d => d !== caso.id) };
+      jxSonido('bien');
+    }else{
+      const pr = KIN_PRUEBAS.find(x => x.id === acc.prueba);
+      pista = { t:'Negativa. Esa prueba evalúa ' + pr.sug + '.', s:[], n:[] };
+      jxSonido('tap');
+    }
+  }else if(dx && dx.c[accId]){
+    pista = dx.c[accId];
+    jxSonido('bien');
+  }else{
+    pista = { t:'Sin hallazgos que aporten al caso.', s:[], n:[] };
+    jxSonido('tap');
+  }
+
+  pista.s.forEach(d => { if(t.conf[d] !== undefined) t.conf[d] += 2; });
+  pista.n.forEach(d => { if(t.conf[d] !== undefined) t.conf[d] -= 3; });
+  t.pistas.push({ acc:acc.n, txt:pista.t, util:pista.s.length + pista.n.length > 0 });
+
+  if(t.tiempo <= 0){
+    t.tiempo = 0;
+    avisar('⏳ Se acabó el tiempo con este paciente: hay que decidir');
+    t.fase = 'diagnostico';
+  }
+  clPanel();
+}
+
 function clPanelCaso(cont){
   const t = clTurno, c = t.caso;
-  const nombre = c.pac;
+  const conf = clConfianzas();
+  const pctTiempo = t.tiempo / (CL_TIEMPO_BASE + (clTieneEquipo('eco') ? 2 : 0)) * 100;
+
   let html =
     '<div class="cl-ficha">' +
       '<div class="cl-ficha-top">' +
         '<div class="cl-ficha-avatar">' + (c.esp === 'respi' ? '🫁' : c.esp === 'neuro' ? '🧠' : '🧍') + '</div>' +
-        '<div><div class="cl-ficha-nom">' + nombre + ', ' + c.edad + ' años</div>' +
-        '<div class="cl-ficha-ocu">' + c.ocup + ' · ' + c.zona + '</div></div>' +
+        '<div><div class="cl-ficha-nom">' + c.pac + ', ' + c.edad + ' años</div>' +
+        '<div class="cl-ficha-ocu">' + c.ocup + ' · consulta por ' + c.zona.toLowerCase() + '</div></div>' +
       '</div>' +
       '<div class="cl-ficha-motivo">“' + c.motivo + '”</div>' +
-      '<div class="cl-ficha-mec"><b>Mecanismo:</b> ' + c.mecanismo + '</div>' +
-      '<ul class="cl-sintomas">' + c.sintomas.map(s => '<li>' + s + '</li>').join('') + '</ul>' +
-      (clTieneEquipo('eco') && t.paso === 'prueba' ? '<div class="cl-pista">📡 Ecógrafo: la zona comprometida es <b>' + c.zona.toLowerCase() + '</b></div>' : '') +
-      t.resueltos.map(r => '<div class="cl-hallazgo">✓ ' + r + '</div>').join('') +
+      '<div class="cl-tiempo"><div class="cl-tiempo-barra"><div style="width:' + pctTiempo + '%"></div></div>' +
+        '<span>⏳ ' + t.tiempo + '</span></div>' +
     '</div>';
 
-  if(t.paso === 'prueba'){
-    html += '<div class="cl-preg">¿Qué prueba le haces?</div><div class="cl-opciones">' +
-      t.opcPrueba.map(p => '<button class="cl-opc" data-prueba="' + p.id + '"><b>' + p.nom + '</b><small>' + p.como + '</small></button>').join('') +
-      '</div>';
-  } else if(t.paso === 'diagnostico'){
-    html += '<div class="cl-preg">¿Cuál es tu diagnóstico?</div><div class="cl-opciones">' +
-      t.opcDx.map(x => '<button class="cl-opc" data-dx="' + x.id + '"><b>' + x.nom + '</b></button>').join('') +
-      '</div>';
-  } else if(t.paso === 'tratamiento'){
+  // tablero de hipótesis
+  html += '<div class="cl-tablero"><div class="cl-tablero-tit">Hipótesis</div>';
+  t.dif.slice().sort((a,b) => conf[b] - conf[a]).forEach(d => {
+    const pc = conf[d];
+    html += '<div class="cl-hip"><div class="cl-hip-nom">' + clNombreDx(d) + '</div>' +
+      '<div class="cl-hip-barra"><div style="width:' + pc.toFixed(0) + '%"></div></div>' +
+      '<div class="cl-hip-pct">' + pc.toFixed(0) + '%</div></div>';
+  });
+  html += '</div>';
+
+  // lo que ya se encontró
+  if(t.pistas.length){
+    html += '<div class="cl-sec">Lo que has encontrado</div><div class="cl-pistas">';
+    t.pistas.forEach(p => html += '<div class="cl-pista-item' + (p.util ? '' : ' vacia') + '">' +
+      '<b>' + p.acc + '</b>' + p.txt + '</div>');
+    html += '</div>';
+  }
+
+  if(t.fase === 'investigar'){
+    const grupos = { anam:'Preguntar', exam:'Examinar', test:'Pruebas', img:'Imágenes' };
+    html += '<div class="cl-sec">¿Qué haces?</div><div class="cl-grupos">';
+    Object.keys(grupos).forEach(g => html += '<button class="cl-grupo' + (t.grupo === g ? ' on' : '') + '" data-g="' + g + '">' + grupos[g] + '</button>');
+    html += '</div><div class="cl-acciones">';
+    t.acciones.filter(a => a.g === t.grupo).forEach(a => {
+      const ya = t.hechas.includes(a.id);
+      const caro = a.plata ? ' · ' + clPlata(a.plata) : '';
+      html += '<button class="cl-acc' + (ya ? ' ya' : '') + '"' + (ya ? '' : ' data-acc="' + a.id + '"') + '>' +
+        '<span>' + a.n + '</span><small>' + (ya ? 'ya lo hiciste' : '⏳ ' + a.t + caro) + '</small></button>';
+    });
+    html += '</div>';
+    html += '<button class="cl-btn-grande" id="clCerrarDx">🧠 Ya sé qué tiene · dar diagnóstico</button>';
+    html += '<button class="cl-btn-derivar" id="clDerivar">↗ Derivar a médico</button>';
+  }
+
+  if(t.fase === 'diagnostico'){
+    html += '<div class="cl-preg">¿Cuál es tu diagnóstico?</div><div class="cl-opciones">';
+    t.dif.slice().sort((a,b) => conf[b] - conf[a]).forEach(d =>
+      html += '<button class="cl-opc" data-dx="' + d + '"><b>' + clNombreDx(d) + '</b>' +
+              '<small>tu confianza: ' + conf[d].toFixed(0) + '%</small></button>');
+    html += '</div>';
+  }
+
+  if(t.fase === 'tratamiento'){
     html += '<div class="cl-preg">¿Qué tratamiento indicas? <small>Fase ' + c.fase + '</small></div><div class="cl-opciones">' +
-      t.opcTto.map((x, i) => '<button class="cl-opc larga" data-tto="' + i + '">' + x.txt + '</button>').join('') +
+      t.opcTto.map((x,i) => '<button class="cl-opc larga" data-tto="' + i + '">' + x.txt + '</button>').join('') +
       '</div>';
   }
+
   cont.innerHTML = html;
-
-  cont.querySelectorAll('[data-prueba]').forEach(b => b.onclick = () => clResponderPrueba(b.dataset.prueba));
+  cont.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { t.grupo = b.dataset.g; jxSonido('tap'); clPanel(); });
+  cont.querySelectorAll('[data-acc]').forEach(b => b.onclick = () => clHacerAccion(b.dataset.acc));
   cont.querySelectorAll('[data-dx]').forEach(b => b.onclick = () => clResponderDx(b.dataset.dx));
-  cont.querySelectorAll('[data-tto]').forEach(b => b.onclick = () => clResponderTto(parseInt(b.dataset.tto, 10)));
+  cont.querySelectorAll('[data-tto]').forEach(b => b.onclick = () => clResponderTto(parseInt(b.dataset.tto,10)));
+  const cd = document.getElementById('clCerrarDx');
+  if(cd) cd.onclick = () => { t.fase = 'diagnostico'; jxSonido('tap'); clPanel(); };
+  const dv = document.getElementById('clDerivar');
+  if(dv) dv.onclick = clDerivarPaciente;
 }
 
-function clFallar(mensaje){
-  clTurno.errores++;
-  jxSonido('mal'); jxVibrar(30);
-  const p = document.getElementById('clPanel');
-  p.classList.remove('cl-error'); void p.offsetWidth; p.classList.add('cl-error');
-  avisar(mensaje);
-}
-
-function clResponderPrueba(id){
-  const t = clTurno, c = t.caso;
-  if(id !== c.prueba){
-    const mala = KIN_PRUEBAS.find(p => p.id === id);
-    clFallar('❌ ' + mala.nom + ' evalúa ' + mala.sug + ', no es lo que buscas acá');
-    return;
+function clDerivarPaciente(){
+  const t = clTurno, c = t.caso, e = clEstado();
+  if(c.derivar){
+    // caso con banderas rojas: derivar ERA lo correcto
+    e.reputacion += 4; e.atendidos++; e.aciertos++;
+    e.vistos[c.id] = (e.vistos[c.id] || 0) + 1;
+    const r = jxRecompensar(10, 25, { desde:document.getElementById('jxScreenClinica') });
+    clTurno = null; clGuardar(true);
+    jxCelebrar({ titulo:'Derivación correcta 🚑', sub:c.dato, monedas:10, xp:25,
+      subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Siguiente paciente',
+      onNext:()=>{ clVista='recepcion'; clIniciarCaso(); } });
+  }else{
+    e.reputacion = Math.max(0, e.reputacion - 2);
+    e.atendidos++; e.fallos++;
+    clTurno = null; clGuardar(true);
+    jxSonido('mal');
+    avisar('Era un cuadro que podías tratar tú: derivar sin necesidad te resta reputación');
+    clVista = 'recepcion'; clPanel();
   }
-  jxSonido('bien');
-  t.resueltos.push('Prueba de ' + KIN_PRUEBAS.find(p => p.id === id).nom + ': ' + c.hallazgo);
-  t.paso = 'diagnostico';
-  clPanel();
 }
 
 function clResponderDx(id){
   const t = clTurno, c = t.caso;
   if(id !== c.id){
-    clFallar('❌ Ese diagnóstico no calza con los síntomas ni con el hallazgo');
+    t.errores++;
+    jxSonido('mal'); jxVibrar(30);
+    const pan = document.getElementById('clPanel');
+    pan.classList.remove('cl-error'); void pan.offsetWidth; pan.classList.add('cl-error');
+    avisar('❌ Ese diagnóstico no explica todos los hallazgos');
     return;
   }
   jxSonido('bien');
-  t.resueltos.push('Diagnóstico: ' + c.nom);
-  t.paso = 'tratamiento';
+  const otros = clMezclar(KIN_CASOS.filter(x => x.id !== c.id)).slice(0,3);
+  t.opcTto = clMezclar([{ txt:c.tto, ok:true }, ...c.ttoMal.map(x => ({ txt:x, ok:false }))]);
+  t.fase = 'tratamiento';
   clPanel();
 }
 
@@ -6808,8 +7231,9 @@ function clResponderTto(i){
 function clCerrarCaso(){
   const t = clTurno, c = t.caso, e = clEstado();
   const perfecto = t.errores === 0;
+  const eficiencia = 1 + (t.tiempo || 0) / 20;   // llegar con tiempo de sobra paga más
   const base = 120 * c.dif;
-  const dinero = Math.round(base * clMultPago() * (perfecto ? 1.5 : 1));
+  const dinero = Math.round(base * clMultPago() * (perfecto ? 1.5 : 1) * eficiencia);
   const rep = perfecto ? 2 + clRepExtra() : 1;
   const monedas = perfecto ? 8 : 4;
 
