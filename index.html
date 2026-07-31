@@ -507,8 +507,11 @@
   .aviso-edicion{
     position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
     background:var(--tinta);color:var(--crema);padding:10px 22px;border-radius:999px;
-    font-size:.9rem;font-weight:300;z-index:60;opacity:0;pointer-events:none;transition:opacity .3s;
+    font-size:.9rem;font-weight:300;opacity:0;pointer-events:none;transition:opacity .3s;
     max-width:90vw;text-align:center;
+    /* Sobre la consola de juegos (z-index 160): si no, los mensajes de los
+       juegos —la explicación al equivocarse, sobre todo— quedan tapados. */
+    z-index:200;
   }
   .aviso-edicion.visible{opacity:.95;}
 
@@ -807,8 +810,6 @@
   .jx-card .sheen{position:absolute;inset:0;background:radial-gradient(120% 80% at 85% 0%,rgba(255,255,255,.35),transparent 55%);pointer-events:none;}
   .jx-card.sudoku{background:linear-gradient(150deg,#8a9a7b,#5f6655);}
   .jx-card.zip{background:linear-gradient(150deg,#c98e9b,#a56b86);}
-  .jx-card.memo{background:linear-gradient(150deg,#7fb0c4,#5b8aa6);}
-  .jx-card.triqui{background:linear-gradient(150deg,#cB9bd0,#9a6fb0);}
   .jx-card.closet{background:linear-gradient(150deg,#d8b673,#b9985a);}
 
   .jx-mini-stats{display:flex;gap:10px;margin-top:18px;}
@@ -840,6 +841,7 @@
   .jx-btn:active{transform:scale(.96);}
   .jx-btn.ghost{background:var(--blanco);color:var(--tinta);border:1px solid var(--dorado-claro);box-shadow:none;}
   .jx-btn.rosa{background:linear-gradient(135deg,var(--rosa),#b87a88);box-shadow:0 8px 18px rgba(201,142,155,.32);}
+  .jx-btn.off{opacity:.55;cursor:not-allowed;}
   .jx-tip{text-align:center;color:var(--gris);font-weight:300;font-size:.86rem;margin:0 auto 8px;max-width:360px;line-height:1.45;}
 
   /* Sudoku */
@@ -897,28 +899,6 @@
   .jx-zc.inicio.en-ruta .nbadge{background:var(--rosa);color:#fff;}
   .jx-zip-svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:visible;}
 
-  /* Memorice */
-  .jx-memo{display:grid;gap:clamp(6px,2vw,10px);width:min(94vw,420px);margin:0 auto;}
-  .jx-mc{position:relative;aspect-ratio:1;cursor:pointer;perspective:700px;}
-  .jx-mc-inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .4s cubic-bezier(.3,1,.5,1);}
-  .jx-mc.volteada .jx-mc-inner, .jx-mc.par .jx-mc-inner{transform:rotateY(180deg);}
-  .jx-mc-cara{position:absolute;inset:0;border-radius:16px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
-  .jx-mc-frente{background:linear-gradient(150deg,var(--dorado-claro),var(--dorado));color:#fff;font-size:1.7rem;box-shadow:0 6px 16px var(--sombra);}
-  .jx-mc-detras{background:var(--blanco);border:1px solid var(--crema-oscuro);transform:rotateY(180deg);font-size:clamp(1.6rem,8vw,2.4rem);box-shadow:0 6px 16px var(--sombra);}
-  .jx-mc.par .jx-mc-detras{background:var(--rosa-claro);animation:jxBump .4s ease;}
-
-  /* Tres en raya */
-  .jx-triqui{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:10px;width:min(82vw,320px);aspect-ratio:1;margin:0 auto;}
-  .jx-tq{
-    background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:18px;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;font-size:clamp(2.2rem,12vw,3.2rem);
-    box-shadow:0 6px 16px var(--sombra);transition:transform .12s, background .15s;min-width:0;min-height:0;
-  }
-  .jx-tq:active{transform:scale(.96);}
-  .jx-tq.gana{background:var(--rosa-claro);animation:jxBump .5s ease;}
-  .jx-tq.x{color:var(--rosa);}
-  .jx-tq.o{color:var(--dorado);}
-
   /* 2048 */
   .jx-card.dosmil{background:linear-gradient(150deg,#e0b25f,#cf7f3c);}
   .jx-card.snake{background:linear-gradient(150deg,#7faf6f,#4f7a4a);}
@@ -937,170 +917,6 @@
   .jx-snake-wrap{display:flex;justify-content:center;}
   #jxSnakeCv{width:min(94vw,400px);aspect-ratio:1;background:var(--crema-oscuro);border-radius:18px;touch-action:none;box-shadow:0 12px 30px var(--sombra);}
 
-  /* Detective — Criminal Case */
-  .jx-card.detective{background:linear-gradient(150deg,#5f6b8a,#3c4360);}
-  .dt-list{display:flex;flex-direction:column;gap:14px;}
-  .dt-caso-card{position:relative;display:flex;gap:14px;align-items:center;text-align:left;width:100%;border:1px solid var(--crema-oscuro);background:var(--blanco);border-radius:20px;padding:16px;cursor:pointer;font-family:inherit;color:inherit;box-shadow:0 8px 22px var(--sombra);transition:transform .15s, box-shadow .2s;overflow:hidden;}
-  .dt-caso-card:active{transform:scale(.98);}
-  .dt-caso-card:hover{transform:translateY(-2px);box-shadow:0 14px 30px var(--sombra);}
-  .dt-caso-card.dia{border-color:var(--dorado);box-shadow:0 0 0 2px rgba(216,192,143,.4),0 12px 28px var(--sombra);}
-  .dt-ribbon{position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--dorado),var(--rosa));color:#fff;font-size:.66rem;letter-spacing:1px;padding:4px 12px;border-bottom-left-radius:12px;}
-  .dt-caso-emo{font-size:2.4rem;flex-shrink:0;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2));}
-  .dt-caso-emo.big{font-size:2.8rem;}
-  .dt-caso-info{flex:1;min-width:0;}
-  .dt-caso-tit{font-family:'Playfair Display',serif;font-size:1.18rem;color:var(--tinta);line-height:1.15;}
-  .dt-ok{color:var(--verde);font-weight:500;}
-  .dt-prog-tag{color:var(--dorado);font-size:.85rem;font-weight:500;}
-  .dt-prog-tag.nuevo{color:var(--rosa);}
-  .dt-caso-meta{font-size:.76rem;color:var(--gris);margin:4px 0;}
-  .dt-tag{display:inline-block;border-radius:999px;padding:2px 9px;font-size:.66rem;letter-spacing:1px;text-transform:uppercase;color:#fff;}
-  .dt-tag.robo{background:#b9985a;}.dt-tag.infidelidad{background:#c98e9b;}.dt-tag.desaparicion{background:#8a9a7b;}.dt-tag.misterio{background:#5f6b8a;}
-  .dt-caso-cli{font-size:.85rem;font-weight:300;}
-  .dt-back{margin-bottom:12px;}
-  .dt-caso-head{display:flex;gap:14px;align-items:center;margin-bottom:12px;}
-  .dt-caso-head h3{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.35rem;line-height:1.1;}
-  .dt-prog{height:8px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;margin-bottom:14px;}
-  .dt-prog > div{height:100%;background:linear-gradient(90deg,var(--dorado-claro),var(--dorado));border-radius:999px;transition:width .5s ease;}
-  .dt-perfil-mini{background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:16px;padding:12px 14px;margin-bottom:16px;box-shadow:0 6px 16px var(--sombra-tenue);}
-  .dt-perfil-mini > b{font-family:'Playfair Display',serif;color:var(--dorado);font-size:.92rem;}
-  .dt-traits{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
-  .dt-trait{display:inline-flex;align-items:center;gap:5px;background:var(--rosa-claro);color:var(--tinta);border-radius:999px;padding:5px 12px;font-size:.86rem;font-weight:500;}
-  .dt-trait.sm{background:var(--crema-oscuro);padding:3px 9px;font-size:.74rem;font-weight:400;}
-
-  .dt-etapa{animation:jxAppIn .25s ease;}
-  .dt-et-tit{font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.25rem;margin-bottom:4px;}
-  .dt-et-sub{color:var(--gris);font-weight:300;font-size:.92rem;margin-bottom:12px;line-height:1.45;}
-  .dt-et-ctrl{text-align:center;margin-top:14px;}
-  .dt-et-done{background:var(--blanco);border:1px solid var(--crema-oscuro);border-left:4px solid var(--verde);border-radius:0 16px 16px 0;padding:16px 18px;margin-top:16px;text-align:center;box-shadow:0 8px 20px var(--sombra);animation:jxPop .3s ease;}
-  .dt-et-done b{font-family:'Playfair Display',serif;color:var(--verde);font-size:1.1rem;}
-  .dt-et-done p{font-weight:300;color:var(--tinta);margin:8px 0 14px;line-height:1.5;}
-
-  /* Escena de búsqueda */
-  .dt-finds{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
-  .dt-find{background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:999px;padding:6px 12px;font-size:.82rem;color:var(--tinta);transition:all .2s;}
-  .dt-find.ok{background:var(--verde);color:#fff;border-color:var(--verde);text-decoration:line-through;opacity:.85;}
-  .dt-escena{position:relative;width:100%;aspect-ratio:200/132;border-radius:18px;overflow:hidden;box-shadow:inset 0 0 70px rgba(0,0,0,.42),0 14px 34px var(--sombra);touch-action:manipulation;cursor:crosshair;}
-  .dt-escena svg{position:absolute;inset:0;width:100%;height:100%;}
-  .dt-escena::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 38%,transparent 55%,rgba(0,0,0,.4) 100%);z-index:4;}
-  .dt-esc-layer{position:absolute;inset:0;z-index:5;}
-  .dt-obj{position:absolute;transform:translate(-50%,-50%);font-size:1.5rem;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.55));opacity:.92;pointer-events:none;transition:transform .15s;}
-  .dt-obj.decoy{opacity:.8;}
-  .dt-obj.ok{transform:translate(-50%,-50%) scale(1.25);opacity:1;filter:drop-shadow(0 0 6px #8a9a7b);animation:jxPopIn .3s ease;}
-  .dt-miss{position:absolute;width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.7);transform:translate(-50%,-50%);pointer-events:none;animation:dtMiss .5s ease forwards;}
-  @keyframes dtMiss{from{opacity:.9;transform:translate(-50%,-50%) scale(.5)}to{opacity:0;transform:translate(-50%,-50%) scale(1.4)}}
-  .dt-hint{position:absolute;width:42px;height:42px;border-radius:50%;border:3px solid #f4d58a;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 16px #f4d58a;animation:dtHint 1.6s ease forwards;z-index:6;}
-  @keyframes dtHint{0%,80%{opacity:1}100%{opacity:0}}
-  .dt-obj{z-index:5;}
-  .dt-obj:not(.ok){animation:dtObjPulse 2.4s ease-in-out infinite;}
-  @keyframes dtObjPulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.12)}}
-  /* Figuras de sospechosos en la escena */
-  .dt-fig{position:absolute;transform:translate(-50%,-100%);bottom:auto;display:flex;flex-direction:column;align-items:center;background:none;border:none;cursor:pointer;padding:0;z-index:6;filter:drop-shadow(0 4px 5px rgba(0,0,0,.5));transition:transform .15s;}
-  .dt-fig:active{transform:translate(-50%,-100%) scale(.92);}
-  .dt-fig:hover{transform:translate(-50%,-105%);}
-  .dt-fig-cuerpo{width:20px;height:26px;border-radius:10px 10px 7px 7px;margin-top:-4px;box-shadow:inset 0 -4px 6px rgba(0,0,0,.25);}
-  .dt-fig-cara{font-size:1.35rem;line-height:1;order:-1;}
-  .dt-fig-nom{font-size:.6rem;color:#fff;background:rgba(0,0,0,.5);border-radius:999px;padding:1px 7px;margin-top:3px;white-space:nowrap;font-weight:500;}
-  .dt-fig-badge{position:absolute;top:-6px;right:-6px;font-size:.8rem;background:var(--blanco);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.3);}
-  .dt-fig.hablado{filter:drop-shadow(0 4px 5px rgba(0,0,0,.5)) saturate(.7);opacity:.92;}
-  .dt-esc-hud{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:10px;}
-  .dt-esc-hud .pill{background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:999px;padding:5px 12px;font-size:.8rem;color:var(--tinta);box-shadow:0 3px 8px var(--sombra-tenue);}
-  .dt-hint-btn{background:var(--dorado);color:#fff;border:none;border-radius:999px;padding:6px 14px;font-family:'Jost',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;box-shadow:0 4px 10px var(--sombra);}
-  .dt-clue-regla.coartada{color:var(--gris);background:transparent;font-weight:400;font-style:italic;}
-  /* Ambiente animado por escena */
-  .dt-flama{transform-origin:center;animation:dtFlama 1.6s ease-in-out infinite;}
-  @keyframes dtFlama{0%,100%{opacity:.9;transform:scaleY(1) scaleX(1)}50%{opacity:1;transform:scaleY(1.15) scaleX(.9)}}
-  .dt-luc circle,.dt-spark circle{animation:dtLuc 3s ease-in-out infinite;}
-  .dt-luc circle:nth-child(2){animation-delay:.7s}.dt-luc circle:nth-child(3){animation-delay:1.4s}.dt-luc circle:nth-child(4){animation-delay:2.1s}
-  @keyframes dtLuc{0%,100%{opacity:.15}50%{opacity:1}}
-  .dt-flicker{animation:dtFlicker 4s steps(1) infinite;}
-  @keyframes dtFlicker{0%,100%{opacity:.85}8%{opacity:.3}10%{opacity:.9}45%{opacity:.85}47%{opacity:.45}49%{opacity:.85}}
-  .dt-beam{animation:dtBeam 5s ease-in-out infinite;}
-  @keyframes dtBeam{0%,100%{opacity:.85}50%{opacity:1}}
-  .dt-laser line{animation:dtLaser 3s ease-in-out infinite;}
-  @keyframes dtLaser{0%,100%{opacity:.35}50%{opacity:.7}}
-  .dt-escena.amb-lluvia::before,.dt-escena.amb-velas::before,.dt-escena.amb-luna::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;}
-  .dt-escena.amb-lluvia::before{background-image:repeating-linear-gradient(105deg,transparent 0 6px,rgba(180,200,230,.16) 6px 7px);background-size:14px 100%;animation:dtRain .5s linear infinite;}
-  @keyframes dtRain{from{background-position:0 0}to{background-position:-14px 60px}}
-  .dt-escena.amb-velas::before{background:radial-gradient(60% 50% at 50% 60%,rgba(255,180,80,.12),transparent 70%);animation:dtVela 3s ease-in-out infinite;}
-  @keyframes dtVela{0%,100%{opacity:.6}50%{opacity:1}}
-  .dt-escena.amb-luna::before{background:radial-gradient(40% 30% at 79% 20%,rgba(220,230,255,.18),transparent 70%);}
-  @media (prefers-reduced-motion: reduce){
-    .dt-flama,.dt-luc circle,.dt-spark circle,.dt-flicker,.dt-beam,.dt-laser line,.dt-obj:not(.ok),.dt-escena.amb-lluvia::before,.dt-escena.amb-velas::before{animation:none !important;}
-  }
-
-  /* Análisis (emparejar) */
-  .dt-match-grid{display:flex;gap:12px;}
-  .dt-match-col{flex:1;display:flex;flex-direction:column;gap:10px;}
-  .dt-match{border:1.5px solid var(--dorado-claro);background:var(--blanco);color:var(--tinta);border-radius:14px;padding:13px 12px;cursor:pointer;font-family:'Jost',sans-serif;font-size:.86rem;text-align:left;line-height:1.35;transition:all .15s;min-height:58px;}
-  .dt-match:active{transform:scale(.97);}
-  .dt-match.sel{border-color:var(--rosa);background:var(--rosa-claro);box-shadow:0 0 0 2px var(--rosa-claro);}
-  .dt-match.ok{border-color:var(--verde);background:rgba(138,154,123,.16);color:var(--gris);cursor:default;}
-
-  /* Interrogatorio */
-  .dt-sosp-card{display:flex;gap:14px;align-items:center;background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:18px;padding:14px;margin-bottom:14px;box-shadow:0 8px 20px var(--sombra-tenue);}
-  .dt-sosp-emo{font-size:2.6rem;}
-  .dt-sosp-card b{font-family:'Playfair Display',serif;color:var(--tinta);font-size:1.1rem;}
-  .dt-sosp-card p{font-weight:300;color:var(--gris);font-size:.9rem;margin-top:2px;}
-  .dt-pregs{display:flex;flex-direction:column;gap:12px;}
-  .dt-preg{border:1px solid var(--crema-oscuro);background:var(--blanco);border-radius:16px;padding:14px 16px;cursor:pointer;box-shadow:0 4px 12px var(--sombra-tenue);transition:transform .12s;}
-  .dt-preg:active{transform:scale(.98);}
-  .dt-preg-q{font-weight:500;color:var(--dorado);}
-  .dt-preg-a{margin-top:10px;font-style:italic;font-weight:300;color:var(--tinta);line-height:1.5;border-top:1px dashed var(--crema-oscuro);padding-top:10px;animation:jxAppIn .25s ease;}
-
-  /* Cronología */
-  .dt-crono{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
-  .dt-evt{display:flex;gap:12px;align-items:center;background:rgba(138,154,123,.14);border:1px solid var(--verde);border-radius:14px;padding:12px 14px;font-weight:300;color:var(--tinta);line-height:1.4;animation:jxAppIn .25s ease;}
-  .dt-evt-n{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--verde);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:.9rem;}
-  .dt-evt-ops{display:flex;flex-direction:column;gap:10px;}
-  .dt-evt-op{border:1.5px solid var(--dorado-claro);background:var(--blanco);color:var(--tinta);border-radius:14px;padding:13px 16px;cursor:pointer;font-family:'Jost',sans-serif;font-size:.92rem;text-align:left;line-height:1.4;transition:all .15s;}
-  .dt-evt-op:active{transform:scale(.97);}
-  .dt-evt-op:hover{border-color:var(--dorado);}
-  .dt-vacio{color:var(--gris);font-weight:300;font-style:italic;}
-
-  /* Arresto */
-  .dt-perfil-box{background:linear-gradient(135deg,var(--blanco),var(--crema));border:1px solid var(--dorado-claro);border-radius:18px;padding:16px 18px;margin-bottom:16px;box-shadow:0 8px 22px var(--sombra);}
-  .dt-perfil-box > b{font-family:'Playfair Display',serif;color:var(--dorado);}
-  .dt-arrest{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .dt-arrest-card{border:1.5px solid var(--crema-oscuro);background:var(--blanco);border-radius:18px;padding:16px 10px;cursor:pointer;text-align:center;box-shadow:0 6px 16px var(--sombra);transition:transform .14s, border-color .2s;}
-  .dt-arrest-card:active{transform:scale(.96);}
-  .dt-arrest-card:hover{border-color:var(--rosa);}
-  .dt-arrest-card .dt-sosp-emo{font-size:2.6rem;display:block;}
-  .dt-arrest-card b{font-family:'Playfair Display',serif;display:block;margin:6px 0;color:var(--tinta);}
-  .dt-arrest-perfil{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}
-  /* Detective — deducción */
-  .dt-pasos{display:flex;gap:6px;margin-bottom:14px;}
-  .dt-pasos span{flex:1;text-align:center;font-size:.68rem;color:var(--gris);background:var(--crema-oscuro);border-radius:999px;padding:5px 4px;letter-spacing:.3px;transition:all .2s;}
-  .dt-pasos span.on{background:var(--dorado);color:#fff;font-weight:600;}
-  .dt-brief{background:linear-gradient(135deg,var(--blanco),var(--crema));border:1px solid var(--dorado-claro);border-left:4px solid var(--dorado);border-radius:0 16px 16px 0;padding:14px 16px;margin-bottom:16px;box-shadow:0 8px 20px var(--sombra-tenue);}
-  .dt-brief-cli{display:inline-block;font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--dorado);font-weight:600;margin-bottom:6px;}
-  .dt-brief p{font-weight:300;font-style:italic;color:var(--tinta);line-height:1.55;}
-  .dt-susp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px;}
-  .dt-susp{position:relative;border:1.5px solid var(--crema-oscuro);background:var(--blanco);border-radius:18px;padding:12px;box-shadow:0 6px 16px var(--sombra-tenue);transition:transform .14s, border-color .2s, opacity .2s;}
-  .dt-susp.clickable{cursor:pointer;}
-  .dt-susp.clickable:hover{border-color:var(--rosa);}
-  .dt-susp.clickable:active{transform:scale(.97);}
-  .dt-susp.descartado{opacity:.55;filter:grayscale(.7);border-color:var(--crema-oscuro);background:var(--crema);}
-  .dt-susp.descartado .dt-susp-top, .dt-susp.descartado .dt-traits{text-decoration:line-through;}
-  .dt-susp-x{position:absolute;top:8px;right:10px;font-size:1.1rem;color:#c0392b;font-weight:700;}
-  .dt-susp-top{display:flex;gap:10px;align-items:center;margin-bottom:8px;}
-  .dt-susp-emo{font-size:2rem;flex-shrink:0;}
-  .dt-susp-id b{font-family:'Playfair Display',serif;color:var(--tinta);font-size:1.02rem;display:block;line-height:1.1;}
-  .dt-susp-id small{color:var(--gris);font-weight:300;font-size:.76rem;}
-  .dt-trait.bien{background:rgba(138,154,123,.22);color:#5a7045;box-shadow:inset 0 0 0 1px rgba(138,154,123,.5);}
-  .dt-trait.mal{background:rgba(192,57,43,.14);color:#b3402f;box-shadow:inset 0 0 0 1px rgba(192,57,43,.4);}
-  .dt-clues{display:flex;flex-direction:column;gap:10px;}
-  .dt-clue{display:flex;gap:12px;align-items:flex-start;background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:14px;padding:12px 14px;box-shadow:0 4px 12px var(--sombra-tenue);animation:jxAppIn .25s ease;}
-  .dt-clue.oculta{opacity:.5;border-style:dashed;}
-  .dt-clue-emo{font-size:1.5rem;flex-shrink:0;}
-  .dt-clue b{font-family:'Playfair Display',serif;color:var(--tinta);font-size:.96rem;}
-  .dt-clue p{font-weight:300;color:var(--tinta);font-size:.86rem;line-height:1.4;margin:3px 0;}
-  .dt-clue-regla{display:inline-block;font-size:.78rem;font-weight:600;color:var(--dorado);background:var(--crema);border-radius:999px;padding:3px 10px;margin-top:3px;}
-  .dt-clue-mini{margin:10px 0 0;padding-left:18px;}
-  .dt-clue-mini li{font-size:.82rem;color:var(--tinta);font-weight:300;line-height:1.5;}
-  .dt-clue-mini i{color:var(--dorado);font-style:normal;font-weight:500;}
-  .jx-btn.off{opacity:.55;cursor:not-allowed;}
-  .sacude{animation:dtSacude .4s ease;}
-  @keyframes dtSacude{0%,100%{transform:none}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
 
   /* Celebración + confeti */
   #jxConfeti{position:absolute;inset:0;width:100%;height:100%;z-index:7;pointer-events:none;display:none;}
@@ -1144,6 +960,89 @@
     .jx-cards{grid-template-columns:1fr;}
     .jx-card{min-height:120px;}
   }
+  /* ===== Clínica kinésica (tycoon) ===== */
+  .cl-top{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 12px 30px var(--sombra);margin-bottom:14px;}
+  .cl-lienzo{display:block;width:100%;height:190px;}
+  .cl-hud{position:absolute;top:12px;right:14px;text-align:right;text-shadow:0 2px 8px rgba(255,255,255,.6);}
+  .cl-plata{font-family:'Playfair Display',serif;font-size:1.9rem;color:#2f4858;line-height:1;}
+  .cl-sub{font-size:.76rem;color:#4a6274;margin-top:3px;}
+  .cl-tabs{display:flex;gap:8px;margin-bottom:12px;}
+  .cl-tabs.chicas{margin-bottom:14px;}
+  .cl-tab{flex:1;background:var(--blanco);border:1.5px solid var(--crema-oscuro);border-radius:999px;padding:9px 6px;
+    font-family:'Jost',sans-serif;font-size:.82rem;color:var(--gris);cursor:pointer;transition:all .18s;}
+  .cl-tab.activa{background:#5b8aa6;border-color:#5b8aa6;color:#fff;font-weight:600;}
+  .cl-btn-grande{width:100%;background:linear-gradient(140deg,#6da3c0,#4b7d99);color:#fff;border:none;border-radius:18px;
+    padding:16px;font-family:'Jost',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;
+    box-shadow:0 8px 20px rgba(75,125,153,.35);transition:transform .12s;}
+  .cl-btn-grande:active{transform:scale(.98);}
+  .cl-chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;}
+  .cl-chip{font-size:.72rem;color:#fff;border-radius:999px;padding:4px 11px;}
+  .cl-chip.off{background:var(--crema-oscuro)!important;color:var(--gris);}
+  .cl-stats{display:flex;gap:8px;margin-top:6px;}
+  .cl-stats div{flex:1;background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:14px;padding:10px 4px;text-align:center;}
+  .cl-stats b{display:block;font-family:'Playfair Display',serif;color:#4b7d99;font-size:1.15rem;}
+  .cl-stats span{font-size:.66rem;color:var(--gris);display:block;margin-top:2px;}
+  .cl-sec{font-family:'Playfair Display',serif;color:var(--dorado);font-size:.98rem;margin:16px 2px 8px;}
+  .cl-lista{display:flex;flex-direction:column;gap:9px;}
+  .cl-item{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:var(--blanco);
+    border:1.5px solid var(--crema-oscuro);border-radius:16px;padding:10px 12px;box-shadow:0 4px 12px var(--sombra-tenue);
+    font-family:'Jost',sans-serif;transition:transform .12s,border-color .2s,opacity .2s;}
+  .cl-item.accion,.cl-item[data-eq]{cursor:pointer;}
+  .cl-item.puede{border-color:#5b8aa6;box-shadow:0 6px 18px rgba(91,138,166,.25);}
+  .cl-item.puede .cl-item-costo{color:#4b7d99;font-weight:600;}
+  .cl-item:not(.puede):not(.listo){opacity:.6;}
+  .cl-item.listo{opacity:.85;border-color:#bcd6c4;}
+  .cl-item:active{transform:scale(.985);}
+  .cl-item-emo{width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+  .cl-item-info{flex:1;min-width:0;}
+  .cl-item-nom{font-size:.95rem;color:var(--tinta);}
+  .cl-item-desc{font-size:.75rem;color:var(--gris);margin-top:1px;line-height:1.35;}
+  .cl-item-costo{font-size:.82rem;color:var(--gris);white-space:nowrap;}
+  /* ficha del paciente */
+  .cl-ficha{background:var(--blanco);border:1px solid var(--crema-oscuro);border-left:4px solid #5b8aa6;
+    border-radius:0 18px 18px 0;padding:14px 16px;box-shadow:0 8px 20px var(--sombra-tenue);margin-bottom:14px;}
+  .cl-ficha-top{display:flex;align-items:center;gap:11px;margin-bottom:10px;}
+  .cl-ficha-avatar{width:46px;height:46px;flex:0 0 46px;border-radius:50%;background:#e8f0f4;display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+  .cl-ficha-nom{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--tinta);}
+  .cl-ficha-ocu{font-size:.75rem;color:var(--gris);}
+  .cl-ficha-motivo{font-style:italic;color:var(--tinta);font-size:.92rem;line-height:1.5;margin-bottom:8px;}
+  .cl-ficha-mec{font-size:.8rem;color:var(--gris);line-height:1.45;margin-bottom:8px;}
+  .cl-ficha-mec b{color:var(--tinta);font-weight:600;}
+  .cl-sintomas{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px;}
+  .cl-sintomas li{font-size:.8rem;color:var(--gris);padding-left:16px;position:relative;line-height:1.4;}
+  .cl-sintomas li::before{content:"•";position:absolute;left:4px;color:#5b8aa6;}
+  .cl-pista{margin-top:10px;background:#eef5f9;border-radius:10px;padding:7px 10px;font-size:.76rem;color:#4b7d99;}
+  .cl-hallazgo{margin-top:9px;background:#eaf4ec;border-radius:10px;padding:8px 11px;font-size:.79rem;color:#3f6b4d;line-height:1.45;}
+  .cl-preg{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--tinta);margin:4px 2px 10px;}
+  .cl-preg small{font-family:'Jost',sans-serif;font-size:.74rem;color:var(--gris);}
+  .cl-opciones{display:flex;flex-direction:column;gap:9px;}
+  .cl-opc{width:100%;text-align:left;background:var(--blanco);border:1.5px solid var(--crema-oscuro);border-radius:15px;
+    padding:12px 14px;cursor:pointer;font-family:'Jost',sans-serif;font-size:.88rem;color:var(--tinta);
+    box-shadow:0 4px 12px var(--sombra-tenue);transition:transform .12s,border-color .18s;line-height:1.45;}
+  .cl-opc:hover{border-color:#5b8aa6;}
+  .cl-opc:active{transform:scale(.985);}
+  .cl-opc b{display:block;font-weight:600;}
+  .cl-opc small{display:block;color:var(--gris);font-size:.73rem;margin-top:3px;line-height:1.4;}
+  #clPanel.cl-error{animation:clSacude .4s ease;}
+  @keyframes clSacude{0%,100%{transform:none}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  /* repaso */
+  .cl-carta{background:linear-gradient(150deg,var(--blanco),var(--crema));border:1.5px solid var(--crema-oscuro);
+    border-radius:20px;padding:22px 18px;min-height:180px;display:flex;flex-direction:column;justify-content:center;
+    cursor:pointer;box-shadow:0 8px 22px var(--sombra-tenue);transition:border-color .2s;}
+  .cl-carta.abierta{border-color:#5b8aa6;}
+  .cl-carta-tit{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--tinta);text-align:center;}
+  .cl-carta-pista{text-align:center;color:var(--gris);font-size:.8rem;font-style:italic;margin-top:12px;}
+  .cl-carta-grados{text-align:center;font-family:'Playfair Display',serif;font-size:3rem;color:#4b7d99;margin-top:8px;}
+  .cl-carta-cuerpo{display:flex;flex-direction:column;gap:9px;margin-top:14px;}
+  .cl-carta-cuerpo div{display:flex;flex-direction:column;}
+  .cl-carta-cuerpo b{font-size:.68rem;text-transform:uppercase;letter-spacing:.6px;color:#4b7d99;}
+  .cl-carta-cuerpo span{font-size:.85rem;color:var(--tinta);line-height:1.4;}
+  .cl-repaso-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;}
+  .cl-repaso-nav span{font-size:.8rem;color:var(--gris);}
+  .cl-nota{text-align:center;font-size:.68rem;color:var(--gris);font-style:italic;margin-top:14px;opacity:.8;}
+  .jx-card.clinica{background:linear-gradient(150deg,#6da3c0,#43708c);}
+  @media (max-width:400px){ .cl-lienzo{height:165px;} .cl-plata{font-size:1.6rem;} }
+
   @media (prefers-reduced-motion: reduce){
     .jx-launch-escena svg,.jx-pet-holder svg,.jx-celebra-gato svg,.jx-daily.listo .jx-daily-emo,.jx-nivelup{animation:none !important;}
   }
@@ -1575,12 +1474,10 @@
       <section class="jx-screen activa" id="jxScreenHub"></section>
       <section class="jx-screen" id="jxScreenSudoku"></section>
       <section class="jx-screen" id="jxScreenZip"></section>
-      <section class="jx-screen" id="jxScreenMemo"></section>
-      <section class="jx-screen" id="jxScreenTriqui"></section>
       <section class="jx-screen" id="jxScreenDosmil"></section>
       <section class="jx-screen" id="jxScreenSnake"></section>
-      <section class="jx-screen" id="jxScreenDetective"></section>
       <section class="jx-screen" id="jxScreenJardin"></section>
+      <section class="jx-screen" id="jxScreenClinica"></section>
       <section class="jx-screen" id="jxScreenCloset"></section>
     </div>
   </div>
@@ -4084,7 +3981,7 @@ if('serviceWorker' in navigator){
   });
 }
 /* ============================================================
-   RINCÓN DE JUEGOS — consola con Sudoku, Zip, Memorice y Tres en raya
+   RINCÓN DE JUEGOS — consola con Sudoku, Zip, 2048, Snake y el Jardín
    La progresión (monedas, ropa, niveles, rachas) vive en
    datos.juegos, así que se sincroniza con Neon como el resto.
    ============================================================ */
@@ -4201,12 +4098,10 @@ function jxDefaultJuegos(){
     comprados: ['fondo:pradera'],
     sudoku: { resueltos:0, mejor:{} },
     zip: { resueltos:0 },
-    memo: { resueltos:0 },
-    triqui: { ganados:0 },
     dosmil: { record:0, partidas:0 },
     snake: { record:0, partidas:0 },
-    detective: { resueltos:[], bonusDiario:'' },
     jardin: jarDefault(),
+    clinica: clDefault(),
     diario: { ultimo:null, racha:0 },
   };
 }
@@ -4244,19 +4139,12 @@ function asegurarJuegos(){
   if(!j.sudoku.mejor || typeof j.sudoku.mejor !== 'object') j.sudoku.mejor = {};
   if(!j.zip || typeof j.zip !== 'object') j.zip = {};
   if(typeof j.zip.resueltos !== 'number') j.zip.resueltos = 0;
-  if(!j.memo || typeof j.memo !== 'object') j.memo = {};
-  if(typeof j.memo.resueltos !== 'number') j.memo.resueltos = 0;
-  if(!j.triqui || typeof j.triqui !== 'object') j.triqui = {};
-  if(typeof j.triqui.ganados !== 'number') j.triqui.ganados = 0;
   if(!j.dosmil || typeof j.dosmil !== 'object') j.dosmil = {};
   if(typeof j.dosmil.record !== 'number') j.dosmil.record = 0;
   if(typeof j.dosmil.partidas !== 'number') j.dosmil.partidas = 0;
   if(!j.snake || typeof j.snake !== 'object') j.snake = {};
   if(typeof j.snake.record !== 'number') j.snake.record = 0;
   if(typeof j.snake.partidas !== 'number') j.snake.partidas = 0;
-  if(!j.detective || typeof j.detective !== 'object') j.detective = {};
-  if(!Array.isArray(j.detective.resueltos)) j.detective.resueltos = [];
-  if(typeof j.detective.bonusDiario !== 'string') j.detective.bonusDiario = '';
   if(!j.diario || typeof j.diario !== 'object') j.diario = { ultimo:null, racha:0 };
   if(!j.jardin || typeof j.jardin !== 'object') j.jardin = jarDefault();
   const g = j.jardin, base = jarDefault();
@@ -4268,6 +4156,15 @@ function asegurarJuegos(){
     if(typeof g.flores[k] !== 'number' || !isFinite(g.flores[k]) || g.flores[k] < 0) delete g.flores[k];
   }
   if(!Array.isArray(g.mejoras)) g.mejoras = [];
+  if(!j.clinica || typeof j.clinica !== 'object') j.clinica = clDefault();
+  const k = j.clinica, kb = clDefault();
+  for(const x of ['dinero','reputacion','atendidos','aciertos','fallos','salas','t']){
+    if(typeof k[x] !== 'number' || !isFinite(k[x]) || k[x] < 0) k[x] = kb[x];
+  }
+  if(!Array.isArray(k.equipos)) k.equipos = [];
+  if(!Array.isArray(k.personal)) k.personal = [];
+  if(!Array.isArray(k.dominados)) k.dominados = [];
+  if(!k.vistos || typeof k.vistos !== 'object' || Array.isArray(k.vistos)) k.vistos = {};
 }
 
 function jxNivel(){ asegurarJuegos(); return Math.floor(datos.juegos.mascota.xp / JX_NIVEL_XP) + 1; }
@@ -4425,12 +4322,10 @@ const JX_PANTALLAS = {
   hub:    { el:'jxScreenHub',    titulo:'Rincón de juegos', render:() => jxRenderHub() },
   sudoku: { el:'jxScreenSudoku', titulo:'Sudoku',          render:() => sdMostrar() },
   zip:    { el:'jxScreenZip',    titulo:'Zip',             render:() => zipMostrar() },
-  memo:   { el:'jxScreenMemo',   titulo:'Memorice',        render:() => memoMostrar() },
-  triqui: { el:'jxScreenTriqui', titulo:'Tres en raya',    render:() => triquiMostrar() },
   dosmil: { el:'jxScreenDosmil', titulo:'2048', render:() => dmMostrar() },
   snake:  { el:'jxScreenSnake',  titulo:'Snake', render:() => snMostrar() },
-  detective: { el:'jxScreenDetective', titulo:'Detective', render:() => dtMostrar() },
   jardin: { el:'jxScreenJardin', titulo:'Nuestro Jardín', render:() => jarMostrar() },
+  clinica: { el:'jxScreenClinica', titulo:'Clínica Kinésica', render:() => clMostrar() },
   closet: { el:'jxScreenCloset', titulo:'Clóset de Michi', render:() => jxRenderCloset() },
 };
 let jxPantalla = 'hub';
@@ -4464,9 +4359,9 @@ function jxCerrarApp(){
   document.body.style.overflow = '';
   if(sudokuTimer) clearInterval(sudokuTimer);
   if(zipTimer) clearInterval(zipTimer);
-  if(memoTimer) clearInterval(memoTimer);
   if(snLoop) cancelAnimationFrame(snLoop);
   if(jarLoop){ cancelAnimationFrame(jarLoop); jarLoop = null; jarAsentar(); jarGuardar(true); }
+  if(clLoop){ cancelAnimationFrame(clLoop); clLoop = null; clAsentar(); clGuardar(true); }
   pintarJuegos();
 }
 function jxAtras(){ if(jxPantalla === 'hub') jxCerrarApp(); else jxIr('hub'); }
@@ -4499,7 +4394,7 @@ function jxRenderHub(){
   const j = datos.juegos, m = j.mascota, nivel = jxNivel();
   const xpPct = (m.xp % JX_NIVEL_XP) / JX_NIVEL_XP * 100;
   const disp = jxDiarioDisponible();
-  const partidas = j.sudoku.resueltos + j.zip.resueltos + j.memo.resueltos + j.triqui.ganados + j.dosmil.partidas + j.snake.partidas;
+  const partidas = j.sudoku.resueltos + j.zip.resueltos + j.dosmil.partidas + j.snake.partidas;
   const el = document.getElementById('jxScreenHub');
   el.innerHTML =
     '<div class="jx-pet-stage" style="background:' + jxFondoCss() + '">' +
@@ -4524,26 +4419,20 @@ function jxRenderHub(){
       '<button class="jx-card zip" data-ir="zip"><div class="sheen"></div><div class="jx-card-emo">➰</div>' +
         '<div><div class="jx-card-nom">Zip</div><div class="jx-card-desc">Una línea, con paredes</div></div>' +
         '<span class="jx-card-stat">✔ ' + j.zip.resueltos + '</span></button>' +
-      '<button class="jx-card memo" data-ir="memo"><div class="sheen"></div><div class="jx-card-emo">🧠</div>' +
-        '<div><div class="jx-card-nom">Memorice</div><div class="jx-card-desc">Encuentra las parejas</div></div>' +
-        '<span class="jx-card-stat">✔ ' + j.memo.resueltos + '</span></button>' +
-      '<button class="jx-card triqui" data-ir="triqui"><div class="sheen"></div><div class="jx-card-emo">⭕</div>' +
-        '<div><div class="jx-card-nom">Tres en raya</div><div class="jx-card-desc">Contra Michi o de a dos</div></div>' +
-        '<span class="jx-card-stat">✔ ' + j.triqui.ganados + '</span></button>' +
       '<button class="jx-card dosmil" data-ir="dosmil"><div class="sheen"></div><div class="jx-card-emo">🧮</div>' +
         '<div><div class="jx-card-nom">2048</div><div class="jx-card-desc">Une y llega a 2048</div></div>' +
         '<span class="jx-card-stat">★ ' + j.dosmil.record + '</span></button>' +
       '<button class="jx-card snake" data-ir="snake"><div class="sheen"></div><div class="jx-card-emo">🐍</div>' +
         '<div><div class="jx-card-nom">Snake</div><div class="jx-card-desc">Crece sin chocar</div></div>' +
         '<span class="jx-card-stat">★ ' + j.snake.record + '</span></button>' +
-      '<button class="jx-card detective full" data-ir="detective"><div class="sheen"></div><div class="jx-card-emo">🕵️</div>' +
-        '<div style="flex:1"><div class="jx-card-nom">Detective</div>' +
-        '<div class="jx-card-desc">Investiga, deduce con lógica y atrapa al culpable</div></div>' +
-        '<span class="jx-card-stat">✔ ' + j.detective.resueltos.length + '</span></button>' +
       '<button class="jx-card jardin full" data-ir="jardin"><div class="sheen"></div><div class="jx-card-emo">🌸</div>' +
         '<div style="flex:1"><div class="jx-card-nom">Nuestro Jardín</div>' +
         '<div class="jx-card-desc">Riega, planta flores y mira cómo crece solo (aunque cierres la página)</div></div>' +
         '<span class="jx-card-stat">🌸 ' + jarNum(j.jardin.petalos + jarProduccion() * Math.max(0, Math.min(JAR_TOPE_OFFLINE, Date.now() - (j.jardin.t || Date.now()))) / 1000 * JAR_TASA_OFFLINE) + '</span></button>' +
+      '<button class="jx-card clinica full" data-ir="clinica"><div class="sheen"></div><div class="jx-card-emo">🩺</div>' +
+        '<div style="flex:1"><div class="jx-card-nom">Clínica Kinésica</div>' +
+        '<div class="jx-card-desc">Evalúa, diagnostica y trata pacientes de verdad; hazla crecer</div></div>' +
+        '<span class="jx-card-stat">⭐ ' + j.clinica.reputacion + '</span></button>' +
       '<button class="jx-card closet full" data-ir="closet"><div class="sheen"></div><div class="jx-card-emo">👗</div>' +
         '<div style="flex:1"><div class="jx-card-nom">Clóset de ' + m.nombre + '</div>' +
         '<div class="jx-card-desc">Viste y decora a tu gatito con lo que ganas</div></div></button>' +
@@ -5033,176 +4922,6 @@ function zipEnlazarPuntero(){
 window.addEventListener('resize', () => { if(jxPantalla==='zip' && zipEstado){ zipDibujarParedes(); zipDibujarLinea(); } });
 
 /* ============================================================
-   MEMORICE
-   ============================================================ */
-let memoEstado=null, memoTimer=null, memoDif='facil';
-const MEMO_EMOJIS=['🌸','💖','🐱','🌙','⭐','🍓','🎀','🦋','🌻','🍀','🧸','🌈','🍰','🐶','🌷','🎈','🍒','🐬'];
-const MEMO_CFG={ facil:{pares:6,cols:3}, medio:{pares:8,cols:4}, dificil:{pares:12,cols:4} };
-function memoMostrar(){
-  const el=document.getElementById('jxScreenMemo');
-  el.innerHTML =
-    '<div class="jx-juego-top"><div class="jx-seg" id="memoSeg">' +
-      '<button data-dif="facil">Fácil</button><button data-dif="medio">Medio</button><button data-dif="dificil">Difícil</button></div></div>' +
-    '<p class="jx-tip">Da vuelta dos cartas y encuentra todas las parejas.</p>' +
-    '<div class="jx-hud"><span class="pill" id="memoPares">0/0</span><span class="pill">🔁 <span id="memoMov">0</span></span><span class="pill">⏱️ <span id="memoTiempo">0:00</span></span></div>' +
-    '<div class="jx-board-wrap"><div class="jx-memo" id="memoGrid"></div></div>' +
-    '<div class="jx-ctrl"><button class="jx-btn" id="memoNuevo">Nuevo juego</button></div>';
-  el.querySelectorAll('#memoSeg button').forEach(b => {
-    b.classList.toggle('activo', b.dataset.dif === memoDif);
-    b.onclick = () => { memoDif=b.dataset.dif; el.querySelectorAll('#memoSeg button').forEach(x=>x.classList.toggle('activo',x===b)); memoNuevo(); };
-  });
-  document.getElementById('memoNuevo').onclick = memoNuevo;
-  memoNuevo();
-}
-function memoNuevo(){
-  const cfg=MEMO_CFG[memoDif];
-  const elegidos=sdShuffle(MEMO_EMOJIS.slice()).slice(0,cfg.pares);
-  const cartas=sdShuffle(elegidos.concat(elegidos).map(e=>({emoji:e,estado:'oculta'})));
-  memoEstado={ cartas, cols:cfg.cols, pares:cfg.pares, encontrados:0, mov:0, volteadas:[], bloqueo:false, inicio:Date.now(), terminado:false };
-  memoRender();
-  const p=document.getElementById('memoPares'); if(p) p.textContent='0/'+cfg.pares;
-  const mv=document.getElementById('memoMov'); if(mv) mv.textContent='0';
-  memoArrancarTimer();
-}
-function memoRender(){
-  const grid=document.getElementById('memoGrid'); if(!grid) return;
-  const st=memoEstado;
-  grid.style.gridTemplateColumns='repeat('+st.cols+',1fr)';
-  grid.innerHTML='';
-  st.cartas.forEach((c,i)=>{
-    const card=document.createElement('div');
-    card.className='jx-mc'+(c.estado==='volteada'?' volteada':'')+(c.estado==='par'?' par':'');
-    card.innerHTML='<div class="jx-mc-inner"><div class="jx-mc-cara jx-mc-frente">❔</div><div class="jx-mc-cara jx-mc-detras">'+c.emoji+'</div></div>';
-    card.onclick=()=>memoVoltear(i);
-    grid.appendChild(card);
-  });
-}
-function memoVoltear(i){
-  const st=memoEstado; if(!st||st.terminado||st.bloqueo) return;
-  const c=st.cartas[i];
-  if(c.estado!=='oculta') return;
-  c.estado='volteada'; st.volteadas.push(i); jxSonido('tap'); memoRender();
-  if(st.volteadas.length===2){
-    st.mov++; const mv=document.getElementById('memoMov'); if(mv) mv.textContent=st.mov;
-    const [a,b]=st.volteadas;
-    if(st.cartas[a].emoji===st.cartas[b].emoji){
-      st.cartas[a].estado='par'; st.cartas[b].estado='par'; st.volteadas=[]; st.encontrados++;
-      jxSonido('bien'); memoRender();
-      const p=document.getElementById('memoPares'); if(p) p.textContent=st.encontrados+'/'+st.pares;
-      if(st.encontrados===st.pares) memoGanar();
-    }else{
-      st.bloqueo=true;
-      setTimeout(()=>{ st.cartas[a].estado='oculta'; st.cartas[b].estado='oculta'; st.volteadas=[]; st.bloqueo=false; memoRender(); }, 750);
-    }
-  }
-}
-function memoGanar(){
-  const st=memoEstado; st.terminado=true; clearInterval(memoTimer);
-  const seg=Math.floor((Date.now()-st.inicio)/1000);
-  asegurarJuegos(); datos.juegos.memo.resueltos++;
-  const base={facil:[10,12],medio:[18,20],dificil:[30,34]}[memoDif];
-  const r=jxRecompensar(base[0], base[1], { desde: document.getElementById('memoGrid') });
-  jxCelebrar({ titulo:'¡Memorice completo!', sub:st.pares+' parejas en '+st.mov+' movimientos · '+jxTiempo(seg), monedas:base[0], xp:base[1], subioNivel:r.subioNivel, nivel:r.nivel, onNext:memoNuevo });
-}
-function memoArrancarTimer(){
-  clearInterval(memoTimer);
-  memoTimer=setInterval(()=>{ if(!memoEstado||memoEstado.terminado) return; const t=document.getElementById('memoTiempo'); if(t) t.textContent=jxTiempo(Math.floor((Date.now()-memoEstado.inicio)/1000)); },1000);
-}
-
-/* ============================================================
-   TRES EN RAYA
-   ============================================================ */
-let triquiEstado=null, triquiModo='ia';
-const TRIQUI_LINEAS=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-function triquiMostrar(){
-  const el=document.getElementById('jxScreenTriqui');
-  el.innerHTML =
-    '<div class="jx-juego-top"><div class="jx-seg" id="triSeg">' +
-      '<button data-modo="ia">Vs Michi</button><button data-modo="2j">2 jugadores</button></div></div>' +
-    '<div class="jx-hud"><span class="pill" id="triEstado">Tu turno</span></div>' +
-    '<div class="jx-board-wrap"><div class="jx-triqui" id="triGrid"></div></div>' +
-    '<div class="jx-ctrl"><button class="jx-btn" id="triNuevo">Nueva partida</button></div>';
-  el.querySelectorAll('#triSeg button').forEach(b => {
-    b.classList.toggle('activo', b.dataset.modo === triquiModo);
-    b.onclick = () => { triquiModo=b.dataset.modo; el.querySelectorAll('#triSeg button').forEach(x=>x.classList.toggle('activo',x===b)); triquiNuevo(); };
-  });
-  document.getElementById('triNuevo').onclick = triquiNuevo;
-  triquiNuevo();
-}
-function triquiNuevo(){
-  triquiEstado={ tablero:Array(9).fill(''), turno:'X', terminado:false, linea:null };
-  triquiRender();
-  triquiEstadoTexto();
-}
-function triquiRender(){
-  const grid=document.getElementById('triGrid'); if(!grid) return;
-  const st=triquiEstado;
-  grid.innerHTML='';
-  st.tablero.forEach((v,i)=>{
-    const c=document.createElement('div');
-    c.className='jx-tq'+(v==='X'?' x':v==='O'?' o':'')+(st.linea&&st.linea.includes(i)?' gana':'');
-    c.textContent = v==='X'?'✕':v==='O'?'◯':'';
-    c.onclick=()=>triquiJugar(i);
-    grid.appendChild(c);
-  });
-}
-function triquiEstadoTexto(t){
-  const el=document.getElementById('triEstado'); if(!el) return;
-  if(t){ el.textContent=t; return; }
-  const st=triquiEstado;
-  if(triquiModo==='ia') el.textContent = st.turno==='X' ? 'Tu turno (✕)' : 'Michi piensa…';
-  else el.textContent = st.turno==='X' ? 'Turno de Catalina (✕)' : 'Turno de Diego (◯)';
-}
-function triquiGanador(tab){
-  for(const l of TRIQUI_LINEAS){ const [a,b,c]=l; if(tab[a]&&tab[a]===tab[b]&&tab[a]===tab[c]) return { quien:tab[a], linea:l }; }
-  if(tab.every(v=>v)) return { quien:'empate', linea:null };
-  return null;
-}
-function triquiJugar(i){
-  const st=triquiEstado; if(!st||st.terminado||st.tablero[i]) return;
-  if(triquiModo==='ia' && st.turno!=='X') return;
-  st.tablero[i]=st.turno; jxSonido('tap');
-  triquiTrasJugada();
-}
-function triquiTrasJugada(){
-  const st=triquiEstado;
-  const g=triquiGanador(st.tablero);
-  if(g){ triquiFin(g); return; }
-  st.turno = st.turno==='X' ? 'O' : 'X';
-  triquiRender(); triquiEstadoTexto();
-  if(triquiModo==='ia' && st.turno==='O' && !st.terminado){
-    setTimeout(()=>{ const m=triquiIA(st.tablero,'O','X'); if(m>=0){ st.tablero[m]='O'; jxSonido('tap'); triquiTrasJugada(); } }, 380);
-  }
-}
-function triquiIA(tab, yo, rival){
-  const libres=tab.map((v,i)=>v?-1:i).filter(i=>i>=0);
-  const ganaCon=(t,j,q)=>{ const c=t.slice(); c[j]=q; return !!triquiGanador(c) && triquiGanador(c).quien===q; };
-  for(const i of libres) if(ganaCon(tab,i,yo)) return i;       // ganar
-  for(const i of libres) if(ganaCon(tab,i,rival)) return i;    // bloquear
-  if(tab[4]==='') return 4;                                    // centro
-  const esquinas=[0,2,6,8].filter(i=>tab[i]==='');
-  if(esquinas.length) return esquinas[Math.floor(Math.random()*esquinas.length)];
-  return libres.length ? libres[Math.floor(Math.random()*libres.length)] : -1;
-}
-function triquiFin(g){
-  const st=triquiEstado; st.terminado=true; st.linea=g.linea; triquiRender();
-  asegurarJuegos();
-  if(g.quien==='empate'){ triquiEstadoTexto('¡Empate!'); jxRecompensar(3,3,{desde:document.getElementById('triGrid')}); avisar('Empate · +3 🪙'); return; }
-  if(triquiModo==='ia'){
-    if(g.quien==='X'){
-      datos.juegos.triqui.ganados++;
-      const r=jxRecompensar(10,12,{desde:document.getElementById('triGrid')});
-      jxCelebrar({ titulo:'¡Le ganaste a Michi!', sub:'Bien jugado ✕', monedas:10, xp:12, subioNivel:r.subioNivel, nivel:r.nivel, onNext:triquiNuevo });
-    }else{ triquiEstadoTexto('Ganó Michi 🐱'); jxSonido('mal'); }
-  }else{
-    datos.juegos.triqui.ganados++;
-    const quien = g.quien==='X' ? 'Catalina' : 'Diego';
-    const r=jxRecompensar(6,6,{desde:document.getElementById('triGrid')});
-    jxCelebrar({ titulo:'¡Ganó '+quien+'!', sub:'Tres en raya', monedas:6, xp:6, subioNivel:r.subioNivel, nivel:r.nivel, onNext:triquiNuevo });
-  }
-}
-
-/* ============================================================
    UTIL: deslizar (swipe) para 2048 y Snake
    ============================================================ */
 function jxSwipe(el, cb){
@@ -5454,445 +5173,6 @@ window.addEventListener('resize', () => {
   if(jxPantalla==='dosmil' && dm) dmRender();
   else if(jxPantalla==='snake' && sn) snDibujar();
 });
-
-/* ============================================================
-   DETECTIVE — Misterio por capas.
-   Escenas ilustradas y animadas. Investigas buscando PRUEBAS
-   físicas y INTERROGANDO a los sospechosos (ambas dan pistas).
-   Cada pista es una deducción lógica; descarta a quienes la
-   contradicen hasta dejar al culpable. Atención a las mentiras.
-   ============================================================ */
-const DT_ESCENAS = {
-  biblioteca: `<svg viewBox="0 0 200 132" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="bibW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4c3a26"/><stop offset="1" stop-color="#2c2012"/></linearGradient>
-      <radialGradient id="bibG" cx="0.5" cy="0.6" r="0.55"><stop offset="0" stop-color="#ffce78" stop-opacity=".55"/><stop offset="1" stop-color="#ffce78" stop-opacity="0"/></radialGradient>
-      <linearGradient id="bibWin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2740"/><stop offset="1" stop-color="#0e1626"/></linearGradient>
-    </defs>
-    <rect width="200" height="132" fill="url(#bibW)"/>
-    <rect y="98" width="200" height="34" fill="#34261a"/>
-    <polygon points="48,98 152,98 184,132 16,132" fill="#6e2f30" opacity=".55"/>
-    <polygon points="70,98 130,98 145,132 55,132" fill="#8a3a3b" opacity=".4"/>
-    <g><rect x="2" y="10" width="50" height="88" fill="#241a10"/><rect x="148" y="10" width="50" height="88" fill="#241a10"/>
-      <g fill="#7a5c3a"><rect x="5" y="14" width="44" height="3"/><rect x="5" y="30" width="44" height="3"/><rect x="5" y="46" width="44" height="3"/><rect x="5" y="62" width="44" height="3"/><rect x="5" y="78" width="44" height="3"/>
-        <rect x="151" y="14" width="44" height="3"/><rect x="151" y="30" width="44" height="3"/><rect x="151" y="46" width="44" height="3"/><rect x="151" y="62" width="44" height="3"/><rect x="151" y="78" width="44" height="3"/></g>
-      <g><rect x="7" y="18" width="4" height="11" fill="#9a4d3a"/><rect x="12" y="18" width="3" height="11" fill="#3a6b6b"/><rect x="16" y="17" width="5" height="12" fill="#caa64a"/><rect x="22" y="18" width="3" height="11" fill="#7a3b5a"/><rect x="26" y="18" width="4" height="11" fill="#4a6b3a"/><rect x="31" y="17" width="4" height="12" fill="#9a4d3a"/><rect x="36" y="18" width="3" height="11" fill="#3a5b7a"/><rect x="40" y="18" width="5" height="11" fill="#caa64a"/>
-        <rect x="7" y="34" width="5" height="11" fill="#3a6b6b"/><rect x="13" y="33" width="4" height="12" fill="#caa64a"/><rect x="18" y="34" width="3" height="11" fill="#9a4d3a"/><rect x="22" y="34" width="4" height="11" fill="#7a3b5a"/><rect x="27" y="33" width="4" height="12" fill="#4a6b3a"/><rect x="32" y="34" width="3" height="11" fill="#3a5b7a"/><rect x="36" y="34" width="5" height="11" fill="#9a4d3a"/><rect x="42" y="34" width="3" height="11" fill="#caa64a"/>
-        <rect x="153" y="18" width="4" height="11" fill="#4a6b3a"/><rect x="158" y="17" width="5" height="12" fill="#caa64a"/><rect x="164" y="18" width="3" height="11" fill="#9a4d3a"/><rect x="168" y="18" width="4" height="11" fill="#3a6b6b"/><rect x="173" y="17" width="4" height="12" fill="#7a3b5a"/><rect x="178" y="18" width="3" height="11" fill="#caa64a"/><rect x="182" y="18" width="5" height="11" fill="#3a5b7a"/><rect x="188" y="18" width="4" height="11" fill="#9a4d3a"/></g>
-    </g>
-    <rect x="78" y="20" width="44" height="54" rx="2" fill="#0c1422"/><rect x="80" y="22" width="40" height="50" rx="1" fill="url(#bibWin)"/>
-    <line x1="100" y1="22" x2="100" y2="72" stroke="#0c1422" stroke-width="2"/><line x1="80" y1="47" x2="120" y2="47" stroke="#0c1422" stroke-width="2"/>
-    <circle cx="110" cy="34" r="7" fill="#e9e6c8" opacity=".9"/><circle cx="107" cy="32" r="7" fill="#13203a"/>
-    <g class="dt-rain" stroke="#9fb6d8" stroke-width="1" opacity=".5"><line x1="84" y1="24" x2="82" y2="30"/><line x1="92" y1="26" x2="90" y2="32"/><line x1="104" y1="24" x2="102" y2="30"/><line x1="114" y1="28" x2="112" y2="34"/></g>
-    <rect x="64" y="78" width="72" height="9" rx="1" fill="#5a3f26"/><rect x="68" y="87" width="5" height="14" fill="#43301c"/><rect x="127" y="87" width="5" height="14" fill="#43301c"/>
-    <ellipse cx="100" cy="86" rx="60" ry="26" fill="url(#bibG)"/>
-    <rect x="120" y="70" width="2.4" height="9" fill="#d8c8a0"/><ellipse class="dt-flama" cx="121.2" cy="68" rx="2.2" ry="3.6" fill="#ffcf6a"/>
-    <rect x="74" y="73" width="14" height="5" rx="1" fill="#6b4a2c"/>
-    <rect x="156" y="40" width="22" height="26" rx="1" fill="#1c2a1c"/><rect x="159" y="43" width="16" height="20" fill="#39513a"/>
-  </svg>`,
-  jardin: `<svg viewBox="0 0 200 132" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="jarSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16203f"/><stop offset=".6" stop-color="#283a5e"/><stop offset="1" stop-color="#3a4a52"/></linearGradient>
-      <radialGradient id="jarMoon" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fffceb"/><stop offset=".7" stop-color="#f3eecb"/><stop offset="1" stop-color="#f3eecb" stop-opacity="0"/></radialGradient>
-      <radialGradient id="jarLamp" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffdf9a" stop-opacity=".8"/><stop offset="1" stop-color="#ffdf9a" stop-opacity="0"/></radialGradient>
-    </defs>
-    <rect width="200" height="132" fill="url(#jarSky)"/>
-    <circle cx="158" cy="26" r="22" fill="url(#jarMoon)"/><circle cx="160" cy="24" r="12" fill="#f7f2d4"/><circle cx="156" cy="22" r="12" fill="#283a5e" opacity=".25"/>
-    <g fill="#fff"><circle cx="24" cy="16" r=".9"/><circle cx="48" cy="28" r=".7"/><circle cx="80" cy="14" r="1"/><circle cx="112" cy="24" r=".7"/><circle cx="40" cy="44" r=".6"/><circle cx="96" cy="40" r=".8"/><circle cx="18" cy="54" r=".7"/></g>
-    <rect y="92" width="200" height="40" fill="#23351f"/>
-    <path d="M0 92 Q60 80 100 92 T200 90 V132 H0Z" fill="#2c4226"/>
-    <ellipse cx="30" cy="92" rx="34" ry="16" fill="#1f3019"/><ellipse cx="172" cy="94" rx="34" ry="16" fill="#1f3019"/>
-    <ellipse cx="100" cy="118" rx="44" ry="11" fill="#3a4a4a" opacity=".5"/>
-    <ellipse cx="100" cy="104" rx="22" ry="7" fill="#5a6e74"/><rect x="96" y="86" width="8" height="18" fill="#6e8189"/><ellipse cx="100" cy="86" rx="11" ry="4" fill="#86a0a8"/><ellipse cx="100" cy="85" rx="7" ry="2.5" fill="#bcd6dd"/>
-    <g class="dt-spark"><circle cx="120" cy="96" r="1.3" fill="#bfe2ef"/><circle cx="78" cy="100" r="1" fill="#bfe2ef"/></g>
-    <rect x="26" y="60" width="3" height="34" fill="#1a140d"/><ellipse cx="27.5" cy="58" rx="5" ry="6" fill="#3a2f1c"/><circle class="dt-flama" cx="27.5" cy="58" r="3.4" fill="#ffdf9a"/><ellipse cx="27.5" cy="58" rx="16" ry="16" fill="url(#jarLamp)"/>
-    <rect x="172" y="60" width="3" height="34" fill="#1a140d"/><ellipse cx="173.5" cy="58" rx="5" ry="6" fill="#3a2f1c"/><circle class="dt-flama" cx="173.5" cy="58" r="3.4" fill="#ffdf9a"/><ellipse cx="173.5" cy="58" rx="16" ry="16" fill="url(#jarLamp)"/>
-    <g class="dt-luc" fill="#fff6b0"><circle cx="60" cy="78" r="1.2"/><circle cx="132" cy="70" r="1"/><circle cx="92" cy="84" r="1.1"/><circle cx="46" cy="96" r="1"/></g>
-  </svg>`,
-  museo: `<svg viewBox="0 0 200 132" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="musW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3550"/><stop offset="1" stop-color="#1a2236"/></linearGradient>
-      <linearGradient id="musBeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dff0ff" stop-opacity=".5"/><stop offset="1" stop-color="#dff0ff" stop-opacity="0"/></linearGradient>
-    </defs>
-    <rect width="200" height="132" fill="url(#musW)"/>
-    <rect y="96" width="200" height="36" fill="#222a40"/><g stroke="#2c3653" stroke-width="1"><line x1="0" y1="108" x2="200" y2="108"/><line x1="40" y1="96" x2="20" y2="132"/><line x1="100" y1="96" x2="100" y2="132"/><line x1="160" y1="96" x2="180" y2="132"/></g>
-    <g fill="#323d5c"><rect x="10" y="8" width="16" height="90"/><rect x="174" y="8" width="16" height="90"/><rect x="64" y="10" width="13" height="86" opacity=".7"/><rect x="123" y="10" width="13" height="86" opacity=".7"/></g>
-    <rect x="0" y="6" width="200" height="6" fill="#39466a"/>
-    <polygon points="84,6 116,6 132,70 68,70" fill="url(#musBeam)" class="dt-beam"/>
-    <rect x="88" y="60" width="24" height="40" fill="#2c3552"/><rect x="84" y="56" width="32" height="6" fill="#3a466a"/>
-    <rect x="86" y="34" width="28" height="24" rx="1" fill="#bfe2ef" opacity=".18" stroke="#7fa6c8" stroke-width="1"/>
-    <path d="M88 40 l10 -4 6 8 -8 6 z" fill="#9fc4e0" opacity=".4"/><path d="M104 36 l8 5 -3 9 -7 -3z" fill="#9fc4e0" opacity=".3"/>
-    <rect x="40" y="22" width="26" height="34" rx="1" fill="#11182a"/><rect x="43" y="25" width="20" height="28" fill="#2a3a5a"/><path d="M46 48 l6 -12 5 7 4 -5 3 10z" fill="#5a7aa0"/>
-    <rect x="134" y="24" width="24" height="30" rx="1" fill="#11182a"/><rect x="137" y="27" width="18" height="24" fill="#3a2f4a"/>
-    <g class="dt-laser" stroke="#ff6b6b" stroke-width=".6" opacity=".5"><line x1="68" y1="78" x2="132" y2="86"/><line x1="68" y1="86" x2="132" y2="78"/></g>
-    <g class="dt-dust" fill="#dff0ff"><circle cx="92" cy="50" r=".6"/><circle cx="104" cy="44" r=".5"/><circle cx="98" cy="58" r=".5"/></g>
-  </svg>`,
-  callejon: `<svg viewBox="0 0 200 132" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="calSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e1118"/><stop offset="1" stop-color="#1b2030"/></linearGradient>
-      <radialGradient id="calLamp" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#ffd98a" stop-opacity=".7"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
-    </defs>
-    <rect width="200" height="132" fill="url(#calSky)"/>
-    <polygon points="0,0 96,0 70,96 0,96" fill="#3a3026"/><polygon points="104,0 200,0 200,96 130,96" fill="#332b22"/>
-    <g stroke="#241c14" stroke-width=".6" opacity=".6"><line x1="0" y1="24" x2="84" y2="24"/><line x1="0" y1="48" x2="78" y2="48"/><line x1="0" y1="72" x2="72" y2="72"/><line x1="116" y1="24" x2="200" y2="24"/><line x1="122" y1="48" x2="200" y2="48"/><line x1="128" y1="72" x2="200" y2="72"/></g>
-    <rect y="96" width="200" height="36" fill="#10131b"/>
-    <ellipse cx="150" cy="118" rx="40" ry="9" fill="#2a3550" opacity=".6"/><ellipse cx="60" cy="124" rx="30" ry="6" fill="#2a3550" opacity=".4"/>
-    <rect x="150" y="6" width="3" height="40" fill="#0a0c12"/><path d="M138 8 h26 v6 h-26z" fill="#0a0c12"/><ellipse cx="151" cy="30" rx="22" ry="30" fill="url(#calLamp)" class="dt-flicker"/><circle cx="151" cy="16" r="3" fill="#ffe6a0"/>
-    <rect x="8" y="60" width="34" height="36" fill="#46362a"/><rect x="8" y="54" width="34" height="7" fill="#5a4636"/><rect x="14" y="64" width="10" height="10" fill="#2c2018"/>
-    <rect x="176" y="40" width="3" height="56" fill="#1a1f2a"/><g stroke="#1a1f2a" stroke-width="2"><line x1="166" y1="52" x2="188" y2="52"/><line x1="166" y1="68" x2="188" y2="68"/><line x1="166" y1="84" x2="188" y2="84"/></g>
-    <rect x="92" y="40" width="20" height="56" fill="#181c26"/><rect x="94" y="42" width="16" height="54" fill="#221a12"/><path d="M110 42 v54" stroke="#0a0c12" stroke-width="3"/><circle cx="106" cy="70" r="1.4" fill="#caa64a"/>
-    <g class="dt-rain2" stroke="#7f93b8" stroke-width=".7" opacity=".45"><line x1="20" y1="0" x2="14" y2="14"/><line x1="50" y1="0" x2="44" y2="14"/><line x1="80" y1="0" x2="74" y2="14"/><line x1="120" y1="0" x2="114" y2="14"/><line x1="160" y1="0" x2="154" y2="14"/><line x1="190" y1="0" x2="184" y2="14"/></g>
-  </svg>`,
-  salon: `<svg viewBox="0 0 200 132" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="salW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbe9d2"/><stop offset="1" stop-color="#f3d3bd"/></linearGradient></defs>
-    <rect width="200" height="132" fill="url(#salW)"/>
-    <rect y="100" width="200" height="32" fill="#e3b89a"/><rect y="100" width="200" height="3" fill="#caa178"/>
-    <rect x="20" y="22" width="40" height="32" rx="2" fill="#cfeaf6" stroke="#fff" stroke-width="3"/><rect x="140" y="22" width="40" height="32" rx="2" fill="#cfeaf6" stroke="#fff" stroke-width="3"/>
-    <path d="M14 18 Q100 6 186 18" stroke="#c98e9b" stroke-width="2" fill="none"/>
-    <g><circle cx="40" cy="20" r="3" fill="#e3899a"/><circle cx="70" cy="15" r="3" fill="#f0c674"/><circle cx="100" cy="13" r="3" fill="#8fbf8f"/><circle cx="130" cy="15" r="3" fill="#7fb0c4"/><circle cx="160" cy="20" r="3" fill="#c9a6d0"/></g>
-    <circle cx="34" cy="40" r="9" fill="#e3899a"/><line x1="34" y1="49" x2="34" y2="74" stroke="#caa178" stroke-width=".7"/>
-    <circle cx="166" cy="38" r="9" fill="#7fb0c4"/><line x1="166" y1="47" x2="166" y2="72" stroke="#caa178" stroke-width=".7"/>
-    <rect x="64" y="84" width="72" height="8" fill="#fff"/><rect x="64" y="92" width="72" height="14" fill="#d98bb0"/>
-    <path d="M70 84 q30 -16 60 0 z" fill="#f6d8a0"/><rect x="98" y="64" width="2" height="14" fill="#e0a85a"/><ellipse class="dt-flama" cx="99" cy="62" rx="2" ry="3.4" fill="#ffcf6a"/>
-    <path d="M84 84 h32 v0 z" fill="none"/><g fill="#fff"><circle cx="80" cy="88" r="1.4"/><circle cx="100" cy="86" r="1.4"/><circle cx="120" cy="88" r="1.4"/></g>
-    <g class="dt-conf" fill="none"><rect x="50" y="30" width="3" height="3" fill="#e3899a"/><rect x="150" y="40" width="3" height="3" fill="#8fbf8f"/><rect x="90" y="26" width="3" height="3" fill="#f0c674"/><rect x="120" y="34" width="3" height="3" fill="#7fb0c4"/></g>
-  </svg>`,
-};
-const DT_AMB = { biblioteca:'amb-velas', jardin:'amb-luna', museo:'amb-spot', callejon:'amb-lluvia', salon:'amb-fiesta' };
-
-const DT_CASOS = [
-  {
-    id:'pastel', titulo:'El pastel saboteado', emoji:'🎂', tipo:'misterio', dificultad:'Fácil',
-    escena:'salon', cliente:'la cumpleañera Dani',
-    intro:'En mi fiesta alguien arruinó el pastel a propósito antes de soplar las velas. ¿Quién fue, detective? Busca pruebas y hazlos hablar.',
-    cats:[ {key:'bebida', etiqueta:'Bebía', emoji:'🥤'}, {key:'mano', etiqueta:'Mano', emoji:'✋'} ],
-    sospechosos:[
-      {id:'tomi', nombre:'Tomi',    emoji:'🧒', color:'#6b8f4a', desc:'El primo bromista.',  traits:{bebida:'Jugo',   mano:'Zurdo'},   pos:{x:50,y:62},
-        testimonio:{texto:'Yo ni me acerqué a la mesa del pastel, lo juro.', miente:true}},
-      {id:'flor', nombre:'Flor',    emoji:'👧', color:'#c98e9b', desc:'La mejor amiga.',     traits:{bebida:'Bebida', mano:'Diestro'}, pos:{x:24,y:66},
-        testimonio:{texto:'Yo tomaba bebida cola, ¡el jugo no me gusta!', regla:null}},
-      {id:'rita', nombre:'Tía Rita',emoji:'👩', color:'#9a6fb0', desc:'Repartía el pastel.',  traits:{bebida:'Jugo',   mano:'Diestro'}, pos:{x:76,y:64},
-        testimonio:{texto:'Vi a alguien echarle algo al pastel… ¡con la mano izquierda!', regla:{cat:'mano', val:'Zurdo', tipo:'es'}}},
-    ],
-    culpable:'tomi',
-    pistas:[
-      {x:30,y:46, emoji:'🧃', nombre:'Vaso de jugo', texto:'Junto al pastel quedó un vaso de jugo a medio tomar.', regla:{cat:'bebida', val:'Jugo', tipo:'es'} },
-    ],
-    decoys:[{e:'🎈',x:18,y:30},{e:'🎁',x:84,y:74},{e:'🔪',x:64,y:74}],
-    resolucion:'¡Tomi! Bebía jugo (su vaso lo delató) y la tía Rita lo vio actuar con la zurda. Su coartada era mentira.',
-    recompensa:{monedas:30, xp:30},
-  },
-  {
-    id:'belmonte', titulo:'Crimen en la Mansión Belmonte', emoji:'🏛️', tipo:'misterio', dificultad:'Media',
-    escena:'biblioteca', cliente:'la familia Belmonte',
-    intro:'Durante la fiesta, Don Augusto apareció sin vida en su biblioteca. Cuatro invitados estaban cerca. Reúne pruebas y testimonios.',
-    cats:[ {key:'bebida', etiqueta:'Bebía', emoji:'🥤'}, {key:'mano', etiqueta:'Mano', emoji:'✋'}, {key:'perfume', etiqueta:'Aroma', emoji:'🌸'} ],
-    sospechosos:[
-      {id:'clara',    nombre:'Clara',    emoji:'👩', color:'#b06a86', desc:'La sobrina.',           traits:{bebida:'Té',     mano:'Zurdo',   perfume:'Floral'}, pos:{x:30,y:60},
-        testimonio:{texto:'Yo estuve toda la noche en el jardín, jamás entré aquí.', miente:true}},
-      {id:'renata',   nombre:'Renata',   emoji:'🎤', color:'#9a6fb0', desc:'La cantante.',          traits:{bebida:'Vino',   mano:'Diestro', perfume:'Floral'}, pos:{x:52,y:66},
-        testimonio:{texto:'El culpable olía a perfume floral… igual que yo, sí.', regla:{cat:'perfume', val:'Floral', tipo:'es'}}},
-      {id:'mauricio', nombre:'Mauricio', emoji:'🤵', color:'#4a5a6a', desc:'El mayordomo.',         traits:{bebida:'Café',   mano:'Diestro', perfume:'Ninguno'}, pos:{x:72,y:60},
-        testimonio:{texto:'Yo era el único que bebía café esa noche, sirviéndolo a todos.', regla:{cat:'bebida', val:'Café', tipo:'no'}}},
-      {id:'hugo',     nombre:'Hugo',     emoji:'🧔', color:'#7a5c3a', desc:'El socio.',             traits:{bebida:'Whisky', mano:'Zurdo',   perfume:'Ninguno'}, pos:{x:88,y:68},
-        testimonio:{texto:'Estuve fumando en la terraza. No sé nada.', regla:null}},
-    ],
-    culpable:'clara',
-    pistas:[
-      {x:120,y:74, emoji:'🖋️', nombre:'Pluma caída', texto:'La pluma cayó al lado IZQUIERDO del escritorio: el culpable es zurdo.', regla:{cat:'mano', val:'Zurdo', tipo:'es'} },
-    ],
-    decoys:[{e:'📕',x:50,y:80},{e:'🔑',x:24,y:84},{e:'🕯️',x:60,y:50}],
-    resolucion:'¡Clara! Zurda (la pluma), de perfume floral (lo dijo Renata) y no bebía café (Mauricio). Su coartada del jardín era falsa: su taza de té estaba aquí.',
-    recompensa:{monedas:55, xp:55},
-  },
-  {
-    id:'carta', titulo:'La carta de amor anónima', emoji:'💌', tipo:'misterio', dificultad:'Media',
-    escena:'jardin', cliente:'Catalina',
-    intro:'Alguien dejó una carta de amor anónima con un girasol. Hay 4 admiradores posibles. Descubre quién es el admirador secreto.',
-    cats:[ {key:'mano', etiqueta:'Mano', emoji:'✋'}, {key:'tinta', etiqueta:'Tinta', emoji:'🖊️'}, {key:'flor', etiqueta:'Flor', emoji:'🌼'} ],
-    sospechosos:[
-      {id:'diego', nombre:'Diego', emoji:'🧑', color:'#4a6b8a', desc:'El de la sonrisa tímida.', traits:{mano:'Diestro', tinta:'Azul',  flor:'Girasol'}, pos:{x:50,y:64},
-        testimonio:{texto:'¿Yo? No… no sé nada de esa carta. (se sonroja)', miente:true}},
-      {id:'mateo', nombre:'Mateo', emoji:'🧑‍🦱', color:'#8a5a3a', desc:'El poeta del curso.',     traits:{mano:'Zurdo',   tinta:'Azul',  flor:'Rosa'}, pos:{x:26,y:68},
-        testimonio:{texto:'Yo lo vi dejar un girasol, ¡no una rosa como las que YO regalo!', regla:{cat:'flor', val:'Girasol', tipo:'es'}}},
-      {id:'benja', nombre:'Benja', emoji:'👦', color:'#5a7a4a', desc:'El deportista.',           traits:{mano:'Diestro', tinta:'Negra', flor:'Girasol'}, pos:{x:72,y:62},
-        testimonio:{texto:'Yo solo escribo con lapicera negra, mira.', regla:null}},
-      {id:'pablo', nombre:'Pablo', emoji:'🧑‍🎤', color:'#9a6fb0', desc:'El músico.',              traits:{mano:'Diestro', tinta:'Azul',  flor:'Rosa'}, pos:{x:88,y:70},
-        testimonio:{texto:'Estaba ensayando con la banda toda la tarde.', regla:null}},
-    ],
-    culpable:'diego',
-    pistas:[
-      {x:40,y:78, emoji:'✍️', nombre:'Trazo de la letra', texto:'La inclinación de la letra es claramente de alguien DIESTRO.', regla:{cat:'mano', val:'Diestro', tipo:'es'} },
-      {x:62,y:74, emoji:'🖊️', nombre:'Mancha de tinta', texto:'La tinta de la carta es AZUL.', regla:{cat:'tinta', val:'Azul', tipo:'es'} },
-    ],
-    decoys:[{e:'🌹',x:18,y:80},{e:'✉️',x:80,y:50},{e:'🔦',x:30,y:50}],
-    resolucion:'¡Era Diego! Diestro, tinta azul y el girasol que delató Mateo. Confesó sonrojado que la carta siempre fue para Cata 💛',
-    recompensa:{monedas:55, xp:55},
-  },
-  {
-    id:'diamante', titulo:'El robo del Diamante Azul', emoji:'💎', tipo:'robo', dificultad:'Difícil',
-    escena:'museo', cliente:'el Museo Real',
-    intro:'El Diamante Azul desapareció durante la gala. Las cámaras fallaron. Cuatro personas pudieron hacerlo. Atrapa al ladrón.',
-    cats:[ {key:'cabello', etiqueta:'Cabello', emoji:'💇'}, {key:'calzado', etiqueta:'Calzado', emoji:'👞'}, {key:'altura', etiqueta:'Altura', emoji:'📏'} ],
-    sospechosos:[
-      {id:'nadia',   nombre:'Nadia',   emoji:'🤸', color:'#b06a86', desc:'La acróbata.',     traits:{cabello:'Pelirrojo', calzado:'Botas',   altura:'Alta'}, pos:{x:40,y:62},
-        testimonio:{texto:'Estuve en el escenario toda la gala, ¡pregúntenle a quien quieran!', miente:true}},
-      {id:'gunter',  nombre:'Günter',  emoji:'💂', color:'#4a5a6a', desc:'El guardia.',      traits:{cabello:'Castaño',   calzado:'Botas',   altura:'Alta'}, pos:{x:62,y:66},
-        testimonio:{texto:'Dejó huellas de botas pesadas. Yo uso botas reglamentarias también.', regla:{cat:'calzado', val:'Botas', tipo:'es'}}},
-      {id:'celeste', nombre:'Celeste', emoji:'👩‍🎨', color:'#9a6fb0', desc:'La curadora.',     traits:{cabello:'Pelirrojo', calzado:'Tacones', altura:'Baja'}, pos:{x:80,y:60},
-        testimonio:{texto:'Yo soy bajita, jamás alcanzaría esa vitrina.', regla:null}},
-      {id:'bruno',   nombre:'Bruno',   emoji:'🕴️', color:'#3a4a5a', desc:'El coleccionista.', traits:{cabello:'Pelirrojo', calzado:'Zapatos', altura:'Alta'}, pos:{x:92,y:70},
-        testimonio:{texto:'Vine de zapatos de gala, no podría trepar nada.', regla:null}},
-    ],
-    culpable:'nadia',
-    pistas:[
-      {x:30,y:52, emoji:'🧶', nombre:'Mechón de pelo', texto:'En la rejilla del tragaluz quedó un mechón de pelo PELIRROJO.', regla:{cat:'cabello', val:'Pelirrojo', tipo:'es'} },
-      {x:50,y:78, emoji:'📏', nombre:'Marca en la vitrina', texto:'La marca de fuerza en la vitrina está MUY ALTA.', regla:{cat:'altura', val:'Alta', tipo:'es'} },
-    ],
-    decoys:[{e:'🔦',x:80,y:50},{e:'🪢',x:18,y:48},{e:'🏺',x:68,y:50}],
-    resolucion:'¡Nadia, la acróbata! Pelirroja (el mechón), alta (la marca) y de botas (lo dijo Günter): la única que encaja. Su coartada del escenario era falsa.',
-    recompensa:{monedas:65, xp:65},
-  },
-  {
-    id:'callejon', titulo:'El ladrón del callejón', emoji:'🌃', tipo:'robo', dificultad:'Difícil',
-    escena:'callejon', cliente:'la joyería de la esquina',
-    intro:'Robaron la joyería y el ladrón huyó por el callejón lluvioso. 5 sospechosos y cada pista descarta a alguien. Solo la lógica lo atrapa.',
-    cats:[ {key:'altura', etiqueta:'Altura', emoji:'📏'}, {key:'calzado', etiqueta:'Calzado', emoji:'👞'}, {key:'guante', etiqueta:'Guantes', emoji:'🧤'}, {key:'cabello', etiqueta:'Cabello', emoji:'💇'} ],
-    sospechosos:[
-      {id:'vic', nombre:'Vic', emoji:'🕴️', color:'#3a4150', desc:'El silencioso.',  traits:{altura:'Alta', calzado:'Botas',   guante:'Sí', cabello:'Moreno'}, pos:{x:42,y:60},
-        testimonio:{texto:'Yo ni pasé por este callejón en toda la noche.', miente:true}},
-      {id:'rex', nombre:'Rex', emoji:'🧔', color:'#7a5c3a', desc:'El fortachón.',  traits:{altura:'Alta', calzado:'Botas',   guante:'No', cabello:'Rubio'}, pos:{x:60,y:64},
-        testimonio:{texto:'Mira mis manos: nunca uso guantes.', regla:null}},
-      {id:'sam', nombre:'Sam', emoji:'🧑', color:'#5a6a4a', desc:'El bajito.',     traits:{altura:'Baja', calzado:'Botas',   guante:'Sí', cabello:'Moreno'}, pos:{x:76,y:58},
-        testimonio:{texto:'Soy muy bajo, no llego ni a la vitrina.', regla:null}},
-      {id:'leo', nombre:'Leo', emoji:'👨', color:'#4a5a6a', desc:'El elegante.',   traits:{altura:'Alta', calzado:'Zapatos', guante:'Sí', cabello:'Moreno'}, pos:{x:88,y:66},
-        testimonio:{texto:'Vine de zapatos finos, no de botas.', regla:null}},
-      {id:'ona', nombre:'Ona', emoji:'👱', color:'#b06a86', desc:'La cómplice dudosa.', traits:{altura:'Alta', calzado:'Botas', guante:'Sí', cabello:'Rubio'}, pos:{x:30,y:70},
-        testimonio:{texto:'El pelo del que entró era MORENO… no rubio como el mío.', regla:{cat:'cabello', val:'Moreno', tipo:'es'}}},
-    ],
-    culpable:'vic',
-    pistas:[
-      {x:50,y:50, emoji:'📏', nombre:'Marca alta en la pared', texto:'Una marca de mano muy ALTA en la pared.', regla:{cat:'altura', val:'Alta', tipo:'es'} },
-      {x:24,y:80, emoji:'🥾', nombre:'Huella de bota', texto:'Huellas con barro de BOTAS gruesas.', regla:{cat:'calzado', val:'Botas', tipo:'es'} },
-      {x:68,y:78, emoji:'🧤', nombre:'Guante perdido', texto:'No hay huellas dactilares: usaba GUANTES.', regla:{cat:'guante', val:'Sí', tipo:'es'} },
-    ],
-    decoys:[{e:'🗑️',x:14,y:60},{e:'🔑',x:82,y:80},{e:'📦',x:90,y:52}],
-    resolucion:'¡Vic! Alto, con botas, guantes (las pruebas) y pelo moreno (lo soltó Ona). El único que sobrevive a las 4 pistas. Su coartada era mentira.',
-    recompensa:{monedas:75, xp:75},
-  },
-];
-
-let dt = null, dtVista = 'lista';
-function dtTipoNombre(t){ return {robo:'Robo', infidelidad:'Caso del corazón', desaparicion:'Desaparición', misterio:'Misterio'}[t] || t; }
-function dtCatEmoji(caso, key){ const c=(caso.cats||[]).find(x=>x.key===key); return c?c.emoji:'🔹'; }
-function dtCatEtiqueta(caso, key){ const c=(caso.cats||[]).find(x=>x.key===key); return c?c.etiqueta:key; }
-function dtCasoDelDia(){ const h=new Date(); const n=h.getFullYear()*10000+(h.getMonth()+1)*100+h.getDate(); return DT_CASOS[n % DT_CASOS.length].id; }
-function dtEsResuelto(id){ asegurarJuegos(); return datos.juegos.detective.resueltos.includes(id); }
-function dtProgresoTag(id){ try{ const s=JSON.parse(localStorage.getItem('jxDD_'+id)); if(s&&s.fase&&s.fase!=='brief') return s.fase; }catch(e){} return null; }
-function dtGuardar(){ if(!dt) return; try{ localStorage.setItem('jxDD_'+dt.caso.id, JSON.stringify({ fase:dt.fase, enc:[...dt.enc], interr:[...dt.interr], desc:[...dt.desc] })); }catch(e){} }
-function dtCargar(id){ try{ const s=JSON.parse(localStorage.getItem('jxDD_'+id)); if(s){ dt.fase=s.fase||'brief'; dt.enc=new Set(s.enc||[]); dt.interr=new Set(s.interr||[]); dt.desc=new Set(s.desc||[]); } }catch(e){} }
-function dtLimpiar(id){ try{ localStorage.removeItem('jxDD_'+id); }catch(e){} }
-
-/* ── Núcleo lógico ── */
-function dtContradice(regla, susp){ if(!regla) return false; const v=susp.traits[regla.cat]; return regla.tipo==='no' ? (v===regla.val) : (v!==regla.val); }
-function dtCluesPrueba(){ return dt.caso.pistas.filter((p,i)=>dt.enc.has(i)).map(p=>({tipo:'prueba', nombre:p.nombre, emoji:p.emoji, texto:p.texto, regla:p.regla})); }
-function dtCluesTestimonio(){ return dt.caso.sospechosos.filter(s=>dt.interr.has(s.id) && s.testimonio && s.testimonio.regla).map(s=>({tipo:'testimonio', nombre:s.nombre+' declaró', emoji:s.emoji, texto:'“'+s.testimonio.texto+'”', regla:s.testimonio.regla})); }
-function dtReglasActivas(){ return dtCluesPrueba().concat(dtCluesTestimonio()); }
-function dtContradicho(susp){ return dtReglasActivas().some(c=>dtContradice(c.regla, susp)); }
-function dtReglaQueDescarta(susp){ return dtReglasActivas().find(c=>dtContradice(c.regla, susp)); }
-function dtVivos(){ return dt.caso.sospechosos.filter(s=>!dt.desc.has(s.id)); }
-function dtHechos(){ const out=[]; dtReglasActivas().forEach(c=>{ if(c.regla && c.regla.tipo==='es') out.push({cat:c.regla.cat, val:c.regla.val}); }); return out; }
-
-function dtMostrar(){ asegurarJuegos(); dtVista='lista'; dtRender(); }
-function dtAbrir(id){
-  const caso=DT_CASOS.find(c=>c.id===id); if(!caso) return;
-  dt={ caso, fase:'brief', enc:new Set(), interr:new Set(), desc:new Set() };
-  if(dtEsResuelto(id)) dtLimpiar(id); else dtCargar(id);
-  dtVista='caso'; jxSonido('tap'); dtRender();
-}
-function dtRender(){
-  const el=document.getElementById('jxScreenDetective'); if(!el) return;
-  if(dtVista==='lista'){
-    el.innerHTML=dtHtmlLista();
-    el.querySelectorAll('[data-abrir]').forEach(b=>b.onclick=()=>dtAbrir(b.dataset.abrir));
-    el.scrollTop=0; return;
-  }
-  el.innerHTML = dtChrome() + '<div class="dt-etapa" id="dtEtapa"></div>';
-  el.querySelector('[data-salir]').onclick=()=>{ dtGuardar(); dtVista='lista'; dtRender(); };
-  if(dt.fase==='brief') dtBriefRender();
-  else if(dt.fase==='investigar') dtInvestigarRender();
-  else dtDeducirRender();
-  el.scrollTop=0;
-}
-function dtChrome(){
-  const c=dt.caso, pasos={brief:0,investigar:1,deducir:2}, pct=Math.round((pasos[dt.fase]||0)/2*100);
-  const etapaNom={brief:'El caso', investigar:'En la escena', deducir:'Deducción'}[dt.fase];
-  return '<button class="jx-btn ghost dt-back" data-salir>‹ Casos</button>'+
-    '<div class="dt-caso-head"><span class="dt-caso-emo big">'+c.emoji+'</span><div><h3>'+c.titulo+'</h3>'+
-      '<div class="dt-caso-meta">'+etapaNom+' · '+c.dificultad+'</div></div></div>'+
-    '<div class="dt-prog"><div style="width:'+pct+'%"></div></div>'+
-    '<div class="dt-pasos"><span class="'+(dt.fase==='brief'?'on':'')+'">📂 El caso</span><span class="'+(dt.fase==='investigar'?'on':'')+'">🔍 Escena</span><span class="'+(dt.fase==='deducir'?'on':'')+'">🧠 Deducir</span></div>';
-}
-function dtHtmlLista(){
-  asegurarJuegos();
-  const hoy=dtCasoDelDia();
-  const cards=DT_CASOS.map(c=>{
-    const resuelto=dtEsResuelto(c.id), esDia=c.id===hoy, prog=dtProgresoTag(c.id);
-    const estado = resuelto ? '<span class="dt-ok">✓ Resuelto</span>' : (prog ? '<span class="dt-prog-tag">▶ Continuar</span>' : '<span class="dt-prog-tag nuevo">Nuevo</span>');
-    return '<button class="dt-caso-card'+(esDia?' dia':'')+'" data-abrir="'+c.id+'">'+
-      (esDia?'<span class="dt-ribbon">🌟 Caso del día</span>':'')+
-      '<div class="dt-caso-emo">'+c.emoji+'</div>'+
-      '<div class="dt-caso-info"><div class="dt-caso-tit">'+c.titulo+'</div>'+
-      '<div class="dt-caso-meta"><span class="dt-tag '+c.tipo+'">'+dtTipoNombre(c.tipo)+'</span> · '+c.dificultad+' · '+c.sospechosos.length+' sospechosos</div>'+
-      '<div class="dt-caso-cli">'+estado+'</div></div></button>';
-  }).join('');
-  return '<p class="jx-tip">🕵️ Investiga la escena: busca <b>pruebas</b> e <b>interroga</b> a los sospechosos. Junta las pistas y descarta a quienes las contradicen. ¡Cuidado con las coartadas falsas!</p><div class="dt-list">'+cards+'</div>';
-}
-
-/* ── Tarjeta de sospechoso ── */
-function dtSuspCard(s, opc){
-  opc=opc||{};
-  const c=dt.caso;
-  const chips=c.cats.map(cat=>{
-    const v=s.traits[cat.key];
-    let cls='dt-trait sm';
-    if(opc.marcar){
-      const contra=dtReglasActivas().some(p=>p.regla && p.regla.cat===cat.key && dtContradice(p.regla,s));
-      const apoya=dtHechos().some(h=>h.cat===cat.key && h.val===v);
-      if(contra) cls+=' mal'; else if(apoya) cls+=' bien';
-    }
-    return '<span class="'+cls+'">'+cat.emoji+' '+v+'</span>';
-  }).join('');
-  const desc = dt.desc.has(s.id);
-  return '<div class="dt-susp'+(desc?' descartado':'')+(opc.btn?' clickable':'')+'"'+(opc.btn?' data-susp="'+s.id+'"':'')+'>'+
-    (desc?'<span class="dt-susp-x">✕</span>':'')+
-    '<div class="dt-susp-top"><span class="dt-susp-emo">'+s.emoji+'</span><div class="dt-susp-id"><b>'+s.nombre+'</b><small>'+s.desc+'</small></div></div>'+
-    '<div class="dt-traits">'+chips+'</div></div>';
-}
-
-/* ── Fase 1: El caso ── */
-function dtBriefRender(){
-  const cont=document.getElementById('dtEtapa'), c=dt.caso;
-  const susp=c.sospechosos.map(s=>dtSuspCard(s,{})).join('');
-  cont.innerHTML=
-    '<div class="dt-brief"><span class="dt-brief-cli">Cliente: '+c.cliente+'</span><p>“'+c.intro+'”</p></div>'+
-    '<h3 class="dt-et-tit">Los sospechosos</h3>'+
-    '<p class="dt-et-sub">Memoriza sus rasgos: las pistas y los testimonios hablarán de ellos.</p>'+
-    '<div class="dt-susp-grid">'+susp+'</div>'+
-    '<div class="dt-et-ctrl"><button class="jx-btn rosa" id="dtAInvestigar">🔍 Ir a la escena</button></div>';
-  document.getElementById('dtAInvestigar').onclick=()=>{ dt.fase='investigar'; jxSonido('tap'); dtGuardar(); dtRender(); };
-}
-
-/* ── Fase 2: La escena (buscar pruebas + interrogar) ── */
-function dtInvestigarRender(){
-  const cont=document.getElementById('dtEtapa'), c=dt.caso;
-  if(dt._invHint==null) dt._invHint=0;
-  const totalP=c.pistas.length, hechasP=dt.enc.size;
-  const totalS=c.sospechosos.length, hechasS=dt.interr.size;
-  const completo = hechasP===totalP && hechasS===totalS;
-  const objs=c.pistas.map((p,i)=>'<span class="dt-obj'+(dt.enc.has(i)?' ok':'')+'" style="left:'+p.x+'%;top:'+p.y+'%">'+p.emoji+'</span>').join('');
-  const decoys=(c.decoys||[]).map(d=>'<span class="dt-obj decoy" style="left:'+d.x+'%;top:'+d.y+'%">'+d.e+'</span>').join('');
-  const figs=c.sospechosos.map(s=>'<button class="dt-fig'+(dt.interr.has(s.id)?' hablado':'')+'" data-fig="'+s.id+'" style="left:'+s.pos.x+'%;top:'+s.pos.y+'%">'+
-      '<span class="dt-fig-cuerpo" style="background:'+(s.color||'#5b6b8a')+'"></span>'+
-      '<span class="dt-fig-cara">'+s.emoji+'</span>'+
-      '<span class="dt-fig-nom">'+s.nombre+'</span>'+
-      '<span class="dt-fig-badge">'+(dt.interr.has(s.id)?'💬':'❓')+'</span></button>').join('');
-  const clues=dtReglasActivas();
-  const exped = clues.length ? clues.map(p=>'<div class="dt-clue"><span class="dt-clue-emo">'+p.emoji+'</span><div><b>'+p.nombre+'</b><p>'+p.texto+'</p>'+(p.regla?'<span class="dt-clue-regla">'+dtReglaTexto(c,p.regla)+'</span>':'<span class="dt-clue-regla coartada">coartada — sin dato útil</span>')+'</div></div>').join('')
-    : '<p class="dt-vacio">Aún no tienes pistas. Busca pruebas 🔍 e interroga 💬.</p>';
-  cont.innerHTML=
-    '<div class="dt-escena '+(DT_AMB[c.escena]||'')+'" id="dtEsc">'+(DT_ESCENAS[c.escena]||'')+'<div class="dt-esc-layer" id="dtEscLayer">'+decoys+objs+figs+'</div></div>'+
-    '<div class="dt-esc-hud"><span class="pill">🔍 Pruebas '+hechasP+'/'+totalP+'</span><span class="pill">💬 Interrogados '+hechasS+'/'+totalS+'</span>'+
-      (completo?'':'<button class="dt-hint-btn" id="dtPista">💡 ('+(3-dt._invHint)+')</button>')+'</div>'+
-    '<p class="dt-et-sub" style="margin-top:10px">Toca los objetos sospechosos para examinarlos y a las personas para interrogarlas.</p>'+
-    '<h3 class="dt-et-tit">📋 Expediente</h3><div class="dt-clues">'+exped+'</div>'+
-    (completo?'<div class="dt-et-ctrl"><button class="jx-btn rosa" id="dtADeducir">🧠 Pasar a deducir</button></div>':'<p class="dt-et-sub" style="text-align:center;margin-top:12px">Encuentra todas las pruebas e interroga a todos para deducir.</p>');
-  const esc=document.getElementById('dtEsc');
-  esc.addEventListener('pointerdown', e=>dtInvestigarTap(e));
-  cont.querySelectorAll('[data-fig]').forEach(b=>b.addEventListener('click', e=>{ e.stopPropagation(); dtInterrogar(b.dataset.fig); }));
-  if(!completo && document.getElementById('dtPista')) document.getElementById('dtPista').onclick=()=>dtInvestigarPista();
-  if(completo){ const b=document.getElementById('dtADeducir'); if(b) b.onclick=()=>{ dt.fase='deducir'; jxSonido('tap'); dtGuardar(); dtRender(); }; }
-}
-function dtReglaTexto(c, r){
-  const et=dtCatEtiqueta(c, r.cat).toLowerCase();
-  return r.tipo==='no' ? '⇒ el culpable NO: '+et+' “'+r.val+'”' : '⇒ el culpable: '+et+' = “'+r.val+'”';
-}
-function dtInterrogar(id){
-  const s=dt.caso.sospechosos.find(x=>x.id===id); if(!s) return;
-  const primera=!dt.interr.has(id);
-  if(primera){ dt.interr.add(id); jxSonido('bien'); jxVibrar(12); jxRecompensar(3,4,{}); dtGuardar(); }
-  else jxSonido('tap');
-  dtTestimonioPopup(s);
-  if(primera) dtInvestigarRender();
-}
-function dtTestimonioPopup(s){
-  avisar('💬 '+s.nombre+': “'+s.testimonio.texto+'”');
-}
-function dtInvestigarTap(e){
-  const c=dt.caso; if(e.target.closest('[data-fig]')) return;
-  if(dt.enc.size===c.pistas.length) return;
-  const esc=document.getElementById('dtEscLayer'), r=esc.getBoundingClientRect();
-  const px=(e.clientX-r.left)/r.width*100, py=(e.clientY-r.top)/r.height*100;
-  let mejor=-1, dmin=99;
-  c.pistas.forEach((p,i)=>{ if(dt.enc.has(i)) return; const d=Math.hypot(p.x-px,p.y-py); if(d<dmin){ dmin=d; mejor=i; } });
-  if(mejor>=0 && dmin<11){ dt.enc.add(mejor); jxSonido('bien'); jxVibrar(12); jxRecompensar(3,4,{}); dtGuardar(); dtInvestigarRender(); }
-  else{ jxSonido('tap'); const m=document.createElement('div'); m.className='dt-miss'; m.style.left=px+'%'; m.style.top=py+'%'; esc.appendChild(m); setTimeout(()=>m.remove(),500); }
-}
-function dtInvestigarPista(){
-  const c=dt.caso; if(dt._invHint>=3){ avisar('No quedan pistas'); return; }
-  const faltaP=c.pistas.map((p,i)=>i).filter(i=>!dt.enc.has(i));
-  const faltaS=c.sospechosos.filter(s=>!dt.interr.has(s.id));
-  dt._invHint++;
-  const b=document.getElementById('dtPista'); if(b) b.textContent='💡 ('+(3-dt._invHint)+')';
-  if(faltaP.length){
-    const p=c.pistas[faltaP[Math.floor(Math.random()*faltaP.length)]];
-    const esc=document.getElementById('dtEscLayer');
-    const m=document.createElement('div'); m.className='dt-hint'; m.style.left=p.x+'%'; m.style.top=p.y+'%'; esc.appendChild(m);
-    setTimeout(()=>m.remove(),1600);
-  }else if(faltaS.length){
-    avisar('💡 Te falta interrogar a '+faltaS.map(s=>s.nombre).join(', '));
-  }
-}
-
-/* ── Fase 3: Deducción ── */
-function dtDeducirRender(){
-  const cont=document.getElementById('dtEtapa'), c=dt.caso;
-  const hechos=dtHechos().map(h=>'<span class="dt-trait">'+dtCatEmoji(c,h.cat)+' '+h.val+'</span>').join('');
-  const clues=dtReglasActivas().filter(p=>p.regla).map(p=>'<li><b>'+p.nombre+'</b>: <i>'+dtReglaTexto(c,p.regla).replace('⇒ ','')+'</i></li>').join('');
-  const susp=c.sospechosos.map(s=>dtSuspCard(s,{btn:true, marcar:true})).join('');
-  const vivos=dtVivos();
-  const listo = vivos.length===1 && dt.desc.size===c.sospechosos.length-1;
-  cont.innerHTML=
-    '<div class="dt-perfil-box"><b>🎯 Perfil del culpable (según las pruebas y testimonios)</b><div class="dt-traits" style="margin-top:8px">'+(hechos||'<span class="dt-trait sm">—</span>')+'</div>'+
-      (clues?'<ul class="dt-clue-mini">'+clues+'</ul>':'')+'</div>'+
-    '<p class="dt-et-sub">Toca a quienes <b>contradicen</b> alguna pista para descartarlos. Verde = coincide, rojo = lo descarta. Solo podrás acusar cuando quede uno.</p>'+
-    '<div class="dt-susp-grid deducir">'+susp+'</div>'+
-    '<div class="dt-et-ctrl"><button class="jx-btn rosa'+(listo?'':' off')+'" id="dtAcusar"'+(listo?'':' disabled')+'>⚖️ '+(listo?('Acusar a '+vivos[0].nombre):'Descarta hasta que quede 1')+'</button></div>';
-  cont.querySelectorAll('[data-susp]').forEach(b=>b.onclick=()=>dtToggleDescartar(b.dataset.susp));
-  const ac=document.getElementById('dtAcusar'); if(ac && listo) ac.onclick=()=>dtAcusar(vivos[0]);
-}
-function dtToggleDescartar(id){
-  const s=dt.caso.sospechosos.find(x=>x.id===id); if(!s) return;
-  if(dt.desc.has(id)){ dt.desc.delete(id); jxSonido('tap'); jxVibrar(8); dtGuardar(); dtDeducirRender(); return; }
-  const p=dtReglaQueDescarta(s);
-  if(p){ dt.desc.add(id); jxSonido('bien'); jxVibrar(12); dtGuardar(); dtDeducirRender(); avisar('Descartado: '+s.nombre+' contradice “'+p.nombre+'”.'); }
-  else{ jxSonido('mal'); jxVibrar(28); avisar('🔎 Ninguna prueba descarta a '+s.nombre+'. Revisa las pistas.'); const card=document.querySelector('[data-susp="'+id+'"]'); if(card){ card.classList.remove('sacude'); void card.offsetWidth; card.classList.add('sacude'); } }
-}
-function dtAcusar(s){
-  if(s.id===dt.caso.culpable){ dtCasoResuelto(); }
-  else{ jxSonido('mal'); jxVibrar(40); avisar('Te equivocaste de persona. Vuelve a revisar las pruebas.'); }
-}
-function dtCasoResuelto(){
-  const c=dt.caso; asegurarJuegos();
-  const ya=datos.juegos.detective.resueltos.includes(c.id);
-  if(!ya) datos.juegos.detective.resueltos.push(c.id);
-  let monedas=c.recompensa.monedas, xp=c.recompensa.xp, extra='';
-  if(ya){ monedas=Math.ceil(monedas*0.3); xp=Math.ceil(xp*0.3); }
-  if(c.id===dtCasoDelDia() && datos.juegos.detective.bonusDiario!==jxHoyClave()){ datos.juegos.detective.bonusDiario=jxHoyClave(); monedas+=25; xp+=20; extra=' · ¡bonus del día 🌟!'; }
-  dtLimpiar(c.id);
-  const r=jxRecompensar(monedas, xp, { desde: document.getElementById('jxScreenDetective') });
-  jxCelebrar({ titulo:'¡Caso resuelto! 🕵️', sub:c.resolucion+extra, monedas, xp, subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Volver a los casos', onNext:()=>{ dtVista='lista'; dtRender(); } });
-}
 
 /* ============================================================
    NUESTRO JARDÍN — incremental
@@ -6468,6 +5748,839 @@ function jarPintarLienzo(t, dt){
     ctx.fillStyle = 'rgba(255,255,255,' + (jarFlash * 0.25) + ')';
     ctx.fillRect(0, 0, w, h);
     jarFlash -= 0.06;
+  }
+}
+
+/* ============================================================
+   CONTENIDO CLÍNICO — kinesiología
+   ------------------------------------------------------------
+   TODO este bloque es contenido de estudio y está pendiente de
+   revisión por Catalina. Si algo está mal, se corrige ACÁ y el
+   juego entero queda corregido: es la única fuente de verdad.
+
+   Criterio de lo que se incluyó: anatomía y semiología estables
+   y ampliamente aceptadas. Se evitó todo lo que cambia según
+   autor, escuela o guía clínica.
+
+   Ojo con dos cosas al revisar:
+   - Los rangos articulares varían según la fuente (acá se usó
+     AAOS). Si en la U usan otra referencia, cambian los números.
+   - Las pruebas ortopédicas orientan, no diagnostican solas.
+     En el juego se simplifican a "positiva = sugiere X" para que
+     la mecánica funcione.
+   ============================================================ */
+
+const KIN_PRUEBAS = [
+  { id:'neer',      nom:'Neer',                 zona:'hombro',   como:'Elevación pasiva del brazo en rotación interna, estabilizando la escápula.', sug:'pinzamiento subacromial' },
+  { id:'hawkins',   nom:'Hawkins-Kennedy',      zona:'hombro',   como:'Hombro y codo a 90°, se lleva a rotación interna.',                          sug:'pinzamiento subacromial' },
+  { id:'jobe',      nom:'Jobe (lata vacía)',    zona:'hombro',   como:'Brazo a 90° de abducción, 30° de flexión horizontal y pulgar hacia abajo; se resiste.', sug:'compromiso del supraespinoso' },
+  { id:'patte',     nom:'Patte',                zona:'hombro',   como:'Rotación externa resistida con el brazo a 90° de abducción.',                sug:'compromiso del infraespinoso y redondo menor' },
+  { id:'gerber',    nom:'Gerber (lift-off)',    zona:'hombro',   como:'Mano en la zona lumbar, se pide separarla de la espalda.',                   sug:'compromiso del subescapular' },
+  { id:'speed',     nom:'Speed',                zona:'hombro',   como:'Flexión anterior resistida del hombro con el codo extendido y antebrazo supinado.', sug:'tendinopatía de la porción larga del bíceps' },
+  { id:'aprension', nom:'Aprensión anterior',   zona:'hombro',   como:'Abducción y rotación externa progresiva del hombro.',                        sug:'inestabilidad anterior de hombro' },
+  { id:'cozen',     nom:'Cozen',                zona:'codo',     como:'Extensión resistida de muñeca con el codo en extensión y antebrazo pronado.', sug:'epicondilalgia lateral' },
+  { id:'golf',      nom:'Epitrocleítis (flexión resistida)', zona:'codo', como:'Flexión de muñeca resistida con el codo extendido.',                 sug:'epicondilalgia medial' },
+  { id:'phalen',    nom:'Phalen',               zona:'muñeca',   como:'Flexión palmar máxima de ambas muñecas sostenida cerca de un minuto.',        sug:'síndrome del túnel carpiano' },
+  { id:'tinel',     nom:'Tinel',                zona:'muñeca',   como:'Percusión sobre el trayecto del nervio (en el túnel del carpo, sobre el mediano).', sug:'irritación del nervio percutido' },
+  { id:'finkel',    nom:'Finkelstein',          zona:'muñeca',   como:'Pulgar dentro del puño y desviación cubital de la muñeca.',                  sug:'tenosinovitis de De Quervain' },
+  { id:'lasegue',   nom:'Lasègue (elevación de pierna recta)', zona:'lumbar', como:'En decúbito supino se eleva la pierna extendida.',               sug:'compromiso radicular lumbar' },
+  { id:'slump',     nom:'Slump',                zona:'lumbar',   como:'Sentado, se suma flexión cervical, extensión de rodilla y dorsiflexión.',    sug:'tensión neural adversa' },
+  { id:'thomas',    nom:'Thomas',               zona:'cadera',   como:'Se lleva una cadera a flexión máxima y se observa la contraria.',            sug:'acortamiento de flexores de cadera' },
+  { id:'ober',      nom:'Ober',                 zona:'cadera',   como:'En decúbito lateral se abduce y extiende el muslo y se deja caer.',          sug:'tensión de la banda iliotibial' },
+  { id:'faber',     nom:'FABER (Patrick)',      zona:'cadera',   como:'Flexión, abducción y rotación externa de cadera, con la pierna en 4.',       sug:'compromiso de cadera o sacroilíaca' },
+  { id:'trendel',   nom:'Trendelenburg',        zona:'cadera',   como:'Apoyo monopodal; se observa el descenso de la pelvis contralateral.',         sug:'insuficiencia del glúteo medio' },
+  { id:'lachman',   nom:'Lachman',              zona:'rodilla',  como:'Rodilla a 20-30° de flexión, se traslada la tibia hacia anterior.',           sug:'lesión del ligamento cruzado anterior' },
+  { id:'cajon_a',   nom:'Cajón anterior',       zona:'rodilla',  como:'Rodilla a 90°, se tracciona la tibia hacia anterior.',                        sug:'lesión del ligamento cruzado anterior' },
+  { id:'mcmurray',  nom:'McMurray',             zona:'rodilla',  como:'Desde flexión máxima se extiende la rodilla con rotación de la tibia.',       sug:'lesión meniscal' },
+  { id:'valgo',     nom:'Estrés en valgo',      zona:'rodilla',  como:'Fuerza en valgo con la rodilla a 0° y a 30°.',                                sug:'lesión del ligamento colateral medial' },
+  { id:'thompson',  nom:'Thompson',             zona:'tobillo',  como:'En prono se comprime la pantorrilla y se observa la flexión plantar.',        sug:'rotura completa del tendón de Aquiles' },
+  { id:'cajon_ant', nom:'Cajón anterior de tobillo', zona:'tobillo', como:'Se tracciona el retropié hacia anterior con el tobillo en leve flexión plantar.', sug:'insuficiencia del ligamento peroneoastragalino anterior' },
+  { id:'windlass',  nom:'Windlass',             zona:'pie',      como:'Extensión pasiva del hallux en carga.',                                       sug:'fascitis plantar' },
+];
+
+/* Cada caso es un paciente del juego. El jugador elige prueba,
+   luego diagnóstico, luego tratamiento según la fase. */
+const KIN_CASOS = [
+  {
+    id:'pinzamiento', pac:'Rodrigo', nom:'Síndrome de pinzamiento subacromial', esp:'trauma', zona:'Hombro', dif:1,
+    edad:42, ocup:'pintor', motivo:'Dolor en el hombro derecho al levantar el brazo',
+    mecanismo:'Meses trabajando con los brazos sobre la cabeza, sin golpe previo.',
+    sintomas:['Dolor entre los 60° y 120° de abducción (arco doloroso)','Duele más de noche al acostarse sobre ese lado','Sin pérdida de fuerza importante'],
+    prueba:'neer', hallazgo:'Dolor al elevar pasivamente el brazo en rotación interna.',
+    fase:'subaguda',
+    tto:'Corregir el ritmo escapulohumeral y fortalecer manguito rotador y estabilizadores de escápula, evitando el trabajo sobre la cabeza al inicio.',
+    ttoMal:['Inmovilizar el hombro tres semanas','Elongar solo el pectoral y volver al trabajo','Movilización pasiva forzada en abducción máxima'],
+    dato:'El arco doloroso entre 60° y 120° orienta a compromiso subacromial: es el rango donde el espacio se estrecha.',
+  },
+  {
+    id:'capsulitis', pac:'Marcela', nom:'Capsulitis adhesiva (hombro congelado)', esp:'trauma', zona:'Hombro', dif:2,
+    edad:55, ocup:'contadora', motivo:'El hombro se le fue poniendo rígido hace meses',
+    mecanismo:'Sin trauma. Antecedente de diabetes tipo 2.',
+    sintomas:['Pérdida de movilidad ACTIVA y PASIVA','La rotación externa es la más limitada','Dolor que fue disminuyendo mientras aumentaba la rigidez'],
+    prueba:'aprension', hallazgo:'No hay aprensión, pero la movilidad pasiva está claramente restringida en todos los planos.',
+    fase:'crónica',
+    tto:'Movilización articular progresiva y ejercicio en rangos tolerados, con educación sobre lo prolongado del cuadro.',
+    ttoMal:['Reposo absoluto hasta que ceda el dolor','Fortalecimiento intenso del manguito desde la primera sesión','Ultrasonido como único tratamiento'],
+    dato:'La clave que la distingue del pinzamiento: acá la limitación es TAMBIÉN pasiva, y la rotación externa es la más comprometida.',
+  },
+  {
+    id:'manguito', pac:'Javiera', nom:'Tendinopatía del supraespinoso', esp:'trauma', zona:'Hombro', dif:2,
+    edad:38, ocup:'nadadora', motivo:'Dolor al hacer el gesto de brazada',
+    mecanismo:'Aumento brusco del volumen de entrenamiento.',
+    sintomas:['Dolor con la abducción resistida','Debilidad leve al sostener peso con el brazo separado','Sin rigidez pasiva'],
+    prueba:'jobe', hallazgo:'Dolor y debilidad al resistir con el brazo en abducción y pulgar hacia abajo.',
+    fase:'subaguda',
+    tto:'Carga progresiva del tendón con ejercicio isométrico y luego excéntrico, ajustando el volumen de entrenamiento.',
+    ttoMal:['Reposo deportivo completo por seis semanas','Estiramiento agresivo del tendón','Infiltrar y seguir entrenando igual'],
+    dato:'El supraespinoso inicia la abducción; por eso se evalúa resistiendo en ese rango.',
+  },
+  {
+    id:'epicondilalgia', pac:'Luis', nom:'Epicondilalgia lateral (codo de tenista)', esp:'trauma', zona:'Codo', dif:1,
+    edad:45, ocup:'carpintero', motivo:'Dolor en la cara externa del codo al tomar cosas',
+    mecanismo:'Uso repetido de herramientas con la muñeca en extensión.',
+    sintomas:['Dolor al apretar la mano o levantar una taza','Duele en el epicóndilo lateral a la palpación','Empeora con la extensión de muñeca'],
+    prueba:'cozen', hallazgo:'Dolor en el epicóndilo lateral al resistir la extensión de muñeca.',
+    fase:'crónica',
+    tto:'Ejercicio excéntrico de extensores de muñeca con carga progresiva y corrección del gesto de trabajo.',
+    ttoMal:['Reposo e inmovilización con férula por un mes','Masaje profundo como único tratamiento','Fortalecer flexores de muñeca'],
+    dato:'Compromete el origen de los extensores de muñeca, sobre todo el segundo radial externo.',
+  },
+  {
+    id:'tunel', pac:'Paola', nom:'Síndrome del túnel carpiano', esp:'trauma', zona:'Muñeca', dif:2,
+    edad:36, ocup:'digitadora', motivo:'Se le duermen los dedos, sobre todo de noche',
+    mecanismo:'Trabajo prolongado en teclado; embarazo reciente.',
+    sintomas:['Hormigueo en pulgar, índice, medio y mitad del anular','Despierta de noche y necesita sacudir la mano','En casos avanzados, atrofia de la eminencia tenar'],
+    prueba:'phalen', hallazgo:'Reproduce el hormigueo en el territorio del nervio mediano al sostener la flexión.',
+    fase:'subaguda',
+    tto:'Férula nocturna en posición neutra, deslizamiento neural del mediano y ajuste ergonómico del puesto.',
+    ttoMal:['Fortalecer la musculatura de la mano con pelota antiestrés','Estiramiento intenso en flexión de muñeca','Ultrasonido sobre el túnel sin cambiar nada más'],
+    dato:'El territorio respeta el meñique: si también se duerme el meñique, hay que pensar en el nervio cubital, no en el mediano.',
+  },
+  {
+    id:'dequervain', pac:'Camila', nom:'Tenosinovitis de De Quervain', esp:'trauma', zona:'Muñeca', dif:2,
+    edad:31, ocup:'mamá reciente', motivo:'Dolor en el lado del pulgar al tomar a la guagua',
+    mecanismo:'Sostener al bebé de forma repetida con el pulgar separado.',
+    sintomas:['Dolor en la estiloides radial','Duele al agarrar y al desviar la muñeca','Puede haber inflamación local visible'],
+    prueba:'finkel', hallazgo:'Dolor intenso en la estiloides radial al desviar la muñeca con el pulgar dentro del puño.',
+    fase:'aguda',
+    tto:'Reposo relativo del gesto doloroso, órtesis de pulgar y carga progresiva cuando cede el dolor.',
+    ttoMal:['Seguir con la actividad igual y solo aplicar hielo','Fortalecimiento máximo del pulgar desde el inicio','Movilización forzada en desviación cubital'],
+    dato:'Compromete los tendones del abductor largo y extensor corto del pulgar en el primer compartimento dorsal.',
+  },
+  {
+    id:'lumbago', pac:'Cristián', nom:'Lumbago mecánico inespecífico', esp:'trauma', zona:'Lumbar', dif:1,
+    edad:34, ocup:'bodeguero', motivo:'Dolor lumbar tras levantar una caja',
+    mecanismo:'Levantó peso con la espalda flectada y en rotación.',
+    sintomas:['Dolor lumbar que NO baja de la rodilla','Sin déficit neurológico','Duele más con ciertos movimientos y alivia con otros'],
+    prueba:'lasegue', hallazgo:'Negativo: no reproduce dolor irradiado por debajo de la rodilla.',
+    fase:'aguda',
+    tto:'Mantener actividad dentro de lo tolerable, educación en dolor y progresión de ejercicio; evitar el reposo en cama.',
+    ttoMal:['Reposo en cama por una semana','Corsé rígido permanente','Imágenes urgentes antes de cualquier tratamiento'],
+    dato:'Es el cuadro lumbar más frecuente. La evidencia es consistente en que el reposo en cama empeora el pronóstico.',
+  },
+  {
+    id:'radiculopatia', pac:'Héctor', nom:'Radiculopatía lumbar', esp:'trauma', zona:'Lumbar', dif:3,
+    edad:47, ocup:'chofer', motivo:'Dolor que baja por la pierna hasta el pie',
+    mecanismo:'Instalación progresiva, empeora al sentarse mucho.',
+    sintomas:['Dolor irradiado por debajo de la rodilla siguiendo un dermatoma','Hormigueo y a veces debilidad','Empeora al toser o pujar'],
+    prueba:'lasegue', hallazgo:'Positivo: reproduce el dolor irradiado entre los 30° y 70° de elevación.',
+    fase:'subaguda',
+    tto:'Ejercicio con preferencia direccional, deslizamiento neural y educación; derivar si aparece déficit progresivo.',
+    ttoMal:['Manipulación de alta velocidad en fase irritativa','Reposo absoluto hasta que pase','Fortalecimiento máximo de tronco desde el día uno'],
+    dato:'Lo que la separa del lumbago simple es el patrón por dermatoma y el compromiso neural, no la intensidad del dolor.',
+  },
+  {
+    id:'trocanterico', pac:'Verónica', nom:'Síndrome de dolor trocantérico', esp:'trauma', zona:'Cadera', dif:2,
+    edad:52, ocup:'profesora', motivo:'Dolor en el costado de la cadera al acostarse de ese lado',
+    mecanismo:'Sin trauma; aumentó las caminatas hace poco.',
+    sintomas:['Dolor sobre el trocánter mayor','Duele al dormir de ese lado y al subir escaleras','Puede haber Trendelenburg'],
+    prueba:'trendel', hallazgo:'Descenso de la pelvis contralateral en apoyo monopodal.',
+    fase:'subaguda',
+    tto:'Fortalecimiento progresivo de abductores de cadera y corrección de posiciones que comprimen el tendón (evitar cruzar la pierna).',
+    ttoMal:['Estiramiento en aducción sostenido, que comprime el tendón','Infiltración y reposo sin ejercicio','Trabajo de flexores de cadera'],
+    dato:'Hoy se entiende como tendinopatía de glúteo medio y menor más que como bursitis pura.',
+  },
+  {
+    id:'lca', pac:'Antonia', nom:'Lesión del ligamento cruzado anterior', esp:'deporte', zona:'Rodilla', dif:3,
+    edad:24, ocup:'jugadora de fútbol', motivo:'Se le dobló la rodilla en un cambio de dirección',
+    mecanismo:'Giro con el pie fijo, sintió un chasquido y se hinchó rápido.',
+    sintomas:['Derrame articular en las primeras horas','Sensación de que la rodilla "se va"','Dificultad para apoyar'],
+    prueba:'lachman', hallazgo:'Aumento del desplazamiento anterior de la tibia con tope blando.',
+    fase:'aguda',
+    tto:'Control del derrame, recuperar la extensión completa y activar el cuádriceps antes de progresar la carga.',
+    ttoMal:['Fortalecer en cadena abierta con carga máxima de inmediato','Inmovilizar en flexión','Volver a entrenar cuando baje el dolor'],
+    dato:'El derrame en las primeras horas orienta a lesión intraarticular con sangrado. Lachman es más sensible que el cajón anterior.',
+  },
+  {
+    id:'menisco', pac:'Matías', nom:'Lesión meniscal', esp:'deporte', zona:'Rodilla', dif:2,
+    edad:29, ocup:'futbolista amateur', motivo:'Dolor en la interlínea y sensación de bloqueo',
+    mecanismo:'Giro con el pie apoyado y la rodilla flectada.',
+    sintomas:['Dolor en la interlínea articular','Bloqueos o chasquidos','Derrame de instalación lenta'],
+    prueba:'mcmurray', hallazgo:'Chasquido doloroso al extender la rodilla con rotación.',
+    fase:'subaguda',
+    tto:'Ejercicio progresivo con control de la carga en rotación, fortalecimiento de cuádriceps y trabajo propioceptivo.',
+    ttoMal:['Cirugía inmediata en toda lesión meniscal','Reposo hasta que desaparezca el chasquido','Trabajo forzado en flexión máxima con giro'],
+    dato:'El derrame lento (horas o días) diferencia al menisco del LCA, que se hincha rápido.',
+  },
+  {
+    id:'patelofemoral', pac:'Isidora', nom:'Síndrome de dolor patelofemoral', esp:'deporte', zona:'Rodilla', dif:2,
+    edad:22, ocup:'estudiante corredora', motivo:'Dolor delante de la rodilla al bajar escaleras',
+    mecanismo:'Aumentó los kilómetros de trote muy rápido.',
+    sintomas:['Dolor peripatelar difuso','Duele al estar mucho rato sentada (signo del cine)','Sin derrame ni bloqueos'],
+    prueba:'trendel', hallazgo:'Control deficiente de la pelvis y valgo dinámico en apoyo monopodal.',
+    fase:'crónica',
+    tto:'Fortalecimiento de cuádriceps y de abductores/rotadores externos de cadera, con ajuste de la carga de carrera.',
+    ttoMal:['Reposo total hasta que no duela nada','Solo elongar el cuádriceps','Vendaje como tratamiento único'],
+    dato:'El "signo del cine" (dolor al estar mucho rato sentada con la rodilla flectada) es bien característico.',
+  },
+  {
+    id:'aquiles', pac:'Pablo', nom:'Tendinopatía aquiliana', esp:'deporte', zona:'Tobillo', dif:2,
+    edad:41, ocup:'corredor aficionado', motivo:'Dolor en el tendón de Aquiles al empezar a correr',
+    mecanismo:'Aumento del volumen y cambio a zapatillas más planas.',
+    sintomas:['Dolor y rigidez matinal en el tendón','Mejora al entrar en calor y reaparece después','Engrosamiento palpable'],
+    prueba:'thompson', hallazgo:'Negativo: se conserva la flexión plantar al comprimir la pantorrilla (descarta rotura completa).',
+    fase:'crónica',
+    tto:'Carga progresiva del tendón con trabajo excéntrico e isométrico, ajustando el volumen de carrera.',
+    ttoMal:['Reposo completo hasta que no duela','Estiramiento intenso y masaje profundo diario','Volver al volumen previo apenas mejore'],
+    dato:'La rigidez matinal que cede al entrar en calor es el patrón típico de tendinopatía.',
+  },
+  {
+    id:'esguince', pac:'Benjamín', nom:'Esguince lateral de tobillo', esp:'deporte', zona:'Tobillo', dif:1,
+    edad:19, ocup:'jugador de básquetbol', motivo:'Se torció el tobillo al caer de un salto',
+    mecanismo:'Inversión forzada con el pie en flexión plantar.',
+    sintomas:['Dolor e inflamación en la cara lateral','Hematoma','Dificultad para apoyar el primer día'],
+    prueba:'cajon_ant', hallazgo:'Aumento del desplazamiento anterior del retropié comparado con el otro lado.',
+    fase:'aguda',
+    tto:'Carga precoz protegida y trabajo propioceptivo temprano, progresando a fuerza de peroneos.',
+    ttoMal:['Inmovilizar con yeso tres semanas','Reposo sin apoyo hasta que baje toda la inflamación','Volver a jugar apenas camine sin dolor'],
+    dato:'El ligamento que se lesiona primero es el peroneoastragalino anterior. La propiocepción temprana reduce la recurrencia.',
+  },
+  {
+    id:'fascitis', pac:'Gloria', nom:'Fascitis plantar', esp:'trauma', zona:'Pie', dif:1,
+    edad:48, ocup:'vendedora', motivo:'Dolor en el talón con los primeros pasos de la mañana',
+    mecanismo:'Muchas horas de pie sobre superficie dura.',
+    sintomas:['Dolor en la zona medial del talón','Peor con los primeros pasos del día','Mejora al caminar un rato y empeora al final del día'],
+    prueba:'windlass', hallazgo:'Dolor al extender pasivamente el hallux en carga.',
+    fase:'crónica',
+    tto:'Ejercicio de fortalecimiento de la musculatura intrínseca del pie y del tríceps sural, más manejo de la carga diaria.',
+    ttoMal:['Reposo absoluto','Solo plantillas, sin ejercicio','Infiltración repetida como primera opción'],
+    dato:'El dolor de los primeros pasos de la mañana es el rasgo más característico del cuadro.',
+  },
+  {
+    id:'cervicalgia', pac:'Daniela', nom:'Cervicalgia mecánica', esp:'trauma', zona:'Cervical', dif:1,
+    edad:33, ocup:'teleoperadora', motivo:'Dolor de cuello y hombros al final del día',
+    mecanismo:'Muchas horas frente al computador, sin trauma.',
+    sintomas:['Dolor cervical que no baja del codo','Sin déficit neurológico','Mejora con movimiento y empeora con posturas sostenidas'],
+    prueba:'slump', hallazgo:'Negativo: no reproduce síntomas neurales a distancia.',
+    fase:'subaguda',
+    tto:'Ejercicio de resistencia de flexores profundos y musculatura escapular, más pausas activas en la jornada.',
+    ttoMal:['Collar cervical de uso permanente','Reposo y evitar mover el cuello','Manipulación cervical sin evaluación previa'],
+    dato:'Sin signos neurológicos ni banderas rojas, se maneja como dolor mecánico: movimiento y carga, no inmovilización.',
+  },
+  {
+    id:'epoc', pac:'Óscar', nom:'EPOC reagudizado', esp:'respi', zona:'Respiratorio', dif:3,
+    edad:68, ocup:'jubilado, ex fumador', motivo:'Se ahoga más que lo habitual y tiene mucha secreción',
+    mecanismo:'Cuadro respiratorio de una semana sobre una EPOC conocida.',
+    sintomas:['Aumento de la disnea habitual','Tos con secreción difícil de eliminar','Uso de musculatura accesoria'],
+    prueba:null, hallazgo:'Auscultación con ruidos agregados y espiración prolongada.',
+    fase:'aguda',
+    tto:'Técnicas de higiene bronquial para movilizar secreciones, reeducación del patrón respiratorio y ejercicio dosificado según tolerancia.',
+    ttoMal:['Reposo absoluto hasta que ceda la disnea','Ejercicio aeróbico intenso desde el ingreso','Solo aerosolterapia, sin kinesiterapia'],
+    dato:'En EPOC el objetivo kinésico es la permeabilidad de la vía aérea y la tolerancia al esfuerzo, no "curar" la obstrucción.',
+  },
+  {
+    id:'acv', pac:'Rosa', nom:'ACV con hemiparesia', esp:'neuro', zona:'Neurológico', dif:3,
+    edad:71, ocup:'jubilada', motivo:'Debilidad de un lado del cuerpo tras un accidente cerebrovascular',
+    mecanismo:'ACV isquémico hace dos semanas.',
+    sintomas:['Debilidad de hemicuerpo','Alteración del control postural y del equilibrio','Riesgo de hombro doloroso en el lado afectado'],
+    prueba:null, hallazgo:'Disminución del control motor selectivo del lado afectado.',
+    fase:'subaguda',
+    tto:'Entrenamiento orientado a tareas funcionales con alta repetición, trabajo de equilibrio y cuidado del hombro afectado.',
+    ttoMal:['Esperar a que se recupere solo antes de intervenir','Trabajar solo fuerza analítica en camilla','Movilizar el hombro afectado en abducción sin control escapular'],
+    dato:'La evidencia favorece el entrenamiento orientado a tareas con muchas repeticiones por sobre el trabajo analítico aislado.',
+  },
+];
+
+/* Músculos para el modo de repaso. Origen/inserción resumidos. */
+const KIN_MUSCULOS = [
+  { nom:'Supraespinoso',        origen:'Fosa supraespinosa de la escápula',            insercion:'Troquíter (tubérculo mayor del húmero)',   nervio:'Supraescapular',            accion:'Abducción de hombro (inicia el movimiento)' },
+  { nom:'Infraespinoso',        origen:'Fosa infraespinosa de la escápula',            insercion:'Troquíter',                                 nervio:'Supraescapular',            accion:'Rotación externa de hombro' },
+  { nom:'Subescapular',         origen:'Fosa subescapular',                            insercion:'Troquín (tubérculo menor del húmero)',      nervio:'Subescapular',              accion:'Rotación interna de hombro' },
+  { nom:'Redondo menor',        origen:'Borde lateral de la escápula',                 insercion:'Troquíter',                                 nervio:'Axilar',                    accion:'Rotación externa de hombro' },
+  { nom:'Deltoides',            origen:'Clavícula lateral, acromion y espina escapular',insercion:'Tuberosidad deltoidea del húmero',         nervio:'Axilar',                    accion:'Abducción de hombro; flexión y extensión según porción' },
+  { nom:'Pectoral mayor',       origen:'Clavícula, esternón y cartílagos costales',    insercion:'Labio lateral del surco intertubercular',    nervio:'Pectorales medial y lateral',accion:'Aducción, rotación interna y flexión de hombro' },
+  { nom:'Dorsal ancho',         origen:'Apófisis espinosas T7-L5, sacro y cresta ilíaca',insercion:'Surco intertubercular del húmero',        nervio:'Toracodorsal',              accion:'Aducción, extensión y rotación interna de hombro' },
+  { nom:'Trapecio',             origen:'Occipital y apófisis espinosas C7-T12',        insercion:'Clavícula, acromion y espina de la escápula',nervio:'Accesorio (XI)',            accion:'Elevación, retracción y rotación de escápula' },
+  { nom:'Serrato anterior',     origen:'Caras laterales de las primeras costillas',    insercion:'Borde medial de la escápula',               nervio:'Torácico largo',            accion:'Protracción y rotación superior de escápula' },
+  { nom:'Bíceps braquial',      origen:'Tubérculo supraglenoideo y apófisis coracoides',insercion:'Tuberosidad del radio',                    nervio:'Musculocutáneo',            accion:'Flexión de codo y supinación del antebrazo' },
+  { nom:'Tríceps braquial',     origen:'Tubérculo infraglenoideo y cara posterior del húmero',insercion:'Olécranon',                          nervio:'Radial',                    accion:'Extensión de codo' },
+  { nom:'Braquial',             origen:'Cara anterior distal del húmero',              insercion:'Tuberosidad del cúbito',                    nervio:'Musculocutáneo',            accion:'Flexión de codo' },
+  { nom:'Psoas mayor',          origen:'Cuerpos y apófisis transversas de T12-L5',     insercion:'Trocánter menor del fémur',                 nervio:'Ramos del plexo lumbar (L1-L3)',accion:'Flexión de cadera' },
+  { nom:'Glúteo mayor',         origen:'Ilion posterior, sacro y cóccix',              insercion:'Tuberosidad glútea y tracto iliotibial',    nervio:'Glúteo inferior',           accion:'Extensión y rotación externa de cadera' },
+  { nom:'Glúteo medio',         origen:'Cara externa del ilion',                       insercion:'Trocánter mayor',                           nervio:'Glúteo superior',           accion:'Abducción de cadera y estabilización de la pelvis' },
+  { nom:'Piriforme',            origen:'Cara anterior del sacro',                      insercion:'Trocánter mayor',                           nervio:'Ramo del plexo sacro',      accion:'Rotación externa de cadera' },
+  { nom:'Tensor de la fascia lata',origen:'Espina ilíaca anterosuperior',              insercion:'Tracto iliotibial',                         nervio:'Glúteo superior',           accion:'Abducción y flexión de cadera' },
+  { nom:'Recto femoral',        origen:'Espina ilíaca anteroinferior',                 insercion:'Tuberosidad tibial vía tendón rotuliano',   nervio:'Femoral',                   accion:'Extensión de rodilla y flexión de cadera' },
+  { nom:'Vasto medial',         origen:'Línea áspera del fémur (labio medial)',        insercion:'Tuberosidad tibial vía tendón rotuliano',   nervio:'Femoral',                   accion:'Extensión de rodilla' },
+  { nom:'Bíceps femoral',       origen:'Tuberosidad isquiática y línea áspera',        insercion:'Cabeza del peroné',                         nervio:'Ciático',                   accion:'Flexión de rodilla y extensión de cadera' },
+  { nom:'Semitendinoso',        origen:'Tuberosidad isquiática',                       insercion:'Pata de ganso (tibia medial)',              nervio:'Ciático (tibial)',          accion:'Flexión de rodilla y extensión de cadera' },
+  { nom:'Sartorio',             origen:'Espina ilíaca anterosuperior',                 insercion:'Pata de ganso',                             nervio:'Femoral',                   accion:'Flexión, abducción y rotación externa de cadera' },
+  { nom:'Gastrocnemio',         origen:'Cóndilos femorales',                           insercion:'Calcáneo vía tendón de Aquiles',            nervio:'Tibial',                    accion:'Flexión plantar de tobillo y flexión de rodilla' },
+  { nom:'Sóleo',                origen:'Cara posterior de tibia y peroné',             insercion:'Calcáneo vía tendón de Aquiles',            nervio:'Tibial',                    accion:'Flexión plantar de tobillo' },
+  { nom:'Tibial anterior',      origen:'Cóndilo lateral y cara lateral de la tibia',   insercion:'Primer cuneiforme y base del primer metatarsiano',nervio:'Peroneo profundo',     accion:'Dorsiflexión e inversión del pie' },
+  { nom:'Tibial posterior',     origen:'Membrana interósea, tibia y peroné',           insercion:'Escafoides y cuñas',                        nervio:'Tibial',                    accion:'Flexión plantar e inversión del pie' },
+  { nom:'Recto abdominal',      origen:'Pubis',                                        insercion:'Cartílagos costales 5-7 y apéndice xifoides',nervio:'Intercostales (T7-T12)',   accion:'Flexión de tronco' },
+  { nom:'Transverso del abdomen',origen:'Cresta ilíaca, fascia toracolumbar y cartílagos costales',insercion:'Línea alba y pubis',            nervio:'Intercostales y lumbares',  accion:'Compresión abdominal y estabilización lumbopélvica' },
+  { nom:'Cuadrado lumbar',      origen:'Cresta ilíaca',                                insercion:'Duodécima costilla y apófisis transversas lumbares',nervio:'Plexo lumbar',       accion:'Inclinación lateral de tronco' },
+  { nom:'Diafragma',            origen:'Apéndice xifoides, últimas costillas y vértebras lumbares',insercion:'Centro frénico',                nervio:'Frénico (C3-C5)',           accion:'Principal músculo de la inspiración' },
+];
+
+/* Rangos articulares de referencia (AAOS). Si en la U usan otra
+   fuente, se cambian estos números y el juego queda consistente. */
+const KIN_RANGOS = [
+  { art:'Hombro',  mov:'Flexión',            grados:180 },
+  { art:'Hombro',  mov:'Abducción',          grados:180 },
+  { art:'Hombro',  mov:'Rotación externa',   grados:90 },
+  { art:'Hombro',  mov:'Rotación interna',   grados:70 },
+  { art:'Codo',    mov:'Flexión',            grados:150 },
+  { art:'Antebrazo',mov:'Pronación',         grados:80 },
+  { art:'Antebrazo',mov:'Supinación',        grados:80 },
+  { art:'Muñeca',  mov:'Flexión',            grados:80 },
+  { art:'Muñeca',  mov:'Extensión',          grados:70 },
+  { art:'Cadera',  mov:'Flexión',            grados:120 },
+  { art:'Cadera',  mov:'Abducción',          grados:45 },
+  { art:'Cadera',  mov:'Extensión',          grados:30 },
+  { art:'Rodilla', mov:'Flexión',            grados:135 },
+  { art:'Tobillo', mov:'Dorsiflexión',       grados:20 },
+  { art:'Tobillo', mov:'Flexión plantar',    grados:50 },
+];
+
+/* ============================================================
+   CLÍNICA KINÉSICA — tycoon
+   Llegan pacientes, hay que evaluarlos, diagnosticarlos y tratarlos.
+   Acertar da plata y reputación; con eso se contrata gente, se compra
+   equipamiento y se abren especialidades. El personal contratado atiende
+   solo y renta con la página cerrada, igual que el jardín.
+   El contenido clínico vive en KIN_CASOS / KIN_PRUEBAS (ver
+   REVISION-KINESIOLOGIA.md): acá solo está la mecánica.
+   ============================================================ */
+
+const CL_ESPECIALIDADES = {
+  trauma:  { nom:'Traumatológica', emo:'🦴', rep:0,  color:'#c8956d' },
+  deporte: { nom:'Deportiva',      emo:'⚽', rep:15, color:'#6d9fc8' },
+  respi:   { nom:'Respiratoria',   emo:'🫁', rep:40, color:'#c86d8f' },
+  neuro:   { nom:'Neurológica',    emo:'🧠', rep:70, color:'#9b7fc8' },
+};
+
+const CL_EQUIPOS = [
+  { id:'camilla2', nom:'Segunda camilla',      emo:'🛏️', costo:600,    desc:'Una sala más para atender en paralelo', ef:{salas:1} },
+  { id:'tens',     nom:'Equipo de TENS',       emo:'⚡', costo:1800,   desc:'+15% de ingreso por paciente',          ef:{pago:0.15} },
+  { id:'eco',      nom:'Ecógrafo',             emo:'📡', costo:5200,   desc:'Muestra una pista extra en la evaluación', ef:{pista:true} },
+  { id:'camilla3', nom:'Tercera camilla',      emo:'🛏️', costo:9000,   desc:'Otra sala más',                          ef:{salas:1} },
+  { id:'gym',      nom:'Sala de ejercicio',    emo:'🏋️', costo:16000,  desc:'+25% de ingreso por paciente',           ef:{pago:0.25} },
+  { id:'plataforma',nom:'Plataforma de fuerza',emo:'📊', costo:42000,  desc:'+1 reputación extra por acierto perfecto', ef:{rep:1} },
+  { id:'hidro',    nom:'Hidroterapia',         emo:'💧', costo:120000, desc:'+40% de ingreso por paciente',            ef:{pago:0.40} },
+];
+
+const CL_NOMBRES = ['Fernanda','Matías','Camila','Joaquín','Antonia','Vicente','Josefa','Benjamín','Isidora','Tomás','Florencia','Agustín'];
+
+const CL_TOPE_OFFLINE = 8 * 3600 * 1000;
+const CL_TASA_OFFLINE = 0.5;
+
+let clLoop = null, clCanvas = null, clCtx = null, clFiguras = [], clUltimoLocal = 0, clUltimoCheck = 0;
+let clVista = 'recepcion', clTurno = null, clMostrado = 0;
+
+function clEstado(){ asegurarJuegos(); return datos.juegos.clinica; }
+
+function clDefault(){
+  return {
+    dinero:0, reputacion:0, atendidos:0, aciertos:0, fallos:0,
+    salas:1, equipos:[], personal:[], vistos:{}, dominados:[],
+    t:0,
+  };
+}
+
+/* ---------- economía ---------- */
+function clEspecialidadesAbiertas(){
+  const c = clEstado();
+  return Object.keys(CL_ESPECIALIDADES).filter(k => c.reputacion >= CL_ESPECIALIDADES[k].rep);
+}
+function clTieneEquipo(id){ return clEstado().equipos.includes(id); }
+function clSalas(){
+  let n = 1;
+  CL_EQUIPOS.forEach(e => { if(e.ef.salas && clTieneEquipo(e.id)) n += e.ef.salas; });
+  return n;
+}
+function clMultPago(){
+  let x = 1;
+  CL_EQUIPOS.forEach(e => { if(e.ef.pago && clTieneEquipo(e.id)) x += e.ef.pago; });
+  return x;
+}
+function clRepExtra(){
+  let n = 0;
+  CL_EQUIPOS.forEach(e => { if(e.ef.rep && clTieneEquipo(e.id)) n += e.ef.rep; });
+  return n;
+}
+function clCostoKine(){
+  const c = clEstado();
+  return Math.ceil(1500 * Math.pow(2.4, c.personal.length));
+}
+/* Cada kinesiólogo atiende pacientes de rutina por su cuenta. */
+function clIngresoPorSegundo(){
+  const c = clEstado();
+  let s = 0;
+  c.personal.forEach(p => { s += p.renta; });
+  return s * clMultPago();
+}
+
+function clAsentar(){
+  const c = clEstado();
+  const ahora = Date.now();
+  if(!c.t || c.t > ahora) c.t = ahora;
+  let ms = ahora - c.t;
+  if(ms <= 0){ c.t = ahora; return 0; }
+  let tasa = 1;
+  if(ms > 60000){ ms = Math.min(ms, CL_TOPE_OFFLINE); tasa = CL_TASA_OFFLINE; }
+  const ganado = clIngresoPorSegundo() * (ms / 1000) * tasa;
+  c.dinero += ganado;
+  c.t = ahora;
+  return ganado;
+}
+
+function clGuardar(inmediato){
+  const ahora = Date.now();
+  if(inmediato){ clUltimoLocal = ahora; clUltimoCheck = ahora; guardar(); return; }
+  if(ahora - clUltimoLocal > 5000){
+    clUltimoLocal = ahora;
+    try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
+  }
+  if(ahora - clUltimoCheck > 120000){ clUltimoCheck = ahora; guardar(); }
+}
+
+function clPlata(n){
+  if(n < 1000) return '$' + Math.floor(n);
+  if(n < 1e6) return '$' + (n/1000).toFixed(n < 10000 ? 1 : 0) + 'K';
+  return '$' + (n/1e6).toFixed(2) + 'M';
+}
+
+/* ---------- selección de casos ----------
+   Prioriza los que se han visto menos, para que funcione como repaso
+   y no salga siempre el mismo. */
+function clCasosDisponibles(){
+  const abiertas = clEspecialidadesAbiertas();
+  return KIN_CASOS.filter(c => abiertas.includes(c.esp));
+}
+function clSiguienteCaso(){
+  const c = clEstado();
+  const pool = clCasosDisponibles();
+  if(!pool.length) return null;
+  const minimo = Math.min(...pool.map(x => c.vistos[x.id] || 0));
+  const menosVistos = pool.filter(x => (c.vistos[x.id] || 0) === minimo);
+  return menosVistos[Math.floor(Math.random() * menosVistos.length)];
+}
+
+function clMezclar(a){
+  const r = a.slice();
+  for(let i = r.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; }
+  return r;
+}
+
+/* ---------- pantalla ---------- */
+function clMostrar(){
+  const ganado = clAsentar();
+  const c = clEstado();
+  clMostrado = c.dinero;
+  const el = document.getElementById('jxScreenClinica');
+  el.innerHTML =
+    '<div class="cl-top">' +
+      '<canvas id="clLienzo" class="cl-lienzo"></canvas>' +
+      '<div class="cl-hud">' +
+        '<div class="cl-plata"><span id="clDinero">$0</span></div>' +
+        '<div class="cl-sub"><span id="clRenta">0</span>/s · ⭐ <span id="clRep">0</span> reputación</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="cl-tabs">' +
+      '<button class="cl-tab activa" data-cv="recepcion">🩺 Atender</button>' +
+      '<button class="cl-tab" data-cv="gestion">🏥 Clínica</button>' +
+      '<button class="cl-tab" data-cv="repaso">📚 Repaso</button>' +
+    '</div>' +
+    '<div class="cl-panel" id="clPanel"></div>';
+  clCanvas = document.getElementById('clLienzo');
+  clCtx = clCanvas.getContext('2d');
+  clAjustar();
+  clFiguras = [];
+  el.querySelectorAll('.cl-tab').forEach(b => b.onclick = () => {
+    el.querySelectorAll('.cl-tab').forEach(x => x.classList.remove('activa'));
+    b.classList.add('activa');
+    clVista = b.dataset.cv;
+    jxSonido('tap');
+    clPanel();
+  });
+  clPanel();
+  clBucle();
+  if(ganado > 1) avisar('🏥 Mientras no estabas tu equipo atendió y juntó ' + clPlata(ganado));
+}
+
+function clAjustar(){
+  if(!clCanvas) return;
+  const r = clCanvas.getBoundingClientRect();
+  const d = Math.min(window.devicePixelRatio || 1, 2);
+  clCanvas.width = Math.max(1, Math.round(r.width * d));
+  clCanvas.height = Math.max(1, Math.round(r.height * d));
+  clCtx.setTransform(d, 0, 0, d, 0, 0);
+}
+
+function clPanel(){
+  const cont = document.getElementById('clPanel');
+  if(!cont) return;
+  if(clVista === 'recepcion') clTurno ? clPanelCaso(cont) : clPanelRecepcion(cont);
+  else if(clVista === 'gestion') clPanelGestion(cont);
+  else clPanelRepaso(cont);
+}
+
+/* ---------- recepción ---------- */
+function clPanelRecepcion(cont){
+  const c = clEstado();
+  const abiertas = clEspecialidadesAbiertas();
+  const prox = Object.keys(CL_ESPECIALIDADES).find(k => !abiertas.includes(k));
+  const precision = c.atendidos ? Math.round(c.aciertos / (c.aciertos + c.fallos) * 100) : 0;
+  cont.innerHTML =
+    '<div class="cl-recep">' +
+      '<button class="cl-btn-grande" id="clAtender">🩺 Atender al siguiente paciente</button>' +
+      '<div class="cl-chips">' +
+        abiertas.map(k => '<span class="cl-chip" style="background:' + CL_ESPECIALIDADES[k].color + '">' +
+          CL_ESPECIALIDADES[k].emo + ' ' + CL_ESPECIALIDADES[k].nom + '</span>').join('') +
+        (prox ? '<span class="cl-chip off">🔒 ' + CL_ESPECIALIDADES[prox].nom + ' · ⭐' + CL_ESPECIALIDADES[prox].rep + '</span>' : '') +
+      '</div>' +
+      '<div class="cl-stats">' +
+        '<div><b>' + c.atendidos + '</b><span>pacientes</span></div>' +
+        '<div><b>' + precision + '%</b><span>de acierto</span></div>' +
+        '<div><b>' + c.dominados.length + '/' + KIN_CASOS.length + '</b><span>casos dominados</span></div>' +
+      '</div>' +
+      (c.personal.length ? '<div class="cl-sec">Tu equipo</div>' +
+        '<div class="cl-lista">' + c.personal.map(p =>
+          '<div class="cl-item"><div class="cl-item-emo" style="background:' + CL_ESPECIALIDADES[p.esp].color + '33">' + p.emo + '</div>' +
+          '<div class="cl-item-info"><div class="cl-item-nom">' + p.nom + '</div>' +
+          '<div class="cl-item-desc">' + CL_ESPECIALIDADES[p.esp].nom + ' · ' + clPlata(p.renta * clMultPago()) + '/s</div></div></div>'
+        ).join('') + '</div>' : '') +
+    '</div>';
+  document.getElementById('clAtender').onclick = clIniciarCaso;
+}
+
+/* ---------- el caso, paso a paso ---------- */
+function clIniciarCaso(){
+  const caso = clSiguienteCaso();
+  if(!caso){ avisar('No hay casos disponibles todavía'); return; }
+  const distractoras = clMezclar(KIN_PRUEBAS.filter(p => p.id !== caso.prueba)).slice(0, 3);
+  const opcPrueba = caso.prueba
+    ? clMezclar([KIN_PRUEBAS.find(p => p.id === caso.prueba), ...distractoras])
+    : null;
+  const otros = clMezclar(KIN_CASOS.filter(x => x.id !== caso.id)).slice(0, 3);
+  clTurno = {
+    caso,
+    paso: caso.prueba ? 'prueba' : 'diagnostico',
+    opcPrueba,
+    opcDx: clMezclar([caso, ...otros]),
+    opcTto: clMezclar([{ txt:caso.tto, ok:true }, ...caso.ttoMal.map(t => ({ txt:t, ok:false }))]),
+    errores: 0,
+    resueltos: [],
+  };
+  jxSonido('tap');
+  clPanel();
+}
+
+function clPanelCaso(cont){
+  const t = clTurno, c = t.caso;
+  const nombre = c.pac;
+  let html =
+    '<div class="cl-ficha">' +
+      '<div class="cl-ficha-top">' +
+        '<div class="cl-ficha-avatar">' + (c.esp === 'respi' ? '🫁' : c.esp === 'neuro' ? '🧠' : '🧍') + '</div>' +
+        '<div><div class="cl-ficha-nom">' + nombre + ', ' + c.edad + ' años</div>' +
+        '<div class="cl-ficha-ocu">' + c.ocup + ' · ' + c.zona + '</div></div>' +
+      '</div>' +
+      '<div class="cl-ficha-motivo">“' + c.motivo + '”</div>' +
+      '<div class="cl-ficha-mec"><b>Mecanismo:</b> ' + c.mecanismo + '</div>' +
+      '<ul class="cl-sintomas">' + c.sintomas.map(s => '<li>' + s + '</li>').join('') + '</ul>' +
+      (clTieneEquipo('eco') && t.paso === 'prueba' ? '<div class="cl-pista">📡 Ecógrafo: la zona comprometida es <b>' + c.zona.toLowerCase() + '</b></div>' : '') +
+      t.resueltos.map(r => '<div class="cl-hallazgo">✓ ' + r + '</div>').join('') +
+    '</div>';
+
+  if(t.paso === 'prueba'){
+    html += '<div class="cl-preg">¿Qué prueba le haces?</div><div class="cl-opciones">' +
+      t.opcPrueba.map(p => '<button class="cl-opc" data-prueba="' + p.id + '"><b>' + p.nom + '</b><small>' + p.como + '</small></button>').join('') +
+      '</div>';
+  } else if(t.paso === 'diagnostico'){
+    html += '<div class="cl-preg">¿Cuál es tu diagnóstico?</div><div class="cl-opciones">' +
+      t.opcDx.map(x => '<button class="cl-opc" data-dx="' + x.id + '"><b>' + x.nom + '</b></button>').join('') +
+      '</div>';
+  } else if(t.paso === 'tratamiento'){
+    html += '<div class="cl-preg">¿Qué tratamiento indicas? <small>Fase ' + c.fase + '</small></div><div class="cl-opciones">' +
+      t.opcTto.map((x, i) => '<button class="cl-opc larga" data-tto="' + i + '">' + x.txt + '</button>').join('') +
+      '</div>';
+  }
+  cont.innerHTML = html;
+
+  cont.querySelectorAll('[data-prueba]').forEach(b => b.onclick = () => clResponderPrueba(b.dataset.prueba));
+  cont.querySelectorAll('[data-dx]').forEach(b => b.onclick = () => clResponderDx(b.dataset.dx));
+  cont.querySelectorAll('[data-tto]').forEach(b => b.onclick = () => clResponderTto(parseInt(b.dataset.tto, 10)));
+}
+
+function clFallar(mensaje){
+  clTurno.errores++;
+  jxSonido('mal'); jxVibrar(30);
+  const p = document.getElementById('clPanel');
+  p.classList.remove('cl-error'); void p.offsetWidth; p.classList.add('cl-error');
+  avisar(mensaje);
+}
+
+function clResponderPrueba(id){
+  const t = clTurno, c = t.caso;
+  if(id !== c.prueba){
+    const mala = KIN_PRUEBAS.find(p => p.id === id);
+    clFallar('❌ ' + mala.nom + ' evalúa ' + mala.sug + ', no es lo que buscas acá');
+    return;
+  }
+  jxSonido('bien');
+  t.resueltos.push('Prueba de ' + KIN_PRUEBAS.find(p => p.id === id).nom + ': ' + c.hallazgo);
+  t.paso = 'diagnostico';
+  clPanel();
+}
+
+function clResponderDx(id){
+  const t = clTurno, c = t.caso;
+  if(id !== c.id){
+    clFallar('❌ Ese diagnóstico no calza con los síntomas ni con el hallazgo');
+    return;
+  }
+  jxSonido('bien');
+  t.resueltos.push('Diagnóstico: ' + c.nom);
+  t.paso = 'tratamiento';
+  clPanel();
+}
+
+function clResponderTto(i){
+  const t = clTurno;
+  if(!t.opcTto[i].ok){
+    clFallar('❌ Ese manejo no corresponde para esta fase');
+    return;
+  }
+  jxSonido('gana');
+  clCerrarCaso();
+}
+
+function clCerrarCaso(){
+  const t = clTurno, c = t.caso, e = clEstado();
+  const perfecto = t.errores === 0;
+  const base = 120 * c.dif;
+  const dinero = Math.round(base * clMultPago() * (perfecto ? 1.5 : 1));
+  const rep = perfecto ? 2 + clRepExtra() : 1;
+  const monedas = perfecto ? 8 : 4;
+
+  e.dinero += dinero;
+  e.reputacion += rep;
+  e.atendidos++;
+  if(perfecto) e.aciertos++; else { e.aciertos++; e.fallos += t.errores; }
+  e.vistos[c.id] = (e.vistos[c.id] || 0) + 1;
+  if(perfecto && (e.vistos[c.id] || 0) >= 2 && !e.dominados.includes(c.id)) e.dominados.push(c.id);
+
+  const antes = clEspecialidadesAbiertas().length;
+  const r = jxRecompensar(monedas, 12 * c.dif, { desde: document.getElementById('jxScreenClinica') });
+  const nuevas = clEspecialidadesAbiertas().length > antes;
+
+  clTurno = null;
+  clGuardar(true);
+
+  jxCelebrar({
+    titulo: perfecto ? '¡Paciente tratado! 🎉' : 'Paciente tratado',
+    sub: c.dato + (nuevas ? ' · ¡Se abrió una especialidad nueva!' : ''),
+    monedas, xp: 12 * c.dif, subioNivel: r.subioNivel, nivel: r.nivel,
+    textoNext: 'Siguiente paciente',
+    onNext: () => { clVista = 'recepcion'; clIniciarCaso(); },
+  });
+}
+
+/* ---------- gestión ---------- */
+function clPanelGestion(cont){
+  const c = clEstado();
+  const costoKine = clCostoKine();
+  const abiertas = clEspecialidadesAbiertas();
+  let html = '<div class="cl-sec">Contratar</div>' +
+    '<button class="cl-item accion' + (c.dinero >= costoKine ? ' puede' : '') + '" id="clContratar">' +
+      '<div class="cl-item-emo" style="background:#e8f0e4">🧑‍⚕️</div>' +
+      '<div class="cl-item-info"><div class="cl-item-nom">Contratar kinesiólogo</div>' +
+      '<div class="cl-item-desc">Atiende pacientes de rutina solo, también con la página cerrada</div></div>' +
+      '<div class="cl-item-costo">' + clPlata(costoKine) + '</div>' +
+    '</button>' +
+    '<div class="cl-sec">Equipamiento</div><div class="cl-lista">';
+  CL_EQUIPOS.forEach(eq => {
+    const tiene = clTieneEquipo(eq.id);
+    const puede = c.dinero >= eq.costo;
+    html += '<button class="cl-item' + (tiene ? ' listo' : puede ? ' puede' : '') + '"' + (tiene ? '' : ' data-eq="' + eq.id + '"') + '>' +
+      '<div class="cl-item-emo" style="background:#f2ebdc">' + (tiene ? '✓' : eq.emo) + '</div>' +
+      '<div class="cl-item-info"><div class="cl-item-nom">' + eq.nom + '</div>' +
+      '<div class="cl-item-desc">' + eq.desc + '</div></div>' +
+      '<div class="cl-item-costo">' + (tiene ? 'Comprado' : clPlata(eq.costo)) + '</div></button>';
+  });
+  html += '</div><div class="cl-sec">Especialidades</div><div class="cl-lista">';
+  Object.keys(CL_ESPECIALIDADES).forEach(k => {
+    const e = CL_ESPECIALIDADES[k], abierta = abiertas.includes(k);
+    const n = KIN_CASOS.filter(x => x.esp === k).length;
+    html += '<div class="cl-item' + (abierta ? ' listo' : '') + '">' +
+      '<div class="cl-item-emo" style="background:' + e.color + '33">' + (abierta ? e.emo : '🔒') + '</div>' +
+      '<div class="cl-item-info"><div class="cl-item-nom">' + e.nom + '</div>' +
+      '<div class="cl-item-desc">' + (abierta ? n + ' casos disponibles' : 'Se abre con ⭐' + e.rep + ' de reputación') + '</div></div></div>';
+  });
+  html += '</div>';
+  cont.innerHTML = html;
+  document.getElementById('clContratar').onclick = clContratar;
+  cont.querySelectorAll('[data-eq]').forEach(b => b.onclick = () => clComprarEquipo(b.dataset.eq));
+}
+
+function clContratar(){
+  const c = clEstado();
+  const costo = clCostoKine();
+  if(c.dinero < costo){ jxSonido('mal'); return; }
+  clAsentar();
+  c.dinero -= costo;
+  const abiertas = clEspecialidadesAbiertas();
+  const esp = abiertas[Math.floor(Math.random() * abiertas.length)];
+  c.personal.push({
+    nom: CL_NOMBRES[Math.floor(Math.random() * CL_NOMBRES.length)],
+    esp, emo:'🧑‍⚕️',
+    renta: Math.round(4 * Math.pow(2.1, c.personal.length) * 10) / 10,
+  });
+  jxSonido('compra'); jxVibrar(20);
+  clGuardar(true);
+  clPanel();
+}
+
+function clComprarEquipo(id){
+  const c = clEstado();
+  const eq = CL_EQUIPOS.find(e => e.id === id);
+  if(!eq || clTieneEquipo(id) || c.dinero < eq.costo){ jxSonido('mal'); return; }
+  clAsentar();
+  c.dinero -= eq.costo;
+  c.equipos.push(id);
+  jxSonido('bien'); jxVibrar(20);
+  clGuardar(true);
+  clPanel();
+  avisar('🏥 ' + eq.nom + ' · ' + eq.desc);
+}
+
+/* ---------- repaso ---------- */
+let clRepasoTipo = 'musculos', clRepasoIdx = 0, clRepasoAbierta = false;
+function clPanelRepaso(cont){
+  const esMusculo = clRepasoTipo === 'musculos';
+  const lista = esMusculo ? KIN_MUSCULOS : KIN_RANGOS;
+  if(clRepasoIdx >= lista.length) clRepasoIdx = 0;
+  const x = lista[clRepasoIdx];
+  cont.innerHTML =
+    '<div class="cl-tabs chicas">' +
+      '<button class="cl-tab' + (esMusculo ? ' activa' : '') + '" data-rp="musculos">Músculos</button>' +
+      '<button class="cl-tab' + (!esMusculo ? ' activa' : '') + '" data-rp="rangos">Rangos</button>' +
+    '</div>' +
+    '<div class="cl-carta' + (clRepasoAbierta ? ' abierta' : '') + '" id="clCarta">' +
+      (esMusculo
+        ? '<div class="cl-carta-tit">' + x.nom + '</div>' +
+          (clRepasoAbierta
+            ? '<div class="cl-carta-cuerpo">' +
+                '<div><b>Origen</b><span>' + x.origen + '</span></div>' +
+                '<div><b>Inserción</b><span>' + x.insercion + '</span></div>' +
+                '<div><b>Inervación</b><span>' + x.nervio + '</span></div>' +
+                '<div><b>Acción</b><span>' + x.accion + '</span></div>' +
+              '</div>'
+            : '<div class="cl-carta-pista">Toca para ver origen, inserción, inervación y acción</div>')
+        : '<div class="cl-carta-tit">' + x.art + ' · ' + x.mov + '</div>' +
+          (clRepasoAbierta
+            ? '<div class="cl-carta-grados">' + x.grados + '°</div>'
+            : '<div class="cl-carta-pista">Toca para ver el rango normal</div>')
+      ) +
+    '</div>' +
+    '<div class="cl-repaso-nav">' +
+      '<button class="jx-btn ghost" id="clRepAnt">‹ Anterior</button>' +
+      '<span>' + (clRepasoIdx + 1) + ' / ' + lista.length + '</span>' +
+      '<button class="jx-btn ghost" id="clRepSig">Siguiente ›</button>' +
+    '</div>' +
+    '<div class="cl-nota">Contenido pendiente de revisión por Catalina · ver REVISION-KINESIOLOGIA.md</div>';
+  cont.querySelectorAll('[data-rp]').forEach(b => b.onclick = () => {
+    clRepasoTipo = b.dataset.rp; clRepasoIdx = 0; clRepasoAbierta = false; jxSonido('tap'); clPanel();
+  });
+  document.getElementById('clCarta').onclick = () => { clRepasoAbierta = !clRepasoAbierta; jxSonido('tap'); clPanel(); };
+  document.getElementById('clRepAnt').onclick = () => { clRepasoIdx = (clRepasoIdx - 1 + lista.length) % lista.length; clRepasoAbierta = false; clPanel(); };
+  document.getElementById('clRepSig').onclick = () => { clRepasoIdx = (clRepasoIdx + 1) % lista.length; clRepasoAbierta = false; clPanel(); };
+}
+
+/* ---------- lienzo: la clínica ---------- */
+function clBucle(){
+  if(clLoop) cancelAnimationFrame(clLoop);
+  const paso = (ahora) => {
+    if(jxPantalla !== 'clinica' || !document.getElementById('jxApp')?.classList.contains('abierta')){
+      clLoop = null; clAsentar(); clGuardar(true); return;
+    }
+    clAsentar();
+    const c = clEstado();
+    clMostrado += (c.dinero - clMostrado) * 0.15;
+    if(Math.abs(c.dinero - clMostrado) < 0.5) clMostrado = c.dinero;
+    const d = document.getElementById('clDinero'); if(d) d.textContent = clPlata(clMostrado);
+    const r = document.getElementById('clRenta'); if(r) r.textContent = clPlata(clIngresoPorSegundo());
+    const rp = document.getElementById('clRep'); if(rp) rp.textContent = c.reputacion;
+    clPintar(ahora);
+    clGuardar(false);
+    clLoop = requestAnimationFrame(paso);
+  };
+  clLoop = requestAnimationFrame(paso);
+}
+
+function clPintar(t){
+  if(!clCtx || !clCanvas) return;
+  const b = clCanvas.getBoundingClientRect(), w = b.width, h = b.height, ctx = clCtx;
+  const c = clEstado();
+
+  // pared y piso
+  const pared = ctx.createLinearGradient(0, 0, 0, h);
+  pared.addColorStop(0, '#eaf0f4'); pared.addColorStop(1, '#dbe5ec');
+  ctx.fillStyle = pared; ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = '#cdd8e0'; ctx.fillRect(0, h * 0.72, w, h * 0.28);
+  ctx.strokeStyle = 'rgba(255,255,255,.5)'; ctx.lineWidth = 1;
+  for(let i = 1; i < 5; i++){ ctx.beginPath(); ctx.moveTo(w*i/5, h*0.72); ctx.lineTo(w*i/5 - 14, h); ctx.stroke(); }
+
+  // ventana
+  ctx.fillStyle = '#bfe0f0'; ctx.fillRect(w*0.06, h*0.12, w*0.2, h*0.3);
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.strokeRect(w*0.06, h*0.12, w*0.2, h*0.3);
+
+  // camillas, una por sala
+  const salas = clSalas();
+  for(let i = 0; i < salas; i++){
+    const x = w * (0.34 + i * 0.21), y = h * 0.58;
+    const ocupada = i < Math.min(c.personal.length, salas) || (clTurno && i === 0);
+    ctx.fillStyle = '#f5f7f8';
+    ctx.beginPath(); ctx.roundRect(x - 26, y, 52, 16, 5); ctx.fill();
+    ctx.fillStyle = '#9fb4c2';
+    ctx.fillRect(x - 24, y + 16, 4, 12); ctx.fillRect(x + 20, y + 16, 4, 12);
+    if(ocupada){
+      // paciente acostado
+      ctx.fillStyle = '#e8c9a8';
+      ctx.beginPath(); ctx.arc(x - 16, y - 5, 6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#cfe0ea';
+      ctx.beginPath(); ctx.roundRect(x - 10, y - 9, 30, 9, 4); ctx.fill();
+      // kine trabajando, se mece un poco
+      const s = Math.sin(t/380 + i) * 2;
+      ctx.fillStyle = '#7fa88c';
+      ctx.beginPath(); ctx.roundRect(x + 14, y - 30 + s, 12, 24, 5); ctx.fill();
+      ctx.fillStyle = '#e8c9a8';
+      ctx.beginPath(); ctx.arc(x + 20, y - 35 + s, 6, 0, Math.PI*2); ctx.fill();
+    }
+  }
+
+  // gente esperando
+  const esperando = Math.min(4, 1 + Math.floor(c.reputacion / 12));
+  for(let i = 0; i < esperando; i++){
+    const x = w * 0.09 + i * 17, y = h * 0.88 + Math.sin(t/700 + i*2) * 1.5;
+    ctx.fillStyle = ['#c8956d','#6d9fc8','#c86d8f','#9b7fc8'][i % 4];
+    ctx.beginPath(); ctx.roundRect(x - 5, y - 16, 10, 18, 4); ctx.fill();
+    ctx.fillStyle = '#e8c9a8';
+    ctx.beginPath(); ctx.arc(x, y - 20, 5, 0, Math.PI*2); ctx.fill();
   }
 }
 
