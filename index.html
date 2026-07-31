@@ -1149,6 +1149,73 @@
   }
   input[type=file]{display:none;}
 
+  /* ===== Nuestro Jardín (incremental) ===== */
+  .jar-top{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 12px 30px var(--sombra);margin-bottom:14px;}
+  .jar-lienzo{display:block;width:100%;height:210px;}
+  .jar-marcador{position:absolute;top:12px;left:14px;text-shadow:0 2px 8px rgba(0,0,0,.35);pointer-events:none;}
+  .jar-petalos{font-family:'Playfair Display',serif;font-size:2rem;color:#fff;line-height:1;display:flex;align-items:baseline;gap:6px;}
+  .jar-petalos i{font-size:1.2rem;font-style:normal;}
+  .jar-tasa{color:rgba(255,255,255,.92);font-size:.82rem;margin-top:3px;letter-spacing:.3px;}
+  .jar-regar{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;align-items:center;gap:2px;
+    background:linear-gradient(150deg,#8ec7f0,#5b9fd6);color:#fff;border:none;border-radius:18px;padding:10px 16px;
+    font-family:'Jost',sans-serif;font-weight:600;font-size:1.5rem;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.28);
+    transition:transform .1s;user-select:none;-webkit-tap-highlight-color:transparent;}
+  .jar-regar span{font-size:.72rem;font-weight:500;letter-spacing:.5px;}
+  .jar-regar:active{transform:scale(.93);}
+  .jar-regar.pulso{animation:jarPulso .32s ease;}
+  @keyframes jarPulso{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+  .jar-tabs{display:flex;gap:8px;margin-bottom:12px;}
+  .jar-tab{flex:1;background:var(--blanco);border:1.5px solid var(--crema-oscuro);border-radius:999px;padding:9px 6px;
+    font-family:'Jost',sans-serif;font-size:.82rem;color:var(--gris);cursor:pointer;transition:all .18s;position:relative;}
+  .jar-tab.activa{background:var(--dorado);border-color:var(--dorado);color:#fff;font-weight:600;}
+  .jar-tab b{position:absolute;top:-5px;right:6px;background:var(--rosa,#e0576f);color:#fff;border-radius:999px;
+    font-size:.62rem;min-width:16px;height:16px;line-height:16px;padding:0 4px;}
+  .jar-tab b:empty{display:none;}
+  .jar-lista{display:flex;flex-direction:column;gap:9px;}
+  .jar-item{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:var(--blanco);
+    border:1.5px solid var(--crema-oscuro);border-radius:16px;padding:10px 12px;cursor:pointer;
+    box-shadow:0 4px 12px var(--sombra-tenue);transition:transform .12s,border-color .2s,opacity .2s;font-family:'Jost',sans-serif;}
+  .jar-item.puede{border-color:var(--dorado);box-shadow:0 6px 18px rgba(198,160,74,.28);}
+  .jar-item.puede .jar-item-costo{color:var(--dorado);font-weight:600;}
+  .jar-item:not(.puede):not(.bloqueada):not(.lista-ok){opacity:.62;}
+  .jar-item:active{transform:scale(.985);}
+  .jar-item.bloqueada,.jar-item.lista-ok{cursor:default;opacity:.75;}
+  .jar-item-emo{width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.45rem;}
+  .jar-item-info{flex:1;min-width:0;}
+  .jar-item-nom{font-size:.96rem;color:var(--tinta);}
+  .jar-item-nom b{color:var(--dorado);}
+  .jar-item-desc{font-size:.75rem;color:var(--gris);margin-top:1px;line-height:1.35;}
+  .jar-item-costo{font-size:.82rem;color:var(--gris);white-space:nowrap;}
+  .jar-barra{height:4px;background:var(--crema-oscuro);border-radius:999px;margin-top:5px;overflow:hidden;}
+  .jar-barra div{height:100%;border-radius:999px;transition:width .4s;}
+  .jar-sub{font-family:'Playfair Display',serif;color:var(--dorado);font-size:.95rem;margin:14px 2px 4px;}
+  .jar-vacio{text-align:center;color:var(--gris);font-size:.86rem;padding:26px 12px;font-style:italic;}
+  .jar-estacion{display:flex;flex-direction:column;gap:12px;}
+  .jar-est-caja{background:linear-gradient(150deg,#f6e7b8,#e8cf8f);border-radius:20px;padding:16px;text-align:center;
+    box-shadow:0 8px 22px var(--sombra);}
+  .jar-est-emo{font-size:2rem;}
+  .jar-est-tit{font-size:.78rem;letter-spacing:1px;text-transform:uppercase;color:#8a6d1f;margin-top:2px;}
+  .jar-est-num{font-family:'Playfair Display',serif;font-size:2.4rem;color:#6b520f;line-height:1.1;}
+  .jar-est-sub{font-size:.78rem;color:var(--gris);}
+  .jar-est-caja .jar-est-sub{color:#8a6d1f;}
+  .jar-est-txt{font-size:.85rem;color:var(--gris);line-height:1.55;text-align:center;}
+  .jar-progreso{height:8px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;}
+  .jar-progreso div{height:100%;background:linear-gradient(90deg,var(--dorado),#e8cf8f);border-radius:999px;transition:width .5s;}
+  .jar-btn-grande{background:var(--dorado);color:#fff;border:none;border-radius:16px;padding:13px;font-family:'Jost',sans-serif;
+    font-size:.94rem;font-weight:600;cursor:pointer;box-shadow:0 6px 16px var(--sombra);transition:transform .12s,opacity .2s;}
+  .jar-btn-grande.ramo{background:linear-gradient(140deg,#e88aa8,#d1607f);}
+  .jar-btn-grande.off{opacity:.45;pointer-events:none;}
+  .jar-btn-grande:active{transform:scale(.98);}
+  .jar-mini-stats{display:flex;gap:8px;margin-top:6px;}
+  .jar-mini-stats div{flex:1;background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:14px;padding:9px 4px;text-align:center;}
+  .jar-mini-stats b{display:block;font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.05rem;}
+  .jar-mini-stats span{font-size:.66rem;color:var(--gris);line-height:1.25;display:block;margin-top:2px;}
+  .jx-card.jardin{background:linear-gradient(150deg,#8ec98f,#5f9f74);}
+  @media (max-width:400px){
+    .jar-lienzo{height:180px;}
+    .jar-petalos{font-size:1.7rem;}
+  }
+
   @media (prefers-reduced-motion: reduce){
     *{animation:none !important;transition:none !important;}
     html{scroll-behavior:auto;}
@@ -1513,6 +1580,7 @@
       <section class="jx-screen" id="jxScreenDosmil"></section>
       <section class="jx-screen" id="jxScreenSnake"></section>
       <section class="jx-screen" id="jxScreenDetective"></section>
+      <section class="jx-screen" id="jxScreenJardin"></section>
       <section class="jx-screen" id="jxScreenCloset"></section>
     </div>
   </div>
@@ -4138,7 +4206,22 @@ function jxDefaultJuegos(){
     dosmil: { record:0, partidas:0 },
     snake: { record:0, partidas:0 },
     detective: { resueltos:[], bonusDiario:'' },
+    jardin: jarDefault(),
     diario: { ultimo:null, racha:0 },
+  };
+}
+function jarDefault(){
+  return {
+    petalos:0,      // pétalos disponibles ahora
+    total:0,        // acumulado de esta estación (define las semillas al cambiar)
+    granTotal:0,    // acumulado de todas las estaciones (solo estadística)
+    flores:{},      // { idFlor: cuántas }
+    mejoras:[],     // ids de mejoras compradas
+    semillas:0,     // moneda de prestigio: +3% cada una, para siempre
+    estaciones:0,
+    riegos:0,
+    ramos:0,
+    t:0,            // marca de tiempo del último cálculo (permite avance offline)
   };
 }
 function asegurarJuegos(){
@@ -4175,6 +4258,16 @@ function asegurarJuegos(){
   if(!Array.isArray(j.detective.resueltos)) j.detective.resueltos = [];
   if(typeof j.detective.bonusDiario !== 'string') j.detective.bonusDiario = '';
   if(!j.diario || typeof j.diario !== 'object') j.diario = { ultimo:null, racha:0 };
+  if(!j.jardin || typeof j.jardin !== 'object') j.jardin = jarDefault();
+  const g = j.jardin, base = jarDefault();
+  for(const k of ['petalos','total','granTotal','semillas','estaciones','riegos','ramos','t']){
+    if(typeof g[k] !== 'number' || !isFinite(g[k]) || g[k] < 0) g[k] = base[k];
+  }
+  if(!g.flores || typeof g.flores !== 'object' || Array.isArray(g.flores)) g.flores = {};
+  for(const k of Object.keys(g.flores)){
+    if(typeof g.flores[k] !== 'number' || !isFinite(g.flores[k]) || g.flores[k] < 0) delete g.flores[k];
+  }
+  if(!Array.isArray(g.mejoras)) g.mejoras = [];
 }
 
 function jxNivel(){ asegurarJuegos(); return Math.floor(datos.juegos.mascota.xp / JX_NIVEL_XP) + 1; }
@@ -4337,6 +4430,7 @@ const JX_PANTALLAS = {
   dosmil: { el:'jxScreenDosmil', titulo:'2048', render:() => dmMostrar() },
   snake:  { el:'jxScreenSnake',  titulo:'Snake', render:() => snMostrar() },
   detective: { el:'jxScreenDetective', titulo:'Detective', render:() => dtMostrar() },
+  jardin: { el:'jxScreenJardin', titulo:'Nuestro Jardín', render:() => jarMostrar() },
   closet: { el:'jxScreenCloset', titulo:'Clóset de Michi', render:() => jxRenderCloset() },
 };
 let jxPantalla = 'hub';
@@ -4372,6 +4466,7 @@ function jxCerrarApp(){
   if(zipTimer) clearInterval(zipTimer);
   if(memoTimer) clearInterval(memoTimer);
   if(snLoop) cancelAnimationFrame(snLoop);
+  if(jarLoop){ cancelAnimationFrame(jarLoop); jarLoop = null; jarAsentar(); jarGuardar(true); }
   pintarJuegos();
 }
 function jxAtras(){ if(jxPantalla === 'hub') jxCerrarApp(); else jxIr('hub'); }
@@ -4445,6 +4540,10 @@ function jxRenderHub(){
         '<div style="flex:1"><div class="jx-card-nom">Detective</div>' +
         '<div class="jx-card-desc">Investiga, deduce con lógica y atrapa al culpable</div></div>' +
         '<span class="jx-card-stat">✔ ' + j.detective.resueltos.length + '</span></button>' +
+      '<button class="jx-card jardin full" data-ir="jardin"><div class="sheen"></div><div class="jx-card-emo">🌸</div>' +
+        '<div style="flex:1"><div class="jx-card-nom">Nuestro Jardín</div>' +
+        '<div class="jx-card-desc">Riega, planta flores y mira cómo crece solo (aunque cierres la página)</div></div>' +
+        '<span class="jx-card-stat">🌸 ' + jarNum(j.jardin.petalos + jarProduccion() * Math.max(0, Math.min(JAR_TOPE_OFFLINE, Date.now() - (j.jardin.t || Date.now()))) / 1000 * JAR_TASA_OFFLINE) + '</span></button>' +
       '<button class="jx-card closet full" data-ir="closet"><div class="sheen"></div><div class="jx-card-emo">👗</div>' +
         '<div style="flex:1"><div class="jx-card-nom">Clóset de ' + m.nombre + '</div>' +
         '<div class="jx-card-desc">Viste y decora a tu gatito con lo que ganas</div></div></button>' +
@@ -5793,6 +5892,583 @@ function dtCasoResuelto(){
   dtLimpiar(c.id);
   const r=jxRecompensar(monedas, xp, { desde: document.getElementById('jxScreenDetective') });
   jxCelebrar({ titulo:'¡Caso resuelto! 🕵️', sub:c.resolucion+extra, monedas, xp, subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Volver a los casos', onNext:()=>{ dtVista='lista'; dtRender(); } });
+}
+
+/* ============================================================
+   NUESTRO JARDÍN — incremental
+   Se riega, crecen flores, las flores producen pétalos solos.
+   El progreso se calcula desde una marca de tiempo (jar.t), así que
+   avanza aunque la página esté cerrada y NO necesita escribir en Neon
+   en cada tick: solo en acciones concretas y en un checkpoint lento.
+   ============================================================ */
+const JAR_FLORES = [
+  { id:'margarita', nom:'Margarita',     emo:'🌼', costo:15,      prod:0.1,    col:'#f7e7a8', pet:'#fff8e2', desc:'La primera que planté pensando en ti' },
+  { id:'tulipan',   nom:'Tulipán',       emo:'🌷', costo:110,     prod:1,      col:'#f2a2b8', pet:'#ffd4e0', desc:'Se abre despacio, como nosotros' },
+  { id:'rosa',      nom:'Rosa',          emo:'🌹', costo:1200,    prod:8,      col:'#e0576f', pet:'#ff97ab', desc:'La clásica, la que nunca falla' },
+  { id:'girasol',   nom:'Girasol',       emo:'🌻', costo:13000,   prod:47,     col:'#f5c542', pet:'#ffe27a', desc:'Siempre buscando la luz, igual que tú' },
+  { id:'orquidea',  nom:'Orquídea',      emo:'🪷', costo:140000,  prod:260,    col:'#c48ae0', pet:'#e6c4f5', desc:'Rara y preciosa, como este amor' },
+  { id:'cerezo',    nom:'Cerezo',        emo:'🌸', costo:1.6e6,   prod:1400,   col:'#f7b7cd', pet:'#ffe0ec', desc:'Un día tenemos que ver uno de verdad' },
+  { id:'lavanda',   nom:'Lavanda',       emo:'💜', costo:2e7,     prod:7800,   col:'#9b8ade', pet:'#d3c9f7', desc:'Para que el jardín huela a nosotros' },
+  { id:'luna',      nom:'Flor de luna',  emo:'🌙', costo:3.3e8,   prod:44000,  col:'#8fb8e8', pet:'#d6e8ff', desc:'Solo florece de noche, cuando te pienso' },
+];
+
+const JAR_MEJORAS = [
+  { id:'m1',  nom:'Regadera nueva',        desc:'Regar da el doble de pétalos',        costo:200,     req:{f:'margarita',n:5},  ef:{t:'riego', x:2} },
+  { id:'m2',  nom:'Tierra fértil',         desc:'Margaritas ×2',                        costo:900,     req:{f:'margarita',n:12}, ef:{t:'flor', f:'margarita', x:2} },
+  { id:'m3',  nom:'Primera cita',          desc:'Todo el jardín ×1,25',                 costo:4000,    req:{f:'tulipan',n:8},    ef:{t:'global', x:1.25} },
+  { id:'m4',  nom:'Abono de café',         desc:'Tulipanes ×2',                         costo:9000,    req:{f:'tulipan',n:15},   ef:{t:'flor', f:'tulipan', x:2} },
+  { id:'m5',  nom:'Manos que riegan juntas',desc:'Regar da ×3',                          costo:25000,   req:{f:'rosa',n:5},       ef:{t:'riego', x:3} },
+  { id:'m6',  nom:'Anillo de promesa',     desc:'Rosas ×3',                             costo:75000,   req:{f:'rosa',n:15},      ef:{t:'flor', f:'rosa', x:3} },
+  { id:'m7',  nom:'Sol de febrero',        desc:'Girasoles ×2',                         costo:400000,  req:{f:'girasol',n:10},   ef:{t:'flor', f:'girasol', x:2} },
+  { id:'m8',  nom:'Nuestro trekking',      desc:'Todo el jardín ×1,5',                  costo:1.2e6,   req:{f:'girasol',n:20},   ef:{t:'global', x:1.5} },
+  { id:'m9',  nom:'Invernadero',           desc:'Orquídeas ×3',                         costo:6e6,     req:{f:'orquidea',n:10},  ef:{t:'flor', f:'orquidea', x:3} },
+  { id:'m10', nom:'Riego automático',      desc:'Regar da ×5',                          costo:2e7,     req:{f:'orquidea',n:20},  ef:{t:'riego', x:5} },
+  { id:'m11', nom:'Primavera eterna',      desc:'Todo el jardín ×2',                    costo:1e8,     req:{f:'cerezo',n:10},    ef:{t:'global', x:2} },
+  { id:'m12', nom:'Luna de miel',          desc:'Cerezos ×3',                           costo:5e8,     req:{f:'cerezo',n:25},    ef:{t:'flor', f:'cerezo', x:3} },
+  { id:'m13', nom:'Campo de lavanda',      desc:'Lavandas ×3',                          costo:4e9,     req:{f:'lavanda',n:15},   ef:{t:'flor', f:'lavanda', x:3} },
+  { id:'m14', nom:'Para siempre',          desc:'Todo el jardín ×3',                    costo:5e10,    req:{f:'luna',n:10},      ef:{t:'global', x:3} },
+];
+
+const JAR_TOPE_OFFLINE = 8 * 3600 * 1000;  // 8 horas
+const JAR_TASA_OFFLINE = 0.5;              // rinde la mitad estando cerrado
+const JAR_META_ESTACION = 1e6;             // pétalos de una vida para cambiar de estación
+
+let jarLoop = null, jarCanvas = null, jarCtx = null, jarParticulas = [], jarMostrado = 0;
+let jarUltimoCheckpoint = 0, jarUltimoLocal = 0, jarFlash = 0, jarTab = 'flores';
+
+function jarEstado(){ asegurarJuegos(); return datos.juegos.jardin; }
+
+function jarNum(n){
+  if(!isFinite(n)) return '∞';
+  if(n < 1000) return n < 10 && Math.floor(n) !== n ? n.toFixed(1) : String(Math.floor(n));
+  const u = ['','K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc'];
+  let i = 0;
+  while(n >= 1000 && i < u.length - 1){ n /= 1000; i++; }
+  return (n < 10 ? n.toFixed(2) : n < 100 ? n.toFixed(1) : n.toFixed(0)) + u[i];
+}
+
+function jarCosto(flor, cantidad){
+  const j = jarEstado();
+  const tiene = j.flores[flor.id] || 0;
+  let total = 0;
+  for(let i = 0; i < cantidad; i++) total += flor.costo * Math.pow(1.15, tiene + i);
+  return Math.ceil(total);
+}
+
+function jarMultGlobal(){
+  const j = jarEstado();
+  let x = 1;
+  JAR_MEJORAS.forEach(m => { if(j.mejoras.includes(m.id) && m.ef.t === 'global') x *= m.ef.x; });
+  x *= 1 + 0.03 * j.semillas;   // cada semilla dorada suma 3%
+  return x;
+}
+function jarMultFlor(id){
+  const j = jarEstado();
+  let x = 1;
+  JAR_MEJORAS.forEach(m => { if(j.mejoras.includes(m.id) && m.ef.t === 'flor' && m.ef.f === id) x *= m.ef.x; });
+  return x;
+}
+function jarMultRiego(){
+  const j = jarEstado();
+  let x = 1;
+  JAR_MEJORAS.forEach(m => { if(j.mejoras.includes(m.id) && m.ef.t === 'riego') x *= m.ef.x; });
+  return x;
+}
+function jarProduccion(){
+  const j = jarEstado();
+  let s = 0;
+  JAR_FLORES.forEach(f => { s += (j.flores[f.id] || 0) * f.prod * jarMultFlor(f.id); });
+  return s * jarMultGlobal();
+}
+function jarValorRiego(){
+  return (1 + jarProduccion() * 0.02) * jarMultRiego() * jarMultGlobal();
+}
+
+/* Acumula lo producido desde la última marca de tiempo. Es lo que hace que
+   el jardín siga creciendo con la página cerrada. */
+function jarAsentar(){
+  const j = jarEstado();
+  const ahora = Date.now();
+  if(!j.t || j.t > ahora) j.t = ahora;
+  let ms = ahora - j.t;
+  if(ms <= 0){ j.t = ahora; return 0; }
+  let tasa = 1;
+  // Cualquier hueco largo cuenta como ausencia, sea con la página cerrada o
+  // con la pestaña en segundo plano (ahí el navegador congela el bucle).
+  // Si no, dejar la pestaña abierta rendiría más que cerrarla.
+  if(ms > 60000){
+    ms = Math.min(ms, JAR_TOPE_OFFLINE);
+    tasa = JAR_TASA_OFFLINE;
+  }
+  const ganado = jarProduccion() * (ms / 1000) * tasa;
+  j.petalos += ganado;
+  j.total += ganado;
+  j.granTotal += ganado;
+  j.t = ahora;
+  return ganado;
+}
+
+/* Guardado: localStorage seguido, Neon solo en acciones concretas o cada
+   2 minutos. Un incremental hace tick todo el tiempo; sin esto le mandaría
+   un POST por segundo a la base. */
+function jarGuardar(inmediato){
+  const ahora = Date.now();
+  if(inmediato){
+    jarUltimoCheckpoint = ahora;
+    jarUltimoLocal = ahora;
+    guardar();
+    return;
+  }
+  if(ahora - jarUltimoLocal > 5000){
+    jarUltimoLocal = ahora;
+    try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
+  }
+  if(ahora - jarUltimoCheckpoint > 120000){
+    jarUltimoCheckpoint = ahora;
+    guardar();
+  }
+}
+
+/* ---------- pantalla ---------- */
+function jarMostrar(){
+  const j = jarEstado();
+  const ganado = jarAsentar();   // primero cobramos lo de estar cerrado
+  jarMostrado = j.petalos;
+  const el = document.getElementById('jxScreenJardin');
+  el.innerHTML =
+    '<div class="jar-top">' +
+      '<canvas id="jarLienzo" class="jar-lienzo"></canvas>' +
+      '<div class="jar-marcador">' +
+        '<div class="jar-petalos"><span id="jarN">0</span> <i>🌸</i></div>' +
+        '<div class="jar-tasa"><span id="jarPS">0</span> pétalos/s</div>' +
+      '</div>' +
+      '<button class="jar-regar" id="jarRegar">💧<span>Regar</span></button>' +
+    '</div>' +
+    '<div class="jar-tabs">' +
+      '<button class="jar-tab activa" data-tab="flores">🌱 Flores</button>' +
+      '<button class="jar-tab" data-tab="mejoras">✨ Mejoras <b id="jarBadge"></b></button>' +
+      '<button class="jar-tab" data-tab="estacion">🍂 Estación</button>' +
+    '</div>' +
+    '<div class="jar-panel" id="jarPanel"></div>';
+
+  jarCanvas = document.getElementById('jarLienzo');
+  jarCtx = jarCanvas.getContext('2d');
+  jarParticulas = [];
+  jarAjustarLienzo();
+
+  document.getElementById('jarRegar').onclick = (e) => jarRegar(e);
+  el.querySelectorAll('.jar-tab').forEach(b => b.onclick = () => {
+    el.querySelectorAll('.jar-tab').forEach(x => x.classList.remove('activa'));
+    b.classList.add('activa');
+    jarTab = b.dataset.tab;
+    jxSonido('tap');
+    jarPanel();
+  });
+
+  jarPanel();
+  jarBucle();
+
+  if(ganado > 1) avisar('🌸 Mientras no estabas el jardín siguió creciendo: +' + jarNum(ganado) + ' pétalos');
+}
+
+function jarAjustarLienzo(){
+  if(!jarCanvas) return;
+  const r = jarCanvas.getBoundingClientRect();
+  const d = Math.min(window.devicePixelRatio || 1, 2);
+  jarCanvas.width = Math.max(1, Math.round(r.width * d));
+  jarCanvas.height = Math.max(1, Math.round(r.height * d));
+  jarCtx.setTransform(d, 0, 0, d, 0, 0);
+}
+
+function jarRegar(e){
+  const j = jarEstado();
+  const v = jarValorRiego();
+  j.petalos += v; j.total += v; j.granTotal += v; j.riegos = (j.riegos || 0) + 1;
+  jxSonido('tap'); jxVibrar(8);
+  jarFlash = 1;
+  const r = jarCanvas.getBoundingClientRect();
+  const x = e && e.clientX ? e.clientX - r.left : r.width / 2;
+  const y = e && e.clientY ? Math.min(e.clientY - r.top, r.height) : r.height * 0.7;
+  for(let i = 0; i < 12; i++) jarParticulas.push(jarNuevaParticula(x, y, true));
+  const b = document.getElementById('jarRegar');
+  b.classList.remove('pulso'); void b.offsetWidth; b.classList.add('pulso');
+  jarGuardar(false);
+  if(jarTab !== 'flores') return;
+  jarRefrescarBotones();
+}
+
+function jarComprar(florId, cantidad){
+  const j = jarEstado();
+  const flor = JAR_FLORES.find(f => f.id === florId);
+  const costo = jarCosto(flor, cantidad);
+  if(j.petalos < costo){ jxSonido('mal'); return; }
+  jarAsentar();
+  j.petalos -= costo;
+  j.flores[florId] = (j.flores[florId] || 0) + cantidad;
+  jxSonido('compra'); jxVibrar(15);
+  for(let i = 0; i < 8; i++) jarParticulas.push(jarNuevaParticula(Math.random() * (jarCanvas?.getBoundingClientRect().width || 300), 20, false));
+  jarGuardar(true);
+  jarPanel();
+}
+
+function jarComprarMejora(id){
+  const j = jarEstado();
+  const m = JAR_MEJORAS.find(x => x.id === id);
+  if(!m || j.mejoras.includes(id)) return;
+  if(j.petalos < m.costo){ jxSonido('mal'); return; }
+  jarAsentar();
+  j.petalos -= m.costo;
+  j.mejoras.push(id);
+  jxSonido('bien'); jxVibrar(20);
+  jarGuardar(true);
+  jarPanel();
+  avisar('✨ ' + m.nom + ' · ' + m.desc);
+}
+
+function jarSemillasSiCambia(){
+  const j = jarEstado();
+  return Math.floor(Math.sqrt(j.total / JAR_META_ESTACION));
+}
+
+async function jarCambiarEstacion(){
+  const j = jarEstado();
+  const gana = jarSemillasSiCambia();
+  if(gana < 1){ jxSonido('mal'); avisar('Todavía no alcanza para cambiar de estación'); return; }
+  const ok = await confirmar('¿Cambiar de estación?', {
+    detalle: 'El jardín vuelve a empezar: pierdes las flores y las mejoras, pero ganas ' + gana +
+             ' semilla(s) dorada(s) que suman +' + (gana * 3) + '% para siempre.',
+    textoOk: 'Cambiar de estación',
+  });
+  if(!ok) return;
+  j.semillas += gana;
+  j.estaciones += 1;
+  j.petalos = 0;
+  j.total = 0;
+  j.flores = {};
+  j.mejoras = [];
+  j.t = Date.now();
+  jarMostrado = 0;
+  jxSonido('gana'); jxVibrar(40);
+  jarGuardar(true);
+  jarPanel();
+  avisar('🍂 Estación ' + (j.estaciones + 1) + ' · ganaste ' + gana + ' semilla(s) dorada(s)');
+}
+
+function jarCostoRamo(){
+  const j = jarEstado();
+  return Math.ceil(2000 * Math.pow(2.2, j.ramos || 0));
+}
+function jarRegalarRamo(){
+  const j = jarEstado();
+  const costo = jarCostoRamo();
+  if(j.petalos < costo){ jxSonido('mal'); return; }
+  jarAsentar();
+  j.petalos -= costo;
+  j.ramos = (j.ramos || 0) + 1;
+  const monedas = 10 + (j.ramos - 1) * 5;
+  const r = jxRecompensar(monedas, 15, { desde: document.getElementById('jarRamo') });
+  jxSonido('gana');
+  jarGuardar(true);
+  jarPanel();
+  avisar('💐 Le regalaste un ramo a ' + datos.juegos.mascota.nombre + ' · +' + monedas + ' monedas');
+}
+
+/* ---------- paneles ---------- */
+function jarPanel(){
+  const cont = document.getElementById('jarPanel');
+  if(!cont) return;
+  if(jarTab === 'flores') jarPanelFlores(cont);
+  else if(jarTab === 'mejoras') jarPanelMejoras(cont);
+  else jarPanelEstacion(cont);
+  jarActualizarBadge();
+}
+
+function jarPanelFlores(cont){
+  const j = jarEstado();
+  const prodTotal = jarProduccion();
+  let html = '<div class="jar-lista">';
+  let visibles = 0;
+  JAR_FLORES.forEach((f, i) => {
+    const tiene = j.flores[f.id] || 0;
+    const anterior = i === 0 ? 1 : (j.flores[JAR_FLORES[i-1].id] || 0);
+    // una flor aparece cuando ya tienes la anterior (o casi puedes pagarla)
+    if(tiene === 0 && anterior === 0 && j.granTotal < f.costo * 0.5) return;
+    visibles++;
+    const costo = jarCosto(f, 1);
+    const puede = j.petalos >= costo;
+    const mio = tiene * f.prod * jarMultFlor(f.id) * jarMultGlobal();
+    const pct = prodTotal > 0 ? (mio / prodTotal * 100) : 0;
+    html +=
+      '<button class="jar-item' + (puede ? ' puede' : '') + '" data-flor="' + f.id + '">' +
+        '<div class="jar-item-emo" style="background:' + f.pet + '">' + f.emo + '</div>' +
+        '<div class="jar-item-info">' +
+          '<div class="jar-item-nom">' + f.nom + (tiene ? ' <b>×' + tiene + '</b>' : '') + '</div>' +
+          '<div class="jar-item-desc">' + (tiene ? jarNum(mio) + ' pétalos/s · ' + pct.toFixed(0) + '% del jardín' : f.desc) + '</div>' +
+          (tiene ? '<div class="jar-barra"><div style="width:' + Math.min(100, pct) + '%;background:' + f.col + '"></div></div>' : '') +
+        '</div>' +
+        '<div class="jar-item-costo"><span>🌸 ' + jarNum(costo) + '</span></div>' +
+      '</button>';
+  });
+  if(!visibles) html += '<div class="jar-vacio">Riega para juntar tus primeros pétalos 💧</div>';
+  html += '</div>';
+  cont.innerHTML = html;
+  cont.querySelectorAll('[data-flor]').forEach(b => {
+    b.onclick = () => jarComprar(b.dataset.flor, 1);
+    b.oncontextmenu = (e) => { e.preventDefault(); jarComprar(b.dataset.flor, 10); };
+  });
+}
+
+function jarPanelMejoras(cont){
+  const j = jarEstado();
+  const disponibles = JAR_MEJORAS.filter(m => !j.mejoras.includes(m.id) && (j.flores[m.req.f] || 0) >= m.req.n);
+  const bloqueadas = JAR_MEJORAS.filter(m => !j.mejoras.includes(m.id) && (j.flores[m.req.f] || 0) < m.req.n);
+  const compradas = JAR_MEJORAS.filter(m => j.mejoras.includes(m.id));
+  let html = '<div class="jar-lista">';
+  disponibles.forEach(m => {
+    const puede = j.petalos >= m.costo;
+    html +=
+      '<button class="jar-item mejora' + (puede ? ' puede' : '') + '" data-mej="' + m.id + '">' +
+        '<div class="jar-item-emo" style="background:#f6e7b8">✨</div>' +
+        '<div class="jar-item-info"><div class="jar-item-nom">' + m.nom + '</div>' +
+          '<div class="jar-item-desc">' + m.desc + '</div></div>' +
+        '<div class="jar-item-costo"><span>🌸 ' + jarNum(m.costo) + '</span></div>' +
+      '</button>';
+  });
+  bloqueadas.slice(0, 3).forEach(m => {
+    const f = JAR_FLORES.find(x => x.id === m.req.f);
+    html +=
+      '<div class="jar-item bloqueada">' +
+        '<div class="jar-item-emo" style="background:#eee">🔒</div>' +
+        '<div class="jar-item-info"><div class="jar-item-nom">? ? ?</div>' +
+          '<div class="jar-item-desc">Necesitas ' + m.req.n + ' × ' + f.nom + ' ' + f.emo + '</div></div>' +
+      '</div>';
+  });
+  if(compradas.length){
+    html += '<div class="jar-sub">Ya conseguidas</div>';
+    compradas.forEach(m => {
+      html += '<div class="jar-item lista-ok"><div class="jar-item-emo" style="background:#dff0d8">✓</div>' +
+        '<div class="jar-item-info"><div class="jar-item-nom">' + m.nom + '</div>' +
+        '<div class="jar-item-desc">' + m.desc + '</div></div></div>';
+    });
+  }
+  if(!disponibles.length && !bloqueadas.length && !compradas.length){
+    html += '<div class="jar-vacio">Planta algunas flores y aparecerán mejoras ✨</div>';
+  }
+  html += '</div>';
+  cont.innerHTML = html;
+  cont.querySelectorAll('[data-mej]').forEach(b => b.onclick = () => jarComprarMejora(b.dataset.mej));
+}
+
+function jarPanelEstacion(cont){
+  const j = jarEstado();
+  const gana = jarSemillasSiCambia();
+  const falta = Math.max(0, JAR_META_ESTACION - j.total);
+  const pct = Math.min(100, j.total / JAR_META_ESTACION * 100);
+  const costoRamo = jarCostoRamo();
+  cont.innerHTML =
+    '<div class="jar-estacion">' +
+      '<div class="jar-est-caja">' +
+        '<div class="jar-est-emo">🌰</div>' +
+        '<div class="jar-est-tit">Semillas doradas</div>' +
+        '<div class="jar-est-num">' + j.semillas + '</div>' +
+        '<div class="jar-est-sub">+' + (j.semillas * 3) + '% a todo el jardín · estación ' + (j.estaciones + 1) + '</div>' +
+      '</div>' +
+      '<div class="jar-est-txt">Cuando el jardín ya está grande podés <b>cambiar de estación</b>: todo vuelve a empezar, ' +
+        'pero las semillas doradas se quedan para siempre y hacen que la próxima vez crezca mucho más rápido.</div>' +
+      '<div class="jar-progreso"><div style="width:' + pct + '%"></div></div>' +
+      '<div class="jar-est-sub" style="text-align:center">' +
+        (gana >= 1 ? 'Cambiando ahora ganás <b>' + gana + '</b> semilla(s)' : 'Te faltan ' + jarNum(falta) + ' pétalos de esta estación') +
+      '</div>' +
+      '<button class="jar-btn-grande' + (gana >= 1 ? '' : ' off') + '" id="jarEstacionBtn">🍂 Cambiar de estación</button>' +
+      '<div class="jar-sub">Para Michi</div>' +
+      '<div class="jar-est-txt">Armá un ramo con tus pétalos y regaláselo a ' + datos.juegos.mascota.nombre + ' para conseguir monedas del clóset.</div>' +
+      '<button class="jar-btn-grande ramo' + (j.petalos >= costoRamo ? '' : ' off') + '" id="jarRamo">' +
+        '💐 Regalar un ramo · 🌸 ' + jarNum(costoRamo) + ' → 🪙 ' + (10 + (j.ramos || 0) * 5) + '</button>' +
+      '<div class="jar-mini-stats">' +
+        '<div><b>' + jarNum(j.granTotal) + '</b><span>pétalos de toda la vida</span></div>' +
+        '<div><b>' + (j.riegos || 0) + '</b><span>veces regado</span></div>' +
+        '<div><b>' + (j.ramos || 0) + '</b><span>ramos regalados</span></div>' +
+      '</div>' +
+    '</div>';
+  document.getElementById('jarEstacionBtn').onclick = jarCambiarEstacion;
+  document.getElementById('jarRamo').onclick = jarRegalarRamo;
+}
+
+function jarActualizarBadge(){
+  const j = jarEstado();
+  const n = JAR_MEJORAS.filter(m => !j.mejoras.includes(m.id) && (j.flores[m.req.f] || 0) >= m.req.n && j.petalos >= m.costo).length;
+  const b = document.getElementById('jarBadge');
+  if(b) b.textContent = n ? String(n) : '';
+}
+
+/* Solo repinta el estado "puedo pagarlo" sin rehacer el HTML, para que la
+   lista no parpadee mientras suben los pétalos. */
+function jarRefrescarBotones(){
+  const j = jarEstado();
+  const cont = document.getElementById('jarPanel');
+  if(!cont) return;
+  cont.querySelectorAll('[data-flor]').forEach(b => {
+    const f = JAR_FLORES.find(x => x.id === b.dataset.flor);
+    b.classList.toggle('puede', j.petalos >= jarCosto(f, 1));
+  });
+  cont.querySelectorAll('[data-mej]').forEach(b => {
+    const m = JAR_MEJORAS.find(x => x.id === b.dataset.mej);
+    b.classList.toggle('puede', j.petalos >= m.costo);
+  });
+  jarActualizarBadge();
+}
+
+/* ---------- lienzo ---------- */
+function jarNuevaParticula(x, y, arriba){
+  const cols = ['#ffd4e0','#ffe0ec','#fff8e2','#e6c4f5','#d3c9f7','#ff97ab'];
+  return {
+    x, y,
+    vx: (Math.random() - 0.5) * 1.6,
+    vy: arriba ? -(1.5 + Math.random() * 2.2) : (0.4 + Math.random() * 0.8),
+    g: arriba ? 0.06 : 0.01,
+    r: 3 + Math.random() * 4,
+    a: 1,
+    rot: Math.random() * Math.PI * 2,
+    vr: (Math.random() - 0.5) * 0.12,
+    col: cols[Math.floor(Math.random() * cols.length)],
+  };
+}
+
+function jarDibujarFlor(ctx, x, y, esc, flor, t, i){
+  const sway = Math.sin(t / 900 + i * 1.7) * 0.09;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(sway);
+  ctx.scale(esc, esc);
+  // tallo
+  ctx.strokeStyle = '#6f9c5a'; ctx.lineWidth = 2.4; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.quadraticCurveTo(3, -16, 0, -30); ctx.stroke();
+  // hoja
+  ctx.fillStyle = '#7fae66';
+  ctx.beginPath(); ctx.ellipse(-5, -14, 6, 3, -0.6, 0, Math.PI * 2); ctx.fill();
+  // pétalos
+  ctx.fillStyle = flor.pet;
+  for(let p = 0; p < 6; p++){
+    const ang = (p / 6) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.ellipse(Math.cos(ang) * 7, -30 + Math.sin(ang) * 7, 5.2, 3.6, ang, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.fillStyle = flor.col;
+  ctx.beginPath(); ctx.arc(0, -30, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+
+function jarBucle(){
+  if(jarLoop) cancelAnimationFrame(jarLoop);
+  let ultimo = performance.now();
+  const paso = (ahora) => {
+    const dt = Math.min(100, ahora - ultimo);
+    ultimo = ahora;
+    if(jxPantalla !== 'jardin' || !document.getElementById('jxApp')?.classList.contains('abierta')){
+      jarLoop = null;
+      jarAsentar();
+      jarGuardar(true);
+      return;
+    }
+    jarAsentar();
+    const j = jarEstado();
+
+    // el número sube suave en vez de saltar
+    jarMostrado += (j.petalos - jarMostrado) * 0.18;
+    if(Math.abs(j.petalos - jarMostrado) < 0.5) jarMostrado = j.petalos;
+    const nEl = document.getElementById('jarN');
+    if(nEl) nEl.textContent = jarNum(jarMostrado);
+    const psEl = document.getElementById('jarPS');
+    if(psEl) psEl.textContent = jarNum(jarProduccion());
+
+    jarPintarLienzo(ahora, dt);
+    if(Math.floor(ahora / 400) % 2 === 0) jarRefrescarBotones();
+    jarGuardar(false);
+    jarLoop = requestAnimationFrame(paso);
+  };
+  jarLoop = requestAnimationFrame(paso);
+}
+
+function jarPintarLienzo(t, dt){
+  if(!jarCtx || !jarCanvas) return;
+  const w = jarCanvas.getBoundingClientRect().width;
+  const h = jarCanvas.getBoundingClientRect().height;
+  const ctx = jarCtx;
+  const j = jarEstado();
+
+  // cielo
+  const cielo = ctx.createLinearGradient(0, 0, 0, h);
+  const noche = (j.flores.luna || 0) > 0;
+  if(noche){ cielo.addColorStop(0, '#2e3a5c'); cielo.addColorStop(1, '#6a7fa8'); }
+  else { cielo.addColorStop(0, '#cfe6f5'); cielo.addColorStop(1, '#f3e6d0'); }
+  ctx.fillStyle = cielo; ctx.fillRect(0, 0, w, h);
+
+  // sol / luna
+  ctx.globalAlpha = 0.85;
+  ctx.fillStyle = noche ? '#eef3ff' : '#ffe9a8';
+  ctx.beginPath(); ctx.arc(w * 0.82, h * 0.2, noche ? 13 : 17, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // pasto
+  ctx.fillStyle = noche ? '#3f6047' : '#8ab86a';
+  ctx.beginPath();
+  ctx.moveTo(0, h);
+  ctx.lineTo(0, h * 0.72);
+  ctx.quadraticCurveTo(w * 0.5, h * 0.66, w, h * 0.74);
+  ctx.lineTo(w, h);
+  ctx.closePath(); ctx.fill();
+
+  // flores plantadas (tope visual para no ahogar el canvas).
+  // La proporción áurea reparte las posiciones sin que se amontonen,
+  // y se dibujan de atrás hacia adelante para que se superpongan bien.
+  const TOPE = 46, PHI = 0.618033988749895;
+  const plantas = [];
+  for(let fi = JAR_FLORES.length - 1; fi >= 0 && plantas.length < TOPE; fi--){
+    const flor = JAR_FLORES[fi];
+    const n = Math.min(j.flores[flor.id] || 0, 12);
+    for(let k = 0; k < n && plantas.length < TOPE; k++){
+      const s = fi * 13 + k + 1;
+      plantas.push({
+        flor,
+        x: 16 + ((s * PHI) % 1) * (w - 32),
+        y: h * 0.70 + ((s * PHI * 3.7) % 1) * (h * 0.26),
+        i: s,
+      });
+    }
+  }
+  plantas.sort((a, b) => a.y - b.y);
+  plantas.forEach(p => {
+    const prof = (p.y - h * 0.70) / (h * 0.26);
+    jarDibujarFlor(ctx, p.x, p.y, 0.5 + prof * 0.55, p.flor, t, p.i);
+  });
+
+  // pétalos que caen, más densos cuanto más produce el jardín
+  const prod = jarProduccion();
+  const objetivo = Math.min(26, Math.floor(Math.log10(prod + 1) * 6));
+  if(jarParticulas.length < objetivo && Math.random() < 0.25){
+    jarParticulas.push(jarNuevaParticula(Math.random() * w, -8, false));
+  }
+  for(let i = jarParticulas.length - 1; i >= 0; i--){
+    const p = jarParticulas[i];
+    p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+    if(p.vy > 0 && p.y > h * 0.7) p.a -= 0.02;
+    if(p.y > h + 12 || p.a <= 0){ jarParticulas.splice(i, 1); continue; }
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, p.a);
+    ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+    ctx.fillStyle = p.col;
+    ctx.beginPath(); ctx.ellipse(0, 0, p.r, p.r * 0.62, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  ctx.globalAlpha = 1;
+
+  // destello al regar
+  if(jarFlash > 0){
+    ctx.fillStyle = 'rgba(255,255,255,' + (jarFlash * 0.25) + ')';
+    ctx.fillRect(0, 0, w, h);
+    jarFlash -= 0.06;
+  }
 }
 
 /* ============================================================
