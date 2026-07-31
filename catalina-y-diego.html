@@ -1042,6 +1042,13 @@
   .cl-nota{text-align:center;font-size:.68rem;color:var(--gris);font-style:italic;margin-top:14px;opacity:.8;}
   .cl-cargando{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     background:linear-gradient(160deg,#e9f0f4,#d7e3ea);color:#4b7d99;font-size:.9rem;letter-spacing:.3px;}
+  .cl-sel{position:absolute;left:12px;bottom:12px;background:rgba(255,255,255,.94);border-radius:14px;
+    padding:9px 13px;box-shadow:0 6px 18px rgba(0,0,0,.18);opacity:0;transform:translateY(8px);
+    transition:opacity .18s,transform .18s;pointer-events:none;max-width:70%;}
+  .cl-sel.on{opacity:1;transform:none;}
+  .cl-sel b{display:block;font-family:"Playfair Display",serif;font-size:.95rem;color:var(--tinta);}
+  .cl-sel span{display:block;font-size:.74rem;color:#4b7d99;margin-top:1px;}
+  .cl-sel small{display:block;font-size:.66rem;color:var(--gris);margin-top:3px;font-style:italic;}
   .jx-card.clinica{background:linear-gradient(150deg,#6da3c0,#43708c);}
   @media (max-width:400px){ .cl-lienzo{height:210px;} .cl-plata{font-size:1.6rem;} }
 
@@ -6068,7 +6075,8 @@ const KIN_RANGOS = [
    ============================================================ */
 let THREE = null, c3Cargando = null;
 let c3Escena = null, c3Cam = null, c3Rend = null, c3Loop = null, c3Reloj = 0;
-let c3Personal = [], c3Pacientes = [], c3Camillas = [];
+let c3Personal = [], c3Pacientes = [], c3Camillas = [], c3Muebles = [];
+let c3Rayo = null, c3Seleccionado = null, c3Piso = null, c3Anillo = null;
 
 async function c3Cargar(){
   if(THREE) return THREE;
@@ -6088,21 +6096,243 @@ const C3_PALETA = {
   piso:0xe6ddd2, muro:0xf3efe7, muroBajo:0xdcd3c6,
   camilla:0xfdfbf7, patas:0xa6b2ae, sabana:0xbfd8e4,
   piel:0xe8c3a0, pelo:0x4a3b33, tunica:0x7fae96, ropa:[0xc8956d,0x6d9fc8,0xc86d8f,0x9b7fc8,0xd8b45f],
-  planta:0x6f9c5a, macetero:0xc98f6d, mueble:0xd8c3a5,
+  planta:0x6f9c5a, macetero:0xc98f6d, mueble:0xd8c3a5, parche:0x1f4e79,
 };
 
+/* ---------- personas ----------
+   El kinesiólogo lleva túnica, credencial y un parche en la manga.
+   El parche es un color plano a propósito: si Diego pasa la imagen real
+   del escudo, se reemplaza por una textura y queda de verdad. */
 function c3Persona(colorRopa, esKine){
   const g = new THREE.Group();
-  const cuerpo = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.34, 3, 6), c3Mat(esKine ? C3_PALETA.tunica : colorRopa));
+  const colorCuerpo = esKine ? C3_PALETA.tunica : colorRopa;
+  const cuerpo = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.34, 3, 6), c3Mat(colorCuerpo));
   cuerpo.position.y = 0.42; cuerpo.castShadow = true;
   const cabeza = new THREE.Mesh(new THREE.IcosahedronGeometry(0.15, 0), c3Mat(C3_PALETA.piel));
   cabeza.position.y = 0.78; cabeza.castShadow = true;
   const pelo = new THREE.Mesh(new THREE.SphereGeometry(0.155, 6, 4, 0, Math.PI*2, 0, Math.PI/2), c3Mat(C3_PALETA.pelo));
   pelo.position.y = 0.80;
-  const piernas = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.15, 0.3, 6), c3Mat(0x53606b));
+  const piernas = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.15, 0.3, 6), c3Mat(esKine ? 0xf0f2f4 : 0x53606b));
   piernas.position.y = 0.15;
   g.add(cuerpo, cabeza, pelo, piernas);
+
+  if(esKine){
+    // cuello en V de la túnica
+    const v = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.07, 0.02), c3Mat(C3_PALETA.piel));
+    v.position.set(0, 0.60, 0.16); g.add(v);
+    // parche institucional en la manga
+    const parche = new THREE.Mesh(new THREE.CircleGeometry(0.045, 8), c3Mat(C3_PALETA.parche));
+    parche.position.set(-0.165, 0.50, 0.045); parche.rotation.y = -Math.PI/2.2; g.add(parche);
+    // credencial colgando
+    const cred = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.09, 0.012), c3Mat(0xfdfdfd));
+    cred.position.set(0.07, 0.40, 0.165); g.add(cred);
+  }
   return g;
+}
+
+/* ---------- equipamiento: cada compra tiene su modelo ---------- */
+function c3Ecografo(){
+  const g = new THREE.Group();
+  const carro = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.6, 0.36), c3Mat(0xeef1f3));
+  carro.position.y = 0.42; carro.castShadow = true;
+  const pantalla = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.3, 0.05), c3Mat(0x2f4858));
+  pantalla.position.set(0, 0.88, 0.02);
+  const brillo = new THREE.Mesh(new THREE.PlaneGeometry(0.33, 0.22), c3Mat(0x7fd4e8));
+  brillo.position.set(0, 0.88, 0.055);
+  for(const x of [-0.15, 0.15]) for(const z of [-0.13, 0.13]){
+    const r = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.05, 6), c3Mat(0x53606b));
+    r.rotation.z = Math.PI/2; r.position.set(x, 0.06, z); g.add(r);
+  }
+  g.add(carro, pantalla, brillo);
+  return g;
+}
+function c3TENS(){
+  const g = new THREE.Group();
+  const mesa = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.06, 0.34), c3Mat(C3_PALETA.mueble));
+  mesa.position.y = 0.62; mesa.castShadow = true;
+  for(const [x,z] of [[-0.17,-0.12],[0.17,-0.12],[-0.17,0.12],[0.17,0.12]]){
+    const p = new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.6,5), c3Mat(0x9fb0bc));
+    p.position.set(x,0.31,z); g.add(p);
+  }
+  const eq = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.14, 0.2), c3Mat(0xf2e9d8));
+  eq.position.y = 0.72; eq.castShadow = true;
+  const luz = new THREE.Mesh(new THREE.CircleGeometry(0.025, 6), c3Mat(0x7fd48f));
+  luz.position.set(0, 0.74, 0.101);
+  g.add(mesa, eq, luz);
+  return g;
+}
+function c3Gimnasio(){
+  const g = new THREE.Group();
+  // colchoneta
+  const col = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.06, 0.7), c3Mat(0x6d9fc8));
+  col.position.set(0, 0.03, 0.5); col.receiveShadow = true;
+  // rack con mancuernas
+  const rack = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.5, 0.26), c3Mat(C3_PALETA.mueble));
+  rack.position.set(0, 0.25, -0.35); rack.castShadow = true;
+  g.add(col, rack);
+  for(let i = 0; i < 3; i++){
+    const barra = new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.22,5), c3Mat(0x53606b));
+    barra.rotation.z = Math.PI/2; barra.position.set(-0.24 + i*0.24, 0.55, -0.35);
+    const d1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.04,6), c3Mat(0x3c4360));
+    d1.rotation.z = Math.PI/2; d1.position.set(-0.24 + i*0.24 - 0.12, 0.55, -0.35);
+    const d2 = d1.clone(); d2.position.x += 0.24;
+    g.add(barra, d1, d2);
+  }
+  // pelota de kinesiología
+  const bola = new THREE.Mesh(new THREE.IcosahedronGeometry(0.24, 1), c3Mat(0xc86d8f));
+  bola.position.set(0.72, 0.24, 0.45); bola.castShadow = true;
+  g.add(bola);
+  return g;
+}
+function c3Plataforma(){
+  const g = new THREE.Group();
+  const base = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.08, 0.5), c3Mat(0x3c4360));
+  base.position.y = 0.04; base.receiveShadow = true;
+  const tapa = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.02, 0.44), c3Mat(0x7fd4e8));
+  tapa.position.y = 0.09;
+  const poste = new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,0.9,6), c3Mat(0x9fb0bc));
+  poste.position.set(0.3, 0.45, -0.2);
+  const mon = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.22, 0.04), c3Mat(0x2f4858));
+  mon.position.set(0.3, 0.95, -0.2);
+  g.add(base, tapa, poste, mon);
+  return g;
+}
+function c3Hidro(){
+  const g = new THREE.Group();
+  const borde = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.34, 1.0), c3Mat(0xdcd3c6));
+  borde.position.y = 0.17; borde.castShadow = true; borde.receiveShadow = true;
+  const agua = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.04, 0.82), c3Mat(0x5fc0dd, { transparent:true, opacity:0.82 }));
+  agua.position.y = 0.33; agua.name = 'agua';
+  const esc = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.05, 0.5), c3Mat(0xf0f2f4));
+  esc.position.set(0.9, 0.2, 0);
+  g.add(borde, agua, esc);
+  return g;
+}
+
+/* Dónde va cada cosa. La sala se llena a medida que la clínica crece. */
+const C3_LUGARES = {
+  tens:       { hacer:c3TENS,       pos:[ 2.55, 0, -1.5], rotY:-0.5 },
+  eco:        { hacer:c3Ecografo,   pos:[-3.35, 0, -1.2], rotY: 0.7 },
+  gym:        { hacer:c3Gimnasio,   pos:[ 2.30, 0,  1.6], rotY:-0.35 },
+  plataforma: { hacer:c3Plataforma, pos:[-3.30, 0,  1.1], rotY: 0.5 },
+  hidro:      { hacer:c3Hidro,      pos:[ 2.05, 0,  2.75], rotY:-0.25 },
+};
+
+function c3Poblar(){
+  if(!c3Escena) return;
+  [...c3Camillas, ...c3Personal, ...c3Pacientes, ...c3Muebles].forEach(o => c3Escena.remove(o));
+  c3Camillas = []; c3Personal = []; c3Pacientes = []; c3Muebles = [];
+  const c = clEstado();
+  const salas = clSalas();
+
+  // camillas: una por sala comprada
+  for(let i = 0; i < salas; i++){
+    const x = -2.0 + i * 1.9;
+    const cam = c3Camilla(); cam.position.set(x, 0, -1.3);
+    c3Escena.add(cam); c3Camillas.push(cam);
+
+    if(i < c.personal.length){
+      const k = c3Persona(null, true);
+      k.position.set(x + 0.72, 0, -1.3);
+      k.rotation.y = -Math.PI / 2;
+      k.userData = { tipo:'kine', idx:i, nom:c.personal[i].nom, esp:c.personal[i].esp,
+                     renta:c.personal[i].renta, destino:null, base:new THREE.Vector3(x + 0.72, 0, -1.3) };
+      c3Escena.add(k); c3Personal.push(k);
+
+      const p = c3Persona(C3_PALETA.ropa[i % C3_PALETA.ropa.length], false);
+      p.position.set(x, 0.72, -1.2);
+      p.rotation.x = -Math.PI / 2;
+      p.scale.setScalar(0.92);
+      p.userData = { tipo:'acostado' };
+      c3Escena.add(p); c3Pacientes.push(p);
+    }
+  }
+
+  // el equipamiento comprado aparece en la sala
+  Object.keys(C3_LUGARES).forEach(id => {
+    if(!clTieneEquipo(id)) return;
+    const L = C3_LUGARES[id];
+    const m = L.hacer();
+    m.position.set(L.pos[0], L.pos[1], L.pos[2]);
+    m.rotation.y = L.rotY;
+    m.userData = { tipo:'equipo', id };
+    c3Escena.add(m); c3Muebles.push(m);
+  });
+
+  // sala de espera
+  const esperando = Math.min(5, 1 + Math.floor(c.reputacion / 15));
+  for(let i = 0; i < esperando; i++){
+    const s = c3Persona(C3_PALETA.ropa[i % C3_PALETA.ropa.length], false);
+    s.position.set(-3.3 + i * 0.66, 0, 2.5);
+    s.userData = { tipo:'espera', fase:i * 1.3, destino:null,
+                   base:new THREE.Vector3(-3.3 + i * 0.66, 0, 2.5) };
+    c3Escena.add(s); c3Pacientes.push(s);
+  }
+}
+
+/* ---------- interacción: tocar para seleccionar, tocar el piso para mover ---------- */
+function c3PrepararToques(lienzo){
+  c3Rayo = new THREE.Raycaster();
+  const ndc = new THREE.Vector2();
+
+  const alTocar = (ev) => {
+    const r = lienzo.getBoundingClientRect();
+    ndc.x = ((ev.clientX - r.left) / r.width) * 2 - 1;
+    ndc.y = -((ev.clientY - r.top) / r.height) * 2 + 1;
+    c3Rayo.setFromCamera(ndc, c3Cam);
+
+    // ¿tocó a alguien?
+    const gente = [...c3Personal, ...c3Pacientes.filter(p => p.userData.tipo === 'espera')];
+    const hitGente = c3Rayo.intersectObjects(gente, true);
+    if(hitGente.length){
+      let o = hitGente[0].object;
+      while(o.parent && !o.userData.tipo) o = o.parent;
+      c3Seleccionar(o);
+      return;
+    }
+    // ¿tocó un equipo?
+    const hitEq = c3Rayo.intersectObjects(c3Muebles, true);
+    if(hitEq.length){
+      let o = hitEq[0].object;
+      while(o.parent && !o.userData.tipo) o = o.parent;
+      const eq = CL_EQUIPOS.find(e => e.id === o.userData.id);
+      if(eq) avisar(eq.emo + ' ' + eq.nom + ' · ' + eq.desc);
+      jxSonido('tap');
+      return;
+    }
+    // tocó el piso: si hay alguien elegido, lo mando para allá
+    if(c3Seleccionado && c3Piso){
+      const hitPiso = c3Rayo.intersectObject(c3Piso);
+      if(hitPiso.length){
+        const p = hitPiso[0].point;
+        c3Seleccionado.userData.destino = new THREE.Vector3(
+          Math.max(-3.7, Math.min(3.7, p.x)), 0, Math.max(-2.6, Math.min(3.0, p.z)));
+        jxSonido('tap'); jxVibrar(8);
+        return;
+      }
+    }
+    c3Seleccionar(null);
+  };
+  lienzo.addEventListener('pointerdown', alTocar);
+}
+
+function c3Seleccionar(obj){
+  c3Seleccionado = obj;
+  if(c3Anillo) c3Anillo.visible = !!obj;
+  const caja = document.getElementById('cl3dSel');
+  if(!caja) return;
+  if(!obj){ caja.classList.remove('on'); return; }
+  jxSonido('tap');
+  const u = obj.userData;
+  if(u.tipo === 'kine'){
+    const e = CL_ESPECIALIDADES[u.esp];
+    caja.innerHTML = '<b>' + u.nom + '</b><span>' + e.emo + ' ' + e.nom + ' · ' + clPlata(u.renta * clMultPago()) + '/s</span>' +
+                     '<small>Toca el piso para moverlo</small>';
+  }else{
+    caja.innerHTML = '<b>Paciente en espera</b><span>Esperando ser atendido</span>' +
+                     '<small>Toca el piso para moverlo</small>';
+  }
+  caja.classList.add('on');
 }
 
 function c3Camilla(){
@@ -6148,12 +6378,15 @@ function c3Construir(lienzo){
   esc.add(sol);
 
   // piso y muros
-  const piso = new THREE.Mesh(new THREE.BoxGeometry(8.6, 0.2, 7.4), c3Mat(C3_PALETA.piso));
+  const piso = new THREE.Mesh(new THREE.BoxGeometry(9.2, 0.2, 8.2), c3Mat(C3_PALETA.piso));
   piso.position.y = -0.1; piso.receiveShadow = true; esc.add(piso);
-  const muroF = new THREE.Mesh(new THREE.BoxGeometry(8.6, 3.2, 0.2), c3Mat(C3_PALETA.muro));
+  c3Piso = piso;
+  c3Anillo = new THREE.Mesh(new THREE.RingGeometry(0.24, 0.3, 20), c3Mat(0xf5c542, { transparent:true, opacity:0.9 }));
+  c3Anillo.rotation.x = -Math.PI/2; c3Anillo.position.y = 0.02; c3Anillo.visible = false; esc.add(c3Anillo);
+  const muroF = new THREE.Mesh(new THREE.BoxGeometry(9.2, 3.2, 0.2), c3Mat(C3_PALETA.muro));
   muroF.position.set(0, 1.6, -3.7); muroF.receiveShadow = true; esc.add(muroF);
-  const muroI = new THREE.Mesh(new THREE.BoxGeometry(0.2, 3.2, 7.4), c3Mat(C3_PALETA.muroBajo));
-  muroI.position.set(-4.3, 1.6, 0); muroI.receiveShadow = true; esc.add(muroI);
+  const muroI = new THREE.Mesh(new THREE.BoxGeometry(0.2, 3.2, 8.2), c3Mat(C3_PALETA.muroBajo));
+  muroI.position.set(-4.6, 1.6, 0); muroI.receiveShadow = true; esc.add(muroI);
 
   // ventanal
   const vent = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.5, 0.06), c3Mat(0xbfe0f0, { transparent:true, opacity:0.75 }));
@@ -6174,49 +6407,12 @@ function c3Construir(lienzo){
   return { esc, cam, rend };
 }
 
-/* Reconstruye camillas, personal y sala de espera según el estado real. */
-function c3Poblar(){
-  if(!c3Escena) return;
-  [...c3Camillas, ...c3Personal, ...c3Pacientes].forEach(o => c3Escena.remove(o));
-  c3Camillas = []; c3Personal = []; c3Pacientes = [];
-  const c = clEstado();
-  const salas = clSalas();
-
-  for(let i = 0; i < salas; i++){
-    const x = -2.0 + i * 1.9;
-    const cam = c3Camilla(); cam.position.set(x, 0, -1.3);
-    c3Escena.add(cam); c3Camillas.push(cam);
-
-    if(i < c.personal.length){
-      const k = c3Persona(null, true);
-      k.position.set(x + 0.72, 0, -1.3);
-      k.rotation.y = -Math.PI / 2;
-      k.userData.base = k.position.y;
-      c3Escena.add(k); c3Personal.push(k);
-
-      const p = c3Persona(C3_PALETA.ropa[i % C3_PALETA.ropa.length], false);
-      p.position.set(x, 0.72, -1.2);
-      p.rotation.x = -Math.PI / 2;   // acostado en la camilla
-      p.scale.setScalar(0.92);
-      c3Escena.add(p); c3Pacientes.push(p);
-    }
-  }
-
-  // sala de espera: más gente cuanta más reputación
-  const esperando = Math.min(5, 1 + Math.floor(c.reputacion / 15));
-  for(let i = 0; i < esperando; i++){
-    const s = c3Persona(C3_PALETA.ropa[i % C3_PALETA.ropa.length], false);
-    s.position.set(-3.1 + i * 0.72, 0, 1.7);
-    s.userData.fase = i * 1.3;
-    c3Escena.add(s); c3Pacientes.push(s);
-  }
-}
-
 async function c3Iniciar(lienzo){
   await c3Cargar();
   const { esc, cam, rend } = c3Construir(lienzo);
   c3Escena = esc; c3Cam = cam; c3Rend = rend;
   c3Poblar();
+  c3PrepararToques(lienzo);
   c3Ajustar();
   c3Animar();
 }
@@ -6240,13 +6436,28 @@ function c3Animar(){
     c3Reloj = t / 1000;
     // cámara con un vaivén lento, para que la escena respire
     const a = -0.30 + Math.sin(c3Reloj * 0.13) * 0.17;
-    c3Cam.position.set(Math.sin(a) * 5.9, 3.35 + Math.sin(c3Reloj * 0.2) * 0.14, Math.cos(a) * 5.9);
-    c3Cam.lookAt(-0.1, 0.78, -0.35);
+    // mientras más grande la clínica, más se aleja la cámara para que quepa todo
+    const lleno = Math.min(10, c3Camillas.length + c3Muebles.length);
+    const rad = 5.6 + lleno * 0.24, alt = 3.1 + lleno * 0.14;
+    c3Cam.position.set(Math.sin(a) * rad, alt + Math.sin(c3Reloj * 0.2) * 0.14, Math.cos(a) * rad);
+    c3Cam.lookAt(-0.1, 0.7, 0.05);
     // el personal trabaja: leve balanceo
-    c3Personal.forEach((k, i) => { k.position.y = Math.abs(Math.sin(c3Reloj * 1.7 + i)) * 0.045; });
+    c3Personal.forEach((k, i) => { if(!k.userData.destino) k.position.y = Math.abs(Math.sin(c3Reloj * 1.7 + i)) * 0.045; });
+    // quien tenga destino camina hacia allá, con pasitos
+    [...c3Personal, ...c3Pacientes].forEach(o => {
+      const u = o.userData; if(!u || !u.destino) return;
+      const d = u.destino.clone().sub(o.position); d.y = 0;
+      const dist = d.length();
+      if(dist < 0.06){ u.destino = null; o.position.y = 0; return; }
+      d.normalize().multiplyScalar(Math.min(0.03, dist));
+      o.position.add(d);
+      o.rotation.y = Math.atan2(d.x, d.z);
+      o.position.y = Math.abs(Math.sin(c3Reloj * 11)) * 0.04;
+    });
+    if(c3Anillo && c3Seleccionado){ c3Anillo.position.set(c3Seleccionado.position.x, 0.02, c3Seleccionado.position.z); }
     // los que esperan se mueven apenas
     c3Pacientes.forEach(p => {
-      if(p.userData.fase === undefined) return;
+      if(p.userData.fase === undefined || p.userData.destino) return;
       p.rotation.y = Math.sin(c3Reloj * 0.5 + p.userData.fase) * 0.28;
     });
     c3Rend.render(c3Escena, c3Cam);
@@ -6271,7 +6482,8 @@ function c3Destruir(){
   }
   if(c3Rend) c3Rend.dispose();
   c3Escena = null; c3Cam = null; c3Rend = null;
-  c3Personal = []; c3Pacientes = []; c3Camillas = [];
+  c3Personal = []; c3Pacientes = []; c3Camillas = []; c3Muebles = [];
+  c3Seleccionado = null; c3Piso = null; c3Anillo = null; c3Rayo = null;
 }
 
 /* ============================================================
@@ -6414,6 +6626,7 @@ function clMostrar(){
     '<div class="cl-top">' +
       '<canvas id="clLienzo" class="cl-lienzo"></canvas>' +
       '<div class="cl-cargando" id="cl3dCargando">Cargando la clínica…</div>' +
+      '<div class="cl-sel" id="cl3dSel"></div>' +
       '<div class="cl-hud">' +
         '<div class="cl-plata"><span id="clDinero">$0</span></div>' +
         '<div class="cl-sub"><span id="clRenta">0</span>/s · ⭐ <span id="clRep">0</span> reputación</div>' +
@@ -6675,6 +6888,7 @@ function clContratar(){
   });
   jxSonido('compra'); jxVibrar(20);
   clGuardar(true);
+  c3Poblar();
   clPanel();
 }
 
@@ -6687,6 +6901,7 @@ function clComprarEquipo(id){
   c.equipos.push(id);
   jxSonido('bien'); jxVibrar(20);
   clGuardar(true);
+  c3Poblar();
   clPanel();
   avisar('🏥 ' + eq.nom + ' · ' + eq.desc);
 }
