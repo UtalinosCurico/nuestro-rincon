@@ -1080,6 +1080,15 @@
   .cl-btn-derivar{width:100%;margin-top:8px;background:transparent;border:1.5px dashed var(--crema-oscuro);
     border-radius:14px;padding:11px;font-family:"Jost",sans-serif;font-size:.85rem;color:var(--gris);cursor:pointer;}
   .cl-opc small{display:block;color:var(--gris);font-size:.72rem;margin-top:3px;}
+  .cl-fase{font-size:.82rem;color:var(--gris);margin-top:10px;}
+  .cl-fase b{color:#4b7d99;}
+  .cl-prog{height:10px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;margin-top:8px;}
+  .cl-prog div{height:100%;background:linear-gradient(90deg,#7fae96,#5b8aa6);border-radius:999px;transition:width .5s;}
+  .cl-prog-n{font-size:.74rem;color:var(--gris);text-align:right;margin-top:3px;}
+  .cl-nota-sesion{margin-top:10px;background:#f4f7f4;border-radius:11px;padding:9px 12px;font-size:.79rem;
+    color:var(--tinta);line-height:1.5;}
+  .cl-barra-mini{height:4px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;margin-top:5px;}
+  .cl-barra-mini div{height:100%;background:#7fae96;border-radius:999px;transition:width .4s;}
   .jx-card.clinica{background:linear-gradient(150deg,#6da3c0,#43708c);}
   @media (max-width:400px){ .cl-lienzo{height:210px;} .cl-plata{font-size:1.6rem;} }
 
@@ -4218,12 +4227,14 @@ function asegurarJuegos(){
   if(!Array.isArray(g.mejoras)) g.mejoras = [];
   if(!j.clinica || typeof j.clinica !== 'object') j.clinica = clDefault();
   const k = j.clinica, kb = clDefault();
-  for(const x of ['dinero','reputacion','atendidos','aciertos','fallos','salas','t']){
+  for(const x of ['dinero','reputacion','atendidos','aciertos','fallos','salas','t','altas']){
     if(typeof k[x] !== 'number' || !isFinite(k[x]) || k[x] < 0) k[x] = kb[x];
   }
   if(!Array.isArray(k.equipos)) k.equipos = [];
   if(!Array.isArray(k.personal)) k.personal = [];
   if(!Array.isArray(k.dominados)) k.dominados = [];
+  if(!Array.isArray(k.activos)) k.activos = [];
+  if(typeof k.altas !== 'number' || !isFinite(k.altas) || k.altas < 0) k.altas = 0;
   if(!k.vistos || typeof k.vistos !== 'object' || Array.isArray(k.vistos)) k.vistos = {};
 }
 
@@ -6850,14 +6861,14 @@ const CL_TOPE_OFFLINE = 8 * 3600 * 1000;
 const CL_TASA_OFFLINE = 0.5;
 
 let clLoop = null, clCanvas = null, clCtx = null, clFiguras = [], clUltimoLocal = 0, clUltimoCheck = 0;
-let clVista = 'recepcion', clTurno = null, clMostrado = 0;
+let clVista = 'recepcion', clTurno = null, clMostrado = 0, clSesionAbierta = null;
 
 function clEstado(){ asegurarJuegos(); return datos.juegos.clinica; }
 
 function clDefault(){
   return {
     dinero:0, reputacion:0, atendidos:0, aciertos:0, fallos:0,
-    salas:1, equipos:[], personal:[], vistos:{}, dominados:[],
+    salas:1, equipos:[], personal:[], vistos:{}, dominados:[], activos:[], altas:0,
     t:0,
   };
 }
@@ -7000,7 +7011,11 @@ function clAjustar(){
 function clPanel(){
   const cont = document.getElementById('clPanel');
   if(!cont) return;
-  if(clVista === 'recepcion') clTurno ? clPanelCaso(cont) : clPanelRecepcion(cont);
+  if(clVista === 'recepcion'){
+    if(clTurno) clPanelCaso(cont);
+    else if(clSesionAbierta !== null) clPanelSesion(cont, clSesionAbierta);
+    else clPanelRecepcion(cont);
+  }
   else if(clVista === 'gestion') clPanelGestion(cont);
   else clPanelRepaso(cont);
 }
@@ -7022,8 +7037,19 @@ function clPanelRecepcion(cont){
       '<div class="cl-stats">' +
         '<div><b>' + c.atendidos + '</b><span>pacientes</span></div>' +
         '<div><b>' + precision + '%</b><span>de acierto</span></div>' +
-        '<div><b>' + c.dominados.length + '/' + KIN_CASOS.length + '</b><span>casos dominados</span></div>' +
+        '<div><b>' + (c.altas || 0) + '</b><span>altas dadas</span></div>' +
       '</div>' +
+      (c.activos.length ? '<div class="cl-sec">En tratamiento (' + c.activos.length + ')</div><div class="cl-lista">' +
+        c.activos.map((p, i) => {
+          const cs = KIN_CASOS.find(x => x.id === p.id);
+          const f = clFaseDe(p.progreso);
+          return '<button class="cl-item puede" data-sesion="' + i + '">' +
+            '<div class="cl-item-emo" style="background:#e8f0f4">🧍</div>' +
+            '<div class="cl-item-info"><div class="cl-item-nom">' + cs.pac + '</div>' +
+            '<div class="cl-item-desc">' + cs.nom + ' · fase ' + f.nom + '</div>' +
+            '<div class="cl-barra-mini"><div style="width:' + p.progreso + '%"></div></div></div>' +
+            '<div class="cl-item-costo">' + Math.round(p.progreso) + '%</div></button>';
+        }).join('') + '</div>' : '') +
       (c.personal.length ? '<div class="cl-sec">Tu equipo</div>' +
         '<div class="cl-lista">' + c.personal.map(p =>
           '<div class="cl-item"><div class="cl-item-emo" style="background:' + CL_ESPECIALIDADES[p.esp].color + '33">' + p.emo + '</div>' +
@@ -7032,6 +7058,7 @@ function clPanelRecepcion(cont){
         ).join('') + '</div>' : '') +
     '</div>';
   document.getElementById('clAtender').onclick = clIniciarCaso;
+  cont.querySelectorAll('[data-sesion]').forEach(b => b.onclick = () => { clSesionAbierta = parseInt(b.dataset.sesion, 10); jxSonido('tap'); clPanel(); });
 }
 
 /* ---------- el caso, paso a paso ---------- */
@@ -7273,16 +7300,130 @@ function clCerrarCaso(){
   const r = jxRecompensar(monedas, 12 * c.dif, { desde: document.getElementById('jxScreenClinica') });
   const nuevas = clEspecialidadesAbiertas().length > antes;
 
+  // el paciente queda EN TRATAMIENTO: ahora hay que llevarlo hasta el alta
+  e.activos.push({ id:c.id, sesion:0, progreso:0, recaidas:0, nota:'', ultimaCarga:null });
   clTurno = null;
   clGuardar(true);
+  c3Poblar();
 
   jxCelebrar({
-    titulo: perfecto ? '¡Paciente tratado! 🎉' : 'Paciente tratado',
-    sub: c.dato + (nuevas ? ' · ¡Se abrió una especialidad nueva!' : ''),
+    titulo: perfecto ? '¡Diagnóstico certero! 🎯' : 'Diagnóstico cerrado',
+    sub: c.dato + (nuevas ? ' · ¡Se abrió una especialidad nueva!' : '') + ' · ' + c.pac + ' queda en tratamiento: llévalo hasta el alta.',
     monedas, xp: 12 * c.dif, subioNivel: r.subioNivel, nivel: r.nivel,
-    textoNext: 'Siguiente paciente',
-    onNext: () => { clVista = 'recepcion'; clIniciarCaso(); },
+    textoNext: 'Ver la clínica',
+    onNext: () => { clVista = 'recepcion'; clSesionAbierta = null; clPanel(); },
   });
+}
+
+/* ---------- tratamiento por sesiones ----------
+   Diagnosticar ya no cierra el caso: el paciente queda EN TRATAMIENTO y
+   hay que llevarlo sesión a sesión hasta el alta. La fase avanza sola
+   con el progreso y la carga correcta cambia con ella, así que no sirve
+   elegir siempre lo mismo: hay que ir leyendo en qué fase está. */
+
+const CL_FASES = [
+  { desde:0,  nom:'Aguda',    carga:'suave',
+    nota:'En fase aguda manda el control del dolor y la inflamación: carga baja y movimiento tolerable.' },
+  { desde:35, nom:'Subaguda', carga:'moderada',
+    nota:'Ya bajó la irritabilidad: toca subir la carga de a poco y empezar a recuperar función.' },
+  { desde:70, nom:'Retorno',  carga:'intensa',
+    nota:'Fase de retorno: sin carga alta el tejido no se adapta y el alta no se sostiene.' },
+];
+const CL_CARGAS = [
+  { id:'suave',    nom:'Carga suave',    emo:'🌱', desc:'Dolor controlado, rangos libres, isométricos' },
+  { id:'moderada', nom:'Carga moderada', emo:'⚖️', desc:'Fuerza progresiva y trabajo funcional' },
+  { id:'intensa',  nom:'Carga intensa',  emo:'🔥', desc:'Pliometría, velocidad y gesto deportivo' },
+];
+
+function clFaseDe(prog){
+  let f = CL_FASES[0];
+  CL_FASES.forEach(x => { if(prog >= x.desde) f = x; });
+  return f;
+}
+function clIdxCarga(id){ return CL_CARGAS.findIndex(c => c.id === id); }
+
+/* Alta cuando llega a 100. Cada sesión paga algo; el alta paga el grueso. */
+function clSesion(idx, cargaId){
+  const c = clEstado();
+  const pac = c.activos[idx];
+  if(!pac) return;
+  const caso = KIN_CASOS.find(x => x.id === pac.id);
+  const fase = clFaseDe(pac.progreso);
+  const dist = Math.abs(clIdxCarga(cargaId) - clIdxCarga(fase.carga));
+
+  pac.sesion++;
+  let nota, delta;
+  if(dist === 0){
+    delta = 16 + Math.floor(Math.random() * 6);
+    nota = '✓ Buena dosificación. ' + fase.nota;
+    jxSonido('bien');
+  }else if(dist === 1){
+    delta = 5 + Math.floor(Math.random() * 4);
+    nota = '~ Avanza, pero la carga no era la ideal para fase ' + fase.nom.toLowerCase() + '. ' + fase.nota;
+    jxSonido('tap');
+  }else{
+    delta = -14;
+    pac.recaidas++;
+    nota = '✗ Recaída. ' + fase.nota;
+    jxSonido('mal'); jxVibrar(30);
+  }
+  pac.progreso = Math.max(0, Math.min(100, pac.progreso + delta));
+  pac.nota = nota;
+  pac.ultimaCarga = cargaId;
+
+  const pago = Math.round(45 * caso.dif * clMultPago());
+  clAsentar();
+  c.dinero += pago;
+
+  if(pac.progreso >= 100){
+    const limpio = pac.recaidas === 0;
+    const bono = Math.round(260 * caso.dif * clMultPago() * (limpio ? 1.6 : 1));
+    c.dinero += bono;
+    c.reputacion += limpio ? 3 + clRepExtra() : 1;
+    c.altas = (c.altas || 0) + 1;
+    if(limpio && !c.dominados.includes(caso.id)) c.dominados.push(caso.id);
+    c.activos.splice(idx, 1);
+    const r = jxRecompensar(limpio ? 12 : 6, 20 * caso.dif, { desde:document.getElementById('jxScreenClinica') });
+    clGuardar(true); c3Poblar();
+    jxCelebrar({
+      titulo: limpio ? '¡Alta sin recaídas! 🎉' : 'Paciente de alta',
+      sub: caso.pac + ' terminó su tratamiento en ' + pac.sesion + ' sesiones. ' + caso.dato,
+      monedas: limpio ? 12 : 6, xp: 20 * caso.dif,
+      subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Seguir',
+      onNext:()=>{ clVista='recepcion'; clPanel(); },
+    });
+    return;
+  }
+  clGuardar(true);
+  clPanel();
+}
+
+function clPanelSesion(cont, idx){
+  const c = clEstado();
+  const pac = c.activos[idx];
+  if(!pac){ clSesionAbierta = null; clPanel(); return; }
+  const caso = KIN_CASOS.find(x => x.id === pac.id);
+  const fase = clFaseDe(pac.progreso);
+  cont.innerHTML =
+    '<div class="cl-ficha">' +
+      '<div class="cl-ficha-top">' +
+        '<div class="cl-ficha-avatar">🧍</div>' +
+        '<div><div class="cl-ficha-nom">' + caso.pac + '</div>' +
+        '<div class="cl-ficha-ocu">' + caso.nom + '</div></div>' +
+      '</div>' +
+      '<div class="cl-fase">Sesión ' + (pac.sesion + 1) + ' · fase <b>' + fase.nom + '</b>' +
+        (pac.recaidas ? ' · ' + pac.recaidas + ' recaída(s)' : '') + '</div>' +
+      '<div class="cl-prog"><div style="width:' + pac.progreso + '%"></div></div>' +
+      '<div class="cl-prog-n">' + Math.round(pac.progreso) + '% recuperado</div>' +
+      (pac.nota ? '<div class="cl-nota-sesion">' + pac.nota + '</div>' : '') +
+    '</div>' +
+    '<div class="cl-preg">¿Qué carga le pones esta sesión?</div>' +
+    '<div class="cl-opciones">' +
+      CL_CARGAS.map(x => '<button class="cl-opc" data-carga="' + x.id + '"><b>' + x.emo + ' ' + x.nom + '</b><small>' + x.desc + '</small></button>').join('') +
+    '</div>' +
+    '<button class="cl-btn-derivar" id="clVolverRecep">‹ Volver a la clínica</button>';
+  cont.querySelectorAll('[data-carga]').forEach(b => b.onclick = () => clSesion(idx, b.dataset.carga));
+  document.getElementById('clVolverRecep').onclick = () => { clSesionAbierta = null; jxSonido('tap'); clPanel(); };
 }
 
 /* ---------- gestión ---------- */
