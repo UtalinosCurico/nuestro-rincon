@@ -1,8 +1,8 @@
 # Contenido de kinesiología — para revisar
 
-Catalina: esto es **todo** lo que el juego enseña. No está publicado: no lo subimos hasta que tú lo revises.
+Catalina: esto es **todo** lo que el juego enseña. Revisado por ella el 31-jul-2026 y publicado.
 
-Márcame lo que esté malo o que en la U lo vean distinto. Se corrige en un solo lugar y el juego entero queda corregido.
+Si más adelante aparece algo que corregir, se corrige en un solo lugar y el juego entero queda corregido: este documento se genera desde los mismos datos que usa el juego.
 
 Avisos honestos:
 

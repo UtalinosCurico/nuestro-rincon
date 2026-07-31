@@ -6111,8 +6111,9 @@ const KIN_RANGOS = [
 /* ============================================================
    MOTOR DE DIAGNÓSTICO — datos del diferencial
    ------------------------------------------------------------
-   PENDIENTE DE REVISIÓN por Catalina, igual que el resto del
-   contenido clínico. Ver REVISION-KINESIOLOGIA.md.
+   Revisado por Catalina (31-jul-2026). Si algo hay que corregir,
+   se corrige acá y el juego entero queda corregido.
+   Ver REVISION-KINESIOLOGIA.md.
 
    Para cada caso: qué hipótesis compiten (dif) y qué revela cada
    acción (c). En cada pista, `s` son las hipótesis que la pista
@@ -7364,7 +7365,7 @@ function clPanelRepaso(cont){
       '<span>' + (clRepasoIdx + 1) + ' / ' + lista.length + '</span>' +
       '<button class="jx-btn ghost" id="clRepSig">Siguiente ›</button>' +
     '</div>' +
-    '<div class="cl-nota">Contenido pendiente de revisión por Catalina · ver REVISION-KINESIOLOGIA.md</div>';
+    '<div class="cl-nota">Contenido clínico revisado por Catalina · detalle en REVISION-KINESIOLOGIA.md</div>';
   cont.querySelectorAll('[data-rp]').forEach(b => b.onclick = () => {
     clRepasoTipo = b.dataset.rp; clRepasoIdx = 0; clRepasoAbierta = false; jxSonido('tap'); clPanel();
   });
