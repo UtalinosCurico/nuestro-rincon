@@ -40,7 +40,9 @@ public static class Escena
         if (_cache.TryGetValue(c, out var m)) return m;
         if (_base == null)
         {
-            var sh = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+            // mismo motivo: nada de ?? con objetos de Unity
+            var sh = Shader.Find("Universal Render Pipeline/Lit");
+            if (sh == null) sh = Shader.Find("Standard");
             _base = new Material(sh);
         }
         m = new Material(_base) { color = c };

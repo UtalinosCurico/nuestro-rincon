@@ -40,6 +40,22 @@ public class Clinica : MonoBehaviour
         // ya usa la versión web, así comparte progreso y se sincroniza a Neon).
         Puente.PedirEstado(this);
         Reconstruir();
+        // Si la página no contesta (por ejemplo abierto suelto, sin el rincón),
+        // al segundo se muestra una clínica de ejemplo en vez de una sala vacía.
+        Invoke(nameof(DemoSiNadieContesta), 1f);
+    }
+
+    bool _llegoEstado;
+
+    void DemoSiNadieContesta()
+    {
+        if (_llegoEstado) return;
+        estado = new Estado {
+            salas = 3, reputacion = 45, dinero = 90000,
+            equipos = new[] { "tens", "eco", "gym", "plataforma", "hidro" },
+            personal = new[] { "Catalina", "Ana", "Luis" }
+        };
+        Reconstruir();
     }
 
     void CrearLuces()
@@ -170,7 +186,9 @@ public class Clinica : MonoBehaviour
     {
         try
         {
-            estado = JsonUtility.FromJson<Estado>(json) ?? new Estado();
+            _llegoEstado = true;
+            estado = JsonUtility.FromJson<Estado>(json);
+            if (estado == null) estado = new Estado();
             if (estado.equipos == null) estado.equipos = new string[0];
             if (estado.personal == null) estado.personal = new string[0];
             Reconstruir();

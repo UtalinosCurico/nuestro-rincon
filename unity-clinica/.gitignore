@@ -10,3 +10,5 @@
 *.sln
 *.user
 .vs/
+
+# El build sale de correr Build.WebGL; no se versiona.

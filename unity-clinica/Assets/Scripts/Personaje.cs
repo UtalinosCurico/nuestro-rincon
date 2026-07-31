@@ -15,6 +15,7 @@ public class Personaje : MonoBehaviour
     Vector3? _destino;
     float _fase;
     Transform _cuerpo;
+    Animator _animador;
 
     public static Personaje Crear(Transform padre, Vector3 pos, bool esKine, Color ropa, string nombre = "")
     {
@@ -27,6 +28,20 @@ public class Personaje : MonoBehaviour
         p.Nombre = nombre;
         p.Base = pos;
         p._fase = Random.Range(0f, 6.28f);
+
+        // Si hay un modelo de Meshy en Resources, se usa ese; si no, se cae
+        // a las primitivas. Así el juego nunca queda roto por un modelo que falte.
+        var modelo = Resources.Load<GameObject>(esKine ? "Kine" : "Paciente");
+        if (modelo != null)
+        {
+            var m = Object.Instantiate(modelo, g.transform);
+            m.transform.localPosition = Vector3.zero;
+            p._animador = m.GetComponentInChildren<Animator>();
+            var col0 = g.AddComponent<BoxCollider>();
+            col0.center = new Vector3(0f, 0.85f, 0f);
+            col0.size = new Vector3(0.6f, 1.7f, 0.45f);
+            return p;
+        }
 
         var color = esKine ? Escena.Tunica : ropa;
         var cuerpo = Escena.Caja(g.transform, "Cuerpo", new Vector3(0f, 0.45f, 0f), new Vector3(0.34f, 0.42f, 0.24f), color);
@@ -65,19 +80,27 @@ public class Personaje : MonoBehaviour
             if (dist < 0.06f)
             {
                 _destino = null;
+                if (_animador != null) _animador.speed = 0f;   // quieto: congela el clip
                 var p0 = transform.localPosition; p0.y = 0f; transform.localPosition = p0;
             }
             else
             {
+                if (_animador != null) _animador.speed = 1f;
                 var paso = d.normalized * Mathf.Min(1.8f * Time.deltaTime, dist);
                 transform.localPosition += paso;
                 transform.localRotation = Quaternion.LookRotation(new Vector3(d.x, 0f, d.z));
-                var p1 = transform.localPosition;
-                p1.y = Mathf.Abs(Mathf.Sin(t * 11f)) * 0.04f;   // pasitos
-                transform.localPosition = p1;
+                if (_animador == null)
+                {
+                    // pasitos caseros solo si NO hay animación de verdad
+                    var p1 = transform.localPosition;
+                    p1.y = Mathf.Abs(Mathf.Sin(t * 11f)) * 0.04f;
+                    transform.localPosition = p1;
+                }
             }
             return;
         }
+
+        if (_animador != null) { _animador.speed = 0f; return; }
 
         if (EsKine)
         {
