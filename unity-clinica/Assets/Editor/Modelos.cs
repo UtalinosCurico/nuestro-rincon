@@ -165,7 +165,8 @@ public static class Modelos
     /// calza con el avatar del modelo.
     /// Hasta resolverlo solo se usa el que funciona; el resto cae a primitivas.
     static readonly (string clave, string prefab, bool kine)[] Reparto = {
-        ("Nurse_in_Scrubs",       "Kine0",     true),
+        ("Catalina_Rojas_in_lig_biped_Animation_Walking", "Kine0",     true),
+        ("Gaucho_with_Blue_Ponc_biped_Animation_Walking", "Paciente0", false),
     };
 
     static Material MaterialPara(string carpetaModelo, string nombrePrefab)
