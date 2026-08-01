@@ -1,6 +1,6 @@
 // Subir esta versión en cada cambio de index.html: fuerza a los teléfonos a
 // descartar el HTML viejo en vez de seguir ejecutándolo desde la caché.
-const CACHE_NAME = "nuestro-rincon-v10";
+const CACHE_NAME = "nuestro-rincon-v11";
 const APP_SHELL = [
   "/",
   "/index.html",
@@ -31,6 +31,10 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   if (url.pathname.startsWith("/api/")) return;
   if (url.pathname.startsWith("/assets/audio/")) return;
+  // El juego de Unity NO se cachea. Si se cachea, el teléfono se queda con la
+  // primera versión que cargó y nunca ve las nuevas, aunque se publiquen.
+  // Fue exactamente lo que pasó con /juego3d.
+  if (url.pathname.startsWith("/juego3d")) return;
 
   if (event.request.mode === "navigate") {
     event.respondWith(
