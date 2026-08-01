@@ -105,13 +105,12 @@ public class Clinica : MonoBehaviour
         int salas = Mathf.Max(1, estado.salas);
         for (int i = 0; i < salas; i++)
         {
-            float x = -2.6f + i * 2.6f;                     // un box por sala
-            _dinamicos.Add(Escena.CrearBox(_raiz, new Vector3(x, 0f, -2.2f)));
-            _dinamicos.Add(Escena.CrearCamilla(_raiz, new Vector3(x, 0f, -2.2f)));
+            float x = Escena.BoxX[Mathf.Min(i, Escena.BoxX.Length - 1)];
+            _dinamicos.Add(Escena.CrearCamilla(_raiz, new Vector3(x, 0f, Escena.BoxZ)));
 
             if (i < estado.personal.Length)
             {
-                var k = Personaje.Crear(_raiz, new Vector3(x + 0.72f, 0f, -2.2f), true, Color.white, estado.personal[i], i);
+                var k = Personaje.Crear(_raiz, new Vector3(x + 0.8f, 0f, Escena.BoxZ), true, Color.white, estado.personal[i], i);
                 k.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);
                 k.Poner("quieto");        // la de Catalina es "atendiendo al paciente"
                 _dinamicos.Add(k.gameObject);
@@ -121,7 +120,7 @@ public class Clinica : MonoBehaviour
                 // ese clip empieza de pie y desplaza el cuerpo mientras cae, así que
                 // dónde termina el cuerpo no coincide con dónde está el objeto.
                 // De pie es su pose natural, no flota, y la escena se lee igual.
-                var p = Personaje.Crear(_raiz, new Vector3(x - 0.72f, 0f, -2.2f), false,
+                var p = Personaje.Crear(_raiz, new Vector3(x - 0.8f, 0f, Escena.BoxZ), false,
                                         Escena.Ropa[i % Escena.Ropa.Length], "", i);
                 p.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
                 p.Poner("quieto");
@@ -135,15 +134,16 @@ public class Clinica : MonoBehaviour
             if (g != null) _dinamicos.Add(g);
         }
 
-        int esperando = Mathf.Min(5, 1 + estado.reputacion / 15);
+        int esperando = Mathf.Min(3, 1 + estado.reputacion / 25);   // pocos, para que no se vea amontonado
         for (int i = 0; i < esperando; i++)
         {
-            var s = Personaje.Crear(_raiz, new Vector3(-4.2f + i * 1.15f, 0f, 3.4f), false,
+            var s = Personaje.Crear(_raiz, new Vector3(4.6f - i * 1.5f, 0f, 1.1f), false,
                                     Escena.Ropa[i % Escena.Ropa.Length], "", i);
+            s.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);   // mirando al pasillo
             _dinamicos.Add(s.gameObject);
         }
 
-        if (_cam != null) _cam.AjustarPorTamano(salas * 2 + estado.equipos.Length);
+        if (_cam != null) _cam.AjustarPorTamano(salas + estado.equipos.Length);
     }
 
     void Update()
@@ -170,7 +170,7 @@ public class Clinica : MonoBehaviour
             if (plano.Raycast(rayo, out float dd))
             {
                 var p = rayo.GetPoint(dd);
-                _seleccionado.IrA(new Vector3(Mathf.Clamp(p.x, -3.9f, 3.9f), 0f, Mathf.Clamp(p.z, -2.4f, 3.4f)));
+                _seleccionado.IrA(new Vector3(Mathf.Clamp(p.x, -6f, 6f), 0f, Mathf.Clamp(p.z, -4.2f, 4.4f)));
             }
         }
     }
