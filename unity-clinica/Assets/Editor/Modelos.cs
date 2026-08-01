@@ -59,10 +59,11 @@ public static class Modelos
             if (mi == null) continue;
             mi.animationType = ModelImporterAnimationType.Generic;
             mi.importAnimation = true;
-            mi.meshCompression = ModelImporterMeshCompression.High;
+            // NADA de compresión en mallas con esqueleto: cuantiza las posiciones
+            // y deforma el modelo hasta volverlo irreconocible. Fue la causa de que
+            // los personajes salieran como manchas gigantes.
+            mi.meshCompression = ModelImporterMeshCompression.Off;
             mi.isReadable = false;
-            mi.optimizeMeshPolygons = true;
-            mi.optimizeMeshVertices = true;
 
             var clips = mi.defaultClipAnimations;
             for (int i = 0; i < clips.Length; i++)
@@ -153,5 +154,134 @@ public static class Modelos
         AssetDatabase.CreateAsset(mat, "Assets/Resources/KineMat.mat");
         Debug.Log("MATERIAL: albedo=" + (albedo != null ? albedo.name : "NO") + " normal=" + (normal != null ? "si" : "NO"));
         return mat;
+    }
+
+    /// Qué modelo es quién. La clave es un trozo del nombre del archivo.
+    /// PENDIENTE: los export "Meshy_Merged_Animations" deforman la malla hasta
+    /// volverla una mancha gigante al aplicarles su Animator. Se probó sin
+    /// resultado: normalizar escala, apagar/encender root motion y quitar la
+    /// compresión de malla. El export "withSkin" (Nurse) funciona perfecto, así
+    /// que la sospecha es que los clips fusionados traen un esqueleto que no
+    /// calza con el avatar del modelo.
+    /// Hasta resolverlo solo se usa el que funciona; el resto cae a primitivas.
+    static readonly (string clave, string prefab, bool kine)[] Reparto = {
+        ("Nurse_in_Scrubs",       "Kine0",     true),
+    };
+
+    static Material MaterialPara(string carpetaModelo, string nombrePrefab)
+    {
+        Texture2D Buscar(string suf)
+        {
+            foreach (var g in AssetDatabase.FindAssets("t:Texture2D", new[] { carpetaModelo }))
+            {
+                var r = AssetDatabase.GUIDToAssetPath(g);
+                var n = System.IO.Path.GetFileNameWithoutExtension(r);
+                bool esMapa = n.Contains("_normal") || n.Contains("_roughness") || n.Contains("_metallic");
+                if (suf == "" && !esMapa) return AssetDatabase.LoadAssetAtPath<Texture2D>(r);
+                if (suf != "" && n.EndsWith(suf)) return AssetDatabase.LoadAssetAtPath<Texture2D>(r);
+            }
+            return null;
+        }
+        var sh = Shader.Find("Universal Render Pipeline/Lit");
+        if (sh == null) sh = Shader.Find("Standard");
+        var mat = new Material(sh);
+        var alb = Buscar(""); var nor = Buscar("_normal");
+        if (alb != null) { mat.mainTexture = alb; mat.SetTexture("_BaseMap", alb); }
+        if (nor != null) { mat.EnableKeyword("_NORMALMAP"); mat.SetTexture("_BumpMap", nor); mat.SetTexture("_NormalMap", nor); }
+        mat.SetFloat("_Smoothness", 0.15f);
+        mat.SetFloat("_Glossiness", 0.15f);
+        AssetDatabase.CreateAsset(mat, "Assets/Resources/" + nombrePrefab + "Mat.mat");
+        return mat;
+    }
+
+    /// <summary>Arma un prefab por cada modelo, con su material y su clip.</summary>
+    public static void CrearTodosLosPrefabs()
+    {
+        Ajustar();
+        System.IO.Directory.CreateDirectory("Assets/Resources");
+
+        foreach (var guid in AssetDatabase.FindAssets("t:Model", new[] { Carpeta }))
+        {
+            var ruta = AssetDatabase.GUIDToAssetPath(guid);
+            var reparto = Reparto.FirstOrDefault(r => ruta.Contains(r.clave));
+            if (reparto.prefab == null) { Debug.Log("SIN REPARTO: " + ruta); continue; }
+
+            var fbx = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+            if (fbx == null) continue;
+            var inst = (GameObject)PrefabUtility.InstantiatePrefab(fbx);
+            inst.name = reparto.prefab;
+
+            var anim = inst.GetComponent<Animator>();
+            if (anim == null) anim = inst.AddComponent<Animator>();
+            // OJO: debe quedar ACTIVO. Con Generic, si se apaga, el desplazamiento
+            // de la animación se queda dentro del esqueleto en vez de aplicarse al
+            // objeto, y deforma la malla hasta volverla una mancha gigante.
+            anim.applyRootMotion = true;
+
+            var clips = AssetDatabase.LoadAllAssetsAtPath(ruta).OfType<AnimationClip>()
+                        .Where(c => !c.name.StartsWith("__preview")).ToArray();
+            // el clip de caminar es el que manda; si no hay, cualquiera sirve
+            var caminar = clips.FirstOrDefault(c => c.name.ToLower().Contains("walk")) ?? clips.FirstOrDefault();
+            if (caminar != null)
+            {
+                var ctrl = UnityEditor.Animations.AnimatorController
+                    .CreateAnimatorControllerAtPathWithClip("Assets/Resources/" + reparto.prefab + "Ctrl.controller", caminar);
+                anim.runtimeAnimatorController = ctrl;
+            }
+
+            var carpetaModelo = System.IO.Path.GetDirectoryName(ruta).Replace("\\", "/");
+            var mat = MaterialPara(carpetaModelo, reparto.prefab);
+            foreach (var r in inst.GetComponentsInChildren<Renderer>(true))
+            {
+                var ms = new Material[r.sharedMaterials.Length];
+                for (int i = 0; i < ms.Length; i++) ms[i] = mat;
+                r.sharedMaterials = ms;
+            }
+
+            // Normalizar estatura. Se mide la MALLA en pose base (sharedMesh.bounds),
+            // no los bounds del renderer: esos incluyen el recorrido de la animación
+            // y dan cifras absurdas. Los export "Merged_Animations" de Meshy vienen
+            // a una escala enorme; el "withSkin" viene bien. Esto arregla ambos.
+            float alto = 0f;
+            foreach (var smr in inst.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+                if (smr.sharedMesh != null) alto = Mathf.Max(alto, smr.sharedMesh.bounds.size.y);
+            foreach (var mf in inst.GetComponentsInChildren<MeshFilter>(true))
+                if (mf.sharedMesh != null) alto = Mathf.Max(alto, mf.sharedMesh.bounds.size.y);
+            if (alto > 0.01f)
+            {
+                float f = 1.75f / alto;
+                inst.transform.localScale = Vector3.one * f;
+                Debug.Log("ESCALA " + reparto.prefab + ": malla=" + alto.ToString("0.00") + " -> factor " + f.ToString("0.0000"));
+            }
+
+            PrefabUtility.SaveAsPrefabAsset(inst, "Assets/Resources/" + reparto.prefab + ".prefab");
+            Object.DestroyImmediate(inst);
+            Debug.Log("PREFAB: " + reparto.prefab + " <- " + System.IO.Path.GetFileName(ruta) + " · clip=" + (caminar != null ? caminar.name : "ninguno"));
+        }
+    }
+
+    /// <summary>Mide cada prefab para saber si queda de pie o acostado.</summary>
+    public static void Diagnostico()
+    {
+        foreach (var nom in new[] { "Kine0", "Kine1", "Kine2", "Paciente0", "Paciente1", "Paciente2" })
+        {
+            var pf = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/" + nom + ".prefab");
+            if (pf == null) { Debug.Log("DIAG " + nom + ": NO EXISTE"); continue; }
+            var inst = (GameObject)PrefabUtility.InstantiatePrefab(pf);
+            var rends = inst.GetComponentsInChildren<Renderer>(true);
+            if (rends.Length == 0) { Debug.Log("DIAG " + nom + ": sin renderers"); Object.DestroyImmediate(inst); continue; }
+            var b = rends[0].bounds;
+            for (int i = 1; i < rends.Length; i++) b.Encapsulate(rends[i].bounds);
+            var anim = inst.GetComponentInChildren<Animator>();
+            var ctrl = anim != null ? anim.runtimeAnimatorController : null;
+            Debug.Log("DIAG " + nom
+                + " | alto=" + b.size.y.ToString("0.00")
+                + " ancho=" + b.size.x.ToString("0.00")
+                + " fondo=" + b.size.z.ToString("0.00")
+                + " | " + (b.size.y > b.size.z ? "DE PIE" : "ACOSTADO")
+                + " | rotRaiz=" + inst.transform.localRotation.eulerAngles
+                + " | clip=" + (ctrl != null && ctrl.animationClips.Length > 0 ? ctrl.animationClips[0].name : "sin controlador"));
+            Object.DestroyImmediate(inst);
+        }
     }
 }

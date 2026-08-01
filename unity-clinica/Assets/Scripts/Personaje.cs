@@ -17,7 +17,7 @@ public class Personaje : MonoBehaviour
     Transform _cuerpo;
     Animator _animador;
 
-    public static Personaje Crear(Transform padre, Vector3 pos, bool esKine, Color ropa, string nombre = "")
+    public static Personaje Crear(Transform padre, Vector3 pos, bool esKine, Color ropa, string nombre = "", int indice = 0)
     {
         var g = new GameObject(esKine ? "Kine" : "Paciente");
         g.transform.SetParent(padre, false);
@@ -31,7 +31,15 @@ public class Personaje : MonoBehaviour
 
         // Si hay un modelo de Meshy en Resources, se usa ese; si no, se cae
         // a las primitivas. Así el juego nunca queda roto por un modelo que falte.
-        var modelo = Resources.Load<GameObject>(esKine ? "Kine" : "Paciente");
+        // Cada uno tiene su modelo: Kine0..2 y Paciente0..2. Si falta el del
+        // índice pedido, se rota entre los que sí existen; y si no hay ninguno,
+        // se cae a las primitivas y el juego igual funciona.
+        GameObject modelo = null;
+        for (int intento = 0; intento < 3 && modelo == null; intento++)
+        {
+            int idx = (indice + intento) % 3;
+            modelo = Resources.Load<GameObject>((esKine ? "Kine" : "Paciente") + idx);
+        }
         if (modelo != null)
         {
             var m = Object.Instantiate(modelo, g.transform);

@@ -110,11 +110,11 @@ public class Clinica : MonoBehaviour
 
             if (i < estado.personal.Length)
             {
-                var k = Personaje.Crear(_raiz, new Vector3(x + 0.75f, 0f, -1.0f), true, Color.white, estado.personal[i]);
+                var k = Personaje.Crear(_raiz, new Vector3(x + 0.75f, 0f, -1.0f), true, Color.white, estado.personal[i], i);
                 k.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);
                 _dinamicos.Add(k.gameObject);
 
-                var p = Personaje.Crear(_raiz, new Vector3(x, 0.78f, -1.0f), false, Escena.Ropa[i % Escena.Ropa.Length]);
+                var p = Personaje.Crear(_raiz, new Vector3(x, 0.78f, -1.0f), false, Escena.Ropa[i % Escena.Ropa.Length], "", i);
                 p.enabled = false;                                   // acostado, no se anima
                 p.transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
                 p.transform.localScale = Vector3.one * 0.92f;
@@ -131,8 +131,8 @@ public class Clinica : MonoBehaviour
         int esperando = Mathf.Min(5, 1 + estado.reputacion / 15);
         for (int i = 0; i < esperando; i++)
         {
-            var s = Personaje.Crear(_raiz, new Vector3(-3.1f + i * 0.7f, 0f, 2.2f), false,
-                                    Escena.Ropa[i % Escena.Ropa.Length]);
+            var s = Personaje.Crear(_raiz, new Vector3(-3.1f + i * 0.9f, 0f, 2.2f), false,
+                                    Escena.Ropa[i % Escena.Ropa.Length], "", i);
             _dinamicos.Add(s.gameObject);
         }
 
