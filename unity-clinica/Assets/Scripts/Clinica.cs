@@ -118,10 +118,8 @@ public class Clinica : MonoBehaviour
                 var p = Personaje.Crear(_raiz, new Vector3(x, 0.78f, -1.0f), false, Escena.Ropa[i % Escena.Ropa.Length], "", i);
                 // Si el modelo trae animación de acostado, se usa esa y NO se
                 // rota el muñeco: antes quedaba tumbado de lado, encogido.
-                p.Poner("acostado");
-                p.FijarEnSitio();
-                p.enabled = false;
-                p.transform.localPosition = new Vector3(x, 0.74f, -1.0f);
+                p.transform.localPosition = new Vector3(x, 0f, -1.0f);
+                p.AcostarEn(new Vector3(x, 0.72f, -1.0f));   // 0.72 = superficie de la camilla
                 _dinamicos.Add(p.gameObject);
             }
         }

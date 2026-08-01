@@ -17,6 +17,9 @@ public class Personaje : MonoBehaviour
     Transform _cuerpo;
     Animator _animador;
     string _estado = "quieto";
+    bool _acostado;
+    Vector3 _destinoCamilla;
+    int _porAjustar;
 
     public static Personaje Crear(Transform padre, Vector3 pos, bool esKine, Color ropa, string nombre = "", int indice = 0)
     {
@@ -90,6 +93,42 @@ public class Personaje : MonoBehaviour
         if (_animador != null) _animador.applyRootMotion = false;
     }
 
+    /// <summary>Acuesta al paciente y lo APOYA sobre la camilla. La altura no
+    /// se adivina: se deja que el Animator evalúe unos frames, se mide dónde
+    /// quedó el cuerpo y se baja lo que haga falta. Así funciona con cualquier
+    /// animación de acostado, sin importar el desfase que traiga.</summary>
+    public void AcostarEn(Vector3 sobreLaCamilla)
+    {
+        _acostado = true;
+        _destinoCamilla = sobreLaCamilla;
+        Poner("acostado");
+        FijarEnSitio();
+        _porAjustar = 8;
+    }
+
+    void LateUpdate()
+    {
+        if (_porAjustar <= 0) return;
+        _porAjustar--;
+        if (_porAjustar > 0) return;
+
+        // OJO: SkinnedMeshRenderer.bounds devuelve los límites de la POSE BASE,
+        // no de la pose animada, salvo que se active updateWhenOffscreen. Sin
+        // esto la medición da la altura del personaje de pie y la corrección
+        // sale mal.
+        var pieles = GetComponentsInChildren<SkinnedMeshRenderer>();
+        foreach (var sk in pieles) sk.updateWhenOffscreen = true;
+        if (pieles.Length == 0) return;
+        var b = pieles[0].bounds;
+        for (int i = 1; i < pieles.Length; i++) b.Encapsulate(pieles[i].bounds);
+        // Se corrigen los tres ejes: la animación también desplaza en horizontal,
+        // así que corrigiendo solo la altura el paciente quedaba al lado de la camilla.
+        transform.position += new Vector3(
+            _destinoCamilla.x - b.center.x,
+            _destinoCamilla.y - b.min.y,
+            _destinoCamilla.z - b.center.z);
+    }
+
     /// <summary>Cambia la animación: quieto, caminar, acostado, ejercicio.</summary>
     public void Poner(string estado)
     {
@@ -101,6 +140,7 @@ public class Personaje : MonoBehaviour
 
     void Update()
     {
+        if (_acostado) return;   // el de la camilla no se mueve
         float t = Time.time;
         if (_destino.HasValue)
         {

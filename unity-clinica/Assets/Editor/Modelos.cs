@@ -165,8 +165,12 @@ public static class Modelos
     /// calza con el avatar del modelo.
     /// Hasta resolverlo solo se usa el que funciona; el resto cae a primitivas.
     static readonly (string clave, string prefab, bool kine)[] Reparto = {
-        ("Catalina_Rojas", "Kine0",     true),
-        ("Gaucho",         "Paciente0", false),
+        ("Catalina_Rojas",    "Kine0",     true),
+        ("Nurse_in_Scrubs",   "Kine1",     true),
+        ("T_Pose_Healthcare", "Kine2",     true),
+        ("Gaucho",            "Paciente0", false),
+        ("Graceful_Granny",   "Paciente1", false),
+        ("Miner",             "Paciente2", false),
     };
 
     /// Qué papel cumple cada animación, según el nombre del archivo.
