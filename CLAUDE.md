@@ -57,9 +57,7 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 
 **PWA:** `manifest.webmanifest` + `sw.js` make it installable. The service worker caches the app shell only (no API calls, no audio).
 
-**Rincón de juegos** (consola `jx*`, pantalla completa). Juegos actuales: Sudoku (`sd*`), Zip (`zip*`), 2048 (`dm*`), Snake (`sn*`), Nuestro Jardín (`jar*`, incremental) y Clínica Kinésica (`cl*`, tycoon con escena 3D `c3*`). Economía compartida: monedas + mascota + clóset. Se eliminaron Detective, Tres en raya y Memorice.
-
-**3D de la clínica** — Three.js r185 vive en `assets/lib/` (dos archivos: `three.module.min.js` + `three.core.min.js`, 182 KB gzip). Se importa con `import()` dinámico solo al abrir la clínica, para que la página siga abriendo instantánea. Geometría low-poly generada por código, sin modelos externos. `c3Destruir()` libera geometrías, materiales y renderer al cerrar.
+**Rincón de juegos** (consola `jx*`, pantalla completa). Juegos actuales: Sudoku (`sd*`), Zip (`zip*`), 2048 (`dm*`), Snake (`sn*`), Nuestro Jardín (`jar*`, incremental) y Clínica Kinésica (`cl*`, con motor de diagnóstico y tratamiento por sesiones). Economía compartida: monedas + mascota + clóset. Se eliminaron Detective, Tres en raya y Memorice.
 
 **Contenido clínico** — `KIN_CASOS`, `KIN_PRUEBAS`, `KIN_MUSCULOS`, `KIN_RANGOS` en `index.html` son la única fuente de verdad, documentada en `REVISION-KINESIOLOGIA.md`. Pendiente de revisión por Catalina antes de publicar.
 

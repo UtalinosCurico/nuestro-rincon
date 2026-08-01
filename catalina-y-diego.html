@@ -1089,7 +1089,6 @@
     color:var(--tinta);line-height:1.5;}
   .cl-barra-mini{height:4px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;margin-top:5px;}
   .cl-barra-mini div{height:100%;background:#7fae96;border-radius:999px;transition:width .4s;}
-  .jx-card.tresd{background:linear-gradient(150deg,#7f8fc0,#4a5691);}
   .jx-card.clinica{background:linear-gradient(150deg,#6da3c0,#43708c);}
   @media (max-width:400px){ .cl-lienzo{height:210px;} .cl-plata{font-size:1.6rem;} }
 
@@ -4506,9 +4505,6 @@ function jxRenderHub(){
         '<div style="flex:1"><div class="jx-card-nom">Nuestro Jardín</div>' +
         '<div class="jx-card-desc">Riega, planta flores y mira cómo crece solo (aunque cierres la página)</div></div>' +
         '<span class="jx-card-stat">🌸 ' + jarNum(j.jardin.petalos + jarProduccion() * Math.max(0, Math.min(JAR_TOPE_OFFLINE, Date.now() - (j.jardin.t || Date.now()))) / 1000 * JAR_TASA_OFFLINE) + '</span></button>' +
-      '<button class="jx-card tresd full" id="jxCard3D"><div class="sheen"></div><div class="jx-card-emo">🩻</div>' +
-        '<div style="flex:1"><div class="jx-card-nom">Clínica 3D <b style="font-size:.62rem;background:#fff;color:#43708c;border-radius:999px;padding:1px 7px;vertical-align:middle">BETA</b></div>' +
-        '<div class="jx-card-desc">La clínica en 3D de verdad, con Unity. Se abre aparte y tarda un poco la primera vez</div></div></button>' +
       '<button class="jx-card clinica full" data-ir="clinica"><div class="sheen"></div><div class="jx-card-emo">🩺</div>' +
         '<div style="flex:1"><div class="jx-card-nom">Clínica Kinésica</div>' +
         '<div class="jx-card-desc">Evalúa, diagnostica y trata pacientes de verdad; hazla crecer</div></div>' +
@@ -4527,10 +4523,6 @@ function jxRenderHub(){
   document.getElementById('jxEditNom').onclick = (e) => { e.stopPropagation(); jxRenombrar(); };
   document.getElementById('jxPetHolder').onclick = () => { jxSonido('tap'); jxIr('closet'); };
   el.querySelectorAll('[data-ir]').forEach(b => b.onclick = () => { jxSonido('tap'); jxIr(b.dataset.ir); });
-  // El juego de Unity se abre en pestaña aparte: son 44 MB y así la página
-  // no se queda congelada mientras carga.
-  const b3d = el.querySelector('#jxCard3D');
-  if(b3d) b3d.onclick = () => { jxSonido('tap'); window.open('/juego3d/', '_blank', 'noopener'); };
   document.getElementById('jxReset').onclick = jxReiniciarProgreso;
   const daily = document.getElementById('jxDaily');
   daily.onclick = disp ? jxReclamarDiario : null;
