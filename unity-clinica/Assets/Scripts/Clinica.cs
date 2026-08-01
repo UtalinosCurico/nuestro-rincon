@@ -25,6 +25,9 @@ public class Clinica : MonoBehaviour
     readonly List<GameObject> _dinamicos = new List<GameObject>();
     Personaje _seleccionado;
     GameObject _anillo;
+    Juego _juego;
+    Personaje _jugadora;
+    readonly List<Personaje> _enEspera = new List<Personaje>();
 
     void Start()
     {
@@ -43,6 +46,8 @@ public class Clinica : MonoBehaviour
         // Si la página no contesta (por ejemplo abierto suelto, sin el rincón),
         // al segundo se muestra una clínica de ejemplo en vez de una sala vacía.
         Invoke(nameof(DemoSiNadieContesta), 1f);
+        _juego = gameObject.AddComponent<Juego>();
+        _juego.clinica = this;
     }
 
     bool _llegoEstado;
@@ -101,6 +106,8 @@ public class Clinica : MonoBehaviour
     {
         foreach (var g in _dinamicos) if (g != null) Destroy(g);
         _dinamicos.Clear();
+        _enEspera.Clear();
+        _jugadora = null;
 
         int salas = Mathf.Max(1, estado.salas);
         for (int i = 0; i < salas; i++)
@@ -113,6 +120,7 @@ public class Clinica : MonoBehaviour
                 var k = Personaje.Crear(_raiz, new Vector3(x + 0.8f, 0f, Escena.BoxZ), true, Color.white, estado.personal[i], i);
                 k.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);
                 k.Poner("quieto");        // la de Catalina es "atendiendo al paciente"
+                if (i == 0) _jugadora = k;   // Catalina: el personaje que controlas
                 _dinamicos.Add(k.gameObject);
 
                 // El paciente va DE PIE al otro lado de la camilla, siendo evaluado.
@@ -140,10 +148,12 @@ public class Clinica : MonoBehaviour
             var s = Personaje.Crear(_raiz, new Vector3(4.6f - i * 1.5f, 0f, 1.1f), false,
                                     Escena.Ropa[i % Escena.Ropa.Length], "", i);
             s.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);   // mirando al pasillo
+            _enEspera.Add(s);
             _dinamicos.Add(s.gameObject);
         }
 
         if (_cam != null) _cam.AjustarPorTamano(salas + estado.equipos.Length);
+        if (_juego != null) _juego.Configurar(_jugadora, _enEspera, estado.dinero, estado.reputacion);
     }
 
     void Update()
@@ -159,18 +169,26 @@ public class Clinica : MonoBehaviour
         if (Physics.Raycast(cam.ScreenPointToRay(pos), out var hit, 60f))
         {
             var per = hit.collider.GetComponentInParent<Personaje>();
-            if (per != null) { Seleccionar(per); return; }
+            if (per != null)
+            {
+                Seleccionar(per);
+                // tocar a alguien de la sala de espera = ir a buscarlo
+                if (_juego != null && _enEspera.Contains(per)) _juego.TomarPaciente(per);
+                return;
+            }
         }
 
         // tocó el piso: mando al seleccionado para allá
-        if (_seleccionado != null)
         {
             var plano = new Plane(Vector3.up, Vector3.zero);
             var rayo = cam.ScreenPointToRay(pos);
             if (plano.Raycast(rayo, out float dd))
             {
                 var p = rayo.GetPoint(dd);
-                _seleccionado.IrA(new Vector3(Mathf.Clamp(p.x, -6f, 6f), 0f, Mathf.Clamp(p.z, -4.2f, 4.4f)));
+                var meta = new Vector3(Mathf.Clamp(p.x, -6f, 6f), 0f, Mathf.Clamp(p.z, -4.2f, 4.4f));
+                // por defecto se mueve Catalina; si elegiste a otro, se mueve ese
+                if (_seleccionado == _jugadora || _seleccionado == null) { if (_juego != null) _juego.MoverJugador(meta); }
+                else _seleccionado.IrA(meta);
             }
         }
     }

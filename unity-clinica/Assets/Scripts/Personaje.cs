@@ -20,6 +20,11 @@ public class Personaje : MonoBehaviour
     bool _acostado;
     Vector3 _destinoCamilla;
     int _porAjustar;
+    Transform _siguiendoA;
+
+    public bool Siguiendo => _siguiendoA != null;
+    public void Seguir(Transform quien) { _siguiendoA = quien; }
+    public void DejarDeSeguir() { _siguiendoA = null; }
 
     public static Personaje Crear(Transform padre, Vector3 pos, bool esKine, Color ropa, string nombre = "", int indice = 0)
     {
@@ -151,6 +156,14 @@ public class Personaje : MonoBehaviour
     {
         if (_acostado) return;   // el de la camilla no se mueve
         float t = Time.time;
+
+        // Si va siguiendo a alguien, se le pega a un paso de distancia.
+        if (_siguiendoA != null)
+        {
+            var meta = _siguiendoA.localPosition;
+            var dd = meta - transform.localPosition; dd.y = 0f;
+            if (dd.magnitude > 1.1f) _destino = meta - dd.normalized * 1.0f;
+        }
         if (_destino.HasValue)
         {
             var d = _destino.Value - transform.localPosition;

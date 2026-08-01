@@ -60,7 +60,7 @@ public static class Build
         PlayerSettings.productName = "Clinica Kinesica";
         PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Gzip;
         PlayerSettings.WebGL.dataCaching = true;
-        PlayerSettings.WebGL.template = "APPLICATION:Default";   // la que trae Unity; PROJECT: la buscaría dentro de Assets
+        PlayerSettings.WebGL.template = "PROJECT:Movil";   // plantilla propia: pantalla completa en celular
         PlayerSettings.runInBackground = false;
         PlayerSettings.SetGraphicsAPIs(BuildTarget.WebGL, new[] { UnityEngine.Rendering.GraphicsDeviceType.OpenGLES3 });
         PlayerSettings.stripEngineCode = true;

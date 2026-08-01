@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>{{{ PRODUCT_NAME }}}</title>
+<!-- viewport-fit=cover + safe-area: evita que el notch del iPhone tape el juego -->
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#e9f0f4">
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#e9f0f4;overflow:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    overscroll-behavior:none;touch-action:none;-webkit-user-select:none;user-select:none;}
+  /* La pantalla completa: antes el canvas tenía un tamaño fijo y quedaba
+     una franja en el celular. */
+  #unity-canvas{display:block;width:100%;height:100%;background:#e9f0f4;touch-action:none;}
+  #carga{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:#e9f0f4;color:#4b7d99;z-index:10;transition:opacity .4s;}
+  #carga h1{font-size:1.1rem;font-weight:600;margin:0 0 6px;}
+  #carga p{font-size:.82rem;color:#7b8b95;margin:0 0 18px;}
+  #barra{width:min(70vw,320px);height:8px;background:#cfd9e0;border-radius:999px;overflow:hidden;}
+  #barra div{height:100%;width:0;background:linear-gradient(90deg,#7fae96,#5b8aa6);transition:width .2s;}
+  #carga.oculto{opacity:0;pointer-events:none;}
+</style>
+</head>
+<body>
+<canvas id="unity-canvas" tabindex="-1"></canvas>
+<div id="carga">
+  <h1>Clínica Kinésica</h1>
+  <p>Cargando… la primera vez demora</p>
+  <div id="barra"><div id="barraLlena"></div></div>
+</div>
+<script>
+  var canvas = document.querySelector("#unity-canvas");
+  var carga = document.querySelector("#carga");
+  var barra = document.querySelector("#barraLlena");
+
+  // El canvas se dimensiona en píxeles reales del dispositivo, si no en
+  // celular se ve borroso o queda a media pantalla.
+  function ajustar() {
+    var d = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width  = Math.floor(window.innerWidth  * d);
+    canvas.height = Math.floor(window.innerHeight * d);
+    canvas.style.width  = window.innerWidth  + "px";
+    canvas.style.height = window.innerHeight + "px";
+  }
+  ajustar();
+  window.addEventListener("resize", ajustar);
+  window.addEventListener("orientationchange", function(){ setTimeout(ajustar, 200); });
+
+  var script = document.createElement("script");
+  script.src = "Build/{{{ LOADER_FILENAME }}}";
+  script.onload = function () {
+    createUnityInstance(canvas, {
+      dataUrl: "Build/{{{ DATA_FILENAME }}}",
+      frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
+      codeUrl: "Build/{{{ CODE_FILENAME }}}",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+      productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+      productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+      matchWebGLToCanvasSize: true,
+    }, function (p) {
+      barra.style.width = (p * 100) + "%";
+    }).then(function () {
+      carga.classList.add("oculto");
+      setTimeout(function(){ carga.style.display = "none"; }, 500);
+      ajustar();
+    }).catch(function (e) {
+      carga.innerHTML = "<h1>No se pudo cargar</h1><p>" + e + "</p>";
+    });
+  };
+  document.body.appendChild(script);
+</script>
+</body>
+</html>

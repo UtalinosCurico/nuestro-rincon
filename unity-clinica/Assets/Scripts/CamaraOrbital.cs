@@ -11,7 +11,7 @@ public class CamaraOrbital : MonoBehaviour
     public Vector3 Centro = new Vector3(-0.6f, 0f, -1.6f);
     public float DistMin = 4f, DistMax = 18f;
 
-    float _angulo = 0f, _altura = 10.5f, _dist = 10f;
+    float _angulo = 0f, _altura = 12f, _dist = 14f;
     float _inactivo;
     Vector2 _ultimoDedo;
     bool _arrastrando;
@@ -25,8 +25,13 @@ public class CamaraOrbital : MonoBehaviour
         _inactivo += Time.deltaTime;
         if (_inactivo > 4f) _angulo += Mathf.Sin(Time.time * 0.13f) * 0.0016f;
 
-        _dist = Mathf.Clamp(_dist, DistMin, DistMax);
-        _altura = Mathf.Clamp(_altura, 4f, 16f);
+        // En pantalla vertical (celular) cabe menos a lo ancho, así que hay que
+        // alejarse más para ver la clínica completa.
+        float vertical = Mathf.Clamp((float)Screen.height / Mathf.Max(1, Screen.width), 1f, 2.2f);
+        float extra = (vertical - 1f) * 6f;
+        _dist = Mathf.Clamp(_dist, DistMin, DistMax + extra);
+        if (_inactivo > 3f && _dist < DistMin + extra) _dist = Mathf.Lerp(_dist, DistMin + extra, 0.05f);
+        _altura = Mathf.Clamp(_altura, 4f, 20f);
 
         var pos = new Vector3(Mathf.Sin(_angulo) * _dist, _altura, Mathf.Cos(_angulo) * _dist);
         transform.position = Vector3.Lerp(transform.position, pos, 1f - Mathf.Exp(-8f * Time.deltaTime));
@@ -77,7 +82,7 @@ public class CamaraOrbital : MonoBehaviour
             if (delta.sqrMagnitude > 0.01f)
             {
                 _angulo -= delta.x * 0.005f;
-                _altura = Mathf.Clamp(_altura - delta.y * 0.03f, 4f, 16f);
+                _altura = Mathf.Clamp(_altura - delta.y * 0.03f, 4f, 20f);
                 _inactivo = 0f;
             }
         }
