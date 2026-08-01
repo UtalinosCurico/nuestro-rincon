@@ -7,14 +7,16 @@ using UnityEngine;
 /// </summary>
 public class CamaraOrbital : MonoBehaviour
 {
-    static readonly Quaternion Angulo = Quaternion.Euler(52f, 24f, 0f);
+    // Yaw 204° = mirando desde el pasillo hacia los boxes. Con 24° la cámara
+    // quedaba detrás y los personajes daban la espalda.
+    static readonly Quaternion Angulo = Quaternion.Euler(50f, 204f, 0f);
 
     public Vector2 LimiteX = new Vector2(-4.5f, 4.5f);
     public Vector2 LimiteZ = new Vector2(-4f, 3.5f);
 
-    Vector3 _centro = new Vector3(-0.4f, 0f, -1.4f);
-    float _dist = 24f;
-    const float DistMin = 12f, DistMax = 38f;
+    Vector3 _centro = new Vector3(0f, 0f, -1.5f);
+    float _dist = 33f;
+    const float DistMin = 14f, DistMax = 46f;
 
     Vector3 _centroSuave;
     float _distSuave;
@@ -37,7 +39,7 @@ public class CamaraOrbital : MonoBehaviour
 
         // En pantalla vertical cabe menos a lo ancho: hay que alejarse.
         float vertical = Mathf.Clamp((float)Screen.height / Mathf.Max(1, Screen.width), 1f, 2.2f);
-        float extra = (vertical - 1f) * 11f;
+        float extra = (vertical - 1f) * 6f;
         _dist = Mathf.Clamp(_dist, DistMin, DistMax + extra);
         _centro.x = Mathf.Clamp(_centro.x, LimiteX.x, LimiteX.y);
         _centro.z = Mathf.Clamp(_centro.z, LimiteZ.x, LimiteZ.y);

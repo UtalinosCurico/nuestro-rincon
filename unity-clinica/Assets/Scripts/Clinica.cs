@@ -56,8 +56,8 @@ public class Clinica : MonoBehaviour
     {
         if (_llegoEstado) return;
         estado = new Estado {
-            salas = 3, reputacion = 20, dinero = 2500,
-            equipos = new[] { "tens", "eco", "gym", "plataforma", "hidro" },
+            salas = 1, reputacion = 10, dinero = 2500,   // se empieza con un box: el resto se compra
+            equipos = new[] { "tens" },
             personal = new[] { "Catalina" }   // solo la jugadora: el resto se contrata
         };
         Reconstruir();

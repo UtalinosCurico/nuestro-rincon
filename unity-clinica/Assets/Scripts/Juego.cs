@@ -28,6 +28,8 @@ public class Juego : MonoBehaviour
         public bool enCurso;
     }
     Atencion _actual;
+    Text _txtContratar, _txtBox;
+    float _proximoNpc;
     readonly List<Personaje> _espera = new List<Personaje>();
     readonly HashSet<int> _boxOcupado = new HashSet<int>();
 
@@ -59,6 +61,11 @@ public class Juego : MonoBehaviour
         _txtRep   = Texto(go.transform, "Rep",   new Vector2(0f, 1f), new Vector2(24f, -84f), 32, TextAnchor.UpperLeft);
         _txtAviso = Texto(go.transform, "Aviso", new Vector2(0.5f, 0f), new Vector2(0f, 120f), 34, TextAnchor.LowerCenter);
         _txtAviso.rectTransform.sizeDelta = new Vector2(660f, 120f);
+        CrearBoton(go.transform, "BtnContratar", new Vector2(0.5f, 0f), new Vector2(-170f, 46f),
+                   "🧑‍⚕️ Contratar", out _txtContratar, Contratar);
+        CrearBoton(go.transform, "BtnBox", new Vector2(0.5f, 0f), new Vector2(170f, 46f),
+                   "🚪 Abrir box", out _txtBox, AbrirBox);
+
         Aviso("Toca a un paciente para ir a buscarlo");
         Refrescar();
     }
@@ -84,11 +91,75 @@ public class Juego : MonoBehaviour
         return t;
     }
 
+    /// <summary>Botón grande, pensado para el dedo en un celular.</summary>
+    void CrearBoton(Transform padre, string nom, Vector2 anclaje, Vector2 pos, string etiqueta,
+                    out Text texto, UnityEngine.Events.UnityAction alTocar)
+    {
+        var g = new GameObject(nom);
+        g.transform.SetParent(padre, false);
+        var img = g.AddComponent<Image>();
+        img.color = new Color(0.36f, 0.55f, 0.65f, 0.96f);
+        var rt = img.rectTransform;
+        rt.anchorMin = rt.anchorMax = anclaje;
+        rt.pivot = new Vector2(0.5f, 0f);
+        rt.anchoredPosition = pos;
+        rt.sizeDelta = new Vector2(320f, 96f);
+        var btn = g.AddComponent<Button>();
+        btn.targetGraphic = img;
+        btn.onClick.AddListener(alTocar);
+
+        var tg = new GameObject("Txt");
+        tg.transform.SetParent(g.transform, false);
+        texto = tg.AddComponent<Text>();
+        texto.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        if (texto.font == null) texto.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        texto.fontSize = 28;
+        texto.alignment = TextAnchor.MiddleCenter;
+        texto.color = Color.white;
+        texto.text = etiqueta;
+        var trt = texto.rectTransform;
+        trt.anchorMin = Vector2.zero; trt.anchorMax = Vector2.one;
+        trt.offsetMin = trt.offsetMax = Vector2.zero;
+    }
+
+    int CostoKine => 1200 * (int)Mathf.Pow(2, Mathf.Max(0, PersonalActual - 1));
+    int CostoBox  => 2500 * (int)Mathf.Pow(2, Mathf.Max(0, SalasActual - 1));
+    int PersonalActual => clinica != null && clinica.estado.personal != null ? clinica.estado.personal.Length : 1;
+    int SalasActual => clinica != null ? Mathf.Max(1, clinica.estado.salas) : 1;
+
+    void Contratar()
+    {
+        if (PersonalActual >= 3) { Aviso("No caben más kinesiólogos"); return; }
+        if (_plata < CostoKine) { Aviso("No alcanza la plata"); return; }
+        _plata -= CostoKine;
+        var lista = new List<string>(clinica.estado.personal);
+        lista.Add(lista.Count == 1 ? "Ana" : "Rocío");
+        clinica.estado.personal = lista.ToArray();
+        clinica.Reconstruir();
+        Aviso("Contrataste a " + lista[lista.Count - 1] + " · atiende sola");
+        Refrescar();
+    }
+
+    void AbrirBox()
+    {
+        if (SalasActual >= 3) { Aviso("No caben más boxes"); return; }
+        if (_plata < CostoBox) { Aviso("No alcanza la plata"); return; }
+        _plata -= CostoBox;
+        clinica.estado.salas = SalasActual + 1;
+        clinica.Reconstruir();
+        Aviso("Abriste un box nuevo");
+        Refrescar();
+    }
+
     void Aviso(string s) { if (_txtAviso != null) { _txtAviso.text = s; _avisoHasta = Time.time + 4f; } }
 
     void Refrescar()
     {
         if (_txtPlata != null) _txtPlata.text = "$" + Mathf.FloorToInt((float)_plata).ToString("N0");
+        if (_txtContratar != null)
+            _txtContratar.text = PersonalActual >= 3 ? "🧑‍⚕️ Completo" : "🧑‍⚕️ Contratar\n$" + CostoKine.ToString("N0");
+        if (_txtBox != null)
+            _txtBox.text = SalasActual >= 3 ? "🚪 Completo" : "🚪 Abrir box\n$" + CostoBox.ToString("N0");
         if (_txtRep != null) _txtRep.text = "⭐ " + _rep + "   ·   " + _atendidos + " atendidos";
     }
 
@@ -113,6 +184,18 @@ public class Juego : MonoBehaviour
     void Update()
     {
         if (_txtAviso != null && Time.time > _avisoHasta && _txtAviso.text.Length > 0) _txtAviso.text = "";
+        // Los kinesiólogos contratados atienden por su cuenta: es lo que hace
+        // que la clínica rente aunque tú estés haciendo otra cosa.
+        int npcs = Mathf.Max(0, PersonalActual - 1);
+        if (npcs > 0 && Time.time > _proximoNpc)
+        {
+            _proximoNpc = Time.time + 6f;
+            int pago = 70 * npcs;
+            _plata += pago;
+            _atendidos += npcs;
+            Refrescar();
+        }
+
         if (_actual == null || _jugador == null) return;
 
         var a = _actual;
