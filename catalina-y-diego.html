@@ -5879,7 +5879,51 @@ const KIN_PRUEBAS = [
    luego diagnóstico, luego tratamiento según la fase. */
 const KIN_CASOS = [
   {
-    id:'banderas', pac:'Nelson', nom:'Dolor lumbar con banderas rojas', esp:'trauma', zona:'Lumbar', dif:3, derivar:true,
+    id:'huaso', pac:'Ramón', ava:'🤠', nom:'Rigidez de muñeca tras fractura de radio distal', esp:'trauma', zona:'Muñeca', dif:2,
+    edad:58, ocup:'huaso, trabaja con animales', motivo:'Después de que le sacaron el yeso no puede mover bien la muñeca',
+    mecanismo:'Se cayó del caballo hace dos meses y apoyó la mano. Estuvo seis semanas con yeso.',
+    sintomas:['La muñeca está rígida en todas las direcciones','La mano se ve algo hinchada y con la piel distinta','Le cuesta agarrar las riendas y girar la muñeca'],
+    prueba:null, hallazgo:'Rango pasivo y activo limitados por igual, sin dolor puntual en un tendón.',
+    fase:'subaguda',
+    tto:'Movilización progresiva de muñeca y antebrazo, y ejercicio de agarre; volver de a poco a las tareas del campo.',
+    ttoMal:['Seguir inmovilizando hasta que deje de doler','Forzar el rango con movilizaciones bruscas','Solo calor local sin ejercicio'],
+    dato:'Tras una inmovilización larga lo que limita no es el dolor sino la rigidez: el tratamiento es recuperar movimiento y carga, no seguir protegiendo.',
+  },
+  {
+    id:'minero', pac:'Nelson', ava:'👷', nom:'Lumbago crónico ocupacional', esp:'trauma', zona:'Lumbar', dif:2,
+    edad:46, ocup:'minero, turnos de doce horas', motivo:'Le duele la espalda hace más de un año y ya no sabe qué hacer',
+    mecanismo:'Sin un accidente puntual. Años de turnos largos, vibración y levantar peso.',
+    sintomas:['Dolor lumbar de más de tres meses, que va y viene','Peor al final del turno y los días de más carga','Sin dolor irradiado ni hormigueos'],
+    prueba:'lasegue', hallazgo:'Negativo: no reproduce dolor por debajo de la rodilla.',
+    fase:'crónica',
+    tto:'Ejercicio progresivo de fuerza y resistencia de tronco, educación en dolor persistente y ajuste de la carga del turno.',
+    ttoMal:['Reposo hasta que el dolor desaparezca','Faja lumbar permanente','Reposo laboral prolongado sin ejercicio'],
+    dato:'En dolor lumbar persistente el reposo y la faja empeoran el pronóstico: lo que funciona es moverse, ganar fuerza y entender el dolor.',
+  },
+  {
+    id:'basquetbol', pac:'Ignacio', ava:'⛹️', nom:'Tendinopatía rotuliana (rodilla de saltador)', esp:'deporte', zona:'Rodilla', dif:2,
+    edad:21, ocup:'jugador de básquetbol', motivo:'Dolor justo bajo la rótula al saltar',
+    mecanismo:'Aumentó los entrenamientos con muchos saltos antes del campeonato.',
+    sintomas:['Dolor puntual en el polo inferior de la rótula','Duele al saltar y al caer, no al estar sentado','Rigidez al empezar a entrenar que cede al entrar en calor'],
+    prueba:'mcmurray', hallazgo:'Negativo: sin chasquido ni dolor en la interlínea.',
+    fase:'crónica',
+    tto:'Carga progresiva del tendón rotuliano con isométricos y luego excéntricos, ajustando el volumen de saltos.',
+    ttoMal:['Parar del todo hasta el campeonato','Estirar fuerte el cuádriceps antes de cada partido','Infiltrar para poder seguir jugando igual'],
+    dato:'El dolor puntual en el polo inferior de la rótula al saltar es el sello de la tendinopatía rotuliana: se trata cargando el tendón, no descansándolo.',
+  },
+  {
+    id:'carrete', pac:'Sebastián', ava:'🕺', nom:'Luxación de hombro (primer episodio)', esp:'trauma', zona:'Hombro', dif:3,
+    edad:24, ocup:'estudiante', motivo:'Se le salió el hombro en una caída el fin de semana',
+    mecanismo:'Se cayó carreteando y apoyó el brazo estirado hacia atrás. En urgencias se lo pusieron en su lugar.',
+    sintomas:['Sensación de que el hombro se le va a volver a salir','Miedo a levantar el brazo hacia atrás','Fuerza disminuida por el dolor y la aprensión'],
+    prueba:'aprension', hallazgo:'Aprensión clara al llevar el hombro a abducción y rotación externa.',
+    fase:'subaguda',
+    tto:'Fortalecimiento del manguito rotador y estabilizadores de escápula, ganando control antes de volver a los rangos de riesgo.',
+    ttoMal:['Cabestrillo hasta que se le pase el miedo','Forzar la rotación externa para "soltar" el hombro','Volver a jugar apenas no le duela'],
+    dato:'Tras una primera luxación el riesgo mayor es que se repita, sobre todo en gente joven: el trabajo es ganar estabilidad, no recuperar rango a la fuerza.',
+  },
+  {
+    id:'banderas', ava:'🧓', pac:'Nelson', nom:'Dolor lumbar con banderas rojas', esp:'trauma', zona:'Lumbar', dif:3, derivar:true,
     edad:64, ocup:'jubilado', motivo:'Dolor lumbar que no se le pasa con nada',
     mecanismo:'Sin trauma. Lleva dos meses y va empeorando.',
     sintomas:['Dolor que no cede con el reposo ni cambia de posición','Ha bajado de peso sin proponérselo','Dolor nocturno que lo despierta'],
@@ -5890,7 +5934,7 @@ const KIN_CASOS = [
     dato:'Dolor que no cede con el reposo, baja de peso no buscada y dolor nocturno son banderas rojas: acá lo correcto es derivar, no tratar.',
   },
   {
-    id:'pinzamiento', pac:'Rodrigo', nom:'Síndrome de pinzamiento subacromial', esp:'trauma', zona:'Hombro', dif:1,
+    id:'pinzamiento', ava:'🧑‍🎨', pac:'Rodrigo', nom:'Síndrome de pinzamiento subacromial', esp:'trauma', zona:'Hombro', dif:1,
     edad:42, ocup:'pintor', motivo:'Dolor en el hombro derecho al levantar el brazo',
     mecanismo:'Meses trabajando con los brazos sobre la cabeza, sin golpe previo.',
     sintomas:['Dolor entre los 60° y 120° de abducción (arco doloroso)','Duele más de noche al acostarse sobre ese lado','Sin pérdida de fuerza importante'],
@@ -5901,7 +5945,7 @@ const KIN_CASOS = [
     dato:'El arco doloroso entre 60° y 120° orienta a compromiso subacromial: es el rango donde el espacio se estrecha.',
   },
   {
-    id:'capsulitis', pac:'Marcela', nom:'Capsulitis adhesiva (hombro congelado)', esp:'trauma', zona:'Hombro', dif:2,
+    id:'capsulitis', ava:'👩‍💼', pac:'Marcela', nom:'Capsulitis adhesiva (hombro congelado)', esp:'trauma', zona:'Hombro', dif:2,
     edad:55, ocup:'contadora', motivo:'El hombro se le fue poniendo rígido hace meses',
     mecanismo:'Sin trauma. Antecedente de diabetes tipo 2.',
     sintomas:['Pérdida de movilidad ACTIVA y PASIVA','La rotación externa es la más limitada','Dolor que fue disminuyendo mientras aumentaba la rigidez'],
@@ -5912,7 +5956,7 @@ const KIN_CASOS = [
     dato:'La clave que la distingue del pinzamiento: acá la limitación es TAMBIÉN pasiva, y la rotación externa es la más comprometida.',
   },
   {
-    id:'manguito', pac:'Javiera', nom:'Tendinopatía del supraespinoso', esp:'trauma', zona:'Hombro', dif:2,
+    id:'manguito', ava:'🏊‍♀️', pac:'Javiera', nom:'Tendinopatía del supraespinoso', esp:'trauma', zona:'Hombro', dif:2,
     edad:38, ocup:'nadadora', motivo:'Dolor al hacer el gesto de brazada',
     mecanismo:'Aumento brusco del volumen de entrenamiento.',
     sintomas:['Dolor con la abducción resistida','Debilidad leve al sostener peso con el brazo separado','Sin rigidez pasiva'],
@@ -5923,7 +5967,7 @@ const KIN_CASOS = [
     dato:'El supraespinoso inicia la abducción; por eso se evalúa resistiendo en ese rango.',
   },
   {
-    id:'epicondilalgia', pac:'Luis', nom:'Epicondilalgia lateral (codo de tenista)', esp:'trauma', zona:'Codo', dif:1,
+    id:'epicondilalgia', ava:'🪚', pac:'Luis', nom:'Epicondilalgia lateral (codo de tenista)', esp:'trauma', zona:'Codo', dif:1,
     edad:45, ocup:'carpintero', motivo:'Dolor en la cara externa del codo al tomar cosas',
     mecanismo:'Uso repetido de herramientas con la muñeca en extensión.',
     sintomas:['Dolor al apretar la mano o levantar una taza','Duele en el epicóndilo lateral a la palpación','Empeora con la extensión de muñeca'],
@@ -5934,7 +5978,7 @@ const KIN_CASOS = [
     dato:'Compromete el origen de los extensores de muñeca, sobre todo el segundo radial externo.',
   },
   {
-    id:'tunel', pac:'Paola', nom:'Síndrome del túnel carpiano', esp:'trauma', zona:'Muñeca', dif:2,
+    id:'tunel', ava:'⌨️', pac:'Paola', nom:'Síndrome del túnel carpiano', esp:'trauma', zona:'Muñeca', dif:2,
     edad:36, ocup:'digitadora', motivo:'Se le duermen los dedos, sobre todo de noche',
     mecanismo:'Trabajo prolongado en teclado; embarazo reciente.',
     sintomas:['Hormigueo en pulgar, índice, medio y mitad del anular','Despierta de noche y necesita sacudir la mano','En casos avanzados, atrofia de la eminencia tenar'],
@@ -5945,7 +5989,7 @@ const KIN_CASOS = [
     dato:'El territorio respeta el meñique: si también se duerme el meñique, hay que pensar en el nervio cubital, no en el mediano.',
   },
   {
-    id:'dequervain', pac:'Camila', nom:'Tenosinovitis de De Quervain', esp:'trauma', zona:'Muñeca', dif:2,
+    id:'dequervain', ava:'🤱', pac:'Camila', nom:'Tenosinovitis de De Quervain', esp:'trauma', zona:'Muñeca', dif:2,
     edad:31, ocup:'mamá reciente', motivo:'Dolor en el lado del pulgar al tomar a la guagua',
     mecanismo:'Sostener al bebé de forma repetida con el pulgar separado.',
     sintomas:['Dolor en la estiloides radial','Duele al agarrar y al desviar la muñeca','Puede haber inflamación local visible'],
@@ -5956,7 +6000,7 @@ const KIN_CASOS = [
     dato:'Compromete los tendones del abductor largo y extensor corto del pulgar en el primer compartimento dorsal.',
   },
   {
-    id:'lumbago', pac:'Cristián', nom:'Lumbago mecánico inespecífico', esp:'trauma', zona:'Lumbar', dif:1,
+    id:'lumbago', ava:'📦', pac:'Cristián', nom:'Lumbago mecánico inespecífico', esp:'trauma', zona:'Lumbar', dif:1,
     edad:34, ocup:'bodeguero', motivo:'Dolor lumbar tras levantar una caja',
     mecanismo:'Levantó peso con la espalda flectada y en rotación.',
     sintomas:['Dolor lumbar que NO baja de la rodilla','Sin déficit neurológico','Duele más con ciertos movimientos y alivia con otros'],
@@ -5967,7 +6011,7 @@ const KIN_CASOS = [
     dato:'Es el cuadro lumbar más frecuente. La evidencia es consistente en que el reposo en cama empeora el pronóstico.',
   },
   {
-    id:'radiculopatia', pac:'Héctor', nom:'Radiculopatía lumbar', esp:'trauma', zona:'Lumbar', dif:3,
+    id:'radiculopatia', ava:'🚚', pac:'Héctor', nom:'Radiculopatía lumbar', esp:'trauma', zona:'Lumbar', dif:3,
     edad:47, ocup:'chofer', motivo:'Dolor que baja por la pierna hasta el pie',
     mecanismo:'Instalación progresiva, empeora al sentarse mucho.',
     sintomas:['Dolor irradiado por debajo de la rodilla siguiendo un dermatoma','Hormigueo y a veces debilidad','Empeora al toser o pujar'],
@@ -5978,7 +6022,7 @@ const KIN_CASOS = [
     dato:'Lo que la separa del lumbago simple es el patrón por dermatoma y el compromiso neural, no la intensidad del dolor.',
   },
   {
-    id:'trocanterico', pac:'Verónica', nom:'Síndrome de dolor trocantérico', esp:'trauma', zona:'Cadera', dif:2,
+    id:'trocanterico', ava:'👩‍🏫', pac:'Verónica', nom:'Síndrome de dolor trocantérico', esp:'trauma', zona:'Cadera', dif:2,
     edad:52, ocup:'profesora', motivo:'Dolor en el costado de la cadera al acostarse de ese lado',
     mecanismo:'Sin trauma; aumentó las caminatas hace poco.',
     sintomas:['Dolor sobre el trocánter mayor','Duele al dormir de ese lado y al subir escaleras','Puede haber Trendelenburg'],
@@ -5989,7 +6033,7 @@ const KIN_CASOS = [
     dato:'Hoy se entiende como tendinopatía de glúteo medio y menor más que como bursitis pura.',
   },
   {
-    id:'lca', pac:'Antonia', nom:'Lesión del ligamento cruzado anterior', esp:'deporte', zona:'Rodilla', dif:3,
+    id:'lca', ava:'⚽', pac:'Antonia', nom:'Lesión del ligamento cruzado anterior', esp:'deporte', zona:'Rodilla', dif:3,
     edad:24, ocup:'jugadora de fútbol', motivo:'Se le dobló la rodilla en un cambio de dirección',
     mecanismo:'Giro con el pie fijo, sintió un chasquido y se hinchó rápido.',
     sintomas:['Derrame articular en las primeras horas','Sensación de que la rodilla "se va"','Dificultad para apoyar'],
@@ -6000,7 +6044,7 @@ const KIN_CASOS = [
     dato:'El derrame en las primeras horas orienta a lesión intraarticular con sangrado. Lachman es más sensible que el cajón anterior.',
   },
   {
-    id:'menisco', pac:'Matías', nom:'Lesión meniscal', esp:'deporte', zona:'Rodilla', dif:2,
+    id:'menisco', ava:'🥅', pac:'Matías', nom:'Lesión meniscal', esp:'deporte', zona:'Rodilla', dif:2,
     edad:29, ocup:'futbolista amateur', motivo:'Dolor en la interlínea y sensación de bloqueo',
     mecanismo:'Giro con el pie apoyado y la rodilla flectada.',
     sintomas:['Dolor en la interlínea articular','Bloqueos o chasquidos','Derrame de instalación lenta'],
@@ -6011,7 +6055,7 @@ const KIN_CASOS = [
     dato:'El derrame lento (horas o días) diferencia al menisco del LCA, que se hincha rápido.',
   },
   {
-    id:'patelofemoral', pac:'Isidora', nom:'Síndrome de dolor patelofemoral', esp:'deporte', zona:'Rodilla', dif:2,
+    id:'patelofemoral', ava:'🏃‍♀️', pac:'Isidora', nom:'Síndrome de dolor patelofemoral', esp:'deporte', zona:'Rodilla', dif:2,
     edad:22, ocup:'estudiante corredora', motivo:'Dolor delante de la rodilla al bajar escaleras',
     mecanismo:'Aumentó los kilómetros de trote muy rápido.',
     sintomas:['Dolor peripatelar difuso','Duele al estar mucho rato sentada (signo del cine)','Sin derrame ni bloqueos'],
@@ -6022,7 +6066,7 @@ const KIN_CASOS = [
     dato:'El "signo del cine" (dolor al estar mucho rato sentada con la rodilla flectada) es bien característico.',
   },
   {
-    id:'aquiles', pac:'Pablo', nom:'Tendinopatía aquiliana', esp:'deporte', zona:'Tobillo', dif:2,
+    id:'aquiles', ava:'🏃', pac:'Pablo', nom:'Tendinopatía aquiliana', esp:'deporte', zona:'Tobillo', dif:2,
     edad:41, ocup:'corredor aficionado', motivo:'Dolor en el tendón de Aquiles al empezar a correr',
     mecanismo:'Aumento del volumen y cambio a zapatillas más planas.',
     sintomas:['Dolor y rigidez matinal en el tendón','Mejora al entrar en calor y reaparece después','Engrosamiento palpable'],
@@ -6033,7 +6077,7 @@ const KIN_CASOS = [
     dato:'La rigidez matinal que cede al entrar en calor es el patrón típico de tendinopatía.',
   },
   {
-    id:'esguince', pac:'Benjamín', nom:'Esguince lateral de tobillo', esp:'deporte', zona:'Tobillo', dif:1,
+    id:'esguince', ava:'🏀', pac:'Benjamín', nom:'Esguince lateral de tobillo', esp:'deporte', zona:'Tobillo', dif:1,
     edad:19, ocup:'jugador de básquetbol', motivo:'Se torció el tobillo al caer de un salto',
     mecanismo:'Inversión forzada con el pie en flexión plantar.',
     sintomas:['Dolor e inflamación en la cara lateral','Hematoma','Dificultad para apoyar el primer día'],
@@ -6044,7 +6088,7 @@ const KIN_CASOS = [
     dato:'El ligamento que se lesiona primero es el peroneoastragalino anterior. La propiocepción temprana reduce la recurrencia.',
   },
   {
-    id:'fascitis', pac:'Gloria', nom:'Fascitis plantar', esp:'trauma', zona:'Pie', dif:1,
+    id:'fascitis', ava:'🛒', pac:'Gloria', nom:'Fascitis plantar', esp:'trauma', zona:'Pie', dif:1,
     edad:48, ocup:'vendedora', motivo:'Dolor en el talón con los primeros pasos de la mañana',
     mecanismo:'Muchas horas de pie sobre superficie dura.',
     sintomas:['Dolor en la zona medial del talón','Peor con los primeros pasos del día','Mejora al caminar un rato y empeora al final del día'],
@@ -6055,7 +6099,7 @@ const KIN_CASOS = [
     dato:'El dolor de los primeros pasos de la mañana es el rasgo más característico del cuadro.',
   },
   {
-    id:'cervicalgia', pac:'Daniela', nom:'Cervicalgia mecánica', esp:'trauma', zona:'Cervical', dif:1,
+    id:'cervicalgia', ava:'💻', pac:'Daniela', nom:'Cervicalgia mecánica', esp:'trauma', zona:'Cervical', dif:1,
     edad:33, ocup:'teleoperadora', motivo:'Dolor de cuello y hombros al final del día',
     mecanismo:'Muchas horas frente al computador, sin trauma.',
     sintomas:['Dolor cervical que no baja del codo','Sin déficit neurológico','Mejora con movimiento y empeora con posturas sostenidas'],
@@ -6066,7 +6110,7 @@ const KIN_CASOS = [
     dato:'Sin signos neurológicos ni banderas rojas, se maneja como dolor mecánico: movimiento y carga, no inmovilización.',
   },
   {
-    id:'epoc', pac:'Óscar', nom:'EPOC reagudizado', esp:'respi', zona:'Respiratorio', dif:3,
+    id:'epoc', ava:'🚬', pac:'Óscar', nom:'EPOC reagudizado', esp:'respi', zona:'Respiratorio', dif:3,
     edad:68, ocup:'jubilado, ex fumador', motivo:'Se ahoga más que lo habitual y tiene mucha secreción',
     mecanismo:'Cuadro respiratorio de una semana sobre una EPOC conocida.',
     sintomas:['Aumento de la disnea habitual','Tos con secreción difícil de eliminar','Uso de musculatura accesoria'],
@@ -6077,7 +6121,7 @@ const KIN_CASOS = [
     dato:'En EPOC el objetivo kinésico es la permeabilidad de la vía aérea y la tolerancia al esfuerzo, no "curar" la obstrucción.',
   },
   {
-    id:'acv', pac:'Rosa', nom:'ACV con hemiparesia', esp:'neuro', zona:'Neurológico', dif:3,
+    id:'acv', ava:'👵', pac:'Rosa', nom:'ACV con hemiparesia', esp:'neuro', zona:'Neurológico', dif:3,
     edad:71, ocup:'jubilada', motivo:'Debilidad de un lado del cuerpo tras un accidente cerebrovascular',
     mecanismo:'ACV isquémico hace dos semanas.',
     sintomas:['Debilidad de hemicuerpo','Alteración del control postural y del equilibrio','Riesgo de hombro doloroso en el lado afectado'],
@@ -6183,6 +6227,53 @@ const CL_TIEMPO_BASE = 13;   // unidades de tiempo por paciente
 const p = (t, s, n) => ({ t, s: s ? s.split(' ') : [], n: n ? n.split(' ') : [] });
 
 const KIN_DX = {
+  huaso: {
+    dif:['huaso','dequervain','tunel'],
+    c:{
+      inicio:  p('Empezó al sacarle el yeso, hace dos semanas.','huaso','dequervain tunel'),
+      trauma:  p('Caída del caballo con apoyo de la mano, hace dos meses.','huaso','dequervain tunel'),
+      antec:   p('Seis semanas inmovilizado con yeso.','huaso','dequervain'),
+      activo:  p('Rango ACTIVO limitado en todas las direcciones.','huaso','dequervain'),
+      pasivo:  p('El rango PASIVO está igual de limitado: la articulación está rígida.','huaso','dequervain tunel'),
+      palp:    p('Molestia difusa, sin dolor puntual en la estiloides ni en un tendón.','huaso','dequervain'),
+      neuro:   p('Sin hormigueo ni pérdida de sensibilidad.','huaso','tunel'),
+      insp:    p('Mano algo hinchada y con la piel distinta, típico tras inmovilización.','huaso',''),
+    },
+  },
+  minero: {
+    dif:['minero','radiculopatia','lumbago'],
+    c:{
+      inicio:  p('Más de un año, va y viene, sin un accidente que lo explique.','minero','lumbago'),
+      trauma:  p('Ningún golpe ni esfuerzo puntual.','minero','lumbago'),
+      irradia: p('El dolor se queda en la zona lumbar, no baja de la rodilla.','minero lumbago','radiculopatia'),
+      neuro:   p('Tamizaje neurológico normal.','minero lumbago','radiculopatia'),
+      agrava:  p('Peor al final del turno de doce horas y los días de más carga.','minero','lumbago'),
+      alarma:  p('Sin banderas rojas.','minero lumbago',''),
+      antec:   p('Años de turnos largos, vibración y levantar peso.','minero','lumbago'),
+    },
+  },
+  basquetbol: {
+    dif:['basquetbol','patelofemoral','menisco'],
+    c:{
+      inicio:  p('Subió mucho los saltos en los entrenamientos antes del campeonato.','basquetbol','menisco'),
+      trauma:  p('Sin torsión ni golpe.','basquetbol patelofemoral','menisco'),
+      palp:    p('Dolor PUNTUAL en el polo inferior de la rótula.','basquetbol','patelofemoral menisco'),
+      agrava:  p('Duele al saltar y al caer; estar sentado no le molesta.','basquetbol','patelofemoral'),
+      insp:    p('Sin derrame articular.','basquetbol patelofemoral','menisco'),
+      activo:  p('Rigidez al partir que cede al entrar en calor, sin bloqueos.','basquetbol','menisco'),
+    },
+  },
+  carrete: {
+    dif:['carrete','pinzamiento','manguito'],
+    c:{
+      inicio:  p('Episodio agudo el fin de semana: se le salió el hombro y se lo redujeron en urgencias.','carrete','pinzamiento manguito'),
+      trauma:  p('Caída con el brazo estirado hacia atrás.','carrete','pinzamiento manguito'),
+      agrava:  p('Siente que el hombro se le va a volver a salir al levantar el brazo hacia atrás.','carrete','pinzamiento manguito'),
+      fuerza:  p('Fuerza limitada por dolor y por miedo, no por debilidad real.','carrete','manguito'),
+      activo:  p('Evita activamente la rotación externa en abducción.','carrete','pinzamiento'),
+      insp:    p('Sin atrofia ni deformidad tras la reducción.','carrete','manguito'),
+    },
+  },
   banderas: {
     dif:['banderas','lumbago','radiculopatia'],
     c:{
@@ -7164,7 +7255,7 @@ function clPanelCaso(cont){
   let html =
     '<div class="cl-ficha">' +
       '<div class="cl-ficha-top">' +
-        '<div class="cl-ficha-avatar">' + (c.esp === 'respi' ? '🫁' : c.esp === 'neuro' ? '🧠' : '🧍') + '</div>' +
+        '<div class="cl-ficha-avatar">' + (c.ava || '🧍') + '</div>' +
         '<div><div class="cl-ficha-nom">' + c.pac + ', ' + c.edad + ' años</div>' +
         '<div class="cl-ficha-ocu">' + c.ocup + ' · consulta por ' + c.zona.toLowerCase() + '</div></div>' +
       '</div>' +

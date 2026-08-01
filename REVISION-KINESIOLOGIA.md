@@ -1,157 +1,234 @@
-# Contenido de kinesiología — para revisar
+# Contenido de kinesiología
 
-Catalina: esto es **todo** lo que el juego enseña. Revisado por ella el 31-jul-2026 y publicado.
+Catalina: esto es todo lo que enseña la Clínica del Rincón. Está publicado.
 
-Si más adelante aparece algo que corregir, se corrige en un solo lugar y el juego entero queda corregido: este documento se genera desde los mismos datos que usa el juego.
+Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en un solo lugar y el juego entero queda corregido.
 
-Avisos honestos:
-
-- Los **rangos articulares** son de AAOS. Si usan otra referencia, cambian los números.
-- Las **pruebas ortopédicas** orientan, no diagnostican solas. El juego las simplifica para que la mecánica funcione.
-- Lo más importante de revisar es la **sección 2**: son las pistas con las que el jugador descarta hipótesis. Si una está mal, enseña a razonar mal.
+- Los **rangos articulares** son de AAOS.
+- Las **pruebas ortopédicas** orientan, no diagnostican solas; el juego las simplifica para que la mecánica funcione.
+- Lo más importante de revisar es la **sección 2**: son las pistas con las que se descartan hipótesis.
 
 ---
-## 1. Casos (19)
+## 1. Casos (23)
 
-### Dolor lumbar con banderas rojas  `Lumbar`  ⚠️ **lo correcto es DERIVAR**
+### 🤠 Rigidez de muñeca tras fractura de radio distal  `Muñeca`
+- **Paciente:** Ramón, 58 años, huaso, trabaja con animales — después de que le sacaron el yeso no puede mover bien la muñeca
+- **Mecanismo:** Se cayó del caballo hace dos meses y apoyó la mano. Estuvo seis semanas con yeso.
+- **Prueba:** _(no aplica)_ → Rango pasivo y activo limitados por igual, sin dolor puntual en un tendón.
+- **Tratamiento correcto** (fase subaguda): Movilización progresiva de muñeca y antebrazo, y ejercicio de agarre; volver de a poco a las tareas del campo.
+- **Se le enseña:** _Tras una inmovilización larga lo que limita no es el dolor sino la rigidez: el tratamiento es recuperar movimiento y carga, no seguir protegiendo._
+
+### 👷 Lumbago crónico ocupacional  `Lumbar`
+- **Paciente:** Nelson, 46 años, minero, turnos de doce horas — le duele la espalda hace más de un año y ya no sabe qué hacer
+- **Mecanismo:** Sin un accidente puntual. Años de turnos largos, vibración y levantar peso.
+- **Prueba:** Lasègue (elevación de pierna recta) → Negativo: no reproduce dolor por debajo de la rodilla.
+- **Tratamiento correcto** (fase crónica): Ejercicio progresivo de fuerza y resistencia de tronco, educación en dolor persistente y ajuste de la carga del turno.
+- **Se le enseña:** _En dolor lumbar persistente el reposo y la faja empeoran el pronóstico: lo que funciona es moverse, ganar fuerza y entender el dolor._
+
+### ⛹️ Tendinopatía rotuliana (rodilla de saltador)  `Rodilla`
+- **Paciente:** Ignacio, 21 años, jugador de básquetbol — dolor justo bajo la rótula al saltar
+- **Mecanismo:** Aumentó los entrenamientos con muchos saltos antes del campeonato.
+- **Prueba:** McMurray → Negativo: sin chasquido ni dolor en la interlínea.
+- **Tratamiento correcto** (fase crónica): Carga progresiva del tendón rotuliano con isométricos y luego excéntricos, ajustando el volumen de saltos.
+- **Se le enseña:** _El dolor puntual en el polo inferior de la rótula al saltar es el sello de la tendinopatía rotuliana: se trata cargando el tendón, no descansándolo._
+
+### 🕺 Luxación de hombro (primer episodio)  `Hombro`
+- **Paciente:** Sebastián, 24 años, estudiante — se le salió el hombro en una caída el fin de semana
+- **Mecanismo:** Se cayó carreteando y apoyó el brazo estirado hacia atrás. En urgencias se lo pusieron en su lugar.
+- **Prueba:** Aprensión anterior → Aprensión clara al llevar el hombro a abducción y rotación externa.
+- **Tratamiento correcto** (fase subaguda): Fortalecimiento del manguito rotador y estabilizadores de escápula, ganando control antes de volver a los rangos de riesgo.
+- **Se le enseña:** _Tras una primera luxación el riesgo mayor es que se repita, sobre todo en gente joven: el trabajo es ganar estabilidad, no recuperar rango a la fuerza._
+
+### 🧓 Dolor lumbar con banderas rojas  `Lumbar`  ⚠️ **lo correcto es DERIVAR**
 - **Paciente:** Nelson, 64 años, jubilado — dolor lumbar que no se le pasa con nada
-- **Prueba correcta:** _(no aplica)_ → El dolor no se modifica con ninguna posición ni movimiento.
+- **Mecanismo:** Sin trauma. Lleva dos meses y va empeorando.
+- **Prueba:** _(no aplica)_ → El dolor no se modifica con ninguna posición ni movimiento.
 - **Tratamiento correcto** (fase aguda): Derivar a evaluación médica antes de cualquier tratamiento kinésico.
-- **Distractores:** Iniciar ejercicio progresivo de tronco / Manipulación lumbar / Ultrasonido y calor local
 - **Se le enseña:** _Dolor que no cede con el reposo, baja de peso no buscada y dolor nocturno son banderas rojas: acá lo correcto es derivar, no tratar._
 
-### Síndrome de pinzamiento subacromial  `Hombro`
+### 🧑‍🎨 Síndrome de pinzamiento subacromial  `Hombro`
 - **Paciente:** Rodrigo, 42 años, pintor — dolor en el hombro derecho al levantar el brazo
-- **Prueba correcta:** Neer → Dolor al elevar pasivamente el brazo en rotación interna.
+- **Mecanismo:** Meses trabajando con los brazos sobre la cabeza, sin golpe previo.
+- **Prueba:** Neer → Dolor al elevar pasivamente el brazo en rotación interna.
 - **Tratamiento correcto** (fase subaguda): Corregir el ritmo escapulohumeral y fortalecer manguito rotador y estabilizadores de escápula, evitando el trabajo sobre la cabeza al inicio.
-- **Distractores:** Inmovilizar el hombro tres semanas / Elongar solo el pectoral y volver al trabajo / Movilización pasiva forzada en abducción máxima
 - **Se le enseña:** _El arco doloroso entre 60° y 120° orienta a compromiso subacromial: es el rango donde el espacio se estrecha._
 
-### Capsulitis adhesiva (hombro congelado)  `Hombro`
+### 👩‍💼 Capsulitis adhesiva (hombro congelado)  `Hombro`
 - **Paciente:** Marcela, 55 años, contadora — el hombro se le fue poniendo rígido hace meses
-- **Prueba correcta:** Aprensión anterior → No hay aprensión, pero la movilidad pasiva está claramente restringida en todos los planos.
+- **Mecanismo:** Sin trauma. Antecedente de diabetes tipo 2.
+- **Prueba:** Aprensión anterior → No hay aprensión, pero la movilidad pasiva está claramente restringida en todos los planos.
 - **Tratamiento correcto** (fase crónica): Movilización articular progresiva y ejercicio en rangos tolerados, con educación sobre lo prolongado del cuadro.
-- **Distractores:** Reposo absoluto hasta que ceda el dolor / Fortalecimiento intenso del manguito desde la primera sesión / Ultrasonido como único tratamiento
 - **Se le enseña:** _La clave que la distingue del pinzamiento: acá la limitación es TAMBIÉN pasiva, y la rotación externa es la más comprometida._
 
-### Tendinopatía del supraespinoso  `Hombro`
+### 🏊‍♀️ Tendinopatía del supraespinoso  `Hombro`
 - **Paciente:** Javiera, 38 años, nadadora — dolor al hacer el gesto de brazada
-- **Prueba correcta:** Jobe (lata vacía) → Dolor y debilidad al resistir con el brazo en abducción y pulgar hacia abajo.
+- **Mecanismo:** Aumento brusco del volumen de entrenamiento.
+- **Prueba:** Jobe (lata vacía) → Dolor y debilidad al resistir con el brazo en abducción y pulgar hacia abajo.
 - **Tratamiento correcto** (fase subaguda): Carga progresiva del tendón con ejercicio isométrico y luego excéntrico, ajustando el volumen de entrenamiento.
-- **Distractores:** Reposo deportivo completo por seis semanas / Estiramiento agresivo del tendón / Infiltrar y seguir entrenando igual
 - **Se le enseña:** _El supraespinoso inicia la abducción; por eso se evalúa resistiendo en ese rango._
 
-### Epicondilalgia lateral (codo de tenista)  `Codo`
+### 🪚 Epicondilalgia lateral (codo de tenista)  `Codo`
 - **Paciente:** Luis, 45 años, carpintero — dolor en la cara externa del codo al tomar cosas
-- **Prueba correcta:** Cozen → Dolor en el epicóndilo lateral al resistir la extensión de muñeca.
+- **Mecanismo:** Uso repetido de herramientas con la muñeca en extensión.
+- **Prueba:** Cozen → Dolor en el epicóndilo lateral al resistir la extensión de muñeca.
 - **Tratamiento correcto** (fase crónica): Ejercicio excéntrico de extensores de muñeca con carga progresiva y corrección del gesto de trabajo.
-- **Distractores:** Reposo e inmovilización con férula por un mes / Masaje profundo como único tratamiento / Fortalecer flexores de muñeca
 - **Se le enseña:** _Compromete el origen de los extensores de muñeca, sobre todo el segundo radial externo._
 
-### Síndrome del túnel carpiano  `Muñeca`
+### ⌨️ Síndrome del túnel carpiano  `Muñeca`
 - **Paciente:** Paola, 36 años, digitadora — se le duermen los dedos, sobre todo de noche
-- **Prueba correcta:** Phalen → Reproduce el hormigueo en el territorio del nervio mediano al sostener la flexión.
+- **Mecanismo:** Trabajo prolongado en teclado; embarazo reciente.
+- **Prueba:** Phalen → Reproduce el hormigueo en el territorio del nervio mediano al sostener la flexión.
 - **Tratamiento correcto** (fase subaguda): Férula nocturna en posición neutra, deslizamiento neural del mediano y ajuste ergonómico del puesto.
-- **Distractores:** Fortalecer la musculatura de la mano con pelota antiestrés / Estiramiento intenso en flexión de muñeca / Ultrasonido sobre el túnel sin cambiar nada más
 - **Se le enseña:** _El territorio respeta el meñique: si también se duerme el meñique, hay que pensar en el nervio cubital, no en el mediano._
 
-### Tenosinovitis de De Quervain  `Muñeca`
+### 🤱 Tenosinovitis de De Quervain  `Muñeca`
 - **Paciente:** Camila, 31 años, mamá reciente — dolor en el lado del pulgar al tomar a la guagua
-- **Prueba correcta:** Finkelstein → Dolor intenso en la estiloides radial al desviar la muñeca con el pulgar dentro del puño.
+- **Mecanismo:** Sostener al bebé de forma repetida con el pulgar separado.
+- **Prueba:** Finkelstein → Dolor intenso en la estiloides radial al desviar la muñeca con el pulgar dentro del puño.
 - **Tratamiento correcto** (fase aguda): Reposo relativo del gesto doloroso, órtesis de pulgar y carga progresiva cuando cede el dolor.
-- **Distractores:** Seguir con la actividad igual y solo aplicar hielo / Fortalecimiento máximo del pulgar desde el inicio / Movilización forzada en desviación cubital
 - **Se le enseña:** _Compromete los tendones del abductor largo y extensor corto del pulgar en el primer compartimento dorsal._
 
-### Lumbago mecánico inespecífico  `Lumbar`
+### 📦 Lumbago mecánico inespecífico  `Lumbar`
 - **Paciente:** Cristián, 34 años, bodeguero — dolor lumbar tras levantar una caja
-- **Prueba correcta:** Lasègue (elevación de pierna recta) → Negativo: no reproduce dolor irradiado por debajo de la rodilla.
+- **Mecanismo:** Levantó peso con la espalda flectada y en rotación.
+- **Prueba:** Lasègue (elevación de pierna recta) → Negativo: no reproduce dolor irradiado por debajo de la rodilla.
 - **Tratamiento correcto** (fase aguda): Mantener actividad dentro de lo tolerable, educación en dolor y progresión de ejercicio; evitar el reposo en cama.
-- **Distractores:** Reposo en cama por una semana / Corsé rígido permanente / Imágenes urgentes antes de cualquier tratamiento
 - **Se le enseña:** _Es el cuadro lumbar más frecuente. La evidencia es consistente en que el reposo en cama empeora el pronóstico._
 
-### Radiculopatía lumbar  `Lumbar`
+### 🚚 Radiculopatía lumbar  `Lumbar`
 - **Paciente:** Héctor, 47 años, chofer — dolor que baja por la pierna hasta el pie
-- **Prueba correcta:** Lasègue (elevación de pierna recta) → Positivo: reproduce el dolor irradiado entre los 30° y 70° de elevación.
+- **Mecanismo:** Instalación progresiva, empeora al sentarse mucho.
+- **Prueba:** Lasègue (elevación de pierna recta) → Positivo: reproduce el dolor irradiado entre los 30° y 70° de elevación.
 - **Tratamiento correcto** (fase subaguda): Ejercicio con preferencia direccional, deslizamiento neural y educación; derivar si aparece déficit progresivo.
-- **Distractores:** Manipulación de alta velocidad en fase irritativa / Reposo absoluto hasta que pase / Fortalecimiento máximo de tronco desde el día uno
 - **Se le enseña:** _Lo que la separa del lumbago simple es el patrón por dermatoma y el compromiso neural, no la intensidad del dolor._
 
-### Síndrome de dolor trocantérico  `Cadera`
+### 👩‍🏫 Síndrome de dolor trocantérico  `Cadera`
 - **Paciente:** Verónica, 52 años, profesora — dolor en el costado de la cadera al acostarse de ese lado
-- **Prueba correcta:** Trendelenburg → Descenso de la pelvis contralateral en apoyo monopodal.
+- **Mecanismo:** Sin trauma; aumentó las caminatas hace poco.
+- **Prueba:** Trendelenburg → Descenso de la pelvis contralateral en apoyo monopodal.
 - **Tratamiento correcto** (fase subaguda): Fortalecimiento progresivo de abductores de cadera y corrección de posiciones que comprimen el tendón (evitar cruzar la pierna).
-- **Distractores:** Estiramiento en aducción sostenido, que comprime el tendón / Infiltración y reposo sin ejercicio / Trabajo de flexores de cadera
 - **Se le enseña:** _Hoy se entiende como tendinopatía de glúteo medio y menor más que como bursitis pura._
 
-### Lesión del ligamento cruzado anterior  `Rodilla`
+### ⚽ Lesión del ligamento cruzado anterior  `Rodilla`
 - **Paciente:** Antonia, 24 años, jugadora de fútbol — se le dobló la rodilla en un cambio de dirección
-- **Prueba correcta:** Lachman → Aumento del desplazamiento anterior de la tibia con tope blando.
+- **Mecanismo:** Giro con el pie fijo, sintió un chasquido y se hinchó rápido.
+- **Prueba:** Lachman → Aumento del desplazamiento anterior de la tibia con tope blando.
 - **Tratamiento correcto** (fase aguda): Control del derrame, recuperar la extensión completa y activar el cuádriceps antes de progresar la carga.
-- **Distractores:** Fortalecer en cadena abierta con carga máxima de inmediato / Inmovilizar en flexión / Volver a entrenar cuando baje el dolor
 - **Se le enseña:** _El derrame en las primeras horas orienta a lesión intraarticular con sangrado. Lachman es más sensible que el cajón anterior._
 
-### Lesión meniscal  `Rodilla`
+### 🥅 Lesión meniscal  `Rodilla`
 - **Paciente:** Matías, 29 años, futbolista amateur — dolor en la interlínea y sensación de bloqueo
-- **Prueba correcta:** McMurray → Chasquido doloroso al extender la rodilla con rotación.
+- **Mecanismo:** Giro con el pie apoyado y la rodilla flectada.
+- **Prueba:** McMurray → Chasquido doloroso al extender la rodilla con rotación.
 - **Tratamiento correcto** (fase subaguda): Ejercicio progresivo con control de la carga en rotación, fortalecimiento de cuádriceps y trabajo propioceptivo.
-- **Distractores:** Cirugía inmediata en toda lesión meniscal / Reposo hasta que desaparezca el chasquido / Trabajo forzado en flexión máxima con giro
 - **Se le enseña:** _El derrame lento (horas o días) diferencia al menisco del LCA, que se hincha rápido._
 
-### Síndrome de dolor patelofemoral  `Rodilla`
+### 🏃‍♀️ Síndrome de dolor patelofemoral  `Rodilla`
 - **Paciente:** Isidora, 22 años, estudiante corredora — dolor delante de la rodilla al bajar escaleras
-- **Prueba correcta:** Trendelenburg → Control deficiente de la pelvis y valgo dinámico en apoyo monopodal.
+- **Mecanismo:** Aumentó los kilómetros de trote muy rápido.
+- **Prueba:** Trendelenburg → Control deficiente de la pelvis y valgo dinámico en apoyo monopodal.
 - **Tratamiento correcto** (fase crónica): Fortalecimiento de cuádriceps y de abductores/rotadores externos de cadera, con ajuste de la carga de carrera.
-- **Distractores:** Reposo total hasta que no duela nada / Solo elongar el cuádriceps / Vendaje como tratamiento único
 - **Se le enseña:** _El "signo del cine" (dolor al estar mucho rato sentada con la rodilla flectada) es bien característico._
 
-### Tendinopatía aquiliana  `Tobillo`
+### 🏃 Tendinopatía aquiliana  `Tobillo`
 - **Paciente:** Pablo, 41 años, corredor aficionado — dolor en el tendón de aquiles al empezar a correr
-- **Prueba correcta:** Thompson → Negativo: se conserva la flexión plantar al comprimir la pantorrilla (descarta rotura completa).
+- **Mecanismo:** Aumento del volumen y cambio a zapatillas más planas.
+- **Prueba:** Thompson → Negativo: se conserva la flexión plantar al comprimir la pantorrilla (descarta rotura completa).
 - **Tratamiento correcto** (fase crónica): Carga progresiva del tendón con trabajo excéntrico e isométrico, ajustando el volumen de carrera.
-- **Distractores:** Reposo completo hasta que no duela / Estiramiento intenso y masaje profundo diario / Volver al volumen previo apenas mejore
 - **Se le enseña:** _La rigidez matinal que cede al entrar en calor es el patrón típico de tendinopatía._
 
-### Esguince lateral de tobillo  `Tobillo`
+### 🏀 Esguince lateral de tobillo  `Tobillo`
 - **Paciente:** Benjamín, 19 años, jugador de básquetbol — se torció el tobillo al caer de un salto
-- **Prueba correcta:** Cajón anterior de tobillo → Aumento del desplazamiento anterior del retropié comparado con el otro lado.
+- **Mecanismo:** Inversión forzada con el pie en flexión plantar.
+- **Prueba:** Cajón anterior de tobillo → Aumento del desplazamiento anterior del retropié comparado con el otro lado.
 - **Tratamiento correcto** (fase aguda): Carga precoz protegida y trabajo propioceptivo temprano, progresando a fuerza de peroneos.
-- **Distractores:** Inmovilizar con yeso tres semanas / Reposo sin apoyo hasta que baje toda la inflamación / Volver a jugar apenas camine sin dolor
 - **Se le enseña:** _El ligamento que se lesiona primero es el peroneoastragalino anterior. La propiocepción temprana reduce la recurrencia._
 
-### Fascitis plantar  `Pie`
+### 🛒 Fascitis plantar  `Pie`
 - **Paciente:** Gloria, 48 años, vendedora — dolor en el talón con los primeros pasos de la mañana
-- **Prueba correcta:** Windlass → Dolor al extender pasivamente el hallux en carga.
+- **Mecanismo:** Muchas horas de pie sobre superficie dura.
+- **Prueba:** Windlass → Dolor al extender pasivamente el hallux en carga.
 - **Tratamiento correcto** (fase crónica): Ejercicio de fortalecimiento de la musculatura intrínseca del pie y del tríceps sural, más manejo de la carga diaria.
-- **Distractores:** Reposo absoluto / Solo plantillas, sin ejercicio / Infiltración repetida como primera opción
 - **Se le enseña:** _El dolor de los primeros pasos de la mañana es el rasgo más característico del cuadro._
 
-### Cervicalgia mecánica  `Cervical`
+### 💻 Cervicalgia mecánica  `Cervical`
 - **Paciente:** Daniela, 33 años, teleoperadora — dolor de cuello y hombros al final del día
-- **Prueba correcta:** Slump → Negativo: no reproduce síntomas neurales a distancia.
+- **Mecanismo:** Muchas horas frente al computador, sin trauma.
+- **Prueba:** Slump → Negativo: no reproduce síntomas neurales a distancia.
 - **Tratamiento correcto** (fase subaguda): Ejercicio de resistencia de flexores profundos y musculatura escapular, más pausas activas en la jornada.
-- **Distractores:** Collar cervical de uso permanente / Reposo y evitar mover el cuello / Manipulación cervical sin evaluación previa
 - **Se le enseña:** _Sin signos neurológicos ni banderas rojas, se maneja como dolor mecánico: movimiento y carga, no inmovilización._
 
-### EPOC reagudizado  `Respiratorio`
+### 🚬 EPOC reagudizado  `Respiratorio`
 - **Paciente:** Óscar, 68 años, jubilado, ex fumador — se ahoga más que lo habitual y tiene mucha secreción
-- **Prueba correcta:** _(no aplica)_ → Auscultación con ruidos agregados y espiración prolongada.
+- **Mecanismo:** Cuadro respiratorio de una semana sobre una EPOC conocida.
+- **Prueba:** _(no aplica)_ → Auscultación con ruidos agregados y espiración prolongada.
 - **Tratamiento correcto** (fase aguda): Técnicas de higiene bronquial para movilizar secreciones, reeducación del patrón respiratorio y ejercicio dosificado según tolerancia.
-- **Distractores:** Reposo absoluto hasta que ceda la disnea / Ejercicio aeróbico intenso desde el ingreso / Solo aerosolterapia, sin kinesiterapia
 - **Se le enseña:** _En EPOC el objetivo kinésico es la permeabilidad de la vía aérea y la tolerancia al esfuerzo, no "curar" la obstrucción._
 
-### ACV con hemiparesia  `Neurológico`
+### 👵 ACV con hemiparesia  `Neurológico`
 - **Paciente:** Rosa, 71 años, jubilada — debilidad de un lado del cuerpo tras un accidente cerebrovascular
-- **Prueba correcta:** _(no aplica)_ → Disminución del control motor selectivo del lado afectado.
+- **Mecanismo:** ACV isquémico hace dos semanas.
+- **Prueba:** _(no aplica)_ → Disminución del control motor selectivo del lado afectado.
 - **Tratamiento correcto** (fase subaguda): Entrenamiento orientado a tareas funcionales con alta repetición, trabajo de equilibrio y cuidado del hombro afectado.
-- **Distractores:** Esperar a que se recupere solo antes de intervenir / Trabajar solo fuerza analítica en camilla / Movilizar el hombro afectado en abducción sin control escapular
 - **Se le enseña:** _La evidencia favorece el entrenamiento orientado a tareas con muchas repeticiones por sobre el trabajo analítico aislado._
 
 ---
 ## 2. Razonamiento diagnóstico
 
-Para cada caso: contra qué hipótesis compite y qué revela cada acción. **↑** = hace más probable · **↓** = descarta.
+**↑** hace más probable · **↓** descarta.
 
-### Dolor lumbar con banderas rojas
+### 🤠 Rigidez de muñeca tras fractura de radio distal
+Compite contra: Tenosinovitis de De Quervain, Síndrome del túnel carpiano
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Empezó al sacarle el yeso, hace dos semanas. | Rigidez | Tenosinovitis, Síndrome |
+| ¿Hubo golpe o caída? | Caída del caballo con apoyo de la mano, hace dos meses. | Rigidez | Tenosinovitis, Síndrome |
+| Antecedentes de salud | Seis semanas inmovilizado con yeso. | Rigidez | Tenosinovitis |
+| Rango de movimiento activo | Rango ACTIVO limitado en todas las direcciones. | Rigidez | Tenosinovitis |
+| Rango de movimiento pasivo | El rango PASIVO está igual de limitado: la articulación está rígida. | Rigidez | Tenosinovitis, Síndrome |
+| Palpación | Molestia difusa, sin dolor puntual en la estiloides ni en un tendón. | Rigidez | Tenosinovitis |
+| Tamizaje neurológico | Sin hormigueo ni pérdida de sensibilidad. | Rigidez | Síndrome |
+| Inspección | Mano algo hinchada y con la piel distinta, típico tras inmovilización. | Rigidez | — |
+
+### 👷 Lumbago crónico ocupacional
+Compite contra: Radiculopatía lumbar, Lumbago mecánico inespecífico
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Más de un año, va y viene, sin un accidente que lo explique. | Lumbago | Lumbago |
+| ¿Hubo golpe o caída? | Ningún golpe ni esfuerzo puntual. | Lumbago | Lumbago |
+| ¿El dolor se corre a otra parte? | El dolor se queda en la zona lumbar, no baja de la rodilla. | Lumbago, Lumbago | Radiculopatía |
+| Tamizaje neurológico | Tamizaje neurológico normal. | Lumbago, Lumbago | Radiculopatía |
+| ¿Qué lo empeora y qué lo alivia? | Peor al final del turno de doce horas y los días de más carga. | Lumbago | Lumbago |
+| Preguntar por síntomas de alarma | Sin banderas rojas. | Lumbago, Lumbago | — |
+| Antecedentes de salud | Años de turnos largos, vibración y levantar peso. | Lumbago | Lumbago |
+
+### ⛹️ Tendinopatía rotuliana (rodilla de saltador)
+Compite contra: Síndrome de dolor patelofemoral, Lesión meniscal
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Subió mucho los saltos en los entrenamientos antes del campeonato. | Tendinopatía | Lesión |
+| ¿Hubo golpe o caída? | Sin torsión ni golpe. | Tendinopatía, Síndrome | Lesión |
+| Palpación | Dolor PUNTUAL en el polo inferior de la rótula. | Tendinopatía | Síndrome, Lesión |
+| ¿Qué lo empeora y qué lo alivia? | Duele al saltar y al caer; estar sentado no le molesta. | Tendinopatía | Síndrome |
+| Inspección | Sin derrame articular. | Tendinopatía, Síndrome | Lesión |
+| Rango de movimiento activo | Rigidez al partir que cede al entrar en calor, sin bloqueos. | Tendinopatía | Lesión |
+
+### 🕺 Luxación de hombro (primer episodio)
+Compite contra: Síndrome de pinzamiento subacromial, Tendinopatía del supraespinoso
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Episodio agudo el fin de semana: se le salió el hombro y se lo redujeron en urgencias. | Luxación | Síndrome, Tendinopatía |
+| ¿Hubo golpe o caída? | Caída con el brazo estirado hacia atrás. | Luxación | Síndrome, Tendinopatía |
+| ¿Qué lo empeora y qué lo alivia? | Siente que el hombro se le va a volver a salir al levantar el brazo hacia atrás. | Luxación | Síndrome, Tendinopatía |
+| Fuerza muscular | Fuerza limitada por dolor y por miedo, no por debilidad real. | Luxación | Tendinopatía |
+| Rango de movimiento activo | Evita activamente la rotación externa en abducción. | Luxación | Síndrome |
+| Inspección | Sin atrofia ni deformidad tras la reducción. | Luxación | Tendinopatía |
+
+### 🧓 Dolor lumbar con banderas rojas
 Compite contra: Lumbago mecánico inespecífico, Radiculopatía lumbar
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -163,7 +240,7 @@ Compite contra: Lumbago mecánico inespecífico, Radiculopatía lumbar
 | Tamizaje neurológico | Sin déficit focal por ahora. | Dolor, Lumbago | Radiculopatía |
 | ¿El dolor se corre a otra parte? | Dolor lumbar profundo, no sigue un dermatoma. | Dolor, Lumbago | Radiculopatía |
 
-### Síndrome de pinzamiento subacromial
+### 🧑‍🎨 Síndrome de pinzamiento subacromial
 Compite contra: Tendinopatía del supraespinoso, Capsulitis adhesiva (hombro congelado), Cervicalgia mecánica
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -178,7 +255,7 @@ Compite contra: Tendinopatía del supraespinoso, Capsulitis adhesiva (hombro con
 | Fuerza muscular | Fuerza prácticamente conservada. | Síndrome | Tendinopatía |
 | Tamizaje neurológico | Sin alteraciones neurológicas. | Síndrome, Tendinopatía, Capsulitis | Cervicalgia |
 
-### Capsulitis adhesiva (hombro congelado)
+### 👩‍💼 Capsulitis adhesiva (hombro congelado)
 Compite contra: Síndrome de pinzamiento subacromial, Tendinopatía del supraespinoso, Cervicalgia mecánica
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -192,7 +269,7 @@ Compite contra: Síndrome de pinzamiento subacromial, Tendinopatía del supraesp
 | Fuerza muscular | Fuerza conservada en lo poco que puede mover. | Capsulitis | Tendinopatía |
 | Tamizaje neurológico | Sin compromiso neurológico. | Capsulitis | Cervicalgia |
 
-### Tendinopatía del supraespinoso
+### 🏊‍♀️ Tendinopatía del supraespinoso
 Compite contra: Síndrome de pinzamiento subacromial, Capsulitis adhesiva (hombro congelado), Cervicalgia mecánica
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -206,7 +283,7 @@ Compite contra: Síndrome de pinzamiento subacromial, Capsulitis adhesiva (hombr
 | Palpación | Dolor a la palpación del troquíter. | Tendinopatía, Síndrome | Cervicalgia |
 | Ecografía | Engrosamiento del tendón supraespinoso, sin rotura completa. | Tendinopatía | Síndrome, Capsulitis, Cervicalgia |
 
-### Epicondilalgia lateral (codo de tenista)
+### 🪚 Epicondilalgia lateral (codo de tenista)
 Compite contra: Síndrome del túnel carpiano, Tenosinovitis de De Quervain
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -218,7 +295,7 @@ Compite contra: Síndrome del túnel carpiano, Tenosinovitis de De Quervain
 | Tamizaje neurológico | Sin hormigueos ni alteración de la sensibilidad. | Epicondilalgia | Síndrome |
 | ¿Le duele de noche? | No despierta de noche. | Epicondilalgia, Tenosinovitis | Síndrome |
 
-### Síndrome del túnel carpiano
+### ⌨️ Síndrome del túnel carpiano
 Compite contra: Epicondilalgia lateral (codo de tenista), Cervicalgia mecánica
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -230,7 +307,7 @@ Compite contra: Epicondilalgia lateral (codo de tenista), Cervicalgia mecánica
 | Tamizaje neurológico | Alteración de la sensibilidad en el territorio del nervio mediano. | Síndrome | Epicondilalgia |
 | Inspección | Leve atrofia de la eminencia tenar. | Síndrome | Cervicalgia, Epicondilalgia |
 
-### Tenosinovitis de De Quervain
+### 🤱 Tenosinovitis de De Quervain
 Compite contra: Síndrome del túnel carpiano, Epicondilalgia lateral (codo de tenista)
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -241,7 +318,7 @@ Compite contra: Síndrome del túnel carpiano, Epicondilalgia lateral (codo de t
 | Tamizaje neurológico | Sin hormigueo ni compromiso sensitivo. | Tenosinovitis, Epicondilalgia | Síndrome |
 | Inspección | Aumento de volumen sobre el primer compartimento dorsal. | Tenosinovitis | Síndrome |
 
-### Lumbago mecánico inespecífico
+### 📦 Lumbago mecánico inespecífico
 Compite contra: Radiculopatía lumbar, Síndrome de dolor trocantérico
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -254,7 +331,7 @@ Compite contra: Radiculopatía lumbar, Síndrome de dolor trocantérico
 | Preguntar por síntomas de alarma | Sin banderas rojas: no hay fiebre, baja de peso ni compromiso de esfínteres. | Lumbago, Radiculopatía | — |
 | Palpación | Dolor en la musculatura paravertebral; el trocánter mayor NO duele. | Lumbago | Radiculopatía, Síndrome |
 
-### Radiculopatía lumbar
+### 🚚 Radiculopatía lumbar
 Compite contra: Lumbago mecánico inespecífico, Síndrome de dolor trocantérico
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -266,7 +343,7 @@ Compite contra: Lumbago mecánico inespecífico, Síndrome de dolor trocantéric
 | Preguntar por síntomas de alarma | Sin compromiso de esfínteres ni anestesia en silla de montar. | Radiculopatía, Lumbago | — |
 | Fuerza muscular | Debilidad segmentaria concordante con la raíz. | Radiculopatía | Lumbago, Síndrome |
 
-### Síndrome de dolor trocantérico
+### 👩‍🏫 Síndrome de dolor trocantérico
 Compite contra: Radiculopatía lumbar, Lumbago mecánico inespecífico
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -278,7 +355,7 @@ Compite contra: Radiculopatía lumbar, Lumbago mecánico inespecífico
 | Tamizaje neurológico | Sin déficit neurológico. | Síndrome, Lumbago | Radiculopatía |
 | ¿Qué lo empeora y qué lo alivia? | Empeora al subir escaleras y al cruzar la pierna. | Síndrome | Lumbago |
 
-### Lesión del ligamento cruzado anterior
+### ⚽ Lesión del ligamento cruzado anterior
 Compite contra: Lesión meniscal, Síndrome de dolor patelofemoral
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -290,7 +367,7 @@ Compite contra: Lesión meniscal, Síndrome de dolor patelofemoral
 | Rango de movimiento activo | Limitación por dolor y derrame, sin bloqueo mecánico. | Lesión | Lesión |
 | Fuerza muscular | Inhibición del cuádriceps. | Lesión, Lesión | — |
 
-### Lesión meniscal
+### 🥅 Lesión meniscal
 Compite contra: Lesión del ligamento cruzado anterior, Síndrome de dolor patelofemoral
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -301,7 +378,7 @@ Compite contra: Lesión del ligamento cruzado anterior, Síndrome de dolor patel
 | Palpación | Dolor en la interlínea articular. | Lesión | Síndrome, Lesión |
 | Rango de movimiento activo | Bloqueo mecánico a la extensión completa. | Lesión | Síndrome |
 
-### Síndrome de dolor patelofemoral
+### 🏃‍♀️ Síndrome de dolor patelofemoral
 Compite contra: Lesión meniscal, Lesión del ligamento cruzado anterior
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -313,7 +390,7 @@ Compite contra: Lesión meniscal, Lesión del ligamento cruzado anterior
 | Palpación | Dolor peripatelar difuso, interlínea indolora. | Síndrome | Lesión |
 | Rango de movimiento activo | Valgo dinámico y mal control de la pelvis en apoyo monopodal. | Síndrome | Lesión, Lesión |
 
-### Tendinopatía aquiliana
+### 🏃 Tendinopatía aquiliana
 Compite contra: Esguince lateral de tobillo, Fascitis plantar
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -324,7 +401,7 @@ Compite contra: Esguince lateral de tobillo, Fascitis plantar
 | Palpación | Engrosamiento y dolor en el tercio medio del tendón. | Tendinopatía | Fascitis, Esguince |
 | Inspección | Sin hematoma ni inflamación lateral. | Tendinopatía, Fascitis | Esguince |
 
-### Esguince lateral de tobillo
+### 🏀 Esguince lateral de tobillo
 Compite contra: Tendinopatía aquiliana, Fascitis plantar
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -335,7 +412,7 @@ Compite contra: Tendinopatía aquiliana, Fascitis plantar
 | Palpación | Dolor sobre el ligamento peroneoastragalino anterior. | Esguince | Tendinopatía |
 | Radiografía | Sin fractura. | Esguince | — |
 
-### Fascitis plantar
+### 🛒 Fascitis plantar
 Compite contra: Tendinopatía aquiliana, Esguince lateral de tobillo
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -346,7 +423,7 @@ Compite contra: Tendinopatía aquiliana, Esguince lateral de tobillo
 | ¿Hubo golpe o caída? | Sin torcedura. | Fascitis, Tendinopatía | Esguince |
 | Inspección | Sin hematoma ni deformidad. | Fascitis, Tendinopatía | Esguince |
 
-### Cervicalgia mecánica
+### 💻 Cervicalgia mecánica
 Compite contra: Síndrome de pinzamiento subacromial, Radiculopatía lumbar, Capsulitis adhesiva (hombro congelado)
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -360,7 +437,7 @@ Compite contra: Síndrome de pinzamiento subacromial, Radiculopatía lumbar, Cap
 | Palpación | Musculatura cervical y de trapecios sensible. | Cervicalgia | Síndrome |
 | Preguntar por síntomas de alarma | Sin banderas rojas. | Cervicalgia | — |
 
-### EPOC reagudizado
+### 🚬 EPOC reagudizado
 Compite contra: ACV con hemiparesia
 
 | Acción | Hallazgo | ↑ | ↓ |
@@ -371,7 +448,7 @@ Compite contra: ACV con hemiparesia
 | ¿Qué lo empeora y qué lo alivia? | Tos con secreción difícil de eliminar. | EPOC | ACV |
 | Tamizaje neurológico | Sin déficit motor. | EPOC | ACV |
 
-### ACV con hemiparesia
+### 👵 ACV con hemiparesia
 Compite contra: EPOC reagudizado
 
 | Acción | Hallazgo | ↑ | ↓ |
