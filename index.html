@@ -967,7 +967,8 @@
   .cl-plata{font-family:'Playfair Display',serif;font-size:1.9rem;color:#2f4858;line-height:1;}
   .cl-sub{font-size:.76rem;color:#4a6274;margin-top:3px;}
   .cl-tabs{display:flex;gap:8px;margin-bottom:12px;}
-  .cl-tabs.chicas{margin-bottom:14px;}
+  .cl-tabs.chicas{margin-bottom:14px;flex-wrap:wrap;}
+  .cl-tabs.chicas .cl-tab{flex:1 1 calc(50% - 4px);font-size:.8rem;}
   .cl-tab{flex:1;background:var(--blanco);border:1.5px solid var(--crema-oscuro);border-radius:999px;padding:9px 6px;
     font-family:'Jost',sans-serif;font-size:.82rem;color:var(--gris);cursor:pointer;transition:all .18s;}
   .cl-tab.activa{background:#5b8aa6;border-color:#5b8aa6;color:#fff;font-weight:600;}
@@ -1042,6 +1043,10 @@
   .cl-nota{text-align:center;font-size:.68rem;color:var(--gris);font-style:italic;margin-top:14px;opacity:.8;}
   .cl-cargando{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     background:linear-gradient(160deg,#e9f0f4,#d7e3ea);color:#4b7d99;font-size:.9rem;letter-spacing:.3px;}
+  .cl-zona{position:absolute;left:14px;top:12px;z-index:2;background:rgba(255,255,255,.88);border-radius:999px;
+    padding:5px 13px;font-size:.72rem;color:#4b7d99;letter-spacing:.4px;font-weight:600;
+    box-shadow:0 4px 12px rgba(47,72,88,.12);}
+  .cl-zona:empty{display:none;}
   .cl-sel{position:absolute;left:12px;bottom:12px;background:rgba(255,255,255,.94);border-radius:14px;
     padding:9px 13px;box-shadow:0 6px 18px rgba(0,0,0,.18);opacity:0;transform:translateY(8px);
     transition:opacity .18s,transform .18s;pointer-events:none;max-width:70%;}
@@ -1090,6 +1095,146 @@
   .cl-barra-mini{height:4px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;margin-top:5px;}
   .cl-barra-mini div{height:100%;background:#7fae96;border-radius:999px;transition:width .4s;}
   .jx-card.clinica{background:linear-gradient(150deg,#6da3c0,#43708c);}
+
+  /* --- la clínica como lugar: jornada, sala de espera, eventos, historia --- */
+  .cl-top::after{content:"";position:absolute;inset:0 0 auto 0;height:78px;pointer-events:none;
+    background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,0));}
+  .cl-hud,.cl-sel{z-index:2;}
+  .cl-jornada{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 2px 12px;}
+  .cl-jornada-dia{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--tinta);}
+  .cl-jornada-dia small{display:block;font-family:'Jost',sans-serif;font-size:.72rem;color:var(--gris);margin-top:1px;}
+  .cl-jornada-sol{font-size:1.4rem;opacity:.9;}
+  .cl-evento{display:flex;gap:11px;align-items:flex-start;border-radius:16px;padding:12px 14px;margin-bottom:14px;
+    background:linear-gradient(140deg,#fdf3e2,#f8e6cd);border:1px solid #ecd3ab;
+    animation:clEntra .35s ease both;}
+  .cl-evento-emo{font-size:1.5rem;line-height:1.1;}
+  .cl-evento-nom{font-family:'Playfair Display',serif;font-size:.98rem;color:#8a6224;}
+  .cl-evento-desc{font-size:.78rem;color:#8a7355;line-height:1.45;margin-top:2px;}
+  .cl-evento-quedan{font-size:.68rem;color:#a68a5f;margin-top:5px;letter-spacing:.3px;text-transform:uppercase;}
+  @keyframes clEntra{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+  .cl-espera{display:flex;flex-direction:column;gap:10px;}
+  .cl-pac{display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;
+    background:var(--blanco);border:1.5px solid var(--crema-oscuro);border-radius:17px;padding:12px 14px;
+    font-family:'Jost',sans-serif;transition:transform .12s,border-color .18s,box-shadow .18s;}
+  .cl-pac:hover{border-color:#5b8aa6;box-shadow:0 8px 20px rgba(91,138,166,.18);}
+  .cl-pac:active{transform:scale(.985);}
+  .cl-pac.vuelve{border-color:#c8a86d;background:linear-gradient(140deg,#fffaf1,var(--blanco));}
+  .cl-pac-emo{width:48px;height:48px;flex:0 0 48px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-size:1.55rem;background:#eef4f7;}
+  .cl-pac-info{flex:1;min-width:0;}
+  .cl-pac-nom{font-size:.97rem;color:var(--tinta);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  .cl-pac-mot{font-size:.79rem;color:var(--gris);line-height:1.4;margin-top:3px;}
+  .cl-pac-meta{font-size:.68rem;color:#8fa3b0;margin-top:5px;letter-spacing:.2px;}
+  .cl-badge{font-size:.62rem;text-transform:uppercase;letter-spacing:.6px;border-radius:999px;padding:2px 8px;
+    background:#e8f0f4;color:#4b7d99;font-weight:600;}
+  .cl-badge.oro{background:#f6e6c6;color:#8a6224;}
+  .cl-badge.verde{background:#e2f0e4;color:#3f6b4d;}
+  .cl-vacio{text-align:center;color:var(--gris);font-size:.82rem;font-style:italic;padding:18px 10px;
+    border:1.5px dashed var(--crema-oscuro);border-radius:16px;}
+  .cl-ficha-ctx{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;}
+  .cl-ficha-ctx span{font-size:.68rem;background:var(--crema);color:var(--gris);border-radius:999px;padding:3px 9px;}
+  .cl-historia{margin-top:10px;background:linear-gradient(140deg,#fffaf1,#f8f1e4);border:1px solid #ecdcc0;
+    border-radius:13px;padding:10px 12px;}
+  .cl-historia b{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.7px;color:#a3823f;margin-bottom:4px;}
+  .cl-historia p{margin:0;font-size:.81rem;color:#7a6440;line-height:1.5;font-style:italic;}
+  .cl-historia em{display:block;font-style:normal;font-size:.72rem;color:#a3823f;margin-top:5px;}
+  /* --- urgencias, noche, misiones, personalidad, adherencia --- */
+  .cl-plata.rojo,.cl-sub .rojo{color:#c0392b;}
+  .cl-rojo{background:linear-gradient(140deg,#fdeceb,#f9dedb);border:1px solid #eec2bc;border-radius:15px;
+    padding:11px 14px;margin-bottom:12px;font-size:.8rem;color:#a03c2e;line-height:1.5;}
+  .cl-urgencia{display:block;width:100%;text-align:left;background:linear-gradient(140deg,#fdecea,#fadbd7);
+    border:2px solid #e07a6a;border-radius:18px;padding:12px 14px;margin-bottom:14px;cursor:pointer;
+    font-family:'Jost',sans-serif;animation:clLate 1.5s ease-in-out infinite;}
+  .cl-urgencia:active{transform:scale(.985);}
+  @keyframes clLate{0%,100%{box-shadow:0 0 0 0 rgba(224,122,106,.5);}50%{box-shadow:0 0 0 9px rgba(224,122,106,0);}}
+  .cl-urgencia-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+  .cl-urgencia-top span:first-child{font-family:'Playfair Display',serif;color:#b1392a;font-size:1rem;}
+  .cl-urgencia-reloj{font-variant-numeric:tabular-nums;background:#b1392a;color:#fff;border-radius:999px;
+    padding:3px 11px;font-size:.8rem;font-weight:600;}
+  .cl-urgencia-cuerpo{display:flex;gap:12px;align-items:center;}
+  .cl-pac-emo.urg{background:#f7d3cd;}
+  .cl-urgente-banner,.cl-noche-banner{border-radius:13px;padding:9px 13px;margin-bottom:10px;font-size:.82rem;
+    text-align:center;letter-spacing:.3px;}
+  .cl-urgente-banner{background:#fadbd7;color:#a03c2e;font-weight:600;}
+  .cl-noche-banner{background:#e2e2f2;color:#4a4a7a;}
+  .cl-ficha.urgente{border-left-color:#e07a6a;}
+  .cl-noche-btn{width:100%;background:linear-gradient(140deg,#3f4a72,#2b3350);color:#fff;border:none;border-radius:17px;
+    padding:13px;margin-bottom:14px;cursor:pointer;font-family:'Jost',sans-serif;font-size:.95rem;}
+  .cl-noche-btn small{display:block;font-size:.72rem;opacity:.82;margin-top:3px;line-height:1.4;}
+  .cl-noche-btn:active{transform:scale(.985);}
+  .cl-misiones{display:flex;flex-direction:column;gap:8px;}
+  .cl-mision{display:flex;align-items:center;gap:11px;background:var(--blanco);border:1px solid var(--crema-oscuro);
+    border-radius:14px;padding:9px 13px;}
+  .cl-mision.lista{border-color:#7fae96;background:linear-gradient(140deg,#f2faf4,var(--blanco));cursor:pointer;}
+  .cl-mision.cobrada{opacity:.55;}
+  .cl-mision-info{flex:1;min-width:0;}
+  .cl-mision-info b{display:block;font-size:.88rem;color:var(--tinta);font-weight:600;}
+  .cl-mision-info small{display:block;font-size:.72rem;color:var(--gris);line-height:1.35;margin-top:1px;}
+  .cl-mision-premio{font-size:.78rem;color:#4b7d99;white-space:nowrap;font-weight:600;}
+  .cl-mision.lista .cl-mision-premio{background:#7fae96;color:#fff;border-radius:999px;padding:4px 12px;}
+  .cl-badge.sobrio{background:var(--crema);color:var(--gris);font-weight:500;text-transform:none;letter-spacing:0;}
+  .cl-badge.roja{background:#fadbd7;color:#a03c2e;}
+  .cl-item.alerta{border-color:#e07a6a;box-shadow:0 6px 18px rgba(224,122,106,.22);}
+  .cl-animo{font-size:.8rem;color:var(--gris);font-style:italic;margin-bottom:8px;}
+  .cl-rasgo{display:flex;gap:10px;align-items:flex-start;background:#f4f1fa;border:1px solid #ddd5ef;
+    border-radius:13px;padding:9px 12px;margin-top:9px;}
+  .cl-rasgo.chico{background:var(--crema);border-color:var(--crema-oscuro);}
+  .cl-rasgo-emo{font-size:1.2rem;line-height:1.2;}
+  .cl-rasgo b{display:block;font-size:.85rem;color:var(--tinta);font-weight:600;}
+  .cl-rasgo small{display:block;font-size:.75rem;color:var(--gris);line-height:1.4;margin-top:1px;}
+  .cl-creencia{margin-top:9px;background:#fff6e6;border:1px solid #ecd9b4;border-radius:12px;padding:9px 12px;
+    font-size:.79rem;color:#8a6224;line-height:1.45;}
+  .cl-adh-fila{display:flex;align-items:center;gap:9px;margin-top:9px;font-size:.72rem;color:var(--gris);}
+  .cl-adh{flex:1;height:7px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;}
+  .cl-adh div{height:100%;background:#7fae96;border-radius:999px;transition:width .4s;}
+  .cl-adh div.media{background:#e0a05a;}
+  .cl-adh div.baja{background:#d1705f;}
+  .cl-alarma{background:linear-gradient(140deg,#fdecea,#fadbd7);border:1.5px solid #e8a89c;border-radius:16px;
+    padding:12px 14px;margin-bottom:12px;}
+  .cl-alarma b{display:block;font-family:'Playfair Display',serif;color:#b1392a;font-size:.98rem;margin-bottom:4px;}
+  .cl-alarma p{margin:0;font-size:.84rem;color:#8a4034;line-height:1.5;}
+  .cl-opc.educar{border-style:dashed;border-color:#b9cdbe;}
+  .cl-acred-btn{background:#5b8aa6;color:#fff;border-radius:999px;padding:5px 13px;font-size:.75rem;cursor:pointer;}
+  .cl-nota.izq{text-align:left;font-style:normal;margin:0 2px 9px;opacity:1;line-height:1.5;}
+
+  /* --- examen y álbum --- */
+  .cl-examen-portada{text-align:center;padding:6px 2px;}
+  .cl-examen-emo{font-size:2.4rem;}
+  .cl-examen-tit{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--tinta);margin-top:4px;}
+  .cl-examen-portada p{font-size:.83rem;color:var(--gris);line-height:1.55;margin:8px 6px 14px;}
+  .cl-temas{display:flex;flex-direction:column;gap:7px;}
+  .cl-tema{display:flex;align-items:center;gap:9px;font-size:.78rem;color:var(--gris);}
+  .cl-tema span{width:72px;text-align:left;flex:0 0 72px;}
+  .cl-tema-barra{flex:1;height:7px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;}
+  .cl-tema-barra div{height:100%;background:#7fae96;border-radius:999px;}
+  .cl-tema-barra div.medio{background:#e0a05a;}
+  .cl-tema-barra div.mal{background:#d1705f;}
+  .cl-tema b{width:38px;text-align:right;color:#4b7d99;flex:0 0 38px;}
+  .cl-ex-top{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--gris);margin-bottom:7px;}
+  .cl-ex-reloj{font-variant-numeric:tabular-nums;background:#e8f0f4;color:#4b7d99;border-radius:999px;padding:3px 11px;font-weight:600;}
+  .cl-ex-reloj.poco{background:#fadbd7;color:#a03c2e;}
+  .cl-ex-barra{height:5px;background:var(--crema-oscuro);border-radius:999px;overflow:hidden;margin-bottom:12px;}
+  .cl-ex-barra div{height:100%;background:#5b8aa6;border-radius:999px;transition:width .3s;}
+  .cl-ex-tema{font-size:.66rem;text-transform:uppercase;letter-spacing:1px;color:#4b7d99;margin-bottom:5px;}
+  .cl-ex-preg{font-family:'Playfair Display',serif;font-size:1.08rem;color:var(--tinta);line-height:1.4;margin-bottom:13px;}
+  .cl-opc.correcta{border-color:#7fae96;background:#f2faf4;}
+  .cl-opc.incorrecta{border-color:#d1705f;background:#fdeceb;}
+  .cl-album-cab{background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:16px;padding:13px 15px;
+    font-size:.88rem;color:var(--tinta);}
+  .cl-album-cab b{color:#4b7d99;}
+  .cl-album-cab small{display:block;font-size:.72rem;color:var(--gris);margin-top:6px;line-height:1.4;}
+  .cl-album{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px;}
+  .cl-ficha-mini{display:flex;flex-direction:column;align-items:center;gap:3px;background:var(--blanco);
+    border:1.5px solid var(--crema-oscuro);border-radius:14px;padding:11px 8px;cursor:pointer;
+    font-family:'Jost',sans-serif;text-align:center;transition:transform .12s,border-color .15s;}
+  .cl-ficha-mini:active{transform:scale(.97);}
+  .cl-ficha-mini:not(.bloqueada):hover{border-color:#5b8aa6;}
+  .cl-ficha-mini.bloqueada{opacity:.45;cursor:default;background:var(--crema);}
+  .cl-ficha-mini-emo{font-size:1.5rem;}
+  .cl-ficha-mini-nom{font-size:.8rem;color:var(--tinta);}
+  .cl-ficha-mini-dx{font-size:.64rem;color:var(--gris);line-height:1.25;}
+  .cl-ficha-mini .cl-badge{margin-top:3px;font-size:.55rem;}
+
   @media (max-width:400px){ .cl-lienzo{height:210px;} .cl-plata{font-size:1.6rem;} }
 
   @media (prefers-reduced-motion: reduce){
@@ -4236,6 +4381,47 @@ function asegurarJuegos(){
   if(!Array.isArray(k.activos)) k.activos = [];
   if(typeof k.altas !== 'number' || !isFinite(k.altas) || k.altas < 0) k.altas = 0;
   if(!k.vistos || typeof k.vistos !== 'object' || Array.isArray(k.vistos)) k.vistos = {};
+  // sala de espera, memoria de pacientes y evento del día (se agregaron después)
+  if(!Array.isArray(k.sala)) k.sala = [];
+  k.sala = k.sala.filter(x => x && typeof x === 'object' && KIN_CASOS.some(c => c.id === x.id));
+  if(!k.hist || typeof k.hist !== 'object' || Array.isArray(k.hist)) k.hist = {};
+  for(const id of Object.keys(k.hist)){
+    const h = k.hist[id];
+    if(!h || typeof h !== 'object' || !KIN_CASOS.some(c => c.id === id)){ delete k.hist[id]; continue; }
+    for(const campo of ['veces','altas','recaidas','sesiones','ultima']){
+      if(typeof h[campo] !== 'number' || !isFinite(h[campo]) || h[campo] < 0) h[campo] = 0;
+    }
+  }
+  if(k.evento && (typeof k.evento !== 'object' || !CL_EVENTOS.some(e => e.id === k.evento.id) ||
+     typeof k.evento.restantes !== 'number' || k.evento.restantes <= 0)) k.evento = null;
+  if(typeof k.evRoll !== 'number' || !isFinite(k.evRoll)) k.evRoll = -1;
+  // urgencias, turno de noche, acreditación, misiones y examen
+  if(k.urgencia && (typeof k.urgencia !== 'object' || !KIN_CASOS.some(c => c.id === k.urgencia.id))) k.urgencia = null;
+  if(typeof k.urRoll !== 'number' || !isFinite(k.urRoll)) k.urRoll = -1;
+  if(!Array.isArray(k.acred)) k.acred = ['trauma'];
+  if(!k.acred.includes('trauma')) k.acred.push('trauma');
+  k.acred = k.acred.filter(x => CL_ESPECIALIDADES[x]);
+  // ojo: `quedan === 0` es válido — es el turno recién terminado que todavía
+  // no pasa por clCerrarNoche(). Si se borra acá, el récord nunca se guarda.
+  if(k.noche && (typeof k.noche !== 'object' || typeof k.noche.quedan !== 'number' || k.noche.quedan < 0)) k.noche = null;
+  for(const campo of ['nocheMejor','racha','mejorRacha','rojo']){
+    if(typeof k[campo] !== 'number' || !isFinite(k[campo]) || k[campo] < 0) k[campo] = 0;
+  }
+  if(!k.examen || typeof k.examen !== 'object') k.examen = { mejor:0, intentos:0, tema:{} };
+  if(typeof k.examen.mejor !== 'number' || !isFinite(k.examen.mejor)) k.examen.mejor = 0;
+  if(typeof k.examen.intentos !== 'number' || !isFinite(k.examen.intentos)) k.examen.intentos = 0;
+  if(!k.examen.tema || typeof k.examen.tema !== 'object') k.examen.tema = {};
+  if(!k.misiones || typeof k.misiones !== 'object') k.misiones = { dia:null, lista:[] };
+  if(!Array.isArray(k.misiones.lista)) k.misiones.lista = [];
+  // los pacientes en tratamiento ganaron adherencia y rasgo después
+  k.activos.forEach(pac => {
+    if(typeof pac.adh !== 'number' || !isFinite(pac.adh)) pac.adh = CL_ADH_INICIAL;
+    pac.adh = Math.max(0, Math.min(100, pac.adh));
+    if(pac.rasgo && !CL_RASGOS.some(r => r.id === pac.rasgo)) pac.rasgo = null;
+    if(pac.alarma && !CL_ALARMAS.some(a => a.id === pac.alarma)) pac.alarma = null;
+    if(typeof pac.faltas !== 'number' || !isFinite(pac.faltas) || pac.faltas < 0) pac.faltas = 0;
+    if(typeof pac.visto !== 'number' || !isFinite(pac.visto)) pac.visto = Date.now();
+  });
 }
 
 function jxNivel(){ asegurarJuegos(); return Math.floor(datos.juegos.mascota.xp / JX_NIVEL_XP) + 1; }
@@ -5873,6 +6059,14 @@ const KIN_PRUEBAS = [
   { id:'thompson',  nom:'Thompson',             zona:'tobillo',  como:'En prono se comprime la pantorrilla y se observa la flexión plantar.',        sug:'rotura completa del tendón de Aquiles' },
   { id:'cajon_ant', nom:'Cajón anterior de tobillo', zona:'tobillo', como:'Se tracciona el retropié hacia anterior con el tobillo en leve flexión plantar.', sug:'insuficiencia del ligamento peroneoastragalino anterior' },
   { id:'windlass',  nom:'Windlass',             zona:'pie',      como:'Extensión pasiva del hallux en carga.',                                       sug:'fascitis plantar' },
+  { id:'spurling',  nom:'Spurling',             zona:'cervical', como:'Extensión, inclinación y rotación cervical hacia el lado sintomático, con compresión axial suave.', sug:'radiculopatía cervical' },
+  { id:'distracc',  nom:'Distracción cervical', zona:'cervical', como:'Se tracciona suavemente la cabeza hacia arriba y se pregunta si alivia.',      sug:'origen radicular cervical (si alivia)' },
+  { id:'noble',     nom:'Noble',                zona:'rodilla',  como:'Se comprime el cóndilo femoral lateral mientras se extiende la rodilla desde 90°.', sug:'síndrome de la cintilla iliotibial' },
+  { id:'thessaly',  nom:'Thessaly',             zona:'rodilla',  como:'En apoyo monopodal con 20° de flexión, el paciente rota el cuerpo sobre la rodilla.', sug:'lesión meniscal' },
+  { id:'iso90',     nom:'Flexión resistida 90-90', zona:'muslo', como:'Cadera y rodilla a 90°; se resiste la flexión de rodilla y se compara con el otro lado.', sug:'lesión de isquiotibiales' },
+  { id:'tm6m',      nom:'Test de marcha de 6 minutos', zona:'respiratorio', como:'Se mide la distancia caminada en seis minutos, con saturación y disnea antes y después.', sug:'limitación de la tolerancia al esfuerzo' },
+  { id:'ashworth',  nom:'Escala de Ashworth modificada', zona:'neurológico', como:'Se moviliza pasivamente el segmento a velocidad rápida y se gradúa la resistencia.', sug:'espasticidad' },
+  { id:'pulltest',  nom:'Pull test (retropulsión)', zona:'neurológico', como:'De pie y avisado, se tracciona al paciente hacia atrás desde los hombros y se observa la reacción.', sug:'alteración de los reflejos posturales' },
 ];
 
 /* Cada caso es un paciente del juego. El jugador elige prueba,
@@ -6131,39 +6325,297 @@ const KIN_CASOS = [
     ttoMal:['Esperar a que se recupere solo antes de intervenir','Trabajar solo fuerza analítica en camilla','Movilizar el hombro afectado en abducción sin control escapular'],
     dato:'La evidencia favorece el entrenamiento orientado a tareas con muchas repeticiones por sobre el trabajo analítico aislado.',
   },
+
+  /* ---------- respiratorio ---------- */
+  {
+    id:'bronquiolitis', ava:'👶', pac:'Emilia', nom:'Bronquiolitis por VRS', esp:'respi', zona:'Respiratorio', dif:2,
+    edad:1, edadTxt:'8 meses', ocup:'lactante, control en la sala IRA', motivo:'Lleva tres días con tos y ahora respira agitada y come poco',
+    mecanismo:'Cuadro viral en pleno invierno; el hermano mayor llegó resfriado del jardín.',
+    sintomas:['Sibilancias y espiración prolongada','Retracción costal y aleteo nasal','Se cansa al mamar y come menos de la mitad'],
+    prueba:null, hallazgo:'Auscultación con sibilancias difusas y crepitaciones finas en ambos campos.',
+    fase:'aguda',
+    tto:'Kinesiterapia respiratoria con técnicas de flujo espiratorio lento adaptadas al lactante, educación a la mamá en signos de alarma y control en 24 horas.',
+    ttoMal:['Percusión y vibración enérgicas sobre el tórax','Nebulizar y mandarla a la casa sin control','Ejercicios de soplo dirigido'],
+    dato:'La vía aérea del lactante es pequeña y colapsable: se trabaja con flujo espiratorio lento, no con percusiones. Y lo que más cambia el desenlace es que la mamá reconozca los signos de alarma.',
+  },
+  {
+    id:'neumonia', ava:'🫁', pac:'Hugo', nom:'Neumonía adquirida en la comunidad', esp:'respi', zona:'Respiratorio', dif:2,
+    edad:74, ocup:'jubilado, tiene una huerta en Chillán', motivo:'Fiebre, tos con desgarro y se ahoga al caminar hasta el baño',
+    mecanismo:'Cuatro días de fiebre alta; llegó al SAPU y quedó hospitalizado.',
+    sintomas:['Fiebre y tos productiva','Crepitaciones localizadas en la base derecha','Baja la saturación al mínimo esfuerzo'],
+    prueba:null, hallazgo:'Crepitaciones localizadas en la base derecha y menor entrada de aire en esa zona.',
+    fase:'aguda',
+    tto:'Movilización precoz fuera de la cama, permeabilización de la vía aérea según secreción y reentrenamiento progresivo al esfuerzo.',
+    ttoMal:['Reposo en cama hasta que ceda la fiebre','Entrenamiento aeróbico intenso el primer día','Solo aerosolterapia, sin sacarlo de la cama'],
+    dato:'En el paciente hospitalizado el reposo en cama es un factor de riesgo por sí solo: la movilización precoz acorta la estadía y frena la pérdida de masa muscular.',
+  },
+  {
+    id:'postuci', ava:'🛏️', pac:'Marisol', nom:'Debilidad adquirida en UCI', esp:'respi', zona:'Respiratorio', dif:3,
+    edad:58, ocup:'profesora, estuvo tres semanas en la UCI', motivo:'Salió de la UCI y no puede levantarse sola de la silla',
+    mecanismo:'Neumonía grave con veinte días de ventilación mecánica y sedación.',
+    sintomas:['Debilidad simétrica y proximal en las cuatro extremidades','Se agota al hablar o al sentarse en el borde de la cama','Perdió mucha masa muscular'],
+    prueba:'tm6m', hallazgo:'Camina poco más de 200 metros en seis minutos y debe detenerse dos veces por fatiga.',
+    fase:'subaguda',
+    tto:'Reentrenamiento de fuerza progresivo y trabajo aeróbico dosificado por síntomas, avanzando de sedente a bípedo y a la marcha.',
+    ttoMal:['Esperar a que recupere fuerza sola antes de intervenir','Entrenamiento de alta intensidad desde la primera sesión','Solo ejercicios respiratorios en la cama'],
+    dato:'La debilidad adquirida en UCI es simétrica y proximal, y compromete también al diafragma. Se revierte con carga progresiva, nunca con reposo.',
+  },
+
+  /* ---------- neurológico ---------- */
+  {
+    id:'parkinson', ava:'🧑‍🦳', pac:'Guillermo', nom:'Enfermedad de Parkinson', esp:'neuro', zona:'Neurológico', dif:3,
+    edad:69, ocup:'jubilado, fue relojero', motivo:'Camina a pasitos y se le traban los pies al pasar por la puerta',
+    mecanismo:'Instalación lenta en dos años. Ya tiene diagnóstico neurológico y toma levodopa.',
+    sintomas:['Marcha a pasos cortos que se van acelerando','Bloqueos al pasar por lugares estrechos','Menos braceo y giros en bloque'],
+    prueba:'pulltest', hallazgo:'Da más de dos pasos hacia atrás para recuperarse: reflejos posturales alterados.',
+    fase:'crónica',
+    tto:'Entrenamiento de marcha con claves externas auditivas y visuales, trabajo de equilibrio y ejercicio de alta amplitud, sostenido en el tiempo.',
+    ttoMal:['Esperar a que la medicación haga todo el trabajo','Fuerza analítica en camilla, sin entrenar la marcha','Restringir la marcha para que no se caiga'],
+    dato:'Las claves externas —una cumbia con pulso marcado, líneas en el suelo— saltan el circuito que está fallando y alargan el paso al instante.',
+  },
+  {
+    id:'facial', ava:'😐', pac:'Constanza', nom:'Parálisis facial periférica (de Bell)', esp:'neuro', zona:'Neurológico', dif:2,
+    edad:34, ocup:'peluquera', motivo:'Amaneció con media cara caída y no puede cerrar un ojo',
+    mecanismo:'Apareció de un día para otro, sin trauma. Días antes tuvo un cuadro viral.',
+    sintomas:['No logra cerrar el ojo ni levantar la ceja del lado afectado','Se le escapa el líquido por la comisura','Sin debilidad en el brazo ni en la pierna'],
+    prueba:null, hallazgo:'La debilidad compromete TODA la hemicara, incluida la frente.',
+    fase:'aguda',
+    tto:'Protección ocular, reeducación motora facial frente al espejo con movimientos suaves y educación sobre el pronóstico habitualmente favorable.',
+    ttoMal:['Electroestimulación intensa desde el primer día','Ejercicios faciales máximos y forzados','Empezar los ejercicios sin proteger el ojo'],
+    dato:'La clave está en la frente: si NO puede levantar la ceja, la lesión es periférica. Si la frente se mueve, hay que pensar en una lesión central, y eso es una urgencia.',
+  },
+
+  /* ---------- traumatológico ---------- */
+  {
+    id:'artrosis', ava:'🧺', pac:'Elba', nom:'Artrosis de rodilla', esp:'trauma', zona:'Rodilla', dif:2,
+    edad:63, ocup:'feriante, atiende un puesto en la Vega', motivo:'Le duelen las rodillas al pararse y al bajar la escalera',
+    mecanismo:'Dolor de años que ha ido aumentando de a poco, sin ningún golpe que lo explique.',
+    sintomas:['Rigidez matinal corta, de menos de treinta minutos','Crujidos y dolor que aumenta con la actividad del día','Rodillas algo aumentadas de volumen, sin derrame caliente'],
+    prueba:'mcmurray', hallazgo:'Negativo: sin chasquido ni dolor localizado en la interlínea al rotar.',
+    fase:'crónica',
+    tto:'Ejercicio terapéutico de fuerza de cuádriceps y cadera, educación y manejo de la carga diaria y del peso.',
+    ttoMal:['Reposo y evitar las escaleras','Esperar la operación sin hacer nada mientras tanto','Solo ultrasonido y calor local'],
+    dato:'En artrosis de rodilla el ejercicio y la educación son primera línea, antes que cualquier fármaco o cirugía: mejoran dolor y función aunque la radiografía no cambie nada.',
+  },
+  {
+    id:'cadera', ava:'🩼', pac:'Olga', nom:'Prótesis total de cadera tras fractura', esp:'trauma', zona:'Cadera', dif:3,
+    edad:78, ocup:'jubilada, vive con su hija en Puente Alto', motivo:'La operaron de la cadera hace dos semanas y tiene miedo de caminar',
+    mecanismo:'Se cayó en el baño y se fracturó la cadera. Le pusieron una prótesis por el GES.',
+    sintomas:['Camina con andador y muy poca confianza','Debilidad de abductores del lado operado','Miedo declarado a volver a caerse'],
+    prueba:'trendel', hallazgo:'Descenso de la pelvis contralateral al apoyar sobre el lado operado.',
+    fase:'subaguda',
+    tto:'Carga progresiva según indicación quirúrgica, fuerza de abductores y cuádriceps, reeducación de la marcha y entrenamiento del equilibrio para prevenir caídas.',
+    ttoMal:['Reposo hasta que se sienta segura','Flexión de cadera sobre 90° con aducción y rotación interna','Sacarle el andador de una vez para que se acostumbre'],
+    dato:'Después de una prótesis de cadera el objetivo no es solo volver a caminar: es que no se vuelva a caer. Y al inicio hay que cuidar las posiciones que luxan la prótesis.',
+  },
+  {
+    id:'latigazo', ava:'🚌', pac:'Felipe', nom:'Esguince cervical (latigazo)', esp:'trauma', zona:'Cervical', dif:2,
+    edad:29, ocup:'estudiante, iba en la micro', motivo:'Le duele el cuello desde que chocaron la micro',
+    mecanismo:'La micro fue chocada por atrás; el cuello se le fue hacia atrás y adelante. En el SAPU descartaron fractura.',
+    sintomas:['Dolor y rigidez cervical que aparecieron horas después del choque','Cefalea que parte de la nuca','Sin hormigueo ni debilidad en los brazos'],
+    prueba:'spurling', hallazgo:'Negativo: no reproduce dolor irradiado al brazo.',
+    fase:'aguda',
+    tto:'Reactivación temprana, movilidad cervical dentro de lo tolerable y educación tranquilizadora sobre la buena evolución habitual.',
+    ttoMal:['Collar cervical por tres semanas','Reposo y evitar mover el cuello','Manipulación cervical de alta velocidad en la primera sesión'],
+    dato:'En el latigazo la evidencia es contundente: seguir con la vida normal gana. El collar y el reposo alargan los síntomas.',
+  },
+  {
+    id:'epimedial', ava:'⛏️', pac:'Jorge', nom:'Epicondilalgia medial (codo de golfista)', esp:'trauma', zona:'Codo', dif:2,
+    edad:39, ocup:'maestro albañil', motivo:'Dolor en la cara interna del codo al usar la pala',
+    mecanismo:'Semanas moviendo tierra, apretando la pala con la muñeca en flexión.',
+    sintomas:['Dolor en la epitróclea a la palpación','Duele al apretar y al flectar la muñeca contra resistencia','Sin hormigueo en el meñique'],
+    prueba:'golf', hallazgo:'Dolor en la epitróclea al resistir la flexión de muñeca.',
+    fase:'crónica',
+    tto:'Carga progresiva de los flexopronadores con trabajo excéntrico y corrección del gesto y del agarre de la herramienta.',
+    ttoMal:['Férula y reposo por un mes','Fortalecer los extensores de muñeca','Masaje profundo como único tratamiento'],
+    dato:'Compromete el origen de los flexopronadores. Ojo con el nervio cubital, que pasa justo por detrás de la epitróclea: si hay hormigueo en el meñique, el cuadro es otro.',
+  },
+
+  /* ---------- deportivo ---------- */
+  {
+    id:'isquios', ava:'🏃‍♂️', pac:'Nicolás', nom:'Lesión muscular de isquiotibiales', esp:'deporte', zona:'Muslo', dif:2,
+    edad:26, ocup:'juega en la liga del barrio', motivo:'Sintió un tirón atrás del muslo corriendo a buscar la pelota',
+    mecanismo:'Sprint en el segundo tiempo. Sintió un tirón brusco y tuvo que salir.',
+    sintomas:['Dolor puntual en la parte posterior del muslo','Le cuesta acelerar y extender la rodilla con la cadera flectada','Equimosis que apareció a los dos días'],
+    prueba:'iso90', hallazgo:'Dolor y debilidad al resistir la flexión de rodilla, comparado con el otro lado.',
+    fase:'aguda',
+    tto:'Carga progresiva precoz con ejercicio excéntrico a longitudes largas y reintroducción dosificada de la carrera antes de volver a competir.',
+    ttoMal:['Reposo hasta que no duela nada','Elongación pasiva intensa desde el primer día','Volver a jugar apenas pueda trotar'],
+    dato:'Los isquiotibiales se rompen frenando excéntricamente el sprint. Por eso lo que baja la recurrencia es el trabajo excéntrico a longitudes largas, no elongar.',
+  },
+  {
+    id:'cintilla', ava:'🥾', pac:'Fernanda', nom:'Síndrome de la cintilla iliotibial', esp:'deporte', zona:'Rodilla', dif:2,
+    edad:31, ocup:'corredora de cerro', motivo:'Dolor por fuera de la rodilla que aparece siempre en el mismo kilómetro',
+    mecanismo:'Preparando un trail subió mucho el volumen de bajadas.',
+    sintomas:['Dolor lateral de rodilla que aparece a los 20-30 minutos de correr','Peor en las bajadas','No duele al estar sentada ni caminando despacio'],
+    prueba:'noble', hallazgo:'Dolor en el cóndilo femoral lateral alrededor de los 30° de flexión.',
+    fase:'crónica',
+    tto:'Fuerza de abductores y rotadores externos de cadera, ajuste temporal del volumen y de las bajadas, y progresión ordenada de vuelta a la carrera.',
+    ttoMal:['Elongar fuerte la banda iliotibial','Reposo total hasta que no duela','Rodillera y seguir con el mismo plan de entrenamiento'],
+    dato:'La cintilla iliotibial casi no se elonga: es tejido muy poco extensible. Lo que cambia el cuadro es el control de cadera y la dosis de carrera.',
+  },
+  {
+    id:'canillera', ava:'🎖️', pac:'Bastián', nom:'Síndrome de estrés tibial medial', esp:'deporte', zona:'Tobillo', dif:1,
+    edad:19, ocup:'conscripto, instrucción todos los días', motivo:'Le duelen las canillas desde que empezaron a trotar en la mañana',
+    mecanismo:'Pasó de no entrenar nada a trotar todos los días con borceguíes sobre pavimento.',
+    sintomas:['Dolor difuso en el borde interno de la tibia, a lo largo de varios centímetros','Duele al empezar a trotar y cede algo al entrar en calor','No hay un punto único de hueso que duela'],
+    prueba:null, hallazgo:'Dolor difuso a la palpación del borde posteromedial de la tibia, sin punto exquisito.',
+    fase:'subaguda',
+    tto:'Bajar y redistribuir la carga de impacto, fortalecer tríceps sural y musculatura intrínseca del pie, y progresar la carrera de forma controlada.',
+    ttoMal:['Seguir con el mismo volumen y solo poner hielo','Reposo absoluto hasta que no duela','Infiltrar para poder seguir la instrucción'],
+    dato:'Si el dolor se concentra en UN punto de la tibia y aparece en reposo o de noche, hay que pensar en fractura por estrés y derivar: eso ya no es canillera.',
+  },
+
+  /* ---------- banderas rojas: acá lo correcto es NO tratar ----------
+     `derivar:true` marca que la respuesta correcta es derivar.
+     `urgente:true` los habilita para llegar en ambulancia con reloj. */
+  {
+    id:'cauda', ava:'🚨', pac:'Sergio', nom:'Síndrome de cauda equina', esp:'trauma', zona:'Lumbar', dif:3, derivar:true, urgente:true,
+    edad:44, ocup:'chofer de camión', motivo:'Le bajó la fuerza en las dos piernas y no siente bien cuando orina',
+    mecanismo:'Dolor lumbar de una semana que ayer cambió: se le durmió la zona de la entrepierna.',
+    sintomas:['Adormecimiento en la zona de la entrepierna (silla de montar)','Dificultad para orinar y para darse cuenta de que lo hace','Debilidad que aparece en las DOS piernas'],
+    prueba:'lasegue', hallazgo:'Positivo bilateral, y con déficit motor en ambas piernas.',
+    fase:'aguda',
+    tto:'Derivar de inmediato a urgencia: es una emergencia quirúrgica con ventana de horas.',
+    ttoMal:['Ejercicio con preferencia direccional','Deslizamiento neural y educación en dolor','Reposo relativo y control en una semana'],
+    dato:'Anestesia en silla de montar, retención urinaria y déficit bilateral son cauda equina: de las poquísimas urgencias quirúrgicas reales que llegan a kinesiología. Cada hora cuenta.',
+  },
+  {
+    id:'tvp', ava:'🩸', pac:'Mónica', nom:'Trombosis venosa profunda', esp:'trauma', zona:'Tobillo', dif:3, derivar:true, urgente:true,
+    edad:56, ocup:'costurera, volvió hace poco de un viaje largo', motivo:'Se le hinchó la pantorrilla y le duele al caminar',
+    mecanismo:'Tres semanas con bota inmovilizadora por un esguince, más un viaje en bus de veinte horas.',
+    sintomas:['Pantorrilla hinchada, roja y caliente','Dolor que no cede con el reposo','Diámetro claramente mayor que el de la otra pierna'],
+    prueba:'thompson', hallazgo:'Negativo: se conserva la flexión plantar. Pero la pantorrilla está tensa y caliente.',
+    fase:'aguda',
+    tto:'Derivar a evaluación médica urgente antes de cualquier masaje, movilización o ejercicio.',
+    ttoMal:['Masaje descontracturante de la pantorrilla','Elongación sostenida del tríceps sural','Ejercicio excéntrico progresivo de gemelos'],
+    dato:'Pantorrilla hinchada, caliente y con antecedente de inmovilización o viaje largo: TVP hasta demostrar lo contrario. Masajear ahí puede soltar el trombo.',
+  },
+  {
+    id:'compartimental', ava:'🦵', pac:'Ítalo', nom:'Síndrome compartimental agudo', esp:'deporte', zona:'Tobillo', dif:3, derivar:true, urgente:true,
+    edad:23, ocup:'jugador de rugby', motivo:'Le pegaron una patada en la canilla y ahora el dolor es insoportable',
+    mecanismo:'Golpe directo en la pierna hace seis horas. El dolor fue subiendo en vez de bajar.',
+    sintomas:['Dolor desproporcionado al golpe, que va en aumento','Dolor brutal al estirar pasivamente los dedos del pie','Pierna tensa como tabla y hormigueo en el dorso del pie'],
+    prueba:null, hallazgo:'El estiramiento pasivo de los dedos dispara un dolor desproporcionado.',
+    fase:'aguda',
+    tto:'Derivar de inmediato a urgencia: sin fasciotomía a tiempo el músculo se necrosa.',
+    ttoMal:['Hielo, compresión y elevación','Movilización suave y descarga con bastones','Vendaje compresivo y control mañana'],
+    dato:'Dolor desproporcionado que aumenta y que se dispara al estirar pasivamente: síndrome compartimental. Ojo, comprimir y poner hielo lo empeoran, y el pulso puede estar normal igual.',
+  },
+  {
+    id:'cardiaco', ava:'❤️‍🩹', pac:'Raúl', nom:'Dolor torácico de origen cardíaco', esp:'trauma', zona:'Cervical', dif:3, derivar:true, urgente:true,
+    edad:61, ocup:'maestro panadero', motivo:'Le duele entre los omóplatos y el brazo izquierdo cuando camina rápido',
+    mecanismo:'Sin trauma. Aparece con el esfuerzo y se le pasa cuando se detiene.',
+    sintomas:['El dolor aparece con el esfuerzo y cede con el reposo','Se acompaña de sudoración fría y falta de aire','Hipertenso y fumador de años'],
+    prueba:'spurling', hallazgo:'Negativo: no reproduce el dolor ni lo irradia al brazo.',
+    fase:'aguda',
+    tto:'Derivar a evaluación médica urgente: el patrón es de origen cardíaco, no musculoesquelético.',
+    ttoMal:['Masaje y calor en la musculatura dorsal','Ejercicio de movilidad torácica','Punción seca de trapecio y romboides'],
+    dato:'Dolor que aparece con el esfuerzo, cede con el reposo y trae sudoración o disnea NO es musculoesquelético. Que ningún movimiento lo reproduzca es el dato que lo delata.',
+  },
+  {
+    id:'fxestres', ava:'🩻', pac:'Trinidad', nom:'Fractura por estrés de tibia', esp:'deporte', zona:'Tobillo', dif:2, derivar:true,
+    edad:20, ocup:'bailarina de ballet', motivo:'Le duele un punto de la canilla y ahora también en la noche',
+    mecanismo:'Subió mucho los ensayos para el examen de fin de año. Empezó como canillera y fue empeorando.',
+    sintomas:['Dolor en UN punto exacto de la tibia','Ahora duele también en reposo y de noche','Duele al saltar en un pie'],
+    prueba:null, hallazgo:'Dolor exquisito en un punto único del borde tibial, con dolor al salto monopodal.',
+    fase:'aguda',
+    tto:'Derivar para estudio de imagen y descarga: no se sigue cargando una fractura por estrés.',
+    ttoMal:['Bajar el volumen y seguir ensayando','Fortalecer el tríceps sural y progresar la carga','Plantillas y hielo después de cada ensayo'],
+    dato:'La canillera duele difuso y mejora al entrar en calor; la fractura por estrés duele en un punto, en reposo y de noche. Esa es la línea entre tratar y derivar.',
+  },
+  {
+    id:'septica', ava:'🌡️', pac:'Manuel', nom:'Artritis séptica de rodilla', esp:'trauma', zona:'Rodilla', dif:3, derivar:true, urgente:true,
+    edad:67, ocup:'jubilado, diabético', motivo:'Se le hinchó la rodilla de un día para otro y anda con fiebre',
+    mecanismo:'Sin golpe. Hace tres días le pusieron una infiltración en esa rodilla.',
+    sintomas:['Rodilla caliente, roja y muy dolorosa','Fiebre y compromiso del estado general','No tolera nada de movimiento'],
+    prueba:'mcmurray', hallazgo:'No se puede realizar: cualquier movimiento provoca dolor intenso.',
+    fase:'aguda',
+    tto:'Derivar de inmediato: articulación caliente con fiebre es artritis séptica hasta demostrar lo contrario.',
+    ttoMal:['Drenaje linfático y movilización suave','Ejercicio isométrico de cuádriceps','Hielo, reposo y control en una semana'],
+    dato:'Monoartritis aguda, caliente, con fiebre y antecedente de punción: artritis séptica. En horas destruye el cartílago, no es un cuadro para tratar en box.',
+  },
 ];
 
-/* Músculos para el modo de repaso. Origen/inserción resumidos. */
+/* Lo que dicen los pacientes cuando vuelven a la clínica. La gracia del
+   juego no es solo acertar: es que la gente vuelva y uno se acuerde. */
+const CL_REGRESO = {
+  huaso:'Volvió con una bolsa de nueces del campo. Ya ensilla solo, pero quiere que le revisen la muñeca otra vez.',
+  minero:'Bajó del turno derecho a la clínica. "Esta vez vine antes de que se pusiera fea", dice.',
+  basquetbol:'Ganaron el campeonato. Trajo la foto del equipo y también la rodilla reclamando de nuevo.',
+  carrete:'Volvió con el mismo hombro y la misma cara de susto. Esta vez fue jugando a la pelota.',
+  banderas:'Volvió con los exámenes en la mano y quiere que se los expliquen con calma.',
+  pinzamiento:'Terminó de pintar la casa entera. Adivina qué hombro le está doliendo.',
+  capsulitis:'Ahora viene por el otro hombro. Sabe lo que le espera y trajo anotados sus ejercicios.',
+  manguito:'Clasificó al nacional de aguas abiertas. Quiere ajustar la carga antes de que el hombro reclame.',
+  epicondilalgia:'Trajo un banquito de madera que hizo él para la sala de espera.',
+  tunel:'La guagua ya camina. Ahora es la otra mano la que se le duerme.',
+  dequervain:'La guagua pesa cuatro kilos más y el pulgar volvió a reclamar.',
+  lumbago:'Lo ascendieron a jefe de bodega. Levanta menos cajas y anda con menos susto.',
+  radiculopatia:'Le cambiaron el asiento de la micro y viene a control. La pierna ya no le baja hasta el pie.',
+  trocanterico:'Se compró zapatillas nuevas y volvió a caminar el cerro. La cadera se hizo notar.',
+  lca:'Vuelve con la orden de rehabilitación en la mano y muchas ganas de volver a la cancha.',
+  menisco:'Sigue jugando los domingos. Dice que la rodilla "le avisa" antes de bloquearse.',
+  patelofemoral:'Se inscribió en la maratón de Santiago y viene a que la ayuden a llegar entera.',
+  aquiles:'Volvió a las zapatillas viejas y el tendón volvió a hablar.',
+  esguince:'Segundo esguince del mismo tobillo. Esta vez sí quiere hacer la propiocepción completa.',
+  fascitis:'Cambió de local y ahora está de pie sobre cerámica. El talón lo notó altiro.',
+  cervicalgia:'Quedó en teletrabajo permanente. Trajo una foto de su escritorio para que se lo revisen.',
+  epoc:'Lleva ocho meses sin fumar y lo cuenta apenas entra por la puerta.',
+  acv:'Llegó caminando con bastón y saludó con la mano que antes no levantaba.',
+  bronquiolitis:'La misma guagua, un invierno después. La mamá ya reconoce sola los signos de alarma.',
+  neumonia:'Salió del hospital y volvió a su huerta. Viene a que le controlen la tolerancia al esfuerzo.',
+  postuci:'Volvió a hacer clases. Todavía se cansa, pero ya sube sola los dos pisos del colegio.',
+  parkinson:'Trajo la lista de canciones que usa para caminar. Dice que con cueca le sale mejor.',
+  facial:'La cara volvió a su lugar. Viene por otra cosa y, de paso, a dar las gracias.',
+  artrosis:'Sigue en la Vega, pero ahora con un piso alto para no estar tantas horas parada.',
+  cadera:'Entró sin andador, con su hija atrás muerta de nervios.',
+  latigazo:'Otro choque, otra micro. Esta vez llegó a la semana y no al mes.',
+  isquios:'Volvió a jugar y volvió el tirón, en el mismo muslo. Ahora quiere hacerlo bien.',
+  cintilla:'Terminó el trail de 30K. Viene a preparar el siguiente sin dolor.',
+  epimedial:'Le cambió el mango a la pala. El codo se lo agradeció.',
+  canillera:'Terminó el servicio militar. Ahora corre por gusto y quiere hacerlo sin dolerse.',
+  cauda:'Lo operaron esa misma noche. Vuelve caminando, a rehabilitar y a agradecer que lo mandaran altiro.',
+  tvp:'Estuvo anticoagulada tres meses. Recién ahora viene a rehabilitar el tobillo, con el alta del internista en la mano.',
+  compartimental:'Alcanzaron a hacerle la fasciotomía. Muestra la cicatriz como trofeo y quiere volver al rugby.',
+  cardiaco:'Le pusieron dos stents. Viene derivado a rehabilitación cardíaca y trae pan amasado para todos.',
+  fxestres:'Ocho semanas sin bailar. Volvió preguntando por la carga antes de subirla, que es lo que había que aprender.',
+  septica:'Le hicieron aseo quirúrgico y salvó la rodilla. Vuelve a recuperar rango, con la glicemia bajo control.',
+};
+
+/* Músculos para el modo de repaso. Origen/inserción resumidos.
+   La inervación lleva las raíces entre paréntesis: en la prueba
+   preguntan el nervio, pero en clínica lo que sirve es la raíz. */
 const KIN_MUSCULOS = [
-  { nom:'Supraespinoso',        origen:'Fosa supraespinosa de la escápula',            insercion:'Troquíter (tubérculo mayor del húmero)',   nervio:'Supraescapular',            accion:'Abducción de hombro (inicia el movimiento)' },
-  { nom:'Infraespinoso',        origen:'Fosa infraespinosa de la escápula',            insercion:'Troquíter',                                 nervio:'Supraescapular',            accion:'Rotación externa de hombro' },
-  { nom:'Subescapular',         origen:'Fosa subescapular',                            insercion:'Troquín (tubérculo menor del húmero)',      nervio:'Subescapular',              accion:'Rotación interna de hombro' },
-  { nom:'Redondo menor',        origen:'Borde lateral de la escápula',                 insercion:'Troquíter',                                 nervio:'Axilar',                    accion:'Rotación externa de hombro' },
-  { nom:'Deltoides',            origen:'Clavícula lateral, acromion y espina escapular',insercion:'Tuberosidad deltoidea del húmero',         nervio:'Axilar',                    accion:'Abducción de hombro; flexión y extensión según porción' },
-  { nom:'Pectoral mayor',       origen:'Clavícula, esternón y cartílagos costales',    insercion:'Labio lateral del surco intertubercular',    nervio:'Pectorales medial y lateral',accion:'Aducción, rotación interna y flexión de hombro' },
-  { nom:'Dorsal ancho',         origen:'Apófisis espinosas T7-L5, sacro y cresta ilíaca',insercion:'Surco intertubercular del húmero',        nervio:'Toracodorsal',              accion:'Aducción, extensión y rotación interna de hombro' },
-  { nom:'Trapecio',             origen:'Occipital y apófisis espinosas C7-T12',        insercion:'Clavícula, acromion y espina de la escápula',nervio:'Accesorio (XI)',            accion:'Elevación, retracción y rotación de escápula' },
-  { nom:'Serrato anterior',     origen:'Caras laterales de las primeras costillas',    insercion:'Borde medial de la escápula',               nervio:'Torácico largo',            accion:'Protracción y rotación superior de escápula' },
-  { nom:'Bíceps braquial',      origen:'Tubérculo supraglenoideo y apófisis coracoides',insercion:'Tuberosidad del radio',                    nervio:'Musculocutáneo',            accion:'Flexión de codo y supinación del antebrazo' },
-  { nom:'Tríceps braquial',     origen:'Tubérculo infraglenoideo y cara posterior del húmero',insercion:'Olécranon',                          nervio:'Radial',                    accion:'Extensión de codo' },
-  { nom:'Braquial',             origen:'Cara anterior distal del húmero',              insercion:'Tuberosidad del cúbito',                    nervio:'Musculocutáneo',            accion:'Flexión de codo' },
-  { nom:'Psoas mayor',          origen:'Cuerpos y apófisis transversas de T12-L5',     insercion:'Trocánter menor del fémur',                 nervio:'Ramos del plexo lumbar (L1-L3)',accion:'Flexión de cadera' },
-  { nom:'Glúteo mayor',         origen:'Ilion posterior, sacro y cóccix',              insercion:'Tuberosidad glútea y tracto iliotibial',    nervio:'Glúteo inferior',           accion:'Extensión y rotación externa de cadera' },
-  { nom:'Glúteo medio',         origen:'Cara externa del ilion',                       insercion:'Trocánter mayor',                           nervio:'Glúteo superior',           accion:'Abducción de cadera y estabilización de la pelvis' },
-  { nom:'Piriforme',            origen:'Cara anterior del sacro',                      insercion:'Trocánter mayor',                           nervio:'Ramo del plexo sacro',      accion:'Rotación externa de cadera' },
-  { nom:'Tensor de la fascia lata',origen:'Espina ilíaca anterosuperior',              insercion:'Tracto iliotibial',                         nervio:'Glúteo superior',           accion:'Abducción y flexión de cadera' },
-  { nom:'Recto femoral',        origen:'Espina ilíaca anteroinferior',                 insercion:'Tuberosidad tibial vía tendón rotuliano',   nervio:'Femoral',                   accion:'Extensión de rodilla y flexión de cadera' },
-  { nom:'Vasto medial',         origen:'Línea áspera del fémur (labio medial)',        insercion:'Tuberosidad tibial vía tendón rotuliano',   nervio:'Femoral',                   accion:'Extensión de rodilla' },
-  { nom:'Bíceps femoral',       origen:'Tuberosidad isquiática y línea áspera',        insercion:'Cabeza del peroné',                         nervio:'Ciático',                   accion:'Flexión de rodilla y extensión de cadera' },
-  { nom:'Semitendinoso',        origen:'Tuberosidad isquiática',                       insercion:'Pata de ganso (tibia medial)',              nervio:'Ciático (tibial)',          accion:'Flexión de rodilla y extensión de cadera' },
-  { nom:'Sartorio',             origen:'Espina ilíaca anterosuperior',                 insercion:'Pata de ganso',                             nervio:'Femoral',                   accion:'Flexión, abducción y rotación externa de cadera' },
-  { nom:'Gastrocnemio',         origen:'Cóndilos femorales',                           insercion:'Calcáneo vía tendón de Aquiles',            nervio:'Tibial',                    accion:'Flexión plantar de tobillo y flexión de rodilla' },
-  { nom:'Sóleo',                origen:'Cara posterior de tibia y peroné',             insercion:'Calcáneo vía tendón de Aquiles',            nervio:'Tibial',                    accion:'Flexión plantar de tobillo' },
-  { nom:'Tibial anterior',      origen:'Cóndilo lateral y cara lateral de la tibia',   insercion:'Primer cuneiforme y base del primer metatarsiano',nervio:'Peroneo profundo',     accion:'Dorsiflexión e inversión del pie' },
-  { nom:'Tibial posterior',     origen:'Membrana interósea, tibia y peroné',           insercion:'Escafoides y cuñas',                        nervio:'Tibial',                    accion:'Flexión plantar e inversión del pie' },
-  { nom:'Recto abdominal',      origen:'Pubis',                                        insercion:'Cartílagos costales 5-7 y apéndice xifoides',nervio:'Intercostales (T7-T12)',   accion:'Flexión de tronco' },
-  { nom:'Transverso del abdomen',origen:'Cresta ilíaca, fascia toracolumbar y cartílagos costales',insercion:'Línea alba y pubis',            nervio:'Intercostales y lumbares',  accion:'Compresión abdominal y estabilización lumbopélvica' },
-  { nom:'Cuadrado lumbar',      origen:'Cresta ilíaca',                                insercion:'Duodécima costilla y apófisis transversas lumbares',nervio:'Plexo lumbar',       accion:'Inclinación lateral de tronco' },
+  { nom:'Supraespinoso',        origen:'Fosa supraespinosa de la escápula',            insercion:'Troquíter (tubérculo mayor del húmero)',   nervio:'Supraescapular (C5-C6)',    accion:'Abducción de hombro (inicia el movimiento)' },
+  { nom:'Infraespinoso',        origen:'Fosa infraespinosa de la escápula',            insercion:'Troquíter',                                 nervio:'Supraescapular (C5-C6)',    accion:'Rotación externa de hombro' },
+  { nom:'Subescapular',         origen:'Fosa subescapular',                            insercion:'Troquín (tubérculo menor del húmero)',      nervio:'Subescapulares superior e inferior (C5-C6)',accion:'Rotación interna de hombro' },
+  { nom:'Redondo menor',        origen:'Borde lateral de la escápula',                 insercion:'Troquíter',                                 nervio:'Axilar (C5-C6)',            accion:'Rotación externa de hombro' },
+  { nom:'Deltoides',            origen:'Clavícula lateral, acromion y espina escapular',insercion:'Tuberosidad deltoidea del húmero',         nervio:'Axilar (C5-C6)',            accion:'Abducción de hombro; flexión y extensión según porción' },
+  { nom:'Pectoral mayor',       origen:'Clavícula, esternón y cartílagos costales',    insercion:'Labio lateral del surco intertubercular',    nervio:'Pectorales lateral y medial (C5-T1)',accion:'Aducción, rotación interna y flexión de hombro' },
+  { nom:'Dorsal ancho',         origen:'Apófisis espinosas T7-L5, sacro y cresta ilíaca',insercion:'Surco intertubercular del húmero',        nervio:'Toracodorsal (C6-C8)',      accion:'Aducción, extensión y rotación interna de hombro' },
+  { nom:'Trapecio',             origen:'Occipital, ligamento nucal y apófisis espinosas C7-T12',insercion:'Clavícula, acromion y espina de la escápula',nervio:'Accesorio (XI); aporte sensitivo de C3-C4',accion:'Elevación, retracción y rotación superior de escápula' },
+  { nom:'Serrato anterior',     origen:'Caras laterales de las costillas 1 a 9',       insercion:'Borde medial de la escápula',               nervio:'Torácico largo (C5-C7)',    accion:'Protracción y rotación superior de escápula' },
+  { nom:'Bíceps braquial',      origen:'Tubérculo supraglenoideo y apófisis coracoides',insercion:'Tuberosidad del radio',                    nervio:'Musculocutáneo (C5-C6)',    accion:'Flexión de codo y supinación del antebrazo' },
+  { nom:'Tríceps braquial',     origen:'Tubérculo infraglenoideo y cara posterior del húmero',insercion:'Olécranon',                          nervio:'Radial (C6-C8)',            accion:'Extensión de codo' },
+  { nom:'Braquial',             origen:'Cara anterior distal del húmero',              insercion:'Tuberosidad del cúbito',                    nervio:'Musculocutáneo (C5-C6), con aporte del radial',accion:'Flexión de codo (es el flexor puro, no depende de la posición del antebrazo)' },
+  { nom:'Psoas mayor',          origen:'Cuerpos y apófisis transversas de T12-L5',     insercion:'Trocánter menor del fémur',                 nervio:'Ramos anteriores directos del plexo lumbar (L1-L3)',accion:'Flexión de cadera' },
+  { nom:'Glúteo mayor',         origen:'Ilion posterior, sacro y cóccix',              insercion:'Tuberosidad glútea y tracto iliotibial',    nervio:'Glúteo inferior (L5-S2)',   accion:'Extensión y rotación externa de cadera' },
+  { nom:'Glúteo medio',         origen:'Cara externa del ilion',                       insercion:'Trocánter mayor',                           nervio:'Glúteo superior (L4-S1)',   accion:'Abducción de cadera y estabilización de la pelvis' },
+  { nom:'Piriforme',            origen:'Cara anterior del sacro',                      insercion:'Borde superior del trocánter mayor',        nervio:'Nervio del piriforme (S1-S2)',accion:'Rotación externa de cadera (y abducción con la cadera flectada)' },
+  { nom:'Tensor de la fascia lata',origen:'Espina ilíaca anterosuperior',              insercion:'Tracto iliotibial',                         nervio:'Glúteo superior (L4-S1)',   accion:'Abducción y flexión de cadera' },
+  { nom:'Recto femoral',        origen:'Espina ilíaca anteroinferior',                 insercion:'Tuberosidad tibial vía tendón rotuliano',   nervio:'Femoral (L2-L4)',           accion:'Extensión de rodilla y flexión de cadera' },
+  { nom:'Vasto medial',         origen:'Línea intertrocantérica y labio medial de la línea áspera',insercion:'Tuberosidad tibial vía tendón rotuliano',nervio:'Femoral (L2-L4)',    accion:'Extensión de rodilla' },
+  { nom:'Bíceps femoral',       origen:'Cabeza larga en la tuberosidad isquiática; cabeza corta en la línea áspera',insercion:'Cabeza del peroné',nervio:'Ciático: cabeza larga por la división tibial, cabeza corta por la peronea común (L5-S2)',accion:'Flexión de rodilla y extensión de cadera' },
+  { nom:'Semitendinoso',        origen:'Tuberosidad isquiática',                       insercion:'Pata de ganso (tibia medial)',              nervio:'Ciático, división tibial (L5-S2)',accion:'Flexión de rodilla y extensión de cadera' },
+  { nom:'Sartorio',             origen:'Espina ilíaca anterosuperior',                 insercion:'Pata de ganso',                             nervio:'Femoral (L2-L3)',           accion:'Flexión, abducción y rotación externa de cadera' },
+  { nom:'Gastrocnemio',         origen:'Cóndilos femorales',                           insercion:'Calcáneo vía tendón de Aquiles',            nervio:'Tibial (S1-S2)',            accion:'Flexión plantar de tobillo y flexión de rodilla' },
+  { nom:'Sóleo',                origen:'Línea del sóleo en la tibia y cabeza del peroné',insercion:'Calcáneo vía tendón de Aquiles',          nervio:'Tibial (S1-S2)',            accion:'Flexión plantar de tobillo (el que trabaja con la rodilla flectada)' },
+  { nom:'Tibial anterior',      origen:'Cóndilo lateral y cara lateral de la tibia',   insercion:'Primera cuña y base del primer metatarsiano',nervio:'Peroneo profundo (L4-L5)', accion:'Dorsiflexión e inversión del pie' },
+  { nom:'Tibial posterior',     origen:'Membrana interósea, tibia y peroné',           insercion:'Escafoides, cuñas y bases de los metatarsianos 2 a 4',nervio:'Tibial (L4-L5)',  accion:'Flexión plantar e inversión del pie; sostiene el arco medial' },
+  { nom:'Recto abdominal',      origen:'Pubis',                                        insercion:'Cartílagos costales 5-7 y apéndice xifoides',nervio:'Toracoabdominales T7-T11 y subcostal T12',accion:'Flexión de tronco' },
+  { nom:'Transverso del abdomen',origen:'Cresta ilíaca, fascia toracolumbar y cartílagos costales',insercion:'Línea alba y pubis',            nervio:'Toracoabdominales T7-T12, iliohipogástrico e ilioinguinal (L1)',accion:'Compresión abdominal y estabilización lumbopélvica' },
+  { nom:'Cuadrado lumbar',      origen:'Cresta ilíaca y ligamento iliolumbar',         insercion:'Duodécima costilla y apófisis transversas lumbares',nervio:'Subcostal (T12) y ramos del plexo lumbar (L1-L4)',accion:'Inclinación lateral de tronco' },
   { nom:'Diafragma',            origen:'Apéndice xifoides, últimas costillas y vértebras lumbares',insercion:'Centro frénico',                nervio:'Frénico (C3-C5)',           accion:'Principal músculo de la inspiración' },
 ];
 
@@ -6488,16 +6940,295 @@ const KIN_DX = {
     },
   },
   acv: {
-    dif:['acv','epoc'],
+    dif:['acv','epoc','facial','postuci'],
     c:{
-      inicio:  p('Instalación brusca hace dos semanas.','acv','epoc'),
-      antec:   p('Accidente cerebrovascular isquémico reciente.','acv','epoc'),
-      neuro:   p('Debilidad de hemicuerpo y pérdida del control motor selectivo.','acv','epoc'),
-      insp:    p('Alteración del control postural; hombro afectado en riesgo.','acv','epoc'),
-      fuerza:  p('Fuerza disminuida en todo el hemicuerpo comprometido.','acv','epoc'),
+      inicio:  p('Instalación brusca hace dos semanas.','acv facial','epoc postuci'),
+      antec:   p('Accidente cerebrovascular isquémico reciente.','acv','epoc postuci'),
+      neuro:   p('Debilidad de HEMICUERPO completo y pérdida del control motor selectivo.','acv','epoc facial postuci'),
+      insp:    p('Alteración del control postural; hombro afectado en riesgo.','acv','epoc facial'),
+      fuerza:  p('Fuerza disminuida en brazo y pierna del mismo lado.','acv','epoc facial postuci'),
+    },
+  },
+
+  /* ---------- respiratorio: lo que separa los tres es la edad y el patrón ---------- */
+  bronquiolitis: {
+    dif:['bronquiolitis','neumonia','epoc'],
+    c:{
+      inicio:  p('Tres días de tos y coriza; hoy empezó a respirar agitada.','bronquiolitis neumonia','epoc'),
+      antec:   p('Ocho meses, sana hasta ahora; el hermano llegó resfriado del jardín.','bronquiolitis','neumonia epoc'),
+      insp:    p('Retracción costal, aleteo nasal y espiración prolongada.','bronquiolitis','neumonia'),
+      agrava:  p('Se cansa al mamar y toma menos de la mitad.','bronquiolitis neumonia',''),
+      alarma:  p('Sin fiebre alta mantenida; la saturación se mantiene sobre 93%.','bronquiolitis','neumonia'),
+      palp:    p('Tórax sin dolor; se palpan las retracciones intercostales.','bronquiolitis',''),
+      neuro:   p('Activa y reactiva, sin compromiso de conciencia.','bronquiolitis',''),
+    },
+  },
+  neumonia: {
+    dif:['neumonia','bronquiolitis','epoc','postuci'],
+    c:{
+      inicio:  p('Cuatro días de fiebre alta, tos con desgarro y decaimiento.','neumonia','epoc bronquiolitis postuci'),
+      antec:   p('74 años, sin EPOC conocida; hospitalizado desde ayer.','neumonia','epoc bronquiolitis'),
+      insp:    p('Crepitaciones LOCALIZADAS en la base derecha, no sibilancias difusas.','neumonia','epoc bronquiolitis'),
+      alarma:  p('Fiebre de 38,9° y la saturación cae al caminar.','neumonia','epoc postuci'),
+      agrava:  p('Se ahoga al caminar hasta el baño y necesita sentarse.','neumonia epoc',''),
+      fuerza:  p('Fuerza global algo disminuida por los días en cama, sin foco.','neumonia','epoc'),
+    },
+  },
+  postuci: {
+    dif:['postuci','neumonia','acv'],
+    c:{
+      inicio:  p('Salió de la UCI hace cuatro días; la debilidad se instaló durante la hospitalización.','postuci','acv neumonia'),
+      antec:   p('Veinte días de ventilación mecánica y sedación.','postuci','acv'),
+      fuerza:  p('Debilidad SIMÉTRICA y proximal en las cuatro extremidades.','postuci','acv'),
+      neuro:   p('Sin asimetría ni compromiso de un hemicuerpo; reflejos disminuidos de forma global.','postuci','acv'),
+      insp:    p('Pérdida evidente de masa muscular; sin uso de musculatura accesoria en reposo.','postuci','neumonia'),
+      alarma:  p('Ya sin fiebre y con la neumonía tratada.','postuci','neumonia'),
+      agrava:  p('Se agota al hablar o al sentarse en el borde de la cama.','postuci neumonia',''),
+    },
+  },
+
+  /* ---------- neurológico ---------- */
+  parkinson: {
+    dif:['parkinson','acv','postuci'],
+    c:{
+      inicio:  p('Instalación LENTA en dos años, no de un día para otro.','parkinson','acv postuci'),
+      antec:   p('Diagnóstico neurológico ya hecho, en tratamiento con levodopa.','parkinson','acv postuci'),
+      insp:    p('Marcha a pasos cortos, poco braceo y giros en bloque.','parkinson','acv postuci'),
+      neuro:   p('Rigidez en rueda dentada y temblor de reposo, SIN hemiparesia.','parkinson','acv'),
+      fuerza:  p('Fuerza conservada y simétrica: el problema es el control, no la fuerza.','parkinson','acv postuci'),
+      agrava:  p('Se bloquea al iniciar la marcha y al pasar por lugares estrechos.','parkinson','acv'),
+    },
+  },
+  facial: {
+    dif:['facial','acv'],
+    c:{
+      inicio:  p('Amaneció con la cara caída, de un día para otro.','facial acv',''),
+      antec:   p('Cuadro viral días antes; sin hipertensión ni antecedentes vasculares.','facial','acv'),
+      insp:    p('Compromete TODA la hemicara: no levanta la ceja ni cierra el ojo.','facial','acv'),
+      neuro:   p('Sin debilidad de brazo ni pierna, sin alteración del habla.','facial','acv'),
+      fuerza:  p('Fuerza normal en las cuatro extremidades.','facial','acv'),
+      alarma:  p('Sin cefalea brusca ni compromiso de conciencia.','facial','acv'),
+    },
+  },
+
+  /* ---------- rodilla: se suma la artrosis y la cintilla ---------- */
+  artrosis: {
+    dif:['artrosis','menisco','patelofemoral'],
+    c:{
+      inicio:  p('Dolor de AÑOS que fue aumentando de a poco, sin un episodio que lo marque.','artrosis','menisco patelofemoral'),
+      trauma:  p('Ningún golpe ni torsión.','artrosis patelofemoral','menisco'),
+      agrava:  p('Duele al pararse de la silla y al bajar la escalera; mejora con el reposo.','artrosis patelofemoral','menisco'),
+      activo:  p('Rigidez matinal breve, de menos de treinta minutos, y crujidos al mover.','artrosis','patelofemoral menisco'),
+      insp:    p('Rodillas aumentadas de volumen, sin derrame caliente.','artrosis','menisco patelofemoral'),
+      palp:    p('Molestia difusa en la interlínea, sin punto exquisito ni bloqueo.','artrosis','menisco'),
+      imgRx:   p('Disminución del espacio articular y osteofitos.','artrosis','menisco patelofemoral'),
+    },
+  },
+  cintilla: {
+    dif:['cintilla','patelofemoral','menisco'],
+    c:{
+      inicio:  p('Apareció al subir el volumen de bajadas preparando el trail.','cintilla patelofemoral','menisco'),
+      trauma:  p('Sin torsión ni golpe.','cintilla patelofemoral','menisco'),
+      palp:    p('Dolor puntual en el cóndilo femoral LATERAL, un poco sobre la interlínea.','cintilla','patelofemoral menisco'),
+      agrava:  p('Aparece siempre al mismo rato de correr y empeora en las bajadas.','cintilla','patelofemoral menisco'),
+      insp:    p('Sin derrame ni aumento de volumen.','cintilla patelofemoral','menisco'),
+      activo:  p('Rango completo y sin bloqueos; el dolor aparece cerca de los 30° de flexión.','cintilla','menisco'),
+    },
+  },
+
+  /* ---------- cadera, cervical, codo, muslo y pierna ---------- */
+  cadera: {
+    dif:['cadera','trocanterico','radiculopatia'],
+    c:{
+      inicio:  p('Fractura de cadera hace dos semanas, operada con prótesis.','cadera','trocanterico radiculopatia'),
+      trauma:  p('Caída en el baño, con fractura y cirugía.','cadera','trocanterico radiculopatia'),
+      insp:    p('Cicatriz quirúrgica en vías de cierre y marcha con andador.','cadera','trocanterico radiculopatia'),
+      fuerza:  p('Debilidad marcada de los abductores del lado operado.','cadera trocanterico','radiculopatia'),
+      neuro:   p('Sin déficit sensitivo ni dolor irradiado bajo la rodilla.','cadera trocanterico','radiculopatia'),
+      palp:    p('Molestia peri-quirúrgica; no hay dolor puntual sobre el trocánter mayor.','cadera','trocanterico'),
+      agrava:  p('Le da miedo apoyar y por eso camina menos cada día.','cadera',''),
+    },
+  },
+  latigazo: {
+    dif:['latigazo','cervicalgia','pinzamiento'],
+    c:{
+      inicio:  p('Empezó tras el choque; el dolor apareció HORAS después.','latigazo','cervicalgia pinzamiento'),
+      trauma:  p('La micro fue chocada por atrás, con el cuello en latigazo.','latigazo','cervicalgia pinzamiento'),
+      alarma:  p('En el SAPU descartaron fractura; sin déficit ni mareo persistente.','latigazo',''),
+      irradia: p('Cefalea que parte de la nuca; no baja del codo ni sigue un dermatoma.','latigazo cervicalgia','pinzamiento'),
+      activo:  p('Rango cervical limitado en todas las direcciones por dolor y por miedo a moverse.','latigazo','cervicalgia pinzamiento'),
+      neuro:   p('Tamizaje neurológico normal.','latigazo cervicalgia',''),
+      palp:    p('Musculatura cervical y trapecios muy sensibles; el hombro no duele.','latigazo cervicalgia','pinzamiento'),
+    },
+  },
+  epimedial: {
+    dif:['epimedial','epicondilalgia','tunel'],
+    c:{
+      inicio:  p('Progresivo, tras semanas de palear tierra.','epimedial epicondilalgia','tunel'),
+      palp:    p('Dolor puntual en la EPITRÓCLEA, en la cara interna del codo.','epimedial','epicondilalgia tunel'),
+      fuerza:  p('Duele con la FLEXIÓN de muñeca resistida; la extensión resistida no molesta.','epimedial','epicondilalgia'),
+      neuro:   p('Sin hormigueo en el meñique ni en el territorio del mediano.','epimedial epicondilalgia','tunel'),
+      agrava:  p('Duele al apretar la herramienta y al girar el antebrazo.','epimedial epicondilalgia',''),
+      noche:   p('No lo despierta de noche.','epimedial epicondilalgia','tunel'),
+    },
+  },
+  isquios: {
+    dif:['isquios','radiculopatia','trocanterico'],
+    c:{
+      inicio:  p('Tirón BRUSCO durante un sprint; tuvo que salir de la cancha.','isquios','radiculopatia trocanterico'),
+      trauma:  p('Sin golpe: fue el gesto de acelerar.','isquios','trocanterico'),
+      palp:    p('Dolor puntual en el vientre posterior del muslo.','isquios','radiculopatia trocanterico'),
+      irradia: p('El dolor se queda en el muslo posterior; no sigue un dermatoma ni llega al pie.','isquios','radiculopatia'),
+      neuro:   p('Tamizaje neurológico normal, sin hormigueo.','isquios trocanterico','radiculopatia'),
+      fuerza:  p('Dolor y debilidad en la flexión de rodilla resistida.','isquios','radiculopatia trocanterico'),
+      insp:    p('Equimosis en la cara posterior del muslo, aparecida a los dos días.','isquios','radiculopatia trocanterico'),
+    },
+  },
+  canillera: {
+    dif:['canillera','aquiles','fascitis'],
+    c:{
+      inicio:  p('Pasó de no entrenar nada a trotar todos los días con borceguíes.','canillera aquiles','fascitis'),
+      palp:    p('Dolor DIFUSO a lo largo del borde posteromedial de la tibia, sin punto exquisito.','canillera','aquiles fascitis'),
+      agrava:  p('Duele al empezar a trotar, cede algo al entrar en calor y vuelve al terminar.','canillera aquiles','fascitis'),
+      trauma:  p('Sin torcedura ni episodio agudo.','canillera aquiles fascitis',''),
+      insp:    p('Sin hematoma ni deformidad; calzado rígido y muy usado.','canillera',''),
+      alarma:  p('Sin dolor nocturno ni dolor en un punto único de hueso: no impresiona fractura por estrés.','canillera',''),
+    },
+  },
+
+  /* ---------- banderas rojas ----------
+     Acá la pista que importa casi siempre está en "síntomas de alarma".
+     Quien nunca pregunta por banderas rojas, tarde o temprano trata una. */
+  cauda: {
+    dif:['cauda','radiculopatia','lumbago'],
+    c:{
+      inicio:  p('Dolor lumbar de una semana que AYER cambió: se le durmió la entrepierna.','cauda','lumbago radiculopatia'),
+      alarma:  p('ANESTESIA EN SILLA DE MONTAR y dificultad para orinar.','cauda','lumbago radiculopatia'),
+      neuro:   p('Déficit motor y sensitivo en AMBAS piernas, con reflejos alterados.','cauda','lumbago radiculopatia'),
+      irradia: p('El dolor y el adormecimiento bajan por las DOS piernas, no por una.','cauda','radiculopatia lumbago'),
+      fuerza:  p('Debilidad bilateral que fue progresando en horas.','cauda','lumbago radiculopatia'),
+      agrava:  p('No hay posición ni movimiento que lo alivie.','cauda','lumbago'),
+    },
+  },
+  tvp: {
+    dif:['tvp','canillera','aquiles'],
+    c:{
+      inicio:  p('Se hinchó la pantorrilla en dos días, sin correr ni entrenar.','tvp','canillera aquiles'),
+      antec:   p('Tres semanas con bota inmovilizadora y un viaje en bus de veinte horas.','tvp','canillera aquiles'),
+      insp:    p('Pantorrilla ROJA, hinchada y de mayor diámetro que la otra.','tvp','canillera aquiles'),
+      palp:    p('Pantorrilla CALIENTE y tensa, con dolor difuso a la compresión.','tvp','canillera aquiles'),
+      agrava:  p('El dolor no cede con el reposo ni cambia al entrar en calor.','tvp','canillera aquiles'),
+      trauma:  p('Sin golpe ni torcedura reciente.','tvp canillera',''),
+      alarma:  p('Refiere que anda más ahogada al subir escaleras desde ayer.','tvp','canillera aquiles'),
+    },
+  },
+  compartimental: {
+    dif:['compartimental','canillera','esguince'],
+    c:{
+      inicio:  p('Golpe hace seis horas y el dolor fue SUBIENDO en vez de bajar.','compartimental','canillera esguince'),
+      trauma:  p('Patada directa en la cara anterior de la pierna.','compartimental esguince','canillera'),
+      agrava:  p('Dolor desproporcionado al golpe, que aumenta hora a hora.','compartimental','canillera esguince'),
+      palp:    p('Compartimento anterior TENSO como tabla.','compartimental','canillera esguince'),
+      pasivo:  p('El estiramiento pasivo de los dedos dispara un dolor brutal.','compartimental','canillera esguince'),
+      neuro:   p('Hormigueo en el dorso del pie, aparecido en la última hora.','compartimental','canillera'),
+    },
+  },
+  cardiaco: {
+    dif:['cardiaco','cervicalgia','latigazo'],
+    c:{
+      inicio:  p('Aparece al caminar rápido o subir la cuesta, y cede al detenerse.','cardiaco','cervicalgia latigazo'),
+      trauma:  p('Sin golpe ni accidente.','cardiaco cervicalgia','latigazo'),
+      agrava:  p('NINGÚN movimiento ni posición lo reproduce ni lo alivia: solo el esfuerzo.','cardiaco','cervicalgia latigazo'),
+      alarma:  p('Sudoración fría y falta de aire cuando aparece el dolor.','cardiaco','cervicalgia latigazo'),
+      antec:   p('Hipertenso y fumador de años.','cardiaco','cervicalgia'),
+      irradia: p('Se corre al brazo izquierdo y a la mandíbula.','cardiaco','cervicalgia latigazo'),
+      palp:    p('La musculatura dorsal no está sensible y no reproduce el dolor.','cardiaco','cervicalgia'),
+    },
+  },
+  fxestres: {
+    dif:['fxestres','canillera','aquiles'],
+    c:{
+      inicio:  p('Empezó como canillera y fue empeorando pese a bajar la carga.','fxestres','canillera'),
+      palp:    p('Dolor EXQUISITO en un punto único del borde tibial.','fxestres','canillera aquiles'),
+      agrava:  p('Ahora duele en reposo y DE NOCHE.','fxestres','canillera aquiles'),
+      activo:  p('Dolor al salto monopodal, justo en el sitio exacto.','fxestres','canillera'),
+      antec:   p('Subió mucho los ensayos; bailarina, con menstruaciones irregulares.','fxestres','canillera aquiles'),
+      insp:    p('Sin hematoma; se palpa un pequeño abultamiento en el hueso.','fxestres','canillera'),
+      alarma:  p('Dolor nocturno que la despierta, en un punto fijo.','fxestres','canillera aquiles'),
+    },
+  },
+  septica: {
+    dif:['septica','artrosis','menisco'],
+    c:{
+      inicio:  p('Se hinchó de un día para otro, sin ningún golpe.','septica','artrosis menisco'),
+      antec:   p('Diabético, con una infiltración en esa rodilla hace tres días.','septica','artrosis menisco'),
+      alarma:  p('FIEBRE de 38,5° y compromiso del estado general.','septica','artrosis menisco'),
+      insp:    p('Rodilla roja, brillante y con derrame a tensión.','septica','artrosis menisco'),
+      palp:    p('Piel CALIENTE al tacto y dolor extremo a la palpación.','septica','artrosis menisco'),
+      activo:  p('No tolera ningún grado de movimiento.','septica','artrosis'),
     },
   },
 };
+
+/* ============================================================
+   PERSONALIDAD, ÁNIMO Y ACOMPAÑANTES
+   El mismo cuadro se juega distinto según quién lo trae. Los
+   rasgos tocan la mecánica; el ánimo y el acompañante dan textura.
+   ============================================================ */
+const CL_RASGOS = [
+  { id:'ansioso',    nom:'Ansioso',        emo:'😰', desc:'Pregunta mucho y le cuesta soltarse',
+    aviso:'Se demora en contestar y vuelve a preguntar lo mismo: te queda menos tiempo.', ef:{ tiempo:-3 } },
+  { id:'minimiza',   nom:'Minimizador',    emo:'😶', desc:'"No es nada, si aguanto bien"',
+    aviso:'Le quita importancia a todo: lo que preguntes va a rendir la mitad.', ef:{ pistasPobres:true } },
+  { id:'informado',  nom:'Llega leído',    emo:'🔎', desc:'Buscó en internet y trae su diagnóstico',
+    aviso:'Llega convencido de lo que tiene. Ojo con dejarte llevar.', ef:{ pistaFalsa:true } },
+  { id:'cumplidor',  nom:'Cumplidor',      emo:'📋', desc:'Anota todo y lo hace en la casa',
+    aviso:'Va a cumplir con lo que le indiques.', ef:{ adherencia:22 } },
+  { id:'porfiado',   nom:'Porfiado',       emo:'😤', desc:'Hace las cosas a su manera',
+    aviso:'Va a hacer lo que él crea: la adherencia parte baja.', ef:{ adherencia:-22 } },
+  { id:'impaciente', nom:'Impaciente',     emo:'⚡', desc:'Quiere volver a lo suyo ya mismo',
+    aviso:'Presiona por el alta: se aburre rápido y abandona.', ef:{ adherencia:-12, seAburre:true } },
+  { id:'conversador',nom:'Conversador',    emo:'💬', desc:'Se va por las ramas, pero recomienda a todo el mundo',
+    aviso:'Te va a robar tiempo, pero después habla bien de la clínica.', ef:{ tiempo:-2, pago:1.25 } },
+  { id:'estoico',    nom:'Aguantador',     emo:'🪨', desc:'No se queja aunque le duela',
+    aviso:'Cuesta que reconozca el dolor, pero hace todo lo que le pidas.', ef:{ pistasPobres:true, adherencia:14 } },
+];
+
+const CL_ANIMOS = [
+  { id:'adolorido',   nom:'adolorido',   emo:'😖', frase:'Viene con cara de haber dormido mal.' },
+  { id:'esperanzado', nom:'esperanzado', emo:'🙂', frase:'Llega con ganas de que esto por fin se solucione.' },
+  { id:'desconfiado', nom:'desconfiado', emo:'🤨', frase:'Ya pasó por otros dos kinesiólogos y no le resultó.' },
+  { id:'agradecido',  nom:'agradecido',  emo:'😊', frase:'Lo mandó una amiga que quedó feliz con la clínica.' },
+  { id:'apurado',     nom:'apurado',     emo:'⏱️', frase:'Dejó el auto en doble fila y lo dice apenas entra.' },
+  { id:'asustado',    nom:'asustado',    emo:'😟', frase:'Tiene miedo de que sea algo grave.' },
+];
+
+const CL_ACOMP = [
+  { nom:'su hija',      emo:'👩' }, { nom:'su mamá',    emo:'👩‍🦰' },
+  { nom:'su pareja',    emo:'🧑' }, { nom:'su entrenador', emo:'🧢' },
+  { nom:'su hijo',      emo:'👦' }, { nom:'una vecina', emo:'👵' },
+];
+
+/* Alarmas que aparecen en plena sesión de tratamiento.
+   `ok` es la decisión correcta: seguir, bajar o derivar. */
+const CL_ALARMAS = [
+  { id:'peorNoche', txt:'Cuenta que desde la última sesión el dolor lo despierta todas las noches y no cede con nada.',
+    ok:'derivar', dice:'Dolor nocturno que no cede es bandera roja: se frena y se deriva, aunque el tratamiento venía bien.' },
+  { id:'agujetas', txt:'Llega con dolor muscular difuso que apareció al día siguiente y ya va cediendo.',
+    ok:'seguir', dice:'Dolor muscular tardío que va cediendo es respuesta normal a la carga: no hay que bajar nada.' },
+  { id:'derrame', txt:'La articulación amaneció hinchada y caliente después de la sesión anterior.',
+    ok:'bajar', dice:'Un derrame reactivo dice que la dosis fue mucha: se baja la carga, no se suspende ni se deriva.' },
+  { id:'hormigueo', txt:'Apareció hormigueo nuevo y pérdida de fuerza en el pie que antes no tenía.',
+    ok:'derivar', dice:'Déficit neurológico NUEVO y progresivo se deriva siempre: eso ya no se maneja en box.' },
+  { id:'dolorGuia', txt:'Durante los ejercicios refiere dolor 4/10 que desaparece apenas termina la serie.',
+    ok:'seguir', dice:'Dolor tolerable que cede al terminar está dentro del rango aceptable: se puede seguir cargando.' },
+  { id:'fiebre', txt:'Llega con fiebre, decaído, y la zona está más roja que la semana pasada.',
+    ok:'derivar', dice:'Fiebre más signos inflamatorios locales obliga a descartar infección antes de seguir.' },
+  { id:'reagudiza', txt:'Dice que el dolor volvió al nivel del primer día tras hacer los ejercicios en la casa.',
+    ok:'bajar', dice:'Si la carga reagudiza el cuadro, se retrocede un escalón y se progresa más lento.' },
+  { id:'mareo', txt:'Se marea al pasar a bípedo y hay que sentarlo un rato.',
+    ok:'bajar', dice:'Mareo ortostático: se baja la exigencia y se controla, sin abandonar la movilización.' },
+];
 
 /* ============================================================
    CLÍNICA EN 3D — Three.js cargado bajo demanda
@@ -6530,6 +7261,7 @@ const C3_PALETA = {
   camilla:0xfdfbf7, patas:0xa6b2ae, sabana:0xbfd8e4,
   piel:0xe8c3a0, pelo:0x4a3b33, tunica:0x7fae96, ropa:[0xc8956d,0x6d9fc8,0xc86d8f,0x9b7fc8,0xd8b45f],
   planta:0x6f9c5a, macetero:0xc98f6d, mueble:0xd8c3a5, parche:0x1f4e79,
+  silla:0xc9ab82, alfEspera:0xe9d9bd, alfGym:0xcfe0e6, biombo:0xdfeae3, tv:0x2f3a44,
 };
 
 /* ---------- personas ----------
@@ -6642,14 +7374,63 @@ function c3Hidro(){
   return g;
 }
 
-/* Dónde va cada cosa. La sala se llena a medida que la clínica crece. */
+/* ---------- muebles de la sala de espera ---------- */
+function c3Silla(){
+  const g = new THREE.Group();
+  const asiento = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.06, 0.42), c3Mat(C3_PALETA.silla));
+  asiento.position.y = 0.40; asiento.castShadow = true;
+  const respaldo = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.48, 0.06), c3Mat(C3_PALETA.silla));
+  respaldo.position.set(0, 0.66, 0.19); respaldo.castShadow = true;
+  for(const [x, z] of [[-0.19,-0.16],[0.19,-0.16],[-0.19,0.16],[0.19,0.16]]){
+    const p = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.38, 5), c3Mat(C3_PALETA.patas));
+    p.position.set(x, 0.19, z); g.add(p);
+  }
+  g.add(asiento, respaldo);
+  return g;
+}
+function c3Biombo(){
+  const g = new THREE.Group();
+  const tela = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.25, 1.9), c3Mat(C3_PALETA.biombo));
+  tela.position.y = 0.78; tela.castShadow = true;
+  for(const z of [-0.8, 0.8]){
+    const p = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.18, 5), c3Mat(C3_PALETA.patas));
+    p.position.set(0, 0.09, z); g.add(p);
+  }
+  g.add(tela);
+  return g;
+}
+
+/* ============================================================
+   PLANO DE LA CLÍNICA — tres zonas sobre un mismo piso
+   Izquierda: recepción y sala de espera. Centro: salas de
+   atención con camillas. Derecha: gimnasio terapéutico, donde
+   aparece el equipamiento comprado. La cámara recorre las salas.
+   ============================================================ */
+const C3_ANCHO = 15.2, C3_FONDO = 9.4;   // dimensiones del piso
+
+/* Sillas de la espera (posiciones fijas; los pacientes se sientan en orden) */
+const C3_SILLAS = [
+  [-6.6, 1.9], [-5.8, 1.9], [-5.0, 1.9], [-4.2, 1.9],
+  [-6.6, 3.1], [-5.8, 3.1], [-5.0, 3.1], [-4.2, 3.1],
+];
+
+/* Dónde va cada equipo comprado, todos en el gimnasio. */
 const C3_LUGARES = {
-  tens:       { hacer:c3TENS,       pos:[ 2.55, 0, -1.5], rotY:-0.5 },
-  eco:        { hacer:c3Ecografo,   pos:[-3.35, 0, -1.2], rotY: 0.7 },
-  gym:        { hacer:c3Gimnasio,   pos:[ 2.30, 0,  1.6], rotY:-0.35 },
-  plataforma: { hacer:c3Plataforma, pos:[-3.30, 0,  1.1], rotY: 0.5 },
-  hidro:      { hacer:c3Hidro,      pos:[ 2.05, 0,  2.75], rotY:-0.25 },
+  tens:       { hacer:c3TENS,       pos:[ 3.35, 0, -3.05], rotY:-0.35 },
+  eco:        { hacer:c3Ecografo,   pos:[ 4.75, 0, -3.25], rotY: 0.15 },
+  gym:        { hacer:c3Gimnasio,   pos:[ 4.60, 0,  0.60], rotY:-0.50 },
+  plataforma: { hacer:c3Plataforma, pos:[ 6.25, 0, -1.30], rotY: 0.60 },
+  hidro:      { hacer:c3Hidro,      pos:[ 5.55, 0,  2.60], rotY:-0.30 },
 };
+
+/* Paradas del recorrido de cámara: nombre, posición y hacia dónde mira. */
+const C3_TOUR = [
+  { nom:'Tu clínica',            pos:[ 0.6, 11.6, 11.6], mira:[ 0.0, 0.0, -0.6] },
+  { nom:'Sala de espera',        pos:[-5.2,  3.4,  6.4], mira:[-5.2, 0.6,  0.4] },
+  { nom:'Salas de atención',     pos:[ 0.0,  3.4,  4.8], mira:[ 0.0, 0.7, -2.4] },
+  { nom:'Gimnasio terapéutico',  pos:[ 5.3,  3.5,  5.8], mira:[ 4.4, 0.5, -0.9] },
+];
+const C3_TOUR_SEG = 8, C3_TOUR_MOV = 2.6;   // segundos por parada / de viaje
 
 function c3Poblar(){
   if(!c3Escena) return;
@@ -6658,22 +7439,30 @@ function c3Poblar(){
   const c = clEstado();
   const salas = clSalas();
 
-  // camillas: una por sala comprada
+  // salas de atención: una camilla por sala comprada, en la zona central
   for(let i = 0; i < salas; i++){
-    const x = -2.0 + i * 1.9;
-    const cam = c3Camilla(); cam.position.set(x, 0, -1.3);
+    const x = -1.7 + i * 1.7;
+    const cam = c3Camilla(); cam.position.set(x, 0, -2.7);
     c3Escena.add(cam); c3Camillas.push(cam);
+
+    // biombo entre una camilla y la siguiente: cada sala se siente sala
+    if(i > 0){
+      const b = c3Biombo();
+      b.position.set(x - 0.85, 0, -2.7);
+      b.userData = { tipo:'deco' };
+      c3Escena.add(b); c3Muebles.push(b);
+    }
 
     if(i < c.personal.length){
       const k = c3Persona(null, true);
-      k.position.set(x + 0.72, 0, -1.3);
+      k.position.set(x + 0.72, 0, -2.7);
       k.rotation.y = -Math.PI / 2;
       k.userData = { tipo:'kine', idx:i, nom:c.personal[i].nom, esp:c.personal[i].esp,
-                     renta:c.personal[i].renta, destino:null, base:new THREE.Vector3(x + 0.72, 0, -1.3) };
+                     renta:c.personal[i].renta, destino:null, base:new THREE.Vector3(x + 0.72, 0, -2.7) };
       c3Escena.add(k); c3Personal.push(k);
 
       const p = c3Persona(C3_PALETA.ropa[i % C3_PALETA.ropa.length], false);
-      p.position.set(x, 0.72, -1.2);
+      p.position.set(x, 0.72, -2.6);
       p.rotation.x = -Math.PI / 2;
       p.scale.setScalar(0.92);
       p.userData = { tipo:'acostado' };
@@ -6681,7 +7470,7 @@ function c3Poblar(){
     }
   }
 
-  // el equipamiento comprado aparece en la sala
+  // el equipamiento comprado aparece en el gimnasio
   Object.keys(C3_LUGARES).forEach(id => {
     if(!clTieneEquipo(id)) return;
     const L = C3_LUGARES[id];
@@ -6692,13 +7481,16 @@ function c3Poblar(){
     c3Escena.add(m); c3Muebles.push(m);
   });
 
-  // sala de espera
-  const esperando = Math.min(5, 1 + Math.floor(c.reputacion / 15));
+  // sala de espera: la gente que se ve sentada es la que está en la ficha
+  const esperando = Math.max(1, Math.min(C3_SILLAS.length, (c.sala || []).length + Math.floor(c.reputacion / 30)));
   for(let i = 0; i < esperando; i++){
+    const [sx, sz] = C3_SILLAS[i];
     const s = c3Persona(C3_PALETA.ropa[i % C3_PALETA.ropa.length], false);
-    s.position.set(-3.3 + i * 0.66, 0, 2.5);
+    s.position.set(sx, 0.24, sz - 0.04);   // sentado sobre la silla, mirando a recepción
+    s.rotation.y = Math.PI;
+    s.scale.setScalar(0.94);
     s.userData = { tipo:'espera', fase:i * 1.3, destino:null,
-                   base:new THREE.Vector3(-3.3 + i * 0.66, 0, 2.5) };
+                   base:new THREE.Vector3(sx, 0, sz - 0.04) };
     c3Escena.add(s); c3Pacientes.push(s);
   }
 }
@@ -6739,7 +7531,7 @@ function c3PrepararToques(lienzo){
       if(hitPiso.length){
         const p = hitPiso[0].point;
         c3Seleccionado.userData.destino = new THREE.Vector3(
-          Math.max(-3.7, Math.min(3.7, p.x)), 0, Math.max(-2.6, Math.min(3.0, p.z)));
+          Math.max(-7.0, Math.min(7.0, p.x)), 0, Math.max(-3.9, Math.min(4.2, p.z)));
         jxSonido('tap'); jxVibrar(8);
         return;
       }
@@ -6799,38 +7591,66 @@ function c3Planta(){
 function c3Construir(lienzo){
   const esc = new THREE.Scene();
   esc.background = new THREE.Color(0xeef2f0);
-  esc.fog = new THREE.Fog(0xeef2f0, 11, 22);
+  esc.fog = new THREE.Fog(0xeef2f0, 18, 38);
 
   // luces: una cálida principal con sombra, más relleno frío
   esc.add(new THREE.HemisphereLight(0xffffff, 0xc8d4dc, 1.05));
   const sol = new THREE.DirectionalLight(0xfff2dc, 1.5);
-  sol.position.set(4, 7, 4); sol.castShadow = true;
+  sol.position.set(6, 9, 5); sol.castShadow = true;
   sol.shadow.mapSize.set(1024, 1024);
-  sol.shadow.camera.left = -7; sol.shadow.camera.right = 7;
-  sol.shadow.camera.top = 7; sol.shadow.camera.bottom = -7;
+  sol.shadow.camera.left = -10; sol.shadow.camera.right = 10;
+  sol.shadow.camera.top = 10; sol.shadow.camera.bottom = -10;
   esc.add(sol);
 
-  // piso y muros
-  const piso = new THREE.Mesh(new THREE.BoxGeometry(9.2, 0.2, 8.2), c3Mat(C3_PALETA.piso));
+  // piso completo y anillo de selección
+  const piso = new THREE.Mesh(new THREE.BoxGeometry(C3_ANCHO, 0.2, C3_FONDO), c3Mat(C3_PALETA.piso));
   piso.position.y = -0.1; piso.receiveShadow = true; esc.add(piso);
   c3Piso = piso;
   c3Anillo = new THREE.Mesh(new THREE.RingGeometry(0.24, 0.3, 20), c3Mat(0xf5c542, { transparent:true, opacity:0.9 }));
   c3Anillo.rotation.x = -Math.PI/2; c3Anillo.position.y = 0.02; c3Anillo.visible = false; esc.add(c3Anillo);
-  const muroF = new THREE.Mesh(new THREE.BoxGeometry(9.2, 3.2, 0.2), c3Mat(C3_PALETA.muro));
-  muroF.position.set(0, 1.6, -3.7); muroF.receiveShadow = true; esc.add(muroF);
-  const muroI = new THREE.Mesh(new THREE.BoxGeometry(0.2, 3.2, 8.2), c3Mat(C3_PALETA.muroBajo));
-  muroI.position.set(-4.6, 1.6, 0); muroI.receiveShadow = true; esc.add(muroI);
 
-  // ventanal
-  const vent = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.5, 0.06), c3Mat(0xbfe0f0, { transparent:true, opacity:0.75 }));
-  vent.position.set(-1.0, 1.85, -3.56); esc.add(vent);
+  // muro del fondo y muros laterales
+  const muroF = new THREE.Mesh(new THREE.BoxGeometry(C3_ANCHO, 3.2, 0.2), c3Mat(C3_PALETA.muro));
+  muroF.position.set(0, 1.6, -C3_FONDO/2 + 0.1); muroF.receiveShadow = true; esc.add(muroF);
+  for(const lado of [-1, 1]){
+    const muroL = new THREE.Mesh(new THREE.BoxGeometry(0.2, 3.2, C3_FONDO), c3Mat(C3_PALETA.muroBajo));
+    muroL.position.set(lado * (C3_ANCHO/2 - 0.1), 1.6, 0); muroL.receiveShadow = true; esc.add(muroL);
+  }
 
-  // mesón de recepción
-  const meson = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.95, 0.6), c3Mat(C3_PALETA.mueble));
-  meson.position.set(2.9, 0.48, -2.9); meson.castShadow = true; meson.receiveShadow = true; esc.add(meson);
+  // tabiques que separan las tres zonas (dejan el pasillo del frente libre)
+  for(const x of [-2.55, 2.55]){
+    const tab = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.7, 3.6), c3Mat(C3_PALETA.muroBajo));
+    tab.position.set(x, 0.85, -C3_FONDO/2 + 2.0);
+    tab.castShadow = true; tab.receiveShadow = true; esc.add(tab);
+  }
 
-  const p1 = c3Planta(); p1.position.set(-3.6, 0, -2.8); esc.add(p1);
-  const p2 = c3Planta(); p2.position.set(3.6, 0, 1.2); esc.add(p2);
+  // ventanales: uno sobre la espera y otro sobre el gimnasio
+  for(const x of [-5.2, 4.9]){
+    const vent = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.4, 0.06), c3Mat(0xbfe0f0, { transparent:true, opacity:0.75 }));
+    vent.position.set(x, 1.9, -C3_FONDO/2 + 0.24); esc.add(vent);
+  }
+
+  // --- sala de espera: alfombra, recepción, tele y sillas ---
+  const alfE = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.02, 3.2), c3Mat(C3_PALETA.alfEspera));
+  alfE.position.set(-5.4, 0.01, 2.3); alfE.receiveShadow = true; esc.add(alfE);
+  const meson = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.95, 0.6), c3Mat(C3_PALETA.mueble));
+  meson.position.set(-5.4, 0.48, -3.6); meson.castShadow = true; meson.receiveShadow = true; esc.add(meson);
+  const tv = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.66, 0.07), c3Mat(C3_PALETA.tv));
+  tv.position.set(-3.0, 1.9, -C3_FONDO/2 + 0.24); esc.add(tv);
+  const tvLuz = new THREE.Mesh(new THREE.PlaneGeometry(1.02, 0.54), c3Mat(0x9fd0e8));
+  tvLuz.position.set(-3.0, 1.9, -C3_FONDO/2 + 0.285); esc.add(tvLuz);
+  C3_SILLAS.forEach(([x, z]) => {
+    const s = c3Silla(); s.position.set(x, 0, z); s.rotation.y = Math.PI; esc.add(s);
+  });
+
+  // --- gimnasio: alfombra de goma ---
+  const alfG = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.02, 6.2), c3Mat(C3_PALETA.alfGym));
+  alfG.position.set(5.0, 0.01, -0.4); alfG.receiveShadow = true; esc.add(alfG);
+
+  // plantas repartidas por los rincones
+  for(const [x, z] of [[-7.0, -3.6], [7.0, -3.6], [-2.9, 3.9], [2.9, 3.9]]){
+    const p = c3Planta(); p.position.set(x, 0, z); esc.add(p);
+  }
 
   const cam = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
   const rend = new THREE.WebGLRenderer({ canvas:lienzo, antialias:true, alpha:false });
@@ -6867,13 +7687,26 @@ function c3Animar(){
       c3Loop = null; return;
     }
     c3Reloj = t / 1000;
-    // cámara con un vaivén lento, para que la escena respire
-    const a = -0.30 + Math.sin(c3Reloj * 0.13) * 0.17;
-    // mientras más grande la clínica, más se aleja la cámara para que quepa todo
-    const lleno = Math.min(10, c3Camillas.length + c3Muebles.length);
-    const rad = 5.6 + lleno * 0.24, alt = 3.1 + lleno * 0.14;
-    c3Cam.position.set(Math.sin(a) * rad, alt + Math.sin(c3Reloj * 0.2) * 0.14, Math.cos(a) * rad);
-    c3Cam.lookAt(-0.1, 0.7, 0.05);
+    // recorrido de cámara: se detiene en cada sala y viaja suave a la siguiente
+    const ciclo = C3_TOUR.length * C3_TOUR_SEG;
+    const tt = c3Reloj % ciclo;
+    const idx = Math.floor(tt / C3_TOUR_SEG);
+    const fseg = tt - idx * C3_TOUR_SEG;
+    const A = C3_TOUR[idx], B = C3_TOUR[(idx + 1) % C3_TOUR.length];
+    let k = 0;
+    if(fseg > C3_TOUR_SEG - C3_TOUR_MOV) k = (fseg - (C3_TOUR_SEG - C3_TOUR_MOV)) / C3_TOUR_MOV;
+    k = k * k * (3 - 2 * k);   // smoothstep: parte y llega sin frenazos
+    const mz = (a, b) => a + (b - a) * k;
+    // vaivén chico encima del recorrido, para que la escena respire
+    const sw = Math.sin(c3Reloj * 0.4) * 0.10, sv = Math.sin(c3Reloj * 0.27) * 0.08;
+    c3Cam.position.set(mz(A.pos[0], B.pos[0]) + sw, mz(A.pos[1], B.pos[1]) + sv, mz(A.pos[2], B.pos[2]));
+    c3Cam.lookAt(mz(A.mira[0], B.mira[0]), mz(A.mira[1], B.mira[1]), mz(A.mira[2], B.mira[2]));
+    // letrero con la sala que se está mirando
+    const zonaEl = document.getElementById('cl3dZona');
+    if(zonaEl){
+      const nomZona = (k > 0.5 ? B : A).nom;
+      if(zonaEl.textContent !== nomZona) zonaEl.textContent = nomZona;
+    }
     // el personal trabaja: leve balanceo
     c3Personal.forEach((k, i) => { if(!k.userData.destino) k.position.y = Math.abs(Math.sin(c3Reloj * 1.7 + i)) * 0.045; });
     // quien tenga destino camina hacia allá, con pasitos
@@ -6888,10 +7721,10 @@ function c3Animar(){
       o.position.y = Math.abs(Math.sin(c3Reloj * 11)) * 0.04;
     });
     if(c3Anillo && c3Seleccionado){ c3Anillo.position.set(c3Seleccionado.position.x, 0.02, c3Seleccionado.position.z); }
-    // los que esperan se mueven apenas
+    // los que esperan se mueven apenas en su silla, mirando a recepción
     c3Pacientes.forEach(p => {
       if(p.userData.fase === undefined || p.userData.destino) return;
-      p.rotation.y = Math.sin(c3Reloj * 0.5 + p.userData.fase) * 0.28;
+      p.rotation.y = Math.PI + Math.sin(c3Reloj * 0.5 + p.userData.fase) * 0.24;
     });
     c3Rend.render(c3Escena, c3Cam);
     c3Loop = requestAnimationFrame(paso);
@@ -6948,6 +7781,67 @@ const CL_EQUIPOS = [
 
 const CL_NOMBRES = ['Fernanda','Matías','Camila','Joaquín','Antonia','Vicente','Josefa','Benjamín','Isidora','Tomás','Florencia','Agustín'];
 
+/* ---------- la clínica como lugar ----------
+   Contexto que cambia en cada visita: no es lo mismo un paciente que
+   viene del SAPU que uno derivado por la mutual. Es decoración honesta,
+   no afecta el diagnóstico, pero hace que la sala de espera se sienta
+   un lugar y no una cola de fichas. */
+const CL_PREVISION = ['Fonasa B','Fonasa C','Fonasa D','Isapre','Mutual','GES'];
+const CL_ORIGEN = ['derivado del CESFAM','viene del SAPU','derivado del hospital','viene por su cuenta',
+  'derivado por el traumatólogo','viene de la posta rural','derivado del policlínico de la mutual','lo mandó su médico de cabecera'];
+const CL_ESPERA_FRASE = ['Lleva 20 minutos en la sala','Llegó antes de la hora','Pidió hora hace tres semanas',
+  'Vino acompañado','Vino directo del trabajo','Alcanzó a llegar entre turnos','Se tomó dos micros para llegar'];
+
+/* Eventos que duran unos pacientes y cambian cómo se trabaja. */
+const CL_EVENTOS = [
+  { id:'operativo', emo:'🚐', nom:'Operativo rural',
+    desc:'Se atiende en una posta a dos horas de la ciudad. Paga poco, pero el pueblo lo cuenta.',
+    ef:{ rep:2, pago:0.7 } },
+  { id:'mutual', emo:'🦺', nom:'Convenio con la mutual',
+    desc:'Llegaron accidentes del trabajo derivados: pagan bastante mejor.',
+    ef:{ pago:1.6 } },
+  { id:'invierno', emo:'🌧️', nom:'Campaña de invierno',
+    desc:'La sala IRA está llena. Por ahora llegan puros cuadros respiratorios.',
+    ef:{ esp:'respi', tiempo:2 } },
+  { id:'interna', emo:'🎓', nom:'Llegó una interna en práctica',
+    desc:'Toma la anamnesis mientras tú evalúas: rinde mucho más el tiempo con cada paciente.',
+    ef:{ tiempo:4 } },
+  { id:'corte', emo:'💡', nom:'Corte de luz en el sector',
+    desc:'No hay imágenes ni equipos. Hay que decidir con las manos y la cabeza.',
+    ef:{ sinImg:true, pago:1.2 } },
+  { id:'prensa', emo:'📰', nom:'Vino la tele a grabar',
+    desc:'Un reportaje sobre la clínica. El acierto limpio suma el doble; el error también se ve.',
+    ef:{ rep:2, castigo:true } },
+  { id:'congreso', emo:'🏅', nom:'Semana del congreso',
+    desc:'Media clínica está en el congreso: menos tiempo por paciente, pero lo que llega paga más.',
+    ef:{ pago:1.4, tiempo:-3 } },
+];
+const CL_EVENTO_DURA = 4;
+const CL_ESPERA_MAX = 3;
+
+/* Urgencias que llegan en ambulancia: hay un reloj real y si se acaba,
+   el paciente se va derivado por otro lado y la clínica pierde prestigio. */
+const CL_URGENCIA_SEG = 100;
+const CL_URGENCIA_PROB = 0.20;
+
+/* Costos fijos. Sin esto la plata solo sube y contratar no es una decisión.
+   Ojo con el balance: mientras atiendes tú solo no hay planilla ni local que
+   pagar (gasto 0). Desde el primer contratado corren arriendo y sueldos, y
+   cada kinesiólogo deja ganancia, pero delgada: llenarse de salas sin gente
+   que las use deja la caja en rojo. */
+const CL_ARRIENDO_BASE = 0.8;      // $/s
+const CL_ARRIENDO_SALA = 0.5;      // $/s por sala abierta
+const CL_SUELDO_PROP  = 0.35;      // fracción de la renta que se va en sueldo
+
+/* Turno de noche: pacientes seguidos, sin elegir y con menos tiempo. */
+const CL_NOCHE_REP = 50;           // reputación que lo desbloquea
+const CL_NOCHE_LARGO = 5;
+const CL_NOCHE_PAGO = 2.6;
+const CL_NOCHE_TIEMPO = -4;
+
+const CL_ADH_INICIAL = 60;
+const CL_ALARMA_PROB = 0.20;
+
 const CL_TOPE_OFFLINE = 8 * 3600 * 1000;
 const CL_TASA_OFFLINE = 0.5;
 
@@ -6960,12 +7854,269 @@ function clDefault(){
   return {
     dinero:0, reputacion:0, atendidos:0, aciertos:0, fallos:0,
     salas:1, equipos:[], personal:[], vistos:{}, dominados:[], activos:[], altas:0,
+    sala:[],      // quién está esperando ahora, con su contexto de esta visita
+    hist:{},      // memoria de cada paciente: cuántas veces vino, cómo le fue
+    evento:null,  // { id, restantes }
+    evRoll:-1,    // con qué número de atendidos se sorteó el último evento
+    urgencia:null,// { id, hasta, ficha } — ambulancia con reloj corriendo
+    urRoll:-1,
+    acred:['trauma'],   // especialidades con el examen aprobado
+    noche:null,         // turno de noche en curso
+    nocheMejor:0,
+    racha:0, mejorRacha:0,
+    examen:{ mejor:0, intentos:0, tema:{} },
+    misiones:{ dia:null, lista:[] },
+    rojo:0,             // segundos acumulados con la caja en negativo
     t:0,
   };
 }
 
+/* ---------- eventos ---------- */
+function clEvento(){
+  const e = clEstado().evento;
+  if(!e) return null;
+  const d = CL_EVENTOS.find(x => x.id === e.id);
+  return d ? Object.assign({}, d, { restantes:e.restantes }) : null;
+}
+function clEfEvento(k, def){
+  const e = clEvento();
+  return e && e.ef[k] !== undefined ? e.ef[k] : def;
+}
+function clSortearEvento(){
+  const c = clEstado();
+  if(c.evento && c.evento.restantes > 0) return;
+  c.evento = null;
+  if(c.atendidos < 3) return;                 // los primeros pacientes, sin sobresaltos
+  if(c.evRoll === c.atendidos) return;        // un sorteo por paciente, no uno por repintado
+  c.evRoll = c.atendidos;
+  if(Math.random() > 0.22) return;
+  const abiertas = clEspecialidadesAbiertas();
+  const posibles = CL_EVENTOS.filter(e => !e.ef.esp || abiertas.includes(e.ef.esp));
+  if(!posibles.length) return;
+  const e = posibles[Math.floor(Math.random() * posibles.length)];
+  c.evento = { id:e.id, restantes:CL_EVENTO_DURA };
+  if(e.ef.esp) c.sala = [];                   // la sala se rehace con lo que trae el evento
+  avisar(e.emo + ' ' + e.nom + ' · ' + e.desc);
+}
+function clGastarEvento(){
+  const c = clEstado();
+  if(!c.evento) return;
+  c.evento.restantes--;
+  if(c.evento.restantes <= 0){
+    const e = CL_EVENTOS.find(x => x.id === c.evento.id);
+    c.evento = null;
+    c.sala = [];
+    if(e) avisar('Terminó ' + e.nom.toLowerCase() + '. La clínica vuelve a la normalidad.');
+  }
+}
+
+/* ---------- memoria de cada paciente ---------- */
+function clHist(id){ return clEstado().hist[id] || null; }
+function clHistCrear(id){
+  const c = clEstado();
+  if(!c.hist[id]) c.hist[id] = { veces:0, altas:0, recaidas:0, sesiones:0, ultima:0 };
+  return c.hist[id];
+}
+/* Lo que se le dice al jugador cuando reconoce a alguien que ya atendió. */
+function clResumenHist(h){
+  if(!h || !h.veces) return '';
+  const partes = [];
+  partes.push(h.veces === 1 ? 'Ya vino una vez' : 'Ya vino ' + h.veces + ' veces');
+  if(h.altas) partes.push(h.altas === 1 ? 'le diste el alta' : 'le diste el alta ' + h.altas + ' veces');
+  if(h.altas && h.sesiones) partes.push('en ' + h.sesiones + ' sesiones en total');
+  if(h.recaidas) partes.push(h.recaidas === 1 ? 'tuvo una recaída' : 'tuvo ' + h.recaidas + ' recaídas');
+  else if(h.altas) partes.push('sin recaídas');
+  return partes.join(' · ');
+}
+
+/* ---------- personalidad ---------- */
+function clRasgo(id){ return CL_RASGOS.find(r => r.id === id) || null; }
+function clAnimo(id){ return CL_ANIMOS.find(a => a.id === id) || null; }
+function clEfRasgo(rasgoId, k, def){
+  const r = clRasgo(rasgoId);
+  return r && r.ef[k] !== undefined ? r.ef[k] : def;
+}
+
+/* ---------- sala de espera ---------- */
+function clFichaEspera(caso){
+  const al = a => a[Math.floor(Math.random() * a.length)];
+  // los muy chicos y los muy grandes casi siempre llegan acompañados
+  const probAcomp = (caso.edad <= 15 || caso.edad >= 70) ? 0.85 : 0.28;
+  return {
+    id: caso.id,
+    prev: al(CL_PREVISION),
+    origen: al(CL_ORIGEN),
+    espera: al(CL_ESPERA_FRASE),
+    rasgo: al(CL_RASGOS).id,
+    animo: al(CL_ANIMOS).id,
+    acomp: Math.random() < probAcomp ? al(CL_ACOMP) : null,
+  };
+}
+function clLlenarSala(){
+  const c = clEstado();
+  if(!Array.isArray(c.sala)) c.sala = [];
+  c.sala = c.sala.filter(x => x && KIN_CASOS.some(k => k.id === x.id));
+  let vueltas = 0;
+  while(c.sala.length < CL_ESPERA_MAX && vueltas++ < 40){
+    const caso = clSiguienteCaso(c.sala.map(x => x.id));
+    if(!caso) break;
+    c.sala.push(clFichaEspera(caso));
+  }
+}
+function clJornada(){
+  const c = clEstado();
+  if(c.noche) return { dia: 1 + Math.floor(c.atendidos / 4), nom:'turno de noche', emo:'🌙' };
+  const dia = 1 + Math.floor(c.atendidos / 4);
+  const bloque = c.atendidos % 4;
+  return { dia, nom: bloque < 2 ? 'jornada de la mañana' : 'jornada de la tarde', emo: bloque < 2 ? '🌤️' : '🌇' };
+}
+
+/* ---------- urgencias con reloj ----------
+   Llega una ambulancia con un caso que hay que resolver antes de que
+   se acabe el tiempo. Si expira, se lo llevan a otra parte y duele. */
+function clCasosUrgentes(){
+  const abiertas = clEspecialidadesAbiertas();
+  return KIN_CASOS.filter(c => c.urgente && abiertas.includes(c.esp));
+}
+function clSortearUrgencia(){
+  const c = clEstado();
+  if(c.urgencia || c.noche || clTurno) return;
+  if(c.atendidos < 5) return;
+  if(c.urRoll === c.atendidos) return;
+  c.urRoll = c.atendidos;
+  if(Math.random() > CL_URGENCIA_PROB) return;
+  const pool = clCasosUrgentes();
+  if(!pool.length) return;
+  const caso = pool[Math.floor(Math.random() * pool.length)];
+  const ficha = clFichaEspera(caso);
+  ficha.origen = 'llegó en ambulancia';
+  ficha.espera = 'lo están estabilizando';
+  c.urgencia = Object.assign(ficha, { hasta: Date.now() + CL_URGENCIA_SEG * 1000 });
+  jxSonido('mal'); jxVibrar(40);
+  avisar('🚨 ¡Urgencia! Llegó ' + caso.pac + ' en ambulancia. Tienes poco tiempo.');
+}
+function clSegUrgencia(){
+  const c = clEstado();
+  if(!c.urgencia) return 0;
+  return Math.max(0, Math.ceil((c.urgencia.hasta - Date.now()) / 1000));
+}
+function clVencerUrgencia(){
+  const c = clEstado();
+  if(!c.urgencia || clSegUrgencia() > 0) return false;
+  const caso = KIN_CASOS.find(x => x.id === c.urgencia.id);
+  c.urgencia = null;
+  c.reputacion = Math.max(0, c.reputacion - 5);
+  c.racha = 0;
+  jxSonido('mal'); jxVibrar(60);
+  avisar('🚑 Se llevaron a ' + (caso ? caso.pac : 'el paciente') + ' a otra clínica. −5 de reputación.');
+  return true;
+}
+
+/* ---------- turno de noche ----------
+   Pacientes seguidos, sin elegir, con menos tiempo y mejor pago.
+   No quedan en tratamiento: se resuelven y salen. */
+function clNocheDisponible(){
+  const c = clEstado();
+  return c.reputacion >= CL_NOCHE_REP && !c.noche && !clTurno;
+}
+function clEmpezarNoche(){
+  const c = clEstado();
+  if(!clNocheDisponible()) return;
+  c.noche = { quedan: CL_NOCHE_LARGO, aciertos:0, plata:0, total:CL_NOCHE_LARGO };
+  c.urgencia = null;
+  jxSonido('gana'); jxVibrar(25);
+  avisar('🌙 Turno de noche: ' + CL_NOCHE_LARGO + ' pacientes seguidos, sin elegir y con menos tiempo.');
+  clIniciarCaso();
+}
+function clCasoDeNoche(){
+  const abiertas = clEspecialidadesAbiertas();
+  const pool = KIN_CASOS.filter(x => abiertas.includes(x.esp));
+  const urg = pool.filter(x => x.urgente || x.derivar);
+  // de noche llegan más cuadros complicados, pero no solo esos
+  if(urg.length && Math.random() < 0.45) return urg[Math.floor(Math.random() * urg.length)];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+function clCerrarNoche(){
+  const c = clEstado();
+  const n = c.noche;
+  if(!n) return;
+  c.noche = null;
+  const record = n.aciertos > (c.nocheMejor || 0);
+  if(record) c.nocheMejor = n.aciertos;
+  const r = jxRecompensar(6 + n.aciertos * 3, 30 + n.aciertos * 8, { desde:document.getElementById('jxScreenClinica') });
+  clGuardar(true);
+  jxCelebrar({
+    titulo: record ? '¡Mejor turno hasta ahora! 🌙' : 'Fin del turno de noche 🌙',
+    sub: n.aciertos + ' de ' + n.total + ' resueltos bien · ' + clPlata(n.plata) + ' en caja' +
+         (record ? ' · nuevo récord' : ' · tu récord es ' + c.nocheMejor),
+    monedas: 6 + n.aciertos * 3, xp: 30 + n.aciertos * 8,
+    subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Volver a la clínica',
+    onNext:()=>{ clVista='recepcion'; clSesionAbierta=null; clPanel(); },
+  });
+}
+
+/* ---------- misiones del día ---------- */
+const CL_MISIONES = [
+  { id:'zonaHombro', nom:'Tres de hombro',        desc:'Atiende 3 pacientes que consulten por hombro', meta:3, premio:15, zona:'Hombro' },
+  { id:'zonaRodilla',nom:'Tres de rodilla',       desc:'Atiende 3 pacientes que consulten por rodilla', meta:3, premio:15, zona:'Rodilla' },
+  { id:'zonaLumbar', nom:'Tres de lumbar',        desc:'Atiende 3 pacientes que consulten por lumbar',  meta:3, premio:15, zona:'Lumbar' },
+  { id:'altaLimpia', nom:'Alta sin recaídas',     desc:'Lleva a un paciente al alta sin ninguna recaída', meta:1, premio:20, tipo:'alta' },
+  { id:'perfectos',  nom:'Tres seguidos',         desc:'Acierta 3 diagnósticos seguidos sin errores',   meta:3, premio:25, tipo:'racha' },
+  { id:'sinImagen',  nom:'Ojo clínico',           desc:'Cierra 2 casos perfectos sin pedir imágenes',   meta:2, premio:20, tipo:'sinImg' },
+  { id:'derivar',    nom:'Saber parar',           desc:'Deriva correctamente 1 caso con banderas rojas', meta:1, premio:25, tipo:'derivar' },
+  { id:'atender',    nom:'Jornada completa',      desc:'Atiende 5 pacientes hoy',                       meta:5, premio:15, tipo:'atender' },
+  { id:'sesiones',   nom:'Constancia',            desc:'Haz 6 sesiones de tratamiento',                 meta:6, premio:15, tipo:'sesion' },
+];
+
+function clMisiones(){
+  const c = clEstado();
+  const hoy = jxHoyClave();
+  if(c.misiones.dia !== hoy){
+    const mezcla = clMezclar(CL_MISIONES).slice(0, 3);
+    c.misiones = { dia:hoy, lista: mezcla.map(m => ({ id:m.id, n:0, cobrada:false })) };
+  }
+  return c.misiones.lista;
+}
+function clMisionDef(id){ return CL_MISIONES.find(m => m.id === id); }
+/* Suma avance a las misiones que calcen. `datos` trae zona, tipo, etc. */
+function clAvanzarMision(tipo, info){
+  const lista = clMisiones();
+  let algo = false;
+  lista.forEach(ms => {
+    const d = clMisionDef(ms.id);
+    if(!d || ms.cobrada || ms.n >= d.meta) return;
+    let calza = false;
+    if(d.zona && tipo === 'atender' && info && info.zona === d.zona) calza = true;
+    else if(d.tipo === tipo) calza = true;
+    if(!calza) return;
+    ms.n = Math.min(d.meta, ms.n + (info && info.n ? info.n : 1));
+    if(ms.n >= d.meta) algo = true;
+  });
+  if(algo) avisar('🎯 Completaste una misión del día. Pasa a cobrarla.');
+}
+function clCobrarMision(id){
+  const c = clEstado();
+  const ms = clMisiones().find(x => x.id === id);
+  const d = clMisionDef(id);
+  if(!ms || !d || ms.cobrada || ms.n < d.meta) return;
+  ms.cobrada = true;
+  const r = jxRecompensar(d.premio, d.premio * 2, { desde:document.getElementById('jxScreenClinica') });
+  c.reputacion += 1;
+  jxSonido('gana'); jxVibrar(20);
+  clGuardar(true);
+  avisar('🎯 ' + d.nom + ' · +' + d.premio + ' monedas y +1 reputación');
+  clPanel();
+}
+
 /* ---------- economía ---------- */
+/* Una especialidad se abre con reputación Y con el examen aprobado.
+   La reputación puede bajar, así que una especialidad también se cierra. */
 function clEspecialidadesAbiertas(){
+  const c = clEstado();
+  return Object.keys(CL_ESPECIALIDADES).filter(k =>
+    c.reputacion >= CL_ESPECIALIDADES[k].rep && c.acred.includes(k));
+}
+function clEspecialidadConRep(){
   const c = clEstado();
   return Object.keys(CL_ESPECIALIDADES).filter(k => c.reputacion >= CL_ESPECIALIDADES[k].rep);
 }
@@ -6985,9 +8136,12 @@ function clRepExtra(){
   CL_EQUIPOS.forEach(e => { if(e.ef.rep && clTieneEquipo(e.id)) n += e.ef.rep; });
   return n;
 }
+/* Lo que paga un paciente atendido a mano: el equipamiento más el evento del día.
+   La renta pasiva del equipo NO se toca, para que un evento no dispare el idle. */
+function clMultPagoCaso(){ return clMultPago() * clEfEvento('pago', 1); }
 function clCostoKine(){
   const c = clEstado();
-  return Math.ceil(1500 * Math.pow(2.4, c.personal.length));
+  return Math.ceil(2200 * Math.pow(2.6, c.personal.length));
 }
 /* Cada kinesiólogo atiende pacientes de rutina por su cuenta. */
 function clIngresoPorSegundo(){
@@ -6996,6 +8150,16 @@ function clIngresoPorSegundo(){
   c.personal.forEach(p => { s += p.renta; });
   return s * clMultPago();
 }
+/* Lo que sale todos los segundos: arriendo del local más sueldos.
+   Sin nadie contratado la clínica no tiene costos: eres tú en tu box. */
+function clGastoPorSegundo(){
+  const c = clEstado();
+  if(!c.personal.length) return 0;
+  let g = CL_ARRIENDO_BASE + CL_ARRIENDO_SALA * clSalas();
+  c.personal.forEach(p => { g += p.renta * CL_SUELDO_PROP; });
+  return g;
+}
+function clNetoPorSegundo(){ return clIngresoPorSegundo() - clGastoPorSegundo(); }
 
 function clAsentar(){
   const c = clEstado();
@@ -7005,9 +8169,16 @@ function clAsentar(){
   if(ms <= 0){ c.t = ahora; return 0; }
   let tasa = 1;
   if(ms > 60000){ ms = Math.min(ms, CL_TOPE_OFFLINE); tasa = CL_TASA_OFFLINE; }
-  const ganado = clIngresoPorSegundo() * (ms / 1000) * tasa;
+  const seg = ms / 1000;
+  // los ingresos rinden menos con la página cerrada; el arriendo se paga igual
+  const ganado = clIngresoPorSegundo() * seg * tasa - clGastoPorSegundo() * seg;
   c.dinero += ganado;
   c.t = ahora;
+  // estar en rojo mucho rato cuesta prestigio: no se puede sostener una clínica así
+  if(c.dinero < 0){
+    c.rojo += seg;
+    while(c.rojo >= 60 && c.reputacion > 0){ c.rojo -= 60; c.reputacion = Math.max(0, c.reputacion - 1); }
+  }else if(c.rojo){ c.rojo = 0; }
   return ganado;
 }
 
@@ -7022,9 +8193,11 @@ function clGuardar(inmediato){
 }
 
 function clPlata(n){
-  if(n < 1000) return '$' + Math.floor(n);
-  if(n < 1e6) return '$' + (n/1000).toFixed(n < 10000 ? 1 : 0) + 'K';
-  return '$' + (n/1e6).toFixed(2) + 'M';
+  const signo = n < 0 ? '−' : '';
+  const a = Math.abs(n);
+  if(a < 1000) return signo + '$' + Math.floor(a);
+  if(a < 1e6) return signo + '$' + (a/1000).toFixed(a < 10000 ? 1 : 0) + 'K';
+  return signo + '$' + (a/1e6).toFixed(2) + 'M';
 }
 
 /* ---------- selección de casos ----------
@@ -7032,12 +8205,19 @@ function clPlata(n){
    y no salga siempre el mismo. */
 function clCasosDisponibles(){
   const abiertas = clEspecialidadesAbiertas();
-  return KIN_CASOS.filter(c => abiertas.includes(c.esp));
+  let pool = KIN_CASOS.filter(c => abiertas.includes(c.esp));
+  const forz = clEfEvento('esp', null);        // un evento puede llenar la sala de una especialidad
+  if(forz && pool.some(c => c.esp === forz)) pool = pool.filter(c => c.esp === forz);
+  return pool;
 }
-function clSiguienteCaso(){
+function clSiguienteCaso(excluir){
   const c = clEstado();
-  const pool = clCasosDisponibles();
+  const fuera = excluir || [];
+  let pool = clCasosDisponibles().filter(x => !fuera.includes(x.id));
   if(!pool.length) return null;
+  // de vez en cuando vuelve alguien que ya pasó por la clínica, con su historia
+  const conocidos = pool.filter(x => c.hist[x.id] && c.hist[x.id].altas > 0);
+  if(conocidos.length && Math.random() < 0.28) pool = conocidos;
   const minimo = Math.min(...pool.map(x => c.vistos[x.id] || 0));
   const menosVistos = pool.filter(x => (c.vistos[x.id] || 0) === minimo);
   return menosVistos[Math.floor(Math.random() * menosVistos.length)];
@@ -7059,6 +8239,7 @@ function clMostrar(){
     '<div class="cl-top">' +
       '<canvas id="clLienzo" class="cl-lienzo"></canvas>' +
       '<div class="cl-cargando" id="cl3dCargando">Cargando la clínica…</div>' +
+      '<div class="cl-zona" id="cl3dZona"></div>' +
       '<div class="cl-sel" id="cl3dSel"></div>' +
       '<div class="cl-hud">' +
         '<div class="cl-plata"><span id="clDinero">$0</span></div>' +
@@ -7088,6 +8269,7 @@ function clMostrar(){
   clPanel();
   clBucle();
   if(ganado > 1) avisar('🏥 Mientras no estabas tu equipo atendió y juntó ' + clPlata(ganado));
+  else if(ganado < -1) avisar('🏥 Mientras no estabas se pagó ' + clPlata(-ganado) + ' de arriendo y sueldos');
 }
 
 function clAjustar(){
@@ -7102,6 +8284,9 @@ function clAjustar(){
 function clPanel(){
   const cont = document.getElementById('clPanel');
   if(!cont) return;
+  // las solapas de arriba se mantienen en sintonía con clVista
+  document.querySelectorAll('#jxScreenClinica .cl-tab[data-cv]').forEach(b =>
+    b.classList.toggle('activa', b.dataset.cv === clVista));
   if(clVista === 'recepcion'){
     if(clTurno) clPanelCaso(cont);
     else if(clSesionAbierta !== null) clPanelSesion(cont, clSesionAbierta);
@@ -7112,44 +8297,151 @@ function clPanel(){
 }
 
 /* ---------- recepción ---------- */
+function clEdad(caso){ return caso.edadTxt || (caso.edad + ' años'); }
+
 function clPanelRecepcion(cont){
   const c = clEstado();
+  // red de seguridad: si el turno quedó a medio cerrar (por salir de la app
+  // justo al terminar), se liquida acá en vez de bloquear los siguientes.
+  if(c.noche && c.noche.quedan <= 0 && !clTurno){ clCerrarNoche(); return; }
+  clVencerUrgencia();
+  clRevisarAbandonos();
+  clSortearEvento();
+  clSortearUrgencia();
+  clLlenarSala();
+  const ev = clEvento();
+  const j = clJornada();
   const abiertas = clEspecialidadesAbiertas();
   const prox = Object.keys(CL_ESPECIALIDADES).find(k => !abiertas.includes(k));
   const precision = c.atendidos ? Math.round(c.aciertos / (c.aciertos + c.fallos) * 100) : 0;
-  cont.innerHTML =
-    '<div class="cl-recep">' +
-      '<button class="cl-btn-grande" id="clAtender">🩺 Atender al siguiente paciente</button>' +
-      '<div class="cl-chips">' +
-        abiertas.map(k => '<span class="cl-chip" style="background:' + CL_ESPECIALIDADES[k].color + '">' +
-          CL_ESPECIALIDADES[k].emo + ' ' + CL_ESPECIALIDADES[k].nom + '</span>').join('') +
-        (prox ? '<span class="cl-chip off">🔒 ' + CL_ESPECIALIDADES[prox].nom + ' · ⭐' + CL_ESPECIALIDADES[prox].rep + '</span>' : '') +
-      '</div>' +
-      '<div class="cl-stats">' +
-        '<div><b>' + c.atendidos + '</b><span>pacientes</span></div>' +
-        '<div><b>' + precision + '%</b><span>de acierto</span></div>' +
-        '<div><b>' + (c.altas || 0) + '</b><span>altas dadas</span></div>' +
-      '</div>' +
-      (c.activos.length ? '<div class="cl-sec">En tratamiento (' + c.activos.length + ')</div><div class="cl-lista">' +
-        c.activos.map((p, i) => {
-          const cs = KIN_CASOS.find(x => x.id === p.id);
-          const f = clFaseDe(p.progreso);
-          return '<button class="cl-item puede" data-sesion="' + i + '">' +
-            '<div class="cl-item-emo" style="background:#e8f0f4">🧍</div>' +
-            '<div class="cl-item-info"><div class="cl-item-nom">' + cs.pac + '</div>' +
-            '<div class="cl-item-desc">' + cs.nom + ' · fase ' + f.nom + '</div>' +
-            '<div class="cl-barra-mini"><div style="width:' + p.progreso + '%"></div></div></div>' +
-            '<div class="cl-item-costo">' + Math.round(p.progreso) + '%</div></button>';
-        }).join('') + '</div>' : '') +
-      (c.personal.length ? '<div class="cl-sec">Tu equipo</div>' +
-        '<div class="cl-lista">' + c.personal.map(p =>
-          '<div class="cl-item"><div class="cl-item-emo" style="background:' + CL_ESPECIALIDADES[p.esp].color + '33">' + p.emo + '</div>' +
-          '<div class="cl-item-info"><div class="cl-item-nom">' + p.nom + '</div>' +
-          '<div class="cl-item-desc">' + CL_ESPECIALIDADES[p.esp].nom + ' · ' + clPlata(p.renta * clMultPago()) + '/s</div></div></div>'
-        ).join('') + '</div>' : '') +
+
+  let html = '<div class="cl-recep">' +
+    '<div class="cl-jornada">' +
+      '<div class="cl-jornada-dia">Día ' + j.dia + '<small>' + j.nom + ' · ' + c.sala.length + ' en la sala de espera' +
+        (c.racha > 1 ? ' · 🔥 ' + c.racha + ' seguidos' : '') + '</small></div>' +
+      '<div class="cl-jornada-sol">' + j.emo + '</div>' +
     '</div>';
-  document.getElementById('clAtender').onclick = clIniciarCaso;
+
+  if(c.dinero < 0){
+    html += '<div class="cl-rojo">🔴 La clínica está en rojo: ' + clPlata(c.dinero) +
+      '. El arriendo y los sueldos corren igual, y cada minuto así te cuesta reputación.</div>';
+  }
+
+  // urgencia con reloj: manda sobre todo lo demás
+  if(c.urgencia){
+    const uc = KIN_CASOS.find(x => x.id === c.urgencia.id);
+    if(uc){
+      html += '<button class="cl-urgencia" data-urgencia="1">' +
+        '<div class="cl-urgencia-top"><span>🚨 Urgencia</span>' +
+          '<span class="cl-urgencia-reloj" id="clUrReloj">' + clSegUrgencia() + 's</span></div>' +
+        '<div class="cl-urgencia-cuerpo">' +
+          '<div class="cl-pac-emo urg">' + (uc.ava || '🧍') + '</div>' +
+          '<div class="cl-pac-info"><div class="cl-pac-nom">' + uc.pac + ', ' + clEdad(uc) + '</div>' +
+          '<div class="cl-pac-mot">“' + uc.motivo + '”</div>' +
+          '<div class="cl-pac-meta">Llegó en ambulancia · atiéndelo antes de que se lo lleven</div></div>' +
+        '</div></button>';
+    }
+  }
+
+  if(ev){
+    html += '<div class="cl-evento"><div class="cl-evento-emo">' + ev.emo + '</div><div>' +
+      '<div class="cl-evento-nom">' + ev.nom + '</div>' +
+      '<div class="cl-evento-desc">' + ev.desc + '</div>' +
+      '<div class="cl-evento-quedan">Quedan ' + ev.restantes + ' paciente' + (ev.restantes === 1 ? '' : 's') + '</div>' +
+    '</div></div>';
+  }
+
+  // misiones del día
+  const ms = clMisiones();
+  html += '<div class="cl-sec">Misiones del día</div><div class="cl-misiones">';
+  ms.forEach(m => {
+    const d = clMisionDef(m.id);
+    if(!d) return;
+    const lista = m.n >= d.meta;
+    html += '<div class="cl-mision' + (m.cobrada ? ' cobrada' : lista ? ' lista' : '') + '"' +
+      (lista && !m.cobrada ? ' data-mision="' + m.id + '"' : '') + '>' +
+      '<div class="cl-mision-info"><b>' + d.nom + '</b><small>' + d.desc + '</small>' +
+      '<div class="cl-barra-mini"><div style="width:' + Math.round(m.n / d.meta * 100) + '%"></div></div></div>' +
+      '<div class="cl-mision-premio">' + (m.cobrada ? '✓' : lista ? 'Cobrar' : m.n + '/' + d.meta) + '</div></div>';
+  });
+  html += '</div>';
+
+  if(c.reputacion >= CL_NOCHE_REP){
+    html += '<button class="cl-noche-btn" id="clNoche">🌙 Tomar turno de noche' +
+      '<small>' + CL_NOCHE_LARGO + ' pacientes seguidos, sin elegir y con menos tiempo. Paga ' + CL_NOCHE_PAGO + '×' +
+      (c.nocheMejor ? ' · tu récord: ' + c.nocheMejor + '/' + CL_NOCHE_LARGO : '') + '</small></button>';
+  }
+
+  html += '<div class="cl-sec">Sala de espera</div>';
+  if(!c.sala.length){
+    html += '<div class="cl-vacio">No queda nadie esperando. Sube la reputación para que llegue más gente.</div>';
+  }else{
+    html += '<div class="cl-espera">' + c.sala.map((f, i) => {
+      const caso = KIN_CASOS.find(x => x.id === f.id);
+      if(!caso) return '';
+      const h = clHist(caso.id);
+      const vuelve = !!(h && h.veces);
+      const esp = CL_ESPECIALIDADES[caso.esp];
+      const ra = clRasgo(f.rasgo), an = clAnimo(f.animo);
+      return '<button class="cl-pac' + (vuelve ? ' vuelve' : '') + '" data-atender="' + i + '">' +
+        '<div class="cl-pac-emo"' + (vuelve ? ' style="background:#f6ead4"' : '') + '>' + (caso.ava || '🧍') + '</div>' +
+        '<div class="cl-pac-info">' +
+          '<div class="cl-pac-nom">' + caso.pac + ', ' + clEdad(caso) +
+            (an ? '<span class="cl-badge sobrio">' + an.emo + ' ' + an.nom + '</span>' : '') +
+            (ra ? '<span class="cl-badge sobrio">' + ra.emo + ' ' + ra.nom + '</span>' : '') +
+            (vuelve ? '<span class="cl-badge oro">vuelve</span>' : '') +
+            (c.dominados.includes(caso.id) ? '<span class="cl-badge verde">dominado</span>' : '') +
+          '</div>' +
+          '<div class="cl-pac-mot">“' + caso.motivo + '”</div>' +
+          '<div class="cl-pac-meta">' + esp.emo + ' ' + caso.ocup + ' · ' + f.prev + ' · ' + f.espera +
+            (f.acomp ? ' · ' + f.acomp.emo + ' con ' + f.acomp.nom : '') + '</div>' +
+        '</div></button>';
+    }).join('') + '</div>';
+  }
+
+  html += '<div class="cl-chips">' +
+      abiertas.map(k => '<span class="cl-chip" style="background:' + CL_ESPECIALIDADES[k].color + '">' +
+        CL_ESPECIALIDADES[k].emo + ' ' + CL_ESPECIALIDADES[k].nom + '</span>').join('') +
+      (prox ? '<span class="cl-chip off">🔒 ' + CL_ESPECIALIDADES[prox].nom + ' · ⭐' + CL_ESPECIALIDADES[prox].rep + '</span>' : '') +
+    '</div>' +
+    '<div class="cl-stats">' +
+      '<div><b>' + c.atendidos + '</b><span>pacientes</span></div>' +
+      '<div><b>' + precision + '%</b><span>de acierto</span></div>' +
+      '<div><b>' + (c.altas || 0) + '</b><span>altas dadas</span></div>' +
+    '</div>';
+
+  if(c.activos.length){
+    html += '<div class="cl-sec">En tratamiento (' + c.activos.length + ')</div><div class="cl-lista">' +
+      c.activos.map((p, i) => {
+        const cs = KIN_CASOS.find(x => x.id === p.id);
+        if(!cs) return '';
+        const f = clFaseDe(p.progreso);
+        const adh = Math.round(p.adh);
+        return '<button class="cl-item puede' + (p.alarma ? ' alerta' : '') + '" data-sesion="' + i + '">' +
+          '<div class="cl-item-emo" style="background:#e8f0f4">' + (p.alarma ? '⚠️' : (cs.ava || '🧍')) + '</div>' +
+          '<div class="cl-item-info"><div class="cl-item-nom">' + cs.pac +
+            (p.alarma ? ' <span class="cl-badge roja">algo cambió</span>' : adh < 35 ? ' <span class="cl-badge roja">va a abandonar</span>' : '') + '</div>' +
+          '<div class="cl-item-desc">' + cs.nom + ' · fase ' + f.nom + ' · adherencia ' + adh + '%</div>' +
+          '<div class="cl-barra-mini"><div style="width:' + p.progreso + '%"></div></div></div>' +
+          '<div class="cl-item-costo">' + Math.round(p.progreso) + '%</div></button>';
+      }).join('') + '</div>';
+  }
+
+  if(c.personal.length){
+    html += '<div class="cl-sec">Tu equipo</div><div class="cl-lista">' + c.personal.map(p =>
+      '<div class="cl-item listo"><div class="cl-item-emo" style="background:' + CL_ESPECIALIDADES[p.esp].color + '33">' + p.emo + '</div>' +
+      '<div class="cl-item-info"><div class="cl-item-nom">' + p.nom + '</div>' +
+      '<div class="cl-item-desc">' + CL_ESPECIALIDADES[p.esp].nom + ' · ' + clPlata(p.renta * clMultPago()) + '/s</div></div></div>'
+    ).join('') + '</div>';
+  }
+
+  cont.innerHTML = html + '</div>';
+  cont.querySelectorAll('[data-atender]').forEach(b => b.onclick = () => clIniciarCaso(parseInt(b.dataset.atender, 10)));
   cont.querySelectorAll('[data-sesion]').forEach(b => b.onclick = () => { clSesionAbierta = parseInt(b.dataset.sesion, 10); jxSonido('tap'); clPanel(); });
+  cont.querySelectorAll('[data-urgencia]').forEach(b => b.onclick = () => clIniciarCaso('urgencia'));
+  cont.querySelectorAll('[data-mision]').forEach(b => b.onclick = () => clCobrarMision(b.dataset.mision));
+  const bn = document.getElementById('clNoche');
+  if(bn) bn.onclick = clEmpezarNoche;
 }
 
 /* ---------- el caso, paso a paso ---------- */
@@ -7169,18 +8461,62 @@ function clAccionesDe(caso){
   return { lista, dif: dx ? dx.dif : [caso.id] };
 }
 
-function clIniciarCaso(){
-  const caso = clSiguienteCaso();
-  if(!caso){ avisar('No hay casos disponibles todavía'); return; }
-  const { lista, dif } = clAccionesDe(caso);
+function clTiempoTotal(rasgoId){
+  const c = clEstado();
+  let t = CL_TIEMPO_BASE + (clTieneEquipo('eco') ? 2 : 0) + clEfEvento('tiempo', 0);
+  if(c.noche) t += CL_NOCHE_TIEMPO;
+  t += clEfRasgo(rasgoId, 'tiempo', 0);
+  return Math.max(6, t);
+}
+
+/* `i` es la posición en la sala de espera; 'urgencia' atiende la ambulancia.
+   Sin argumento se atiende al primero de la fila. */
+function clIniciarCaso(i){
+  const c = clEstado();
+  let ficha = null;
+
+  if(i === 'urgencia'){
+    if(!c.urgencia || clVencerUrgencia()){ clPanel(); return; }
+    ficha = c.urgencia; c.urgencia = null;
+  }else if(c.noche){
+    ficha = clFichaEspera(clCasoDeNoche());
+    ficha.origen = 'llegó al turno de noche';
+  }else{
+    clLlenarSala();
+    const pos = (typeof i === 'number' && c.sala[i]) ? i : 0;
+    ficha = c.sala.splice(pos, 1)[0];
+  }
+  if(!ficha){ avisar('No hay nadie esperando todavía'); clPanel(); return; }
+  const caso = KIN_CASOS.find(x => x.id === ficha.id);
+  if(!caso){ clPanel(); return; }
+
+  let { lista, dif } = clAccionesDe(caso);
+  if(clEfEvento('sinImg', false)) lista = lista.filter(a => a.g !== 'img');
+  if(ficha.acomp) lista.push({ id:'acomp', g:'anam', n:'Preguntarle a ' + ficha.acomp.nom, t:1 });
+
   const conf = {}; dif.forEach(d => conf[d] = 0);
+  // "llega leído": parte convencido de un diagnóstico que no es el suyo
+  let creencia = null;
+  if(clEfRasgo(ficha.rasgo, 'pistaFalsa', false)){
+    const otras = dif.filter(d => d !== caso.id);
+    if(otras.length){
+      creencia = otras[Math.floor(Math.random() * otras.length)];
+      conf[creencia] += 4;
+    }
+  }
+  const h = clHist(caso.id);
+  const tot = clTiempoTotal(ficha.rasgo);
   clTurno = {
-    caso, acciones:lista, dif, conf,
-    hechas:[], pistas:[],
-    tiempo: CL_TIEMPO_BASE + (clTieneEquipo('eco') ? 2 : 0),
+    caso, ficha, acciones:lista, dif, conf, creencia,
+    hechas:[], pistas:[], imagenes:0,
+    tiempo: tot, tiempoMax: tot,
     fase:'investigar', errores:0, grupo:'anam',
+    hist: h ? Object.assign({}, h) : null,
+    noche: !!c.noche,
+    urgente: i === 'urgencia',
   };
   jxSonido('tap');
+  clVista = 'recepcion'; clSesionAbierta = null;
   clPanel();
 }
 
@@ -7214,11 +8550,26 @@ function clHacerAccion(accId){
   }
   t.tiempo -= acc.t;
   t.hechas.push(accId);
+  if(acc.g === 'img') t.imagenes++;
 
   const dx = KIN_DX[caso.id];
-  let pista = null;
+  let pista = null, etiqueta = acc.n;
 
-  if(acc.g === 'test'){
+  if(acc.id === 'acomp'){
+    // el acompañante cuenta algo que el paciente no había dicho
+    const pendientes = dx ? Object.keys(dx.c).filter(k => !t.hechas.includes(k)) : [];
+    if(pendientes.length){
+      const k = pendientes[Math.floor(Math.random() * pendientes.length)];
+      t.hechas.push(k);
+      const base = dx.c[k];
+      pista = { t:'“' + base.t + '”', s:base.s, n:base.n };
+      etiqueta = 'Dice ' + t.ficha.acomp.nom;
+      jxSonido('bien');
+    }else{
+      pista = { t:'Confirma lo que ya te contó el paciente.', s:[], n:[] };
+      jxSonido('tap');
+    }
+  }else if(acc.g === 'test'){
     if(acc.prueba === caso.prueba){
       pista = { t: caso.hallazgo, s:[caso.id], n:t.dif.filter(d => d !== caso.id) };
       jxSonido('bien');
@@ -7235,9 +8586,16 @@ function clHacerAccion(accId){
     jxSonido('tap');
   }
 
-  pista.s.forEach(d => { if(t.conf[d] !== undefined) t.conf[d] += 2; });
-  pista.n.forEach(d => { if(t.conf[d] !== undefined) t.conf[d] -= 3; });
-  t.pistas.push({ acc:acc.n, txt:pista.t, util:pista.s.length + pista.n.length > 0 });
+  // el minimizador y el aguantador entregan la mitad de lo que preguntas
+  const pobre = clEfRasgo(t.ficha && t.ficha.rasgo, 'pistasPobres', false) && acc.g === 'anam' && acc.id !== 'acomp';
+  const sube = pobre ? 1 : 2, baja = pobre ? 1 : 3;
+  pista.s.forEach(d => { if(t.conf[d] !== undefined) t.conf[d] += sube; });
+  pista.n.forEach(d => { if(t.conf[d] !== undefined) t.conf[d] -= baja; });
+  t.pistas.push({
+    acc: etiqueta,
+    txt: pista.t + (pobre && pista.s.length ? ' (te lo cuenta a medias)' : ''),
+    util: pista.s.length + pista.n.length > 0,
+  });
 
   if(t.tiempo <= 0){
     t.tiempo = 0;
@@ -7250,18 +8608,38 @@ function clHacerAccion(accId){
 function clPanelCaso(cont){
   const t = clTurno, c = t.caso;
   const conf = clConfianzas();
-  const pctTiempo = t.tiempo / (CL_TIEMPO_BASE + (clTieneEquipo('eco') ? 2 : 0)) * 100;
+  const pctTiempo = t.tiempo / (t.tiempoMax || clTiempoTotal()) * 100;
+  const f = t.ficha || {};
+  const ev = clEvento();
 
-  let html =
-    '<div class="cl-ficha">' +
+  const ra = clRasgo(f.rasgo), an = clAnimo(f.animo);
+
+  let html = '';
+  if(t.urgente) html += '<div class="cl-urgente-banner">🚨 Urgencia · resuélvelo ya</div>';
+  if(t.noche) html += '<div class="cl-noche-banner">🌙 Turno de noche · quedan ' + (clEstado().noche ? clEstado().noche.quedan : 0) + '</div>';
+
+  html +=
+    '<div class="cl-ficha' + (t.urgente ? ' urgente' : '') + '">' +
       '<div class="cl-ficha-top">' +
         '<div class="cl-ficha-avatar">' + (c.ava || '🧍') + '</div>' +
-        '<div><div class="cl-ficha-nom">' + c.pac + ', ' + c.edad + ' años</div>' +
+        '<div><div class="cl-ficha-nom">' + c.pac + ', ' + clEdad(c) + '</div>' +
         '<div class="cl-ficha-ocu">' + c.ocup + ' · consulta por ' + c.zona.toLowerCase() + '</div></div>' +
       '</div>' +
       '<div class="cl-ficha-motivo">“' + c.motivo + '”</div>' +
+      (an ? '<div class="cl-animo">' + an.emo + ' ' + an.frase + '</div>' : '') +
+      (f.prev ? '<div class="cl-ficha-ctx"><span>' + f.prev + '</span><span>' + f.origen + '</span>' +
+        '<span>' + CL_ESPECIALIDADES[c.esp].emo + ' ' + CL_ESPECIALIDADES[c.esp].nom + '</span>' +
+        (f.acomp ? '<span>' + f.acomp.emo + ' viene con ' + f.acomp.nom + '</span>' : '') + '</div>' : '') +
+      (ra ? '<div class="cl-rasgo"><span class="cl-rasgo-emo">' + ra.emo + '</span>' +
+        '<div><b>' + ra.nom + '</b><small>' + ra.aviso + '</small></div></div>' : '') +
+      (t.creencia ? '<div class="cl-creencia">Llega convencido de que tiene <b>' + clNombreDx(t.creencia) + '</b>. Ojo con eso.</div>' : '') +
+      (t.hist && t.hist.veces
+        ? '<div class="cl-historia"><b>Ya lo conoces</b><p>' + (CL_REGRESO[c.id] || 'Vuelve a la clínica.') + '</p>' +
+          '<em>' + clResumenHist(t.hist) + '</em></div>'
+        : '') +
       '<div class="cl-tiempo"><div class="cl-tiempo-barra"><div style="width:' + pctTiempo + '%"></div></div>' +
         '<span>⏳ ' + t.tiempo + '</span></div>' +
+      (ev ? '<div class="cl-ficha-ctx"><span>' + ev.emo + ' ' + ev.nom + '</span></div>' : '') +
     '</div>';
 
   // tablero de hipótesis
@@ -7284,8 +8662,10 @@ function clPanelCaso(cont){
 
   if(t.fase === 'investigar'){
     const grupos = { anam:'Preguntar', exam:'Examinar', test:'Pruebas', img:'Imágenes' };
+    const conAcciones = Object.keys(grupos).filter(g => t.acciones.some(a => a.g === g));
+    if(!conAcciones.includes(t.grupo)) t.grupo = conAcciones[0];
     html += '<div class="cl-sec">¿Qué haces?</div><div class="cl-grupos">';
-    Object.keys(grupos).forEach(g => html += '<button class="cl-grupo' + (t.grupo === g ? ' on' : '') + '" data-g="' + g + '">' + grupos[g] + '</button>');
+    conAcciones.forEach(g => html += '<button class="cl-grupo' + (t.grupo === g ? ' on' : '') + '" data-g="' + g + '">' + grupos[g] + '</button>');
     html += '</div><div class="cl-acciones">';
     t.acciones.filter(a => a.g === t.grupo).forEach(a => {
       const ya = t.hechas.includes(a.id);
@@ -7325,46 +8705,78 @@ function clPanelCaso(cont){
 
 function clDerivarPaciente(){
   const t = clTurno, c = t.caso, e = clEstado();
+  const urgente = t.urgente || c.urgente;
   if(c.derivar){
     // caso con banderas rojas: derivar ERA lo correcto
-    e.reputacion += 4; e.atendidos++; e.aciertos++;
+    const rep = Math.round((urgente ? 7 : 4) * clEfEvento('rep', 1));
+    const plata = Math.round((urgente ? 900 : 400) * c.dif * clMultPagoCaso());
+    e.reputacion += rep;
+    e.dinero += plata;
+    e.atendidos++; e.aciertos++;
+    e.racha++; if(e.racha > e.mejorRacha) e.mejorRacha = e.racha;
     e.vistos[c.id] = (e.vistos[c.id] || 0) + 1;
-    const r = jxRecompensar(10, 25, { desde:document.getElementById('jxScreenClinica') });
+    if(!e.dominados.includes(c.id) && (e.vistos[c.id] || 0) >= 1) e.dominados.push(c.id);
+    const h = clHistCrear(c.id); h.veces++; h.ultima = Date.now();
+    clGastarEvento();
+    clAvanzarMision('derivar'); clAvanzarMision('atender', { zona:c.zona });
+    if(t.noche && e.noche){ e.noche.aciertos++; e.noche.plata += plata; e.noche.quedan--; }
+    const r = jxRecompensar(urgente ? 16 : 10, urgente ? 40 : 25, { desde:document.getElementById('jxScreenClinica') });
+    const seguir = t.noche;
     clTurno = null; clGuardar(true);
-    jxCelebrar({ titulo:'Derivación correcta 🚑', sub:c.dato, monedas:10, xp:25,
-      subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Siguiente paciente',
-      onNext:()=>{ clVista='recepcion'; clIniciarCaso(); } });
+    jxCelebrar({ titulo: urgente ? '¡Derivación a tiempo! 🚑' : 'Derivación correcta 🚑',
+      sub:c.dato, monedas: urgente ? 16 : 10, xp: urgente ? 40 : 25,
+      subioNivel:r.subioNivel, nivel:r.nivel, textoNext: seguir ? 'Siguiente paciente' : 'Volver a la sala',
+      onNext:()=>{ clVista='recepcion'; clSesionAbierta=null;
+                   if(seguir && e.noche && e.noche.quedan > 0) clIniciarCaso();
+                   else if(seguir) clCerrarNoche();
+                   else clPanel(); } });
   }else{
-    e.reputacion = Math.max(0, e.reputacion - 2);
-    e.atendidos++; e.fallos++;
+    e.reputacion = Math.max(0, e.reputacion - (clEfEvento('castigo', false) ? 4 : 2));
+    e.atendidos++; e.fallos++; e.racha = 0;
+    clGastarEvento();
+    if(t.noche && e.noche) e.noche.quedan--;
+    const seguir = t.noche && e.noche;
     clTurno = null; clGuardar(true);
     jxSonido('mal');
     avisar('Era un cuadro que podías tratar tú: derivar sin necesidad te resta reputación');
-    clVista = 'recepcion'; clPanel();
+    clVista = 'recepcion';
+    if(seguir && e.noche.quedan > 0) clIniciarCaso();
+    else if(seguir) clCerrarNoche();
+    else clPanel();
   }
 }
 
 function clResponderDx(id){
-  const t = clTurno, c = t.caso;
+  const t = clTurno, c = t.caso, e = clEstado();
   if(id !== c.id){
     t.errores++;
+    e.reputacion = Math.max(0, e.reputacion - (clEfEvento('castigo', false) ? 2 : 1));
+    e.racha = 0;
     jxSonido('mal'); jxVibrar(30);
     const pan = document.getElementById('clPanel');
     pan.classList.remove('cl-error'); void pan.offsetWidth; pan.classList.add('cl-error');
-    avisar('❌ Ese diagnóstico no explica todos los hallazgos');
+    avisar('❌ Ese diagnóstico no explica todos los hallazgos · −1 reputación');
     return;
   }
   jxSonido('bien');
-  const otros = clMezclar(KIN_CASOS.filter(x => x.id !== c.id)).slice(0,3);
   t.opcTto = clMezclar([{ txt:c.tto, ok:true }, ...c.ttoMal.map(x => ({ txt:x, ok:false }))]);
   t.fase = 'tratamiento';
   clPanel();
 }
 
 function clResponderTto(i){
-  const t = clTurno;
+  const t = clTurno, e = clEstado();
   if(!t.opcTto[i].ok){
-    clFallar('❌ Ese manejo no corresponde para esta fase');
+    // elegir mal el manejo cuesta lo mismo que errar el diagnóstico:
+    // se puede reintentar, pero el caso ya no cierra perfecto
+    t.errores++;
+    e.reputacion = Math.max(0, e.reputacion - (clEfEvento('castigo', false) ? 2 : 1));
+    e.racha = 0;
+    jxSonido('mal'); jxVibrar(30);
+    const pan = document.getElementById('clPanel');
+    if(pan){ pan.classList.remove('cl-error'); void pan.offsetWidth; pan.classList.add('cl-error'); }
+    avisar('❌ Ese manejo no corresponde para la fase ' + t.caso.fase + ' · −1 reputación');
+    clPanel();
     return;
   }
   jxSonido('gana');
@@ -7375,34 +8787,71 @@ function clCerrarCaso(){
   const t = clTurno, c = t.caso, e = clEstado();
   const perfecto = t.errores === 0;
   const eficiencia = 1 + (t.tiempo || 0) / 20;   // llegar con tiempo de sobra paga más
-  const base = 120 * c.dif;
-  const dinero = Math.round(base * clMultPago() * (perfecto ? 1.5 : 1) * eficiencia);
-  const rep = perfecto ? 2 + clRepExtra() : 1;
+  const base = 95 * c.dif;
+  const vuelve = !!(t.hist && t.hist.veces);
+  const confianza = vuelve ? 1.15 : 1;           // el que ya te conoce llega con la ficha hecha
+  const gracia = clEfRasgo(t.ficha && t.ficha.rasgo, 'pago', 1);  // el conversador recomienda
+  const noche = t.noche && e.noche ? CL_NOCHE_PAGO : 1;
+  const dinero = Math.round(base * clMultPagoCaso() * (perfecto ? 1.5 : 1) * eficiencia * confianza * gracia * noche);
+  let rep = perfecto ? 2 + clRepExtra() : 1;
+  if(!perfecto && clEfEvento('castigo', false)) rep = 0;   // con la tele mirando, el error no suma
+  rep = Math.round(rep * clEfEvento('rep', 1));
   const monedas = perfecto ? 8 : 4;
 
   e.dinero += dinero;
   e.reputacion += rep;
   e.atendidos++;
-  if(perfecto) e.aciertos++; else { e.aciertos++; e.fallos += t.errores; }
+  if(perfecto){ e.aciertos++; e.racha++; if(e.racha > e.mejorRacha) e.mejorRacha = e.racha; }
+  else { e.aciertos++; e.fallos += t.errores; e.racha = 0; }
   e.vistos[c.id] = (e.vistos[c.id] || 0) + 1;
   if(perfecto && (e.vistos[c.id] || 0) >= 2 && !e.dominados.includes(c.id)) e.dominados.push(c.id);
+  const h = clHistCrear(c.id); h.veces++; h.ultima = Date.now();
+  clGastarEvento();
+
+  clAvanzarMision('atender', { zona:c.zona });
+  if(perfecto){
+    clAvanzarMision('racha');
+    if(!t.imagenes) clAvanzarMision('sinImg');
+  }
 
   const antes = clEspecialidadesAbiertas().length;
   const r = jxRecompensar(monedas, 12 * c.dif, { desde: document.getElementById('jxScreenClinica') });
   const nuevas = clEspecialidadesAbiertas().length > antes;
 
-  // el paciente queda EN TRATAMIENTO: ahora hay que llevarlo hasta el alta
-  e.activos.push({ id:c.id, sesion:0, progreso:0, recaidas:0, nota:'', ultimaCarga:null });
+  // en el turno de noche no hay seguimiento: se resuelve y sale
+  const enNoche = t.noche && e.noche;
+  if(enNoche){ if(perfecto) e.noche.aciertos++; e.noche.plata += dinero; e.noche.quedan--; }
+
+  // fuera del turno, el paciente queda EN TRATAMIENTO hasta el alta.
+  // Los de bandera roja no: esos se van derivados igual.
+  let sub = c.dato;
+  if(!enNoche && !c.derivar){
+    e.activos.push({
+      id:c.id, sesion:0, progreso:0, recaidas:0, nota:'', ultimaCarga:null,
+      adh: Math.max(15, Math.min(95, CL_ADH_INICIAL + clEfRasgo(t.ficha && t.ficha.rasgo, 'adherencia', 0))),
+      rasgo: t.ficha ? t.ficha.rasgo : null, alarma:null, faltas:0, visto:Date.now(),
+    });
+    sub += ' · ' + c.pac + ' queda en tratamiento: llévalo hasta el alta.';
+  }else if(c.derivar){
+    sub += ' · Acertaste el cuadro, pero ojo: acá lo correcto era derivar sin tratar.';
+  }
+  if(nuevas) sub += ' · ¡Se abrió una especialidad nueva!';
+
+  const seguir = enNoche;
   clTurno = null;
   clGuardar(true);
   c3Poblar();
 
   jxCelebrar({
     titulo: perfecto ? '¡Diagnóstico certero! 🎯' : 'Diagnóstico cerrado',
-    sub: c.dato + (nuevas ? ' · ¡Se abrió una especialidad nueva!' : '') + ' · ' + c.pac + ' queda en tratamiento: llévalo hasta el alta.',
-    monedas, xp: 12 * c.dif, subioNivel: r.subioNivel, nivel: r.nivel,
-    textoNext: 'Ver la clínica',
-    onNext: () => { clVista = 'recepcion'; clSesionAbierta = null; clPanel(); },
+    sub, monedas, xp: 12 * c.dif, subioNivel: r.subioNivel, nivel: r.nivel,
+    textoNext: seguir ? 'Siguiente paciente' : 'Ver la clínica',
+    onNext: () => {
+      clVista = 'recepcion'; clSesionAbierta = null;
+      if(seguir && e.noche && e.noche.quedan > 0) clIniciarCaso();
+      else if(seguir) clCerrarNoche();
+      else clPanel();
+    },
   });
 }
 
@@ -7433,60 +8882,168 @@ function clFaseDe(prog){
 }
 function clIdxCarga(id){ return CL_CARGAS.findIndex(c => c.id === id); }
 
-/* Alta cuando llega a 100. Cada sesión paga algo; el alta paga el grueso. */
+/* Los pacientes que quedan botados pierden adherencia y te cuestan prestigio. */
+function clRevisarAbandonos(){
+  const c = clEstado();
+  const ahora = Date.now();
+  let olvidados = 0;
+  c.activos.forEach(pac => {
+    if(!pac.visto){ pac.visto = ahora; return; }
+    const dias = Math.floor((ahora - pac.visto) / 86400000);
+    if(dias < 1) return;
+    pac.adh = Math.max(0, pac.adh - 12 * Math.min(dias, 5));
+    pac.visto = ahora;
+    c.reputacion = Math.max(0, c.reputacion - 1);
+    olvidados++;
+  });
+  if(olvidados) avisar('📉 ' + olvidados + ' paciente(s) llevaban días sin sesión: bajó su adherencia y tu reputación.');
+}
+
+function clPagarSesion(caso){
+  const c = clEstado();
+  clAsentar();
+  c.dinero += Math.round(38 * caso.dif * clMultPagoCaso());
+}
+
+function clAlta(idx){
+  const c = clEstado();
+  const pac = c.activos[idx];
+  const caso = KIN_CASOS.find(x => x.id === pac.id);
+  const limpio = pac.recaidas === 0;
+  const bono = Math.round(240 * caso.dif * clMultPagoCaso() * (limpio ? 1.6 : 1));
+  c.dinero += bono;
+  c.reputacion += Math.round((limpio ? 3 + clRepExtra() : 1) * clEfEvento('rep', 1));
+  c.altas = (c.altas || 0) + 1;
+  if(limpio && !c.dominados.includes(caso.id)) c.dominados.push(caso.id);
+  const h = clHistCrear(caso.id);
+  h.altas++; h.sesiones += pac.sesion; h.recaidas += pac.recaidas; h.ultima = Date.now();
+  c.activos.splice(idx, 1);
+  clSesionAbierta = null;
+  if(limpio) clAvanzarMision('alta');
+  const r = jxRecompensar(limpio ? 12 : 6, 20 * caso.dif, { desde:document.getElementById('jxScreenClinica') });
+  clGuardar(true); c3Poblar();
+  jxCelebrar({
+    titulo: limpio ? '¡Alta sin recaídas! 🎉' : 'Paciente de alta',
+    sub: caso.pac + ' terminó su tratamiento en ' + pac.sesion + ' sesiones. ' + caso.dato +
+         (h.altas > 1 ? ' Es la ' + h.altas + 'ª vez que le das el alta.' : ''),
+    monedas: limpio ? 12 : 6, xp: 20 * caso.dif,
+    subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Seguir',
+    onNext:()=>{ clVista='recepcion'; clPanel(); },
+  });
+}
+
+/* Alta cuando llega a 100. Cada sesión paga algo; el alta paga el grueso.
+   La adherencia manda: sin ella la mejor dosificación no rinde. */
 function clSesion(idx, cargaId){
   const c = clEstado();
   const pac = c.activos[idx];
   if(!pac) return;
   const caso = KIN_CASOS.find(x => x.id === pac.id);
+  if(!caso){ c.activos.splice(idx, 1); clSesionAbierta = null; clPanel(); return; }
   const fase = clFaseDe(pac.progreso);
-  const dist = Math.abs(clIdxCarga(cargaId) - clIdxCarga(fase.carga));
+  pac.visto = Date.now();
 
+  // sesión de educación: no carga tejido, pero recupera al paciente
+  if(cargaId === 'educar'){
+    pac.sesion++;
+    pac.adh = Math.min(100, pac.adh + 26);
+    pac.progreso = Math.min(100, pac.progreso + 4);
+    pac.nota = '📘 Sesión de educación. Entendió qué le pasa y por qué se trata así: vuelve más comprometido.';
+    pac.ultimaCarga = cargaId;
+    jxSonido('bien');
+    clPagarSesion(caso);
+    clAvanzarMision('sesion');
+    clGuardar(true); clPanel();
+    return;
+  }
+
+  // con la adherencia por el suelo, simplemente no llega
+  if(pac.adh < 35 && Math.random() < 0.45){
+    pac.faltas++;
+    pac.adh = Math.max(0, pac.adh - 4);
+    pac.progreso = Math.max(0, pac.progreso - 3);
+    pac.nota = '📵 No llegó a la sesión' + (pac.faltas > 1 ? ' (van ' + pac.faltas + ')' : '') +
+               '. Con la adherencia tan baja el tratamiento no avanza: toca educar antes que cargar.';
+    jxSonido('mal'); jxVibrar(20);
+    clGuardar(true); clPanel();
+    return;
+  }
+
+  const dist = Math.abs(clIdxCarga(cargaId) - clIdxCarga(fase.carga));
+  const factorAdh = 0.55 + (pac.adh / 100) * 0.65;   // entre 0,55x y 1,2x
   pac.sesion++;
+  clAvanzarMision('sesion');
   let nota, delta;
   if(dist === 0){
-    delta = 16 + Math.floor(Math.random() * 6);
+    delta = Math.round((16 + Math.floor(Math.random() * 6)) * factorAdh);
     nota = '✓ Buena dosificación. ' + fase.nota;
+    pac.adh = Math.min(100, pac.adh + 6);
     jxSonido('bien');
   }else if(dist === 1){
-    delta = 5 + Math.floor(Math.random() * 4);
+    delta = Math.round((5 + Math.floor(Math.random() * 4)) * factorAdh);
     nota = '~ Avanza, pero la carga no era la ideal para fase ' + fase.nom.toLowerCase() + '. ' + fase.nota;
+    pac.adh = Math.max(0, pac.adh - 7);
     jxSonido('tap');
   }else{
     delta = -14;
     pac.recaidas++;
+    pac.adh = Math.max(0, pac.adh - 16);
     nota = '✗ Recaída. ' + fase.nota;
     jxSonido('mal'); jxVibrar(30);
   }
+  if(clEfRasgo(pac.rasgo, 'seAburre', false)) pac.adh = Math.max(0, pac.adh - 5);
   pac.progreso = Math.max(0, Math.min(100, pac.progreso + delta));
   pac.nota = nota;
   pac.ultimaCarga = cargaId;
+  clPagarSesion(caso);
 
-  const pago = Math.round(45 * caso.dif * clMultPago());
-  clAsentar();
-  c.dinero += pago;
-
-  if(pac.progreso >= 100){
-    const limpio = pac.recaidas === 0;
-    const bono = Math.round(260 * caso.dif * clMultPago() * (limpio ? 1.6 : 1));
-    c.dinero += bono;
-    c.reputacion += limpio ? 3 + clRepExtra() : 1;
-    c.altas = (c.altas || 0) + 1;
-    if(limpio && !c.dominados.includes(caso.id)) c.dominados.push(caso.id);
-    c.activos.splice(idx, 1);
-    const r = jxRecompensar(limpio ? 12 : 6, 20 * caso.dif, { desde:document.getElementById('jxScreenClinica') });
-    clGuardar(true); c3Poblar();
-    jxCelebrar({
-      titulo: limpio ? '¡Alta sin recaídas! 🎉' : 'Paciente de alta',
-      sub: caso.pac + ' terminó su tratamiento en ' + pac.sesion + ' sesiones. ' + caso.dato,
-      monedas: limpio ? 12 : 6, xp: 20 * caso.dif,
-      subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Seguir',
-      onNext:()=>{ clVista='recepcion'; clPanel(); },
-    });
+  // a veces aparece un signo nuevo y hay que decidir en el momento
+  if(pac.progreso < 100 && !pac.alarma && Math.random() < CL_ALARMA_PROB){
+    pac.alarma = CL_ALARMAS[Math.floor(Math.random() * CL_ALARMAS.length)].id;
+    jxSonido('mal'); jxVibrar(35);
+    clGuardar(true); clPanel();
     return;
   }
+
+  if(pac.progreso >= 100){ clAlta(idx); return; }
   clGuardar(true);
   clPanel();
+}
+
+/* Alarma en plena sesión: seguir, bajar la carga o derivar. */
+function clResponderAlarma(idx, decision){
+  const c = clEstado();
+  const pac = c.activos[idx];
+  if(!pac || !pac.alarma) return;
+  const al = CL_ALARMAS.find(a => a.id === pac.alarma);
+  const caso = KIN_CASOS.find(x => x.id === pac.id);
+  pac.alarma = null;
+  if(al.ok === decision){
+    c.reputacion += 2;
+    pac.adh = Math.min(100, pac.adh + 8);
+    pac.nota = '✓ ' + al.dice;
+    jxSonido('bien'); jxVibrar(15);
+    if(decision === 'derivar'){
+      c.activos.splice(idx, 1);
+      clSesionAbierta = null;
+      clGuardar(true); c3Poblar();
+      jxCelebrar({ titulo:'Frenaste a tiempo 🚑',
+        sub:(caso ? caso.pac : 'El paciente') + ' quedó en manos del médico. ' + al.dice,
+        monedas:10, xp:25, textoNext:'Volver a la clínica',
+        onNext:()=>{ clVista='recepcion'; clPanel(); } });
+      jxRecompensar(10, 25, { desde:document.getElementById('jxScreenClinica') });
+      return;
+    }
+    if(decision === 'bajar') pac.progreso = Math.max(0, pac.progreso - 4);
+  }else{
+    c.reputacion = Math.max(0, c.reputacion - 2);
+    pac.recaidas++;
+    pac.adh = Math.max(0, pac.adh - 12);
+    pac.progreso = Math.max(0, pac.progreso - 12);
+    pac.nota = '✗ No era la decisión correcta. ' + al.dice;
+    jxSonido('mal'); jxVibrar(30);
+  }
+  clGuardar(true); clPanel();
 }
 
 function clPanelSesion(cont, idx){
@@ -7495,25 +9052,51 @@ function clPanelSesion(cont, idx){
   if(!pac){ clSesionAbierta = null; clPanel(); return; }
   const caso = KIN_CASOS.find(x => x.id === pac.id);
   const fase = clFaseDe(pac.progreso);
-  cont.innerHTML =
+  const h = clHist(caso.id);
+  const ra = clRasgo(pac.rasgo);
+  const adh = Math.round(pac.adh);
+  const adhNom = adh >= 70 ? 'comprometido' : adh >= 45 ? 'irregular' : 'a punto de abandonar';
+  const alarma = pac.alarma ? CL_ALARMAS.find(a => a.id === pac.alarma) : null;
+
+  let html =
     '<div class="cl-ficha">' +
       '<div class="cl-ficha-top">' +
-        '<div class="cl-ficha-avatar">🧍</div>' +
-        '<div><div class="cl-ficha-nom">' + caso.pac + '</div>' +
+        '<div class="cl-ficha-avatar">' + (caso.ava || '🧍') + '</div>' +
+        '<div><div class="cl-ficha-nom">' + caso.pac + ', ' + clEdad(caso) + '</div>' +
         '<div class="cl-ficha-ocu">' + caso.nom + '</div></div>' +
       '</div>' +
+      (h && h.altas ? '<div class="cl-ficha-ctx"><span>Ya lo trataste antes · ' + clResumenHist(h) + '</span></div>' : '') +
+      (ra ? '<div class="cl-rasgo chico"><span class="cl-rasgo-emo">' + ra.emo + '</span><div><b>' + ra.nom + '</b><small>' + ra.desc + '</small></div></div>' : '') +
       '<div class="cl-fase">Sesión ' + (pac.sesion + 1) + ' · fase <b>' + fase.nom + '</b>' +
-        (pac.recaidas ? ' · ' + pac.recaidas + ' recaída(s)' : '') + '</div>' +
+        (pac.recaidas ? ' · ' + pac.recaidas + ' recaída(s)' : '') +
+        (pac.faltas ? ' · ' + pac.faltas + ' falta(s)' : '') + '</div>' +
       '<div class="cl-prog"><div style="width:' + pac.progreso + '%"></div></div>' +
       '<div class="cl-prog-n">' + Math.round(pac.progreso) + '% recuperado</div>' +
+      '<div class="cl-adh-fila"><span>Adherencia</span>' +
+        '<div class="cl-adh"><div class="' + (adh < 35 ? 'baja' : adh < 70 ? 'media' : '') + '" style="width:' + adh + '%"></div></div>' +
+        '<span>' + adh + '% · ' + adhNom + '</span></div>' +
       (pac.nota ? '<div class="cl-nota-sesion">' + pac.nota + '</div>' : '') +
-    '</div>' +
-    '<div class="cl-preg">¿Qué carga le pones esta sesión?</div>' +
-    '<div class="cl-opciones">' +
+    '</div>';
+
+  if(alarma){
+    html += '<div class="cl-alarma"><b>⚠️ Algo cambió</b><p>' + alarma.txt + '</p></div>' +
+      '<div class="cl-preg">¿Qué haces?</div><div class="cl-opciones">' +
+      '<button class="cl-opc" data-al="seguir"><b>▶️ Seguir con el plan</b><small>Es una respuesta esperable a la carga</small></button>' +
+      '<button class="cl-opc" data-al="bajar"><b>🌡️ Bajar la carga y controlar</b><small>Nos pasamos de dosis, hay que retroceder</small></button>' +
+      '<button class="cl-opc" data-al="derivar"><b>🚑 Frenar y derivar al médico</b><small>Esto ya no se maneja acá</small></button>' +
+      '</div>';
+  }else{
+    html += '<div class="cl-preg">¿Qué le haces esta sesión?</div><div class="cl-opciones">' +
       CL_CARGAS.map(x => '<button class="cl-opc" data-carga="' + x.id + '"><b>' + x.emo + ' ' + x.nom + '</b><small>' + x.desc + '</small></button>').join('') +
-    '</div>' +
-    '<button class="cl-btn-derivar" id="clVolverRecep">‹ Volver a la clínica</button>';
+      '<button class="cl-opc educar" data-carga="educar"><b>📘 Educar y reforzar</b>' +
+      '<small>No carga tejido, pero sube fuerte la adherencia. Vale oro cuando está por abandonar.</small></button>' +
+      '</div>';
+  }
+  html += '<button class="cl-btn-derivar" id="clVolverRecep">‹ Volver a la clínica</button>';
+
+  cont.innerHTML = html;
   cont.querySelectorAll('[data-carga]').forEach(b => b.onclick = () => clSesion(idx, b.dataset.carga));
+  cont.querySelectorAll('[data-al]').forEach(b => b.onclick = () => clResponderAlarma(idx, b.dataset.al));
   document.getElementById('clVolverRecep').onclick = () => { clSesionAbierta = null; jxSonido('tap'); clPanel(); };
 }
 
@@ -7539,19 +9122,36 @@ function clPanelGestion(cont){
       '<div class="cl-item-desc">' + eq.desc + '</div></div>' +
       '<div class="cl-item-costo">' + (tiene ? 'Comprado' : clPlata(eq.costo)) + '</div></button>';
   });
-  html += '</div><div class="cl-sec">Especialidades</div><div class="cl-lista">';
+  html += '</div><div class="cl-sec">Especialidades</div>' +
+    '<div class="cl-nota izq">Cada especialidad pide reputación <b>y</b> aprobar su acreditación: ' +
+    '8 preguntas sobre sus casos y el contenido de repaso, se aprueba con 6.</div><div class="cl-lista">';
   Object.keys(CL_ESPECIALIDADES).forEach(k => {
-    const e = CL_ESPECIALIDADES[k], abierta = abiertas.includes(k);
+    const e = CL_ESPECIALIDADES[k];
+    const conRep = c.reputacion >= e.rep;
+    const acreditada = c.acred.includes(k);
+    const abierta = conRep && acreditada;
     const n = KIN_CASOS.filter(x => x.esp === k).length;
-    html += '<div class="cl-item' + (abierta ? ' listo' : '') + '">' +
-      '<div class="cl-item-emo" style="background:' + e.color + '33">' + (abierta ? e.emo : '🔒') + '</div>' +
+    let desc;
+    if(abierta) desc = n + ' casos disponibles';
+    else if(!conRep && !acreditada) desc = 'Necesita ⭐' + e.rep + ' de reputación y la acreditación';
+    else if(!conRep) desc = 'Acreditada ✓ · falta llegar a ⭐' + e.rep + ' de reputación';
+    else desc = 'Reputación lista · falta rendir la acreditación';
+    html += '<div class="cl-item' + (abierta ? ' listo' : conRep && !acreditada ? ' puede' : '') + '">' +
+      '<div class="cl-item-emo" style="background:' + e.color + '33">' + (abierta ? e.emo : acreditada ? '⭐' : '🔒') + '</div>' +
       '<div class="cl-item-info"><div class="cl-item-nom">' + e.nom + '</div>' +
-      '<div class="cl-item-desc">' + (abierta ? n + ' casos disponibles' : 'Se abre con ⭐' + e.rep + ' de reputación') + '</div></div></div>';
+      '<div class="cl-item-desc">' + desc + '</div></div>' +
+      (conRep && !acreditada ? '<div class="cl-item-costo"><span class="cl-acred-btn" data-acred="' + k + '">Rendir</span></div>' : '') +
+      '</div>';
   });
   html += '</div>';
   cont.innerHTML = html;
   document.getElementById('clContratar').onclick = clContratar;
   cont.querySelectorAll('[data-eq]').forEach(b => b.onclick = () => clComprarEquipo(b.dataset.eq));
+  cont.querySelectorAll('[data-acred]').forEach(b => b.onclick = (ev) => {
+    ev.stopPropagation();
+    clRepasoTipo = 'examen'; clVista = 'repaso';
+    clEmpezarExamen(b.dataset.acred);
+  });
 }
 
 function clContratar(){
@@ -7587,18 +9187,261 @@ function clComprarEquipo(id){
   avisar('🏥 ' + eq.nom + ' · ' + eq.desc);
 }
 
+/* ============================================================
+   EXAMEN CONTRARRELOJ
+   Las preguntas se arman solas desde el mismo contenido clínico:
+   si se corrige un músculo o una prueba, el examen queda corregido.
+   El mismo motor sirve para acreditar una especialidad.
+   ============================================================ */
+let clEx = null;
+
+function clOpciones(correcta, pool, n){
+  const otras = clMezclar(pool.filter(x => x !== correcta)).slice(0, n - 1);
+  return clMezclar([correcta, ...otras]);
+}
+
+function clBancoPreguntas(esp){
+  const q = [];
+  const nervios = [...new Set(KIN_MUSCULOS.map(m => m.nervio))];
+  const acciones = [...new Set(KIN_MUSCULOS.map(m => m.accion))];
+  const origenes = [...new Set(KIN_MUSCULOS.map(m => m.origen))];
+  KIN_MUSCULOS.forEach(m => {
+    const n = m.nom.toLowerCase();
+    q.push({ tema:'Músculos', p:'¿Cuál es la inervación del ' + n + '?', ok:m.nervio, pool:nervios });
+    q.push({ tema:'Músculos', p:'¿Cuál es la acción del ' + n + '?', ok:m.accion, pool:acciones });
+    q.push({ tema:'Músculos', p:'¿Dónde se origina el ' + n + '?', ok:m.origen, pool:origenes });
+  });
+  const sugs = [...new Set(KIN_PRUEBAS.map(p => p.sug))];
+  const noms = KIN_PRUEBAS.map(p => p.nom);
+  KIN_PRUEBAS.forEach(p => {
+    q.push({ tema:'Pruebas', p:'Una prueba de ' + p.nom + ' positiva sugiere…', ok:p.sug, pool:sugs });
+    q.push({ tema:'Pruebas', p:'¿Qué prueba evalúa ' + p.sug + '?', ok:p.nom, pool:noms });
+  });
+  const grados = [...new Set(KIN_RANGOS.map(r => r.grados + '°'))];
+  KIN_RANGOS.forEach(r => {
+    q.push({ tema:'Rangos', p:'Según AAOS, ¿cuánto es la ' + r.mov.toLowerCase() + ' normal de ' + r.art.toLowerCase() + '?',
+             ok:r.grados + '°', pool:grados });
+  });
+  const ttos = KIN_CASOS.map(c => c.tto);
+  const casos = esp ? KIN_CASOS.filter(c => c.esp === esp) : KIN_CASOS;
+  casos.forEach(c => {
+    if(c.prueba){
+      const pr = KIN_PRUEBAS.find(x => x.id === c.prueba);
+      if(pr) q.push({ tema:'Casos', p:'En ' + c.nom.toLowerCase() + ', ¿qué prueba orienta el diagnóstico?', ok:pr.nom, pool:noms });
+    }
+    q.push({ tema:'Casos', p:'¿Cuál es el manejo correcto en ' + c.nom.toLowerCase() + ', en fase ' + c.fase + '?', ok:c.tto, pool:ttos });
+  });
+  return q;
+}
+
+function clEmpezarExamen(esp){
+  const total = esp ? 8 : 20;
+  let banco = clBancoPreguntas(esp);
+  if(esp){
+    // la acreditación pregunta sobre todo por los casos de esa especialidad
+    const propias = banco.filter(x => x.tema === 'Casos');
+    const resto = clMezclar(banco.filter(x => x.tema !== 'Casos')).slice(0, 4);
+    banco = [...propias, ...resto];
+  }
+  const sel = clMezclar(banco).slice(0, total).map(x => ({
+    tema:x.tema, p:x.p, ok:x.ok, opciones: clOpciones(x.ok, x.pool, 4),
+  }));
+  clEx = {
+    preg:sel, idx:0, aciertos:0, esp:esp || null, elegida:null,
+    hasta: Date.now() + (esp ? 150 : 240) * 1000, terminado:false, tema:{},
+  };
+  jxSonido('tap');
+  clPanel();
+}
+
+function clExResponder(op){
+  if(!clEx || clEx.elegida !== null || clEx.terminado) return;
+  const q = clEx.preg[clEx.idx];
+  clEx.elegida = op;
+  const bien = op === q.ok;
+  if(!clEx.tema[q.tema]) clEx.tema[q.tema] = { ok:0, n:0 };
+  clEx.tema[q.tema].n++;
+  if(bien){ clEx.aciertos++; clEx.tema[q.tema].ok++; jxSonido('bien'); }
+  else { jxSonido('mal'); jxVibrar(25); }
+  clPanel();
+}
+
+function clExSiguiente(){
+  if(!clEx) return;
+  clEx.elegida = null;
+  clEx.idx++;
+  if(clEx.idx >= clEx.preg.length) clExTerminar();
+  else clPanel();
+}
+
+function clExTerminar(){
+  if(!clEx || clEx.terminado) return;
+  clEx.terminado = true;
+  const c = clEstado();
+  const total = clEx.preg.length;
+  const pct = Math.round(clEx.aciertos / total * 100);
+
+  if(clEx.esp){
+    // examen de acreditación: se aprueba con 75%
+    const aprobo = clEx.aciertos >= Math.ceil(total * 0.75);
+    const e = CL_ESPECIALIDADES[clEx.esp];
+    if(aprobo && !c.acred.includes(clEx.esp)) c.acred.push(clEx.esp);
+    clGuardar(true);
+    jxCelebrar({
+      titulo: aprobo ? '¡Acreditación aprobada! ' + e.emo : 'No alcanzó esta vez',
+      sub: clEx.aciertos + ' de ' + total + ' correctas. ' +
+        (aprobo ? 'Ya puedes atender pacientes de ' + e.nom.toLowerCase() + '.'
+                : 'Necesitas ' + Math.ceil(total * 0.75) + ' de ' + total + '. Repasa y vuelve a intentarlo, no cuesta nada.'),
+      monedas: aprobo ? 20 : 0, xp: aprobo ? 60 : 10,
+      textoNext:'Volver', onNext:()=>{ clEx = null; clVista='gestion'; clPanel(); },
+    });
+    if(aprobo) jxRecompensar(20, 60, { desde:document.getElementById('jxScreenClinica') });
+    return;
+  }
+
+  c.examen.intentos++;
+  const record = pct > (c.examen.mejor || 0);
+  if(record) c.examen.mejor = pct;
+  Object.keys(clEx.tema).forEach(t => {
+    if(!c.examen.tema[t]) c.examen.tema[t] = { ok:0, n:0 };
+    c.examen.tema[t].ok += clEx.tema[t].ok;
+    c.examen.tema[t].n += clEx.tema[t].n;
+  });
+  const monedas = Math.round(clEx.aciertos * 1.5);
+  const r = jxRecompensar(monedas, clEx.aciertos * 5, { desde:document.getElementById('jxScreenClinica') });
+  clGuardar(true);
+  jxCelebrar({
+    titulo: record ? '¡Nuevo récord! 📈' : 'Examen terminado',
+    sub: clEx.aciertos + ' de ' + total + ' correctas (' + pct + '%)' +
+         (record ? ' · mejor que tu marca anterior' : ' · tu récord es ' + c.examen.mejor + '%'),
+    monedas, xp: clEx.aciertos * 5, subioNivel:r.subioNivel, nivel:r.nivel,
+    textoNext:'Ver el detalle', onNext:()=>{ clPanel(); },
+  });
+}
+
+function clPanelExamen(cont){
+  const c = clEstado();
+  if(!clEx || clEx.terminado){
+    const t = c.examen.tema;
+    const temas = Object.keys(t).filter(k => t[k].n);
+    cont.innerHTML =
+      '<div class="cl-examen-portada">' +
+        '<div class="cl-examen-emo">📝</div>' +
+        '<div class="cl-examen-tit">Examen contrarreloj</div>' +
+        '<p>20 preguntas en 4 minutos sobre los ' + KIN_MUSCULOS.length + ' músculos, las ' +
+          KIN_PRUEBAS.length + ' pruebas, los rangos AAOS y el manejo de los ' + KIN_CASOS.length + ' casos.</p>' +
+        (c.examen.intentos
+          ? '<div class="cl-stats"><div><b>' + c.examen.mejor + '%</b><span>tu récord</span></div>' +
+            '<div><b>' + c.examen.intentos + '</b><span>intentos</span></div></div>'
+          : '') +
+        (temas.length
+          ? '<div class="cl-sec">Cómo vas por tema</div><div class="cl-temas">' +
+            temas.map(k => {
+              const pc = Math.round(t[k].ok / t[k].n * 100);
+              return '<div class="cl-tema"><span>' + k + '</span>' +
+                '<div class="cl-tema-barra"><div class="' + (pc < 50 ? 'mal' : pc < 75 ? 'medio' : '') + '" style="width:' + pc + '%"></div></div>' +
+                '<b>' + pc + '%</b></div>';
+            }).join('') + '</div>'
+          : '') +
+        '<button class="cl-btn-grande" id="clExIr">Empezar el examen</button>' +
+      '</div>';
+    document.getElementById('clExIr').onclick = () => clEmpezarExamen(null);
+    return;
+  }
+
+  const q = clEx.preg[clEx.idx];
+  const seg = Math.max(0, Math.ceil((clEx.hasta - Date.now()) / 1000));
+  const esp = clEx.esp ? CL_ESPECIALIDADES[clEx.esp] : null;
+  cont.innerHTML =
+    '<div class="cl-ex-top">' +
+      '<span>' + (esp ? 'Acreditación ' + esp.nom : 'Pregunta') + ' ' + (clEx.idx + 1) + '/' + clEx.preg.length + '</span>' +
+      '<span class="cl-ex-reloj' + (seg < 30 ? ' poco' : '') + '" id="clExReloj">' + seg + 's</span>' +
+    '</div>' +
+    '<div class="cl-ex-barra"><div style="width:' + (clEx.idx / clEx.preg.length * 100) + '%"></div></div>' +
+    '<div class="cl-ex-tema">' + q.tema + '</div>' +
+    '<div class="cl-ex-preg">' + q.p + '</div>' +
+    '<div class="cl-opciones">' +
+      q.opciones.map(o => {
+        let cls = 'cl-opc';
+        if(clEx.elegida !== null){
+          if(o === q.ok) cls += ' correcta';
+          else if(o === clEx.elegida) cls += ' incorrecta';
+        }
+        return '<button class="' + cls + '" data-op="' + encodeURIComponent(o) + '">' + o + '</button>';
+      }).join('') +
+    '</div>' +
+    (clEx.elegida !== null
+      ? '<button class="cl-btn-grande" id="clExSig">' + (clEx.idx + 1 >= clEx.preg.length ? 'Ver resultado' : 'Siguiente') + '</button>'
+      : '');
+  cont.querySelectorAll('[data-op]').forEach(b => b.onclick = () => clExResponder(decodeURIComponent(b.dataset.op)));
+  const s = document.getElementById('clExSig');
+  if(s) s.onclick = clExSiguiente;
+}
+
+/* ---------- álbum de fichas clínicas ---------- */
+function clPanelAlbum(cont){
+  const c = clEstado();
+  const zonas = [...new Set(KIN_CASOS.map(x => x.zona))];
+  let html = '<div class="cl-album-cab">Fichas conseguidas: <b>' + c.dominados.length + ' de ' + KIN_CASOS.length + '</b>' +
+    '<div class="cl-prog"><div style="width:' + (c.dominados.length / KIN_CASOS.length * 100) + '%"></div></div>' +
+    '<small>Una ficha se desbloquea al cerrar el caso sin errores o al darle el alta sin recaídas.</small></div>';
+  zonas.forEach(z => {
+    const casos = KIN_CASOS.filter(x => x.zona === z);
+    html += '<div class="cl-sec">' + z + ' (' + casos.filter(x => c.dominados.includes(x.id)).length + '/' + casos.length + ')</div>' +
+      '<div class="cl-album">';
+    casos.forEach(x => {
+      const tiene = c.dominados.includes(x.id);
+      html += '<button class="cl-ficha-mini' + (tiene ? '' : ' bloqueada') + '"' + (tiene ? ' data-ficha="' + x.id + '"' : '') + '>' +
+        '<span class="cl-ficha-mini-emo">' + (tiene ? x.ava : '🔒') + '</span>' +
+        '<span class="cl-ficha-mini-nom">' + (tiene ? x.pac : '???') + '</span>' +
+        '<span class="cl-ficha-mini-dx">' + (tiene ? x.nom : 'sin conseguir') + '</span>' +
+        // la etiqueta solo va en las conseguidas: en las bloqueadas sería un spoiler
+        (tiene && x.derivar ? '<span class="cl-badge roja">derivar</span>' : '') +
+      '</button>';
+    });
+    html += '</div>';
+  });
+  cont.innerHTML = html;
+  cont.querySelectorAll('[data-ficha]').forEach(b => b.onclick = () => {
+    const x = KIN_CASOS.find(k => k.id === b.dataset.ficha);
+    const pr = x.prueba ? KIN_PRUEBAS.find(p => p.id === x.prueba) : null;
+    jxSonido('tap');
+    jxCelebrar({
+      titulo: x.ava + ' ' + x.nom,
+      sub: x.pac + ', ' + clEdad(x) + ' · ' + x.ocup + '. ' +
+           (pr ? 'Prueba: ' + pr.nom + '. ' : '') + x.dato,
+      monedas:0, xp:0, textoNext:'Cerrar', onNext:()=>{},
+    });
+  });
+}
+
 /* ---------- repaso ---------- */
 let clRepasoTipo = 'musculos', clRepasoIdx = 0, clRepasoAbierta = false;
 function clPanelRepaso(cont){
+  const solapas = '<div class="cl-tabs chicas">' +
+    [['musculos','Músculos'],['rangos','Rangos'],['examen','Examen'],['album','Álbum']].map(([id, nom]) =>
+      '<button class="cl-tab' + (clRepasoTipo === id ? ' activa' : '') + '" data-rp="' + id + '">' + nom + '</button>').join('') +
+    '</div>';
+
+  const colgarSolapas = () => cont.querySelectorAll('[data-rp]').forEach(b => b.onclick = () => {
+    clRepasoTipo = b.dataset.rp; clRepasoIdx = 0; clRepasoAbierta = false; jxSonido('tap'); clPanel();
+  });
+
+  if(clRepasoTipo === 'examen' || clRepasoTipo === 'album'){
+    cont.innerHTML = solapas;
+    const caja = document.createElement('div');
+    cont.appendChild(caja);
+    if(clRepasoTipo === 'examen') clPanelExamen(caja); else clPanelAlbum(caja);
+    colgarSolapas();
+    return;
+  }
+
   const esMusculo = clRepasoTipo === 'musculos';
   const lista = esMusculo ? KIN_MUSCULOS : KIN_RANGOS;
   if(clRepasoIdx >= lista.length) clRepasoIdx = 0;
   const x = lista[clRepasoIdx];
   cont.innerHTML =
-    '<div class="cl-tabs chicas">' +
-      '<button class="cl-tab' + (esMusculo ? ' activa' : '') + '" data-rp="musculos">Músculos</button>' +
-      '<button class="cl-tab' + (!esMusculo ? ' activa' : '') + '" data-rp="rangos">Rangos</button>' +
-    '</div>' +
+    solapas +
     '<div class="cl-carta' + (clRepasoAbierta ? ' abierta' : '') + '" id="clCarta">' +
       (esMusculo
         ? '<div class="cl-carta-tit">' + x.nom + '</div>' +
@@ -7641,9 +9484,26 @@ function clBucle(){
     const c = clEstado();
     clMostrado += (c.dinero - clMostrado) * 0.15;
     if(Math.abs(c.dinero - clMostrado) < 0.5) clMostrado = c.dinero;
-    const d = document.getElementById('clDinero'); if(d) d.textContent = clPlata(clMostrado);
-    const r = document.getElementById('clRenta'); if(r) r.textContent = clPlata(clIngresoPorSegundo());
+    const d = document.getElementById('clDinero');
+    if(d){ d.textContent = clPlata(clMostrado); d.classList.toggle('rojo', c.dinero < 0); }
+    const neto = clNetoPorSegundo();
+    const r = document.getElementById('clRenta');
+    if(r){ r.textContent = (neto >= 0 ? '+' : '') + clPlata(neto); r.classList.toggle('rojo', neto < 0); }
     const rp = document.getElementById('clRep'); if(rp) rp.textContent = c.reputacion;
+    // el reloj de la urgencia corre en tiempo real, aunque no repintes el panel
+    if(c.urgencia){
+      const reloj = document.getElementById('clUrReloj');
+      const seg = clSegUrgencia();
+      if(reloj) reloj.textContent = seg + 's';
+      if(seg <= 0 && clVencerUrgencia() && clVista === 'recepcion' && !clTurno) clPanel();
+    }
+    // reloj del examen
+    if(clEx && !clEx.terminado){
+      const seg = Math.max(0, Math.ceil((clEx.hasta - Date.now()) / 1000));
+      const rel = document.getElementById('clExReloj');
+      if(rel){ rel.textContent = seg + 's'; rel.classList.toggle('poco', seg < 30); }
+      if(seg <= 0) clExTerminar();
+    }
     clGuardar(false);
     clLoop = requestAnimationFrame(paso);
   };

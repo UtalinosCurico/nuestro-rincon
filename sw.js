@@ -1,6 +1,6 @@
 // Subir esta versión en cada cambio de index.html: fuerza a los teléfonos a
 // descartar el HTML viejo en vez de seguir ejecutándolo desde la caché.
-const CACHE_NAME = "nuestro-rincon-v14";
+const CACHE_NAME = "nuestro-rincon-v16";
 const APP_SHELL = [
   "/",
   "/index.html",

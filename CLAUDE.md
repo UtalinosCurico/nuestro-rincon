@@ -23,6 +23,9 @@ node -e "const fs=require('fs'); const html=fs.readFileSync('index.html','utf8')
 
 # Verify deployed API responds
 curl https://nuestro-rincon-neon.vercel.app/api/estado
+
+# Regenerate the clinical review doc from the data in index.html
+node scripts/generar-revision.js
 ```
 
 Deployment is automatic: push to `main` → Vercel redeploys.
@@ -59,7 +62,19 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 
 **Rincón de juegos** (consola `jx*`, pantalla completa). Juegos actuales: Sudoku (`sd*`), Zip (`zip*`), 2048 (`dm*`), Snake (`sn*`), Nuestro Jardín (`jar*`, incremental) y Clínica Kinésica (`cl*`, con motor de diagnóstico y tratamiento por sesiones). Economía compartida: monedas + mascota + clóset. Se eliminaron Detective, Tres en raya y Memorice.
 
-**Contenido clínico** — `KIN_CASOS`, `KIN_PRUEBAS`, `KIN_MUSCULOS`, `KIN_RANGOS` en `index.html` son la única fuente de verdad, documentada en `REVISION-KINESIOLOGIA.md`. Pendiente de revisión por Catalina antes de publicar.
+**Contenido clínico** — `KIN_CASOS` (41 casos, 7 de ellos `derivar:true` y 5 además `urgente:true`), `KIN_PRUEBAS` (33), `KIN_MUSCULOS` (30), `KIN_RANGOS` (15) y el motor de diferencial `KIN_DX` en `index.html` son la única fuente de verdad. `REVISION-KINESIOLOGIA.md` se **genera** desde esos datos, no se edita a mano: si cambia el contenido clínico, regenerar el documento. Pendiente de revisión por Catalina antes de publicar.
+
+**Ciclo de un paciente** — sala de espera (`c.sala`, fichas con previsión, origen, rasgo, ánimo y acompañante que cambian en cada visita) → investigar con tiempo limitado → diagnóstico → tratamiento por sesiones hasta el alta. Cada paciente deja memoria en `c.hist[casoId]` (`veces`, `altas`, `recaidas`, `sesiones`) y al reaparecer se muestra su texto de `CL_REGRESO`.
+
+**Personalidad** — `CL_RASGOS` toca la mecánica vía `clEfRasgo()`: `tiempo` (menos tiempo de consulta), `pistasPobres` (la anamnesis rinde la mitad), `pistaFalsa` (arranca con una hipótesis equivocada inflada), `adherencia`, `seAburre` y `pago`. `CL_ANIMOS` y `CL_ACOMP` son textura; el acompañante agrega la acción `acomp`, que revela una pista pendiente del `KIN_DX` del caso.
+
+**Tratamiento** — cada paciente activo lleva `adh` (adherencia 0-100). La dosificación correcta rinde según `factorAdh`; bajo 35 puede faltar a la sesión. La carga `educar` no progresa tejido pero sube la adherencia. Con probabilidad `CL_ALARMA_PROB` aparece una `CL_ALARMAS` que exige decidir seguir/bajar/derivar. Los pacientes sin sesión por más de un día pierden adherencia y reputación (`clRevisarAbandonos()`).
+
+**Eventos y urgencias** — `CL_EVENTOS` duran `CL_EVENTO_DURA` pacientes y se leen con `clEfEvento()`. El multiplicador de evento va en `clMultPagoCaso()` y **no** en `clMultPago()`, para que un evento no dispare la renta pasiva. `c.urgencia` es una ambulancia con reloj real (`CL_URGENCIA_SEG`); si expira cuesta 5 de reputación. El turno de noche (`c.noche`) encadena `CL_NOCHE_LARGO` pacientes sin elegir, paga `CL_NOCHE_PAGO`× y no deja pacientes en tratamiento.
+
+**Economía** — hay costos fijos: `clGastoPorSegundo()` = arriendo + sueldos. Devuelve **0 mientras no haya personal contratado**; si no, un jugador nuevo entra en rojo desde el segundo cero. Caja negativa sostenida resta reputación. Una especialidad exige reputación **y** acreditación (`c.acred`, examen de 8 preguntas al 75%), y como la reputación baja, una especialidad también se cierra.
+
+**Repaso** — cuatro solapas: Músculos, Rangos, Examen (20 preguntas contrarreloj generadas por `clBancoPreguntas()` desde el mismo contenido clínico) y Álbum (fichas de `c.dominados`). Las misiones diarias viven en `CL_MISIONES` y se avanzan con `clAvanzarMision(tipo, info)`.
 
 ## Rules for editing
 
