@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// Punto de entrada. Se cuelga de un único GameObject vacío en la escena y
@@ -160,6 +161,13 @@ public class Clinica : MonoBehaviour
     void Update()
     {
         if (_cam != null && _cam.ArrastreReal) return;   // estabas moviendo la cámara
+        // si el toque fue sobre un botón, no debe además mover a Catalina
+        var es = EventSystem.current;
+        if (es != null)
+        {
+            if (Input.touchCount == 1 && es.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return;
+            if (Input.touchCount == 0 && es.IsPointerOverGameObject()) return;
+        }
         bool toque = Input.GetMouseButtonUp(0) ||
                      (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended);
         if (!toque) return;

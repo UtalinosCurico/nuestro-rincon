@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// El bucle jugable. Catalina es el personaje que controlas: tocas el piso y
@@ -48,6 +49,15 @@ public class Juego : MonoBehaviour
     /// <summary>Interfaz mínima, con tamaños pensados para un teléfono.</summary>
     void CrearInterfaz()
     {
+        // SIN EventSystem la interfaz no recibe ni un toque: los botones se ven
+        // pero no responden. Es lo que pasaba.
+        if (Object.FindFirstObjectByType<EventSystem>() == null)
+        {
+            var ev = new GameObject("EventSystem");
+            ev.AddComponent<EventSystem>();
+            ev.AddComponent<StandaloneInputModule>();
+        }
+
         var go = new GameObject("UI");
         var canvas = go.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
