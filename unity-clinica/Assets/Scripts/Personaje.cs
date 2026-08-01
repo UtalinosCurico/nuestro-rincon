@@ -21,6 +21,9 @@ public class Personaje : MonoBehaviour
     Vector3 _destinoCamilla;
     int _porAjustar;
     Transform _siguiendoA;
+    public bool Deambula;          // los que esperan se mueven solos
+    float _proximoPaseo;
+    float _vel;
 
     public bool Siguiendo => _siguiendoA != null;
     public void Seguir(Transform quien) { _siguiendoA = quien; }
@@ -157,6 +160,14 @@ public class Personaje : MonoBehaviour
         if (_acostado) return;   // el de la camilla no se mueve
         float t = Time.time;
 
+        // Los que esperan no se quedan como estatuas: cada tanto dan unos pasos.
+        if (Deambula && _siguiendoA == null && !_destino.HasValue && t > _proximoPaseo)
+        {
+            _proximoPaseo = t + Random.Range(3f, 8f);
+            var d0 = Base + new Vector3(Random.Range(-0.9f, 0.9f), 0f, Random.Range(-1.1f, 1.1f));
+            IrA(d0);
+        }
+
         // Si va siguiendo a alguien, se le pega a un paso de distancia.
         if (_siguiendoA != null)
         {
@@ -172,14 +183,17 @@ public class Personaje : MonoBehaviour
             if (dist < 0.06f)
             {
                 _destino = null;
+                _vel = 0f;
                 Poner("quieto");
                 var p0 = transform.localPosition; p0.y = 0f; transform.localPosition = p0;
             }
             else
             {
-                var paso = d.normalized * Mathf.Min(1.8f * Time.deltaTime, dist);
+                _vel = Mathf.Lerp(_vel, 1.9f, 1f - Mathf.Exp(-6f * Time.deltaTime));
+                var paso = d.normalized * Mathf.Min(_vel * Time.deltaTime, dist);
                 transform.localPosition += paso;
-                transform.localRotation = Quaternion.LookRotation(new Vector3(d.x, 0f, d.z));
+                transform.localRotation = Quaternion.Slerp(transform.localRotation,
+                    Quaternion.LookRotation(new Vector3(d.x, 0f, d.z)), 1f - Mathf.Exp(-9f * Time.deltaTime));
                 if (_animador == null)
                 {
                     // pasitos caseros solo si NO hay animación de verdad

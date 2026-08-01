@@ -56,9 +56,9 @@ public class Clinica : MonoBehaviour
     {
         if (_llegoEstado) return;
         estado = new Estado {
-            salas = 3, reputacion = 45, dinero = 90000,
+            salas = 3, reputacion = 20, dinero = 2500,
             equipos = new[] { "tens", "eco", "gym", "plataforma", "hidro" },
-            personal = new[] { "Catalina", "Ana", "Luis" }
+            personal = new[] { "Catalina" }   // solo la jugadora: el resto se contrata
         };
         Reconstruir();
     }
@@ -148,6 +148,7 @@ public class Clinica : MonoBehaviour
             var s = Personaje.Crear(_raiz, new Vector3(4.6f - i * 1.5f, 0f, 1.1f), false,
                                     Escena.Ropa[i % Escena.Ropa.Length], "", i);
             s.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);   // mirando al pasillo
+            s.Deambula = true;
             _enEspera.Add(s);
             _dinamicos.Add(s.gameObject);
         }
@@ -158,6 +159,7 @@ public class Clinica : MonoBehaviour
 
     void Update()
     {
+        if (_cam != null && _cam.ArrastreReal) return;   // estabas moviendo la cámara
         bool toque = Input.GetMouseButtonUp(0) ||
                      (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended);
         if (!toque) return;

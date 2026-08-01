@@ -1,61 +1,70 @@
 using UnityEngine;
 
 /// <summary>
-/// Cámara que el jugador puede mover: arrastrar para girar, rueda o pellizco
-/// para acercar. Es lo que pedía Diego —"que se pueda jugar en 3D"— y lo que
-/// la versión web no tenía, porque ahí la cámara solo se paseaba sola.
-/// Cuando nadie la toca, vuelve a un vaivén lento para que la escena respire.
+/// Cámara FIJA, tipo transmisión de televisión: el ángulo nunca cambia, así no
+/// te pierdes girando en 3D. Solo se desplaza (arrastrando) y se acerca
+/// (rueda o pellizco). Antes era orbital y costaba manejarla.
 /// </summary>
 public class CamaraOrbital : MonoBehaviour
 {
-    public Vector3 Centro = new Vector3(-0.6f, 0f, -1.6f);
-    public float DistMin = 4f, DistMax = 18f;
+    static readonly Quaternion Angulo = Quaternion.Euler(52f, 24f, 0f);
 
-    float _angulo = 0f, _altura = 12f, _dist = 14f;
-    float _inactivo;
+    public Vector2 LimiteX = new Vector2(-4.5f, 4.5f);
+    public Vector2 LimiteZ = new Vector2(-4f, 3.5f);
+
+    Vector3 _centro = new Vector3(-0.4f, 0f, -1.4f);
+    float _dist = 24f;
+    const float DistMin = 12f, DistMax = 38f;
+
+    Vector3 _centroSuave;
+    float _distSuave;
     Vector2 _ultimoDedo;
     bool _arrastrando;
     float _pellizcoPrevio = -1f;
+
+    public bool ArrastreReal { get; private set; }
+
+    void Start()
+    {
+        _centroSuave = _centro;
+        _distSuave = _dist;
+        transform.rotation = Angulo;
+    }
 
     void LateUpdate()
     {
         LeerEntrada();
 
-        // sin interacción por un rato, la cámara retoma su paseo suave
-        _inactivo += Time.deltaTime;
-        if (_inactivo > 4f) _angulo += Mathf.Sin(Time.time * 0.13f) * 0.0016f;
-
-        // En pantalla vertical (celular) cabe menos a lo ancho, así que hay que
-        // alejarse más para ver la clínica completa.
+        // En pantalla vertical cabe menos a lo ancho: hay que alejarse.
         float vertical = Mathf.Clamp((float)Screen.height / Mathf.Max(1, Screen.width), 1f, 2.2f);
-        float extra = (vertical - 1f) * 6f;
+        float extra = (vertical - 1f) * 11f;
         _dist = Mathf.Clamp(_dist, DistMin, DistMax + extra);
-        if (_inactivo > 3f && _dist < DistMin + extra) _dist = Mathf.Lerp(_dist, DistMin + extra, 0.05f);
-        _altura = Mathf.Clamp(_altura, 4f, 20f);
+        _centro.x = Mathf.Clamp(_centro.x, LimiteX.x, LimiteX.y);
+        _centro.z = Mathf.Clamp(_centro.z, LimiteZ.x, LimiteZ.y);
 
-        var pos = new Vector3(Mathf.Sin(_angulo) * _dist, _altura, Mathf.Cos(_angulo) * _dist);
-        transform.position = Vector3.Lerp(transform.position, pos, 1f - Mathf.Exp(-8f * Time.deltaTime));
-        transform.rotation = Quaternion.Slerp(transform.rotation,
-            Quaternion.LookRotation(Centro - transform.position), 1f - Mathf.Exp(-8f * Time.deltaTime));
+        // suavizado: se siente fluido en vez de a saltos
+        float k = 1f - Mathf.Exp(-10f * Time.deltaTime);
+        _centroSuave = Vector3.Lerp(_centroSuave, _centro, k);
+        _distSuave = Mathf.Lerp(_distSuave, _dist, k);
+
+        transform.rotation = Angulo;
+        transform.position = _centroSuave - Angulo * Vector3.forward * _distSuave;
     }
 
     void LeerEntrada()
     {
-        // dos dedos: pellizco para acercar
         if (Input.touchCount == 2)
         {
-            var a = Input.GetTouch(0).position;
-            var b = Input.GetTouch(1).position;
-            float d = Vector2.Distance(a, b);
-            if (_pellizcoPrevio > 0f) { _dist -= (d - _pellizcoPrevio) * 0.012f; _inactivo = 0f; }
+            float d = Vector2.Distance(Input.GetTouch(0).position, Input.GetTouch(1).position);
+            if (_pellizcoPrevio > 0f) _dist -= (d - _pellizcoPrevio) * 0.02f;
             _pellizcoPrevio = d;
             _arrastrando = false;
             return;
         }
         _pellizcoPrevio = -1f;
 
-        Vector2? dedo = null;
-        bool abajo = false, arriba = false;
+        Vector2 dedo;
+        bool abajo, arriba;
         if (Input.touchCount == 1)
         {
             var t = Input.GetTouch(0);
@@ -69,31 +78,26 @@ public class CamaraOrbital : MonoBehaviour
             abajo = Input.GetMouseButtonDown(0);
             arriba = Input.GetMouseButtonUp(0);
             float rueda = Input.mouseScrollDelta.y;
-            if (Mathf.Abs(rueda) > 0.01f) { _dist -= rueda * 0.6f; _inactivo = 0f; }
+            if (Mathf.Abs(rueda) > 0.01f) _dist -= rueda * 1.2f;
         }
 
-        if (abajo) { _arrastrando = true; _ultimoDedo = dedo.Value; }
+        if (abajo) { _arrastrando = true; _ultimoDedo = dedo; ArrastreReal = false; }
         if (arriba) _arrastrando = false;
 
-        if (_arrastrando && dedo.HasValue)
+        if (_arrastrando)
         {
-            var delta = dedo.Value - _ultimoDedo;
-            _ultimoDedo = dedo.Value;
-            if (delta.sqrMagnitude > 0.01f)
+            var delta = dedo - _ultimoDedo;
+            if (delta.sqrMagnitude > 36f)   // umbral: un toque simple no debe desplazar
             {
-                _angulo -= delta.x * 0.005f;
-                _altura = Mathf.Clamp(_altura - delta.y * 0.03f, 4f, 20f);
-                _inactivo = 0f;
+                ArrastreReal = true;
+                _ultimoDedo = dedo;
+                var der = Angulo * Vector3.right;
+                var ade = Vector3.Cross(Vector3.up, der).normalized;
+                float f = _distSuave * 0.0016f;
+                _centro -= (der * delta.x + ade * delta.y) * f;
             }
         }
     }
 
-    /// <summary>Se aleja a medida que la clínica crece, para que quepa todo.
-    /// Mismo criterio que se usó en la versión web.</summary>
-    public void AjustarPorTamano(int cosas)
-    {
-        float objetivo = 9.5f + Mathf.Min(cosas, 12) * 0.15f;
-        if (_inactivo > 3f) _dist = Mathf.Lerp(_dist, objetivo, 0.5f);
-        DistMax = Mathf.Max(11f, objetivo + 3f);
-    }
+    public void AjustarPorTamano(int cosas) { }   // la cámara es fija: ya no aplica
 }
