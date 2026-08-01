@@ -165,9 +165,18 @@ public static class Modelos
     /// calza con el avatar del modelo.
     /// Hasta resolverlo solo se usa el que funciona; el resto cae a primitivas.
     static readonly (string clave, string prefab, bool kine)[] Reparto = {
-        ("Catalina_Rojas_in_lig_biped_Animation_Walking", "Kine0",     true),
-        ("Gaucho_with_Blue_Ponc_biped_Animation_Walking", "Paciente0", false),
+        ("Catalina_Rojas", "Kine0",     true),
+        ("Gaucho",         "Paciente0", false),
     };
+
+    /// Qué papel cumple cada animación, según el nombre del archivo.
+    static string EstadoDe(string ruta)
+    {
+        if (ruta.Contains("Walking")) return "caminar";
+        if (ruta.Contains("Lie_Down") || ruta.Contains("Lie_on_Chair")) return "acostado";
+        if (ruta.Contains("situps") || ruta.Contains("Burpee")) return "ejercicio";
+        return "quieto";   // los de nombre UUID: idle / atendiendo al paciente
+    }
 
     static Material MaterialPara(string carpetaModelo, string nombrePrefab)
     {
@@ -201,63 +210,65 @@ public static class Modelos
         Ajustar();
         System.IO.Directory.CreateDirectory("Assets/Resources");
 
-        foreach (var guid in AssetDatabase.FindAssets("t:Model", new[] { Carpeta }))
+        foreach (var reparto in Reparto)
         {
-            var ruta = AssetDatabase.GUIDToAssetPath(guid);
-            var reparto = Reparto.FirstOrDefault(r => ruta.Contains(r.clave));
-            if (reparto.prefab == null) { Debug.Log("SIN REPARTO: " + ruta); continue; }
+            // todos los FBX de este personaje (uno por animación)
+            var rutas = AssetDatabase.FindAssets("t:Model", new[] { Carpeta })
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Where(r => r.Contains(reparto.clave))
+                .OrderBy(r => r).ToArray();
+            if (rutas.Length == 0) { Debug.Log("SIN ARCHIVOS: " + reparto.clave); continue; }
 
-            var fbx = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+            // el modelo base puede ser cualquiera; todos traen la malla con piel
+            var baseRuta = rutas.FirstOrDefault(r => r.Contains("Walking")) ?? rutas[0];
+            var fbx = AssetDatabase.LoadAssetAtPath<GameObject>(baseRuta);
             if (fbx == null) continue;
+
             var inst = (GameObject)PrefabUtility.InstantiatePrefab(fbx);
             inst.name = reparto.prefab;
-
             var anim = inst.GetComponent<Animator>();
             if (anim == null) anim = inst.AddComponent<Animator>();
-            // OJO: debe quedar ACTIVO. Con Generic, si se apaga, el desplazamiento
-            // de la animación se queda dentro del esqueleto en vez de aplicarse al
-            // objeto, y deforma la malla hasta volverla una mancha gigante.
             anim.applyRootMotion = true;
 
-            var clips = AssetDatabase.LoadAllAssetsAtPath(ruta).OfType<AnimationClip>()
-                        .Where(c => !c.name.StartsWith("__preview")).ToArray();
-            // el clip de caminar es el que manda; si no hay, cualquiera sirve
-            var caminar = clips.FirstOrDefault(c => c.name.ToLower().Contains("walk")) ?? clips.FirstOrDefault();
-            if (caminar != null)
-            {
-                var ctrl = UnityEditor.Animations.AnimatorController
-                    .CreateAnimatorControllerAtPathWithClip("Assets/Resources/" + reparto.prefab + "Ctrl.controller", caminar);
-                anim.runtimeAnimatorController = ctrl;
-            }
+            // un controlador con un estado por papel
+            var ctrl = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(
+                "Assets/Resources/" + reparto.prefab + "Ctrl.controller");
+            var maquina = ctrl.layers[0].stateMachine;
+            var puestos = new System.Collections.Generic.HashSet<string>();
 
-            var carpetaModelo = System.IO.Path.GetDirectoryName(ruta).Replace("\\", "/");
+            foreach (var r in rutas)
+            {
+                var estado = EstadoDe(r);
+                if (puestos.Contains(estado)) continue;
+                var clip = AssetDatabase.LoadAllAssetsAtPath(r).OfType<AnimationClip>()
+                           .FirstOrDefault(c => !c.name.StartsWith("__preview"));
+                if (clip == null) continue;
+                var st = maquina.AddState(estado);
+                st.motion = clip;
+                if (estado == "quieto") maquina.defaultState = st;
+                puestos.Add(estado);
+                Debug.Log("  ESTADO '" + estado + "' <- " + System.IO.Path.GetFileName(r));
+            }
+            if (puestos.Count == 0) { Object.DestroyImmediate(inst); continue; }
+            anim.runtimeAnimatorController = ctrl;
+
+            var carpetaModelo = System.IO.Path.GetDirectoryName(baseRuta).Replace("\\", "/");
             var mat = MaterialPara(carpetaModelo, reparto.prefab);
-            foreach (var r in inst.GetComponentsInChildren<Renderer>(true))
+            foreach (var rd in inst.GetComponentsInChildren<Renderer>(true))
             {
-                var ms = new Material[r.sharedMaterials.Length];
+                var ms = new Material[rd.sharedMaterials.Length];
                 for (int i = 0; i < ms.Length; i++) ms[i] = mat;
-                r.sharedMaterials = ms;
+                rd.sharedMaterials = ms;
             }
 
-            // Normalizar estatura. Se mide la MALLA en pose base (sharedMesh.bounds),
-            // no los bounds del renderer: esos incluyen el recorrido de la animación
-            // y dan cifras absurdas. Los export "Merged_Animations" de Meshy vienen
-            // a una escala enorme; el "withSkin" viene bien. Esto arregla ambos.
             float alto = 0f;
             foreach (var smr in inst.GetComponentsInChildren<SkinnedMeshRenderer>(true))
                 if (smr.sharedMesh != null) alto = Mathf.Max(alto, smr.sharedMesh.bounds.size.y);
-            foreach (var mf in inst.GetComponentsInChildren<MeshFilter>(true))
-                if (mf.sharedMesh != null) alto = Mathf.Max(alto, mf.sharedMesh.bounds.size.y);
-            if (alto > 0.01f)
-            {
-                float f = 1.75f / alto;
-                inst.transform.localScale = Vector3.one * f;
-                Debug.Log("ESCALA " + reparto.prefab + ": malla=" + alto.ToString("0.00") + " -> factor " + f.ToString("0.0000"));
-            }
+            if (alto > 0.01f) inst.transform.localScale = Vector3.one * (1.75f / alto);
 
             PrefabUtility.SaveAsPrefabAsset(inst, "Assets/Resources/" + reparto.prefab + ".prefab");
             Object.DestroyImmediate(inst);
-            Debug.Log("PREFAB: " + reparto.prefab + " <- " + System.IO.Path.GetFileName(ruta) + " · clip=" + (caminar != null ? caminar.name : "ninguno"));
+            Debug.Log("PREFAB: " + reparto.prefab + " · estados: " + string.Join(",", puestos));
         }
     }
 

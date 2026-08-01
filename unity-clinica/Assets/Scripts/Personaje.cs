@@ -16,6 +16,7 @@ public class Personaje : MonoBehaviour
     float _fase;
     Transform _cuerpo;
     Animator _animador;
+    string _estado = "quieto";
 
     public static Personaje Crear(Transform padre, Vector3 pos, bool esKine, Color ropa, string nombre = "", int indice = 0)
     {
@@ -75,7 +76,28 @@ public class Personaje : MonoBehaviour
         return p;
     }
 
-    public void IrA(Vector3 destino) => _destino = destino;
+    public void IrA(Vector3 destino)
+    {
+        _destino = destino;
+        Poner("caminar");
+    }
+
+    /// <summary>Para los que no se mueven de su sitio (el paciente en la
+    /// camilla). Sin esto la animación de acostarse desplaza el objeto por su
+    /// cuenta y el paciente termina flotando sobre la camilla.</summary>
+    public void FijarEnSitio()
+    {
+        if (_animador != null) _animador.applyRootMotion = false;
+    }
+
+    /// <summary>Cambia la animación: quieto, caminar, acostado, ejercicio.</summary>
+    public void Poner(string estado)
+    {
+        if (_animador == null || _animador.runtimeAnimatorController == null) return;
+        _estado = estado;
+        _animador.speed = 1f;
+        _animador.Play(estado, 0, 0f);
+    }
 
     void Update()
     {
@@ -88,12 +110,11 @@ public class Personaje : MonoBehaviour
             if (dist < 0.06f)
             {
                 _destino = null;
-                if (_animador != null) _animador.speed = 0f;   // quieto: congela el clip
+                Poner("quieto");
                 var p0 = transform.localPosition; p0.y = 0f; transform.localPosition = p0;
             }
             else
             {
-                if (_animador != null) _animador.speed = 1f;
                 var paso = d.normalized * Mathf.Min(1.8f * Time.deltaTime, dist);
                 transform.localPosition += paso;
                 transform.localRotation = Quaternion.LookRotation(new Vector3(d.x, 0f, d.z));
@@ -108,7 +129,7 @@ public class Personaje : MonoBehaviour
             return;
         }
 
-        if (_animador != null) { _animador.speed = 0f; return; }
+        if (_animador != null) return;   // con animación real no hace falta el meneo casero
 
         if (EsKine)
         {
