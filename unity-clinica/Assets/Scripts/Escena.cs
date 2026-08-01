@@ -91,17 +91,25 @@ public static class Escena
     /// <summary>Sala: piso, dos muros, ventanal, mesón y plantas.</summary>
     public static void ConstruirSala(Transform raiz)
     {
-        Caja(raiz, "Piso",     new Vector3(0f, -0.1f, 0f),    new Vector3(9.2f, 0.2f, 8.2f), Piso);
-        Caja(raiz, "MuroFondo",new Vector3(0f, 1.6f, -4.1f),  new Vector3(9.2f, 3.2f, 0.2f), Muro);
-        Caja(raiz, "MuroIzq",  new Vector3(-4.6f, 1.6f, 0f),  new Vector3(0.2f, 3.2f, 8.2f), MuroBajo);
+        Caja(raiz, "Piso",     new Vector3(0f, -0.1f, 0.6f),  new Vector3(12f, 0.2f, 11f), Piso);
+        Caja(raiz, "MuroFondo",new Vector3(0f, 1.6f, -4.9f),  new Vector3(12f, 3.2f, 0.2f), Muro);
+        Caja(raiz, "MuroIzq",  new Vector3(-6f, 1.6f, 0.6f),  new Vector3(0.2f, 3.2f, 11f), MuroBajo);
+        Caja(raiz, "MuroDer",  new Vector3(6f, 1.6f, 0.6f),   new Vector3(0.2f, 3.2f, 11f), MuroBajo);
 
-        var vent = Caja(raiz, "Ventanal", new Vector3(-1.0f, 1.9f, -3.97f), new Vector3(3.4f, 1.5f, 0.06f), Col(0xbfe0f0));
+        // Tabique que separa la zona de boxes (atrás) de la sala de espera
+        // (adelante), con un vano para pasar.
+        Caja(raiz, "Tabique-Izq", new Vector3(-3.9f, 1.1f, 0.9f), new Vector3(4.2f, 2.2f, 0.16f), MuroBajo);
+        Caja(raiz, "Tabique-Der", new Vector3(3.9f, 1.1f, 0.9f),  new Vector3(4.2f, 2.2f, 0.16f), MuroBajo);
+        Caja(raiz, "Dintel",      new Vector3(0f, 2.3f, 0.9f),    new Vector3(3.6f, 0.6f, 0.16f), MuroBajo);
+
+        var vent = Caja(raiz, "Ventanal", new Vector3(-1.5f, 1.9f, -4.77f), new Vector3(3.4f, 1.5f, 0.06f), Col(0xbfe0f0));
         vent.GetComponent<Renderer>().sharedMaterial = Mat(Col(0xbfe0f0));
 
-        Caja(raiz, "Meson", new Vector3(2.9f, 0.48f, -3.2f), new Vector3(2.2f, 0.95f, 0.6f), Mueble);
+        Caja(raiz, "MesonRecepcion", new Vector3(4.3f, 0.48f, 2.2f), new Vector3(2.4f, 0.95f, 0.7f), Mueble);
+        CrearSalaEspera(raiz);
 
-        CrearPlanta(raiz, new Vector3(-3.8f, 0f, -3.0f));
-        CrearPlanta(raiz, new Vector3(3.7f, 0f, 1.4f));
+        CrearPlanta(raiz, new Vector3(-5.2f, 0f, -3.8f));
+        CrearPlanta(raiz, new Vector3(5.2f, 0f, 4.6f));
     }
 
     public static GameObject CrearPlanta(Transform padre, Vector3 pos)
@@ -130,5 +138,38 @@ public static class Escena
         foreach (var x in xs) foreach (var z in zs)
             Cilindro(g.transform, "Pata", new Vector3(x, 0.3f, z), 0.035f, 0.6f, Patas);
         return g;
+    }
+
+    /// <summary>Box de atención: mamparas a los lados de la camilla, abiertas
+    /// al frente, como en una clínica de verdad.</summary>
+    public static GameObject CrearBox(Transform padre, Vector3 pos)
+    {
+        var g = new GameObject("Box");
+        g.transform.SetParent(padre, false);
+        g.transform.localPosition = pos;
+        Caja(g.transform, "MamparaIzq", new Vector3(-1.15f, 0.95f, 0f), new Vector3(0.12f, 1.9f, 2.6f), MuroBajo);
+        Caja(g.transform, "MamparaDer", new Vector3(1.15f, 0.95f, 0f),  new Vector3(0.12f, 1.9f, 2.6f), MuroBajo);
+        Caja(g.transform, "Cenefa",     new Vector3(0f, 1.95f, -1.24f), new Vector3(2.4f, 0.14f, 0.14f), Col(0x7fae96));
+        return g;
+    }
+
+    /// <summary>Sala de espera: filas de sillas y una mesita.</summary>
+    public static void CrearSalaEspera(Transform raiz)
+    {
+        var g = new GameObject("SalaEspera");
+        g.transform.SetParent(raiz, false);
+        for (int fila = 0; fila < 2; fila++)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                var x = -4.2f + i * 1.15f;
+                var z = 2.6f + fila * 1.7f;
+                Caja(g.transform, "Asiento",  new Vector3(x, 0.42f, z),        new Vector3(0.6f, 0.1f, 0.55f), Col(0x8fa8b8));
+                Caja(g.transform, "Respaldo", new Vector3(x, 0.68f, z + 0.26f),new Vector3(0.6f, 0.55f, 0.1f), Col(0x8fa8b8));
+                Cilindro(g.transform, "PataA", new Vector3(x - 0.22f, 0.2f, z - 0.2f), 0.03f, 0.42f, Patas);
+                Cilindro(g.transform, "PataB", new Vector3(x + 0.22f, 0.2f, z - 0.2f), 0.03f, 0.42f, Patas);
+            }
+        }
+        Caja(g.transform, "Mesita", new Vector3(0.6f, 0.35f, 4.8f), new Vector3(1.1f, 0.08f, 0.6f), Mueble);
     }
 }

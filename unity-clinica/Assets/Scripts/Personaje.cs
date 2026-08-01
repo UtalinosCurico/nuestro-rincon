@@ -101,9 +101,18 @@ public class Personaje : MonoBehaviour
     {
         _acostado = true;
         _destinoCamilla = sobreLaCamilla;
-        Poner("acostado");
-        FijarEnSitio();
-        _porAjustar = 8;
+        _estado = "acostado";
+        if (_animador != null && _animador.runtimeAnimatorController != null)
+        {
+            _animador.applyRootMotion = false;
+            // Saltar al FINAL del clip: ahí ya está acostado. Antes se reproducía
+            // desde el principio (3,7 s de pie hasta el suelo) y se medía a los
+            // pocos fotogramas, cuando todavía iba cayendo: de ahí que flotara.
+            _animador.Play("acostado", 0, 1f);
+            _animador.speed = 0f;
+            _animador.Update(0f);   // forzar la evaluación ahora mismo
+        }
+        _porAjustar = 3;
     }
 
     void LateUpdate()

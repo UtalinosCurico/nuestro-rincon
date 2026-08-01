@@ -45,7 +45,7 @@ public static class Modelos
             var ruta = AssetDatabase.GUIDToAssetPath(guid);
             var ti = AssetImporter.GetAtPath(ruta) as TextureImporter;
             if (ti == null) continue;
-            ti.maxTextureSize = ruta.Contains("_normal") ? 512 : 1024;
+            ti.maxTextureSize = ruta.Contains("_normal") ? 256 : 512;   // 45 MB no abre en celular
             ti.textureCompression = TextureImporterCompression.Compressed;
             if (ruta.Contains("_normal")) ti.textureType = TextureImporterType.NormalMap;
             ti.SaveAndReimport();

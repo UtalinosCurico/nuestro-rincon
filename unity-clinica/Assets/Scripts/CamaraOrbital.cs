@@ -8,10 +8,10 @@ using UnityEngine;
 /// </summary>
 public class CamaraOrbital : MonoBehaviour
 {
-    public Vector3 Centro = new Vector3(0f, 0.7f, 0f);
-    public float DistMin = 3.5f, DistMax = 14f;
+    public Vector3 Centro = new Vector3(0f, 0.8f, 0.2f);
+    public float DistMin = 4f, DistMax = 18f;
 
-    float _angulo = -0.3f, _altura = 4.2f, _dist = 8.5f;
+    float _angulo = -0.28f, _altura = 5.2f, _dist = 11f;
     float _inactivo;
     Vector2 _ultimoDedo;
     bool _arrastrando;
@@ -87,7 +87,7 @@ public class CamaraOrbital : MonoBehaviour
     /// Mismo criterio que se usó en la versión web.</summary>
     public void AjustarPorTamano(int cosas)
     {
-        float objetivo = 5.6f + Mathf.Min(cosas, 12) * 0.24f;
+        float objetivo = 8.5f + Mathf.Min(cosas, 14) * 0.3f;
         if (_inactivo > 3f) _dist = Mathf.Lerp(_dist, objetivo, 0.5f);
         DistMax = Mathf.Max(11f, objetivo + 3f);
     }

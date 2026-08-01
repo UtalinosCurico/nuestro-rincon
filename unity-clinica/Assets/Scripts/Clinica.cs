@@ -105,21 +105,26 @@ public class Clinica : MonoBehaviour
         int salas = Mathf.Max(1, estado.salas);
         for (int i = 0; i < salas; i++)
         {
-            float x = -2.0f + i * 1.9f;
-            _dinamicos.Add(Escena.CrearCamilla(_raiz, new Vector3(x, 0f, -1.0f)));
+            float x = -2.6f + i * 2.6f;                     // un box por sala
+            _dinamicos.Add(Escena.CrearBox(_raiz, new Vector3(x, 0f, -2.2f)));
+            _dinamicos.Add(Escena.CrearCamilla(_raiz, new Vector3(x, 0f, -2.2f)));
 
             if (i < estado.personal.Length)
             {
-                var k = Personaje.Crear(_raiz, new Vector3(x + 0.75f, 0f, -1.0f), true, Color.white, estado.personal[i], i);
+                var k = Personaje.Crear(_raiz, new Vector3(x + 0.72f, 0f, -2.2f), true, Color.white, estado.personal[i], i);
                 k.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);
                 k.Poner("quieto");        // la de Catalina es "atendiendo al paciente"
                 _dinamicos.Add(k.gameObject);
 
-                var p = Personaje.Crear(_raiz, new Vector3(x, 0.78f, -1.0f), false, Escena.Ropa[i % Escena.Ropa.Length], "", i);
-                // Si el modelo trae animación de acostado, se usa esa y NO se
-                // rota el muñeco: antes quedaba tumbado de lado, encogido.
-                p.transform.localPosition = new Vector3(x, 0f, -1.0f);
-                p.AcostarEn(new Vector3(x, 0.72f, -1.0f));   // 0.72 = superficie de la camilla
+                // El paciente va DE PIE al otro lado de la camilla, siendo evaluado.
+                // Se intentó acostarlo con la animación de Meshy y quedaba flotando:
+                // ese clip empieza de pie y desplaza el cuerpo mientras cae, así que
+                // dónde termina el cuerpo no coincide con dónde está el objeto.
+                // De pie es su pose natural, no flota, y la escena se lee igual.
+                var p = Personaje.Crear(_raiz, new Vector3(x - 0.72f, 0f, -2.2f), false,
+                                        Escena.Ropa[i % Escena.Ropa.Length], "", i);
+                p.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
+                p.Poner("quieto");
                 _dinamicos.Add(p.gameObject);
             }
         }
@@ -133,12 +138,12 @@ public class Clinica : MonoBehaviour
         int esperando = Mathf.Min(5, 1 + estado.reputacion / 15);
         for (int i = 0; i < esperando; i++)
         {
-            var s = Personaje.Crear(_raiz, new Vector3(-3.1f + i * 0.9f, 0f, 2.2f), false,
+            var s = Personaje.Crear(_raiz, new Vector3(-4.2f + i * 1.15f, 0f, 3.4f), false,
                                     Escena.Ropa[i % Escena.Ropa.Length], "", i);
             _dinamicos.Add(s.gameObject);
         }
 
-        if (_cam != null) _cam.AjustarPorTamano(salas + estado.equipos.Length);
+        if (_cam != null) _cam.AjustarPorTamano(salas * 2 + estado.equipos.Length);
     }
 
     void Update()
