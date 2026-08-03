@@ -10,9 +10,9 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - Lo más importante de revisar es la **sección 2**: son las pistas con las que se descartan hipótesis.
 
 ---
-## 1. Casos (41)
+## 1. Casos (53)
 
-### Especialidad Traumatológica (23)
+### Especialidad Traumatológica (32)
 
 #### 🤠 Rigidez de muñeca tras fractura de radio distal  `Muñeca`
 - **Paciente:** Ramón, 58 años, huaso, trabaja con animales — después de que le sacaron el yeso no puede mover bien la muñeca
@@ -226,7 +226,90 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Distractores** (razonables pero equivocados): _Crioterapia, descarga y movilización pasiva suave_ · _Isométricos de cuádriceps y compresión para bajar el derrame_ · _Reposo, elevación y control en 48 horas_
 - **Cuando vuelve:** Le hicieron aseo quirúrgico y salvó la rodilla. Vuelve a recuperar rango, con la glicemia bajo control.
 
-### Especialidad Deportiva (11)
+#### 💢 Radiculopatía cervical C6  `Cervical`
+- **Paciente:** Fabián, 47 años, soldador — le baja un corrientazo por el brazo hasta el pulgar
+- **Mecanismo:** Empezó hace tres semanas sin golpe, y va peor al mirar hacia arriba trabajando.
+- **Prueba:** Spurling → Positivo: reproduce el corrientazo que le baja al brazo.
+- **Tratamiento correcto** (fase subaguda): Descarga cervical y deslizamiento neural, ejercicio en la dirección que centraliza los síntomas y control de la postura de trabajo.
+- **Se le enseña:** _El territorio manda: C6 llega al pulgar, C7 al dedo medio, C8 al meñique. Y ojo, el túnel carpiano también hormiguea el pulgar, pero no duele el cuello._
+- **Distractores** (razonables pero equivocados): _Fortalecimiento cervical con carga alta para estabilizar el segmento_ · _Tracción cervical mantenida como único tratamiento_ · _Movilización hacia la extensión para abrir el foramen_
+- **Cuando vuelve:** Le pasó el corrientazo del brazo. Ahora viene por el hombro del otro lado, de tanto compensar.
+
+#### 🤙 Síndrome del túnel cubital  `Codo`
+- **Paciente:** Renato, 38 años, chofer de camión — se le duermen el meñique y el anular cuando maneja
+- **Mecanismo:** Muchas horas con el codo flectado apoyado en la ventana.
+- **Prueba:** Epitrocleítis (flexión resistida) → Negativo: no duele la epitróclea al resistir la flexión de muñeca.
+- **Tratamiento correcto** (fase subaguda): Evitar la flexión mantenida de codo, férula nocturna en extensión y deslizamiento del nervio cubital, más ajuste de la postura al manejar.
+- **Se le enseña:** _Meñique dormido es cubital, no mediano. El cubital pasa por detrás de la epitróclea, y por eso empeora justo con el codo doblado._
+- **Distractores** (razonables pero equivocados): _Carga progresiva de los flexopronadores_ · _Deslizamiento neural en tensión máxima varias veces al día_ · _Órtesis de contrafuerza en el antebrazo_
+- **Cuando vuelve:** Cambió la postura al manejar y dejó de dormírsele el meñique. Vuelve a control, agradecido.
+
+#### 🚶 Estenosis raquídea lumbar  `Lumbar`
+- **Paciente:** Nibaldo, 71 años, jubilado — camina dos cuadras y tiene que sentarse porque se le duermen las piernas
+- **Mecanismo:** Progresivo en dos años, sin ningún golpe.
+- **Prueba:** Lasègue (elevación de pierna recta) → Negativo: la elevación de la pierna recta no reproduce nada.
+- **Tratamiento correcto** (fase crónica): Ejercicio en flexión y descarga, entrenamiento progresivo de la marcha con pausas y fortalecimiento global; educación sobre el patrón de síntomas.
+- **Se le enseña:** _La clave es la postura: la claudicación neurógena mejora al flectarse (carro del súper, bicicleta) y la vascular no. Y el Lasègue suele ser negativo._
+- **Distractores** (razonables pero equivocados): _Ejercicio en extensión lumbar para recuperar la lordosis_ · _Caminata continua de treinta minutos diarios desde el inicio_ · _Tracción lumbar y reposo hasta que ceda la pesadez_
+- **Cuando vuelve:** Sigue saliendo a caminar, pero ahora con bastones y pausas. Llega mucho más lejos que antes.
+
+#### 🦴 Artrosis de cadera  `Cadera`
+- **Paciente:** Lidia, 68 años, jubilada — le duele la ingle al pararse y ya no puede ponerse los calcetines
+- **Mecanismo:** Dolor de años que fue aumentando de a poco, sin trauma.
+- **Prueba:** FABER (Patrick) → Positivo: reproduce el dolor inguinal y el rango está claramente limitado.
+- **Tratamiento correcto** (fase crónica): Ejercicio de fuerza de cadera y educación como primera línea, más manejo de la carga diaria y ayuda técnica si hace falta.
+- **Se le enseña:** _Dolor de cadera de verdad duele en la INGLE. Si duele en el costado sobre el trocánter, es tendinopatía glútea. La rotación interna limitada es el hallazgo más precoz._
+- **Distractores** (razonables pero equivocados): _Estiramiento de flexores y rotadores como eje del tratamiento_ · _Reposo de las caminatas hasta que ceda el dolor inguinal_ · _Terapia manual de cadera sin programa de ejercicio_
+- **Cuando vuelve:** Se puso los calcetines sola por primera vez en un año y vino a contarlo.
+
+#### 💪 Rotura del manguito rotador  `Hombro`
+- **Paciente:** Aliro, 63 años, maestro carpintero — no puede levantar el brazo desde que se cayó del andamio
+- **Mecanismo:** Caída con apoyo del brazo hace tres semanas. Antes ya le molestaba el hombro.
+- **Prueba:** Lag de rotación externa → Positivo: al soltar, la mano se devuelve sola. No sostiene la rotación externa.
+- **Tratamiento correcto** (fase subaguda): Fortalecimiento del deltoides y del manguito remanente con trabajo en rangos tolerados y educación; derivar a evaluación quirúrgica por la magnitud del déficit.
+- **Se le enseña:** _La tendinopatía duele; la rotura DEBILITA. Si el brazo se cae al soltarlo o el lag es positivo, ya no es un problema de carga, es de continuidad del tendón._
+- **Distractores** (razonables pero equivocados): _Carga progresiva del manguito como en una tendinopatía_ · _Movilización pasiva forzada para recuperar la elevación_ · _Isométricos de rotación externa a carga máxima_
+- **Cuando vuelve:** Lo operaron y volvió con la orden de rehabilitación. Trajo un banquito que hizo con la mano buena.
+
+#### 🖐️ Fractura de escafoides  `Muñeca`  ⚠️ **lo correcto es DERIVAR**
+- **⚠️ Lo correcto es DERIVAR, no tratar.**
+- **Paciente:** Kevin, 21 años, estudiante, anda en skate — se cayó con la mano estirada y le duele la muñeca del lado del pulgar
+- **Mecanismo:** Caída con la mano en extensión hace cinco días. En urgencias le dijeron que era esguince.
+- **Prueba:** Finkelstein → Negativo para De Quervain, pero duele exquisitamente la tabaquera anatómica.
+- **Tratamiento correcto** (fase aguda): Derivar para inmovilización y nueva imagen: una radiografía normal no descarta escafoides en los primeros días.
+- **Se le enseña:** _El escafoides es el hueso que se pasa por alto: la primera radiografía sale normal hasta en un tercio de los casos. Si duele la tabaquera, se trata como fractura hasta demostrar lo contrario, porque se necrosa._
+- **Distractores** (razonables pero equivocados): _Movilización progresiva de muñeca como rigidez post-traumática_ · _Órtesis de pulgar y ejercicio de agarre progresivo_ · _Reposo relativo y control en tres semanas_
+- **Cuando vuelve:** Estuvo ocho semanas con yeso, pero consolidó. Vuelve a recuperar la muñeca, y sin skate por ahora.
+
+#### 🦶 Disfunción del tibial posterior  `Pie`
+- **Paciente:** Berta, 56 años, auxiliar de aseo — se le está aplanando el pie y le duele por dentro del tobillo
+- **Mecanismo:** Progresivo en un año, con muchas horas de pie.
+- **Prueba:** Elevación de talones monopodal → Positivo: no logra elevar el talón en un pie y el retropié no va a varo.
+- **Tratamiento correcto** (fase crónica): Fortalecimiento progresivo del tibial posterior y de la musculatura intrínseca, con órtesis de apoyo del arco y control de la carga diaria.
+- **Se le enseña:** _Que no pueda pararse en la punta de un pie es el signo que lo delata. Si se deja pasar, el pie plano se vuelve rígido y ahí ya no hay ejercicio que lo devuelva._
+- **Distractores** (razonables pero equivocados): _Fortalecer peroneos y musculatura lateral del tobillo_ · _Plantillas solamente, sin programa de ejercicio_ · _Estiramiento del tríceps sural como eje del tratamiento_
+- **Cuando vuelve:** Con las plantillas y los ejercicios el pie aguantó. Ya se para en la punta de ese pie.
+
+#### 👟 Neuroma de Morton  `Pie`
+- **Paciente:** Solange, 44 años, vendedora de tienda — siente que anda con una piedra en el zapato y se le duermen los dedos
+- **Mecanismo:** Meses con zapato angosto y taco, muchas horas de pie.
+- **Prueba:** Signo de Mulder → Positivo: clic doloroso al comprimir el antepié con presión en el espacio intermetatarsiano.
+- **Tratamiento correcto** (fase crónica): Cambio de calzado a horma ancha y sin taco, almohadilla metatarsiana y fortalecimiento de la musculatura intrínseca del pie.
+- **Se le enseña:** _El dato que lo distingue de la metatarsalgia común: acá hay síntoma NEURAL —ardor y adormecimiento entre los dedos— y alivia al descalzarse._
+- **Distractores** (razonables pero equivocados): _Plantilla con apoyo bajo las cabezas metatarsianas_ · _Movilización y masaje transverso del antepié cada sesión_ · _Elevaciones de talón para fortalecer el tríceps sural_
+- **Cuando vuelve:** Botó los tacos y anda con zapatilla ancha. Dice que fue el mejor consejo que le han dado.
+
+#### 🧓 Fractura vertebral por osteoporosis  `Lumbar`  ⚠️ **lo correcto es DERIVAR**
+- **⚠️ Lo correcto es DERIVAR, no tratar.**
+- **Paciente:** Amelia, 76 años, jubilada — le empezó un dolor fuerte en la espalda después de agacharse a recoger algo
+- **Mecanismo:** Sin caída: solo se agachó. El dolor apareció de inmediato y no cede.
+- **Prueba:** _(no aplica)_ → Dolor exquisito a la percusión de una apófisis espinosa, muy localizado.
+- **Tratamiento correcto** (fase aguda): Derivar para imagen y manejo médico del dolor y de la osteoporosis antes de cualquier programa kinésico.
+- **Se le enseña:** _Fractura con trauma mínimo en una adulta mayor es fractura por fragilidad hasta demostrar lo contrario. El dolor puntual a la percusión y la pérdida de estatura son las señales._
+- **Distractores** (razonables pero equivocados): _Ejercicio de extensión dorsal para corregir la cifosis_ · _Movilización y terapia manual de la zona dolorosa_ · _Faja y reposo relativo con control en dos semanas_
+- **Cuando vuelve:** Consolidó y está en tratamiento de la osteoporosis. Viene ahora sí a hacer ejercicio, con calma.
+
+### Especialidad Deportiva (12)
 
 #### ⛹️ Tendinopatía rotuliana (rodilla de saltador)  `Rodilla`
 - **Paciente:** Ignacio, 21 años, jugador de básquetbol — dolor justo bajo la rótula al saltar
@@ -329,6 +412,15 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Distractores** (razonables pero equivocados): _Bajar el volumen a la mitad y mantener el trabajo de fuerza_ · _Descarga con bota tres semanas y después progresar la carrera_ · _Fortalecer tríceps sural y musculatura del pie, sin correr_
 - **Cuando vuelve:** Ocho semanas sin bailar. Volvió preguntando por la carga antes de subirla, que es lo que había que aprender.
 
+#### ⚽ Dolor inguinal del deportista  `Cadera`
+- **Paciente:** Maicol, 25 años, futbolista de club amateur — le duele la ingle al patear y al acelerar
+- **Mecanismo:** Empezó de a poco en pretemporada, con mucho cambio de dirección y remate.
+- **Prueba:** FABER (Patrick) → Negativo: la rotación pasiva de cadera no reproduce el dolor.
+- **Tratamiento correcto** (fase subaguda): Programa progresivo de fuerza de aductores y core (tipo Copenhagen), con retorno gradual al gesto deportivo.
+- **Se le enseña:** _Lo que separa la pubalgia de la artrosis de cadera es que acá la movilidad pasiva está intacta: duele el gesto, no la articulación._
+- **Distractores** (razonables pero equivocados): _Reposo deportivo hasta que no duela y ahí volver a entrenar_ · _Estiramiento intenso de aductores todos los días_ · _Fortalecimiento de abductores y glúteo medio_
+- **Cuando vuelve:** Volvió a jugar y aguantó la temporada entera. Ahora trae a un compañero con lo mismo.
+
 ### Especialidad Respiratoria (4)
 
 #### 🚬 EPOC reagudizado  `Respiratorio`
@@ -367,7 +459,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Distractores** (razonables pero equivocados): _Electroestimulación neuromuscular como único tratamiento_ · _Fuerza al 80% de 1RM desde la primera semana_ · _Movilización pasiva y posicionamiento hasta que recupere fuerza sola_
 - **Cuando vuelve:** Volvió a hacer clases. Todavía se cansa, pero ya sube sola los dos pisos del colegio.
 
-### Especialidad Neurológica (3)
+### Especialidad Neurológica (5)
 
 #### 👵 ACV con hemiparesia  `Neurológico`
 - **Paciente:** Rosa, 71 años, jubilada — debilidad de un lado del cuerpo tras un accidente cerebrovascular
@@ -395,6 +487,24 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Se le enseña:** _La clave está en la frente: si NO puede levantar la ceja, la lesión es periférica. Si la frente se mueve, hay que pensar en una lesión central, y eso es una urgencia._
 - **Distractores** (razonables pero equivocados): _Electroestimulación de la musculatura facial desde la primera sesión_ · _Ejercicios faciales a máxima intensidad, varias veces al día_ · _Protección ocular y esperar la resolución, sin reeducación motora_
 - **Cuando vuelve:** La cara volvió a su lugar. Viene por otra cosa y, de paso, a dar las gracias.
+
+#### 🌀 Vértigo posicional paroxístico benigno  `Neurológico`
+- **Paciente:** Herminia, 64 años, dueña de casa — se le da vuelta todo cuando se da vuelta en la cama
+- **Mecanismo:** Empezó de un día para otro hace una semana, al levantarse en la mañana.
+- **Prueba:** Dix-Hallpike → Positivo: nistagmo con latencia corta que se agota, junto con el vértigo.
+- **Tratamiento correcto** (fase aguda): Maniobra de reposicionamiento canalicular (Epley) y educación; controlar y repetir si persiste.
+- **Se le enseña:** _Es de los pocos cuadros que se resuelven en UNA sesión con la maniobra correcta. Dura segundos, se gatilla con la posición y el nistagmo se agota: eso lo separa de una causa central._
+- **Distractores** (razonables pero equivocados): _Ejercicios de habituación vestibular progresivos por seis semanas_ · _Reposo evitando los movimientos que lo gatillan_ · _Terapia manual cervical y fortalecimiento del cuello_
+- **Cuando vuelve:** Le volvió el vértigo del otro lado. Esta vez llegó al día siguiente en vez de aguantar una semana.
+
+#### 🧩 Esclerosis múltiple  `Neurológico`
+- **Paciente:** Yasna, 34 años, profesora de historia — anda con las piernas pesadas y se cansa con nada desde hace meses
+- **Mecanismo:** Brotes: hace dos años perdió visión de un ojo por unas semanas y se recuperó.
+- **Prueba:** Escala de Ashworth modificada → Resistencia aumentada al movimiento pasivo rápido en ambos miembros inferiores.
+- **Tratamiento correcto** (fase crónica): Ejercicio aeróbico y de fuerza dosificado por fatiga, trabajo de equilibrio y marcha, evitando el sobrecalentamiento; programa sostenido en el tiempo.
+- **Se le enseña:** _Lo que la delata es el patrón: síntomas neurológicos separados en tiempo y espacio. Y ojo con el calor: sube la temperatura y los síntomas empeoran (fenómeno de Uhthoff)._
+- **Distractores** (razonables pero equivocados): _Entrenamiento intensivo continuo para ganar resistencia rápido_ · _Solo elongación y manejo de la espasticidad_ · _Reposo en los períodos de más fatiga hasta que pase_
+- **Cuando vuelve:** Tuvo un brote y lo remontó. Sigue haciendo clases y viene a ajustar el programa.
 
 ---
 ## 2. Razonamiento diagnóstico
@@ -908,8 +1018,157 @@ Compite contra: Artrosis de rodilla, Lesión meniscal
 | Palpación | Piel CALIENTE al tacto y dolor extremo a la palpación. | Artritis séptica de rodilla | Artrosis de rodilla, Lesión meniscal |
 | Rango de movimiento activo | No tolera ningún grado de movimiento. | Artritis séptica de rodilla | Artrosis de rodilla |
 
+### 💢 Radiculopatía cervical C6
+Compite contra: Síndrome del túnel carpiano, Cervicalgia mecánica
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Tres semanas, sin golpe, y empeora al mirar hacia arriba trabajando. | Radiculopatía cervical C6 | Síndrome del túnel carpiano |
+| ¿El dolor se corre a otra parte? | El dolor BAJA del cuello al brazo y llega al PULGAR. | Radiculopatía cervical C6 | Cervicalgia mecánica, Síndrome del túnel carpiano |
+| Tamizaje neurológico | Hipoestesia en pulgar e índice y reflejo braquiorradial disminuido. | Radiculopatía cervical C6 | Cervicalgia mecánica, Síndrome del túnel carpiano |
+| Fuerza muscular | Debilidad de bíceps y de extensión de muñeca del lado sintomático. | Radiculopatía cervical C6 | Cervicalgia mecánica, Síndrome del túnel carpiano |
+| ¿Qué lo empeora y qué lo alivia? | Empeora con la extensión cervical y alivia al poner la mano sobre la cabeza. | Radiculopatía cervical C6 | Síndrome del túnel carpiano, Cervicalgia mecánica |
+| ¿Le duele de noche? | A veces despierta con la mano dormida, pero le duele el cuello igual. | Radiculopatía cervical C6, Síndrome del túnel carpiano | — |
+| Rango de movimiento activo | Rango cervical limitado y doloroso hacia el lado comprometido. | Radiculopatía cervical C6, Cervicalgia mecánica | Síndrome del túnel carpiano |
+
+### 🤙 Síndrome del túnel cubital
+Compite contra: Epicondilalgia medial (codo de golfista), Síndrome del túnel carpiano
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Hormigueo progresivo con el codo doblado apoyado en la ventana. | Síndrome del túnel cubital | Epicondilalgia medial (codo de golfista) |
+| ¿El dolor se corre a otra parte? | Compromete el MEÑIQUE y la mitad del anular. El pulgar no. | Síndrome del túnel cubital | Síndrome del túnel carpiano, Epicondilalgia medial (codo de golfista) |
+| Tamizaje neurológico | Alteración sensitiva en territorio cubital y debilidad de los interóseos. | Síndrome del túnel cubital | Epicondilalgia medial (codo de golfista) |
+| Palpación | Molestia al percutir el canal epitrocleoolecraneano; la epitróclea misma no duele. | Síndrome del túnel cubital | Epicondilalgia medial (codo de golfista) |
+| ¿Qué lo empeora y qué lo alivia? | Peor con el codo flectado mucho rato, mejor al estirarlo. | Síndrome del túnel cubital | Epicondilalgia medial (codo de golfista), Síndrome del túnel carpiano |
+| Fuerza muscular | Le cuesta separar los dedos y sostener un papel entre pulgar e índice. | Síndrome del túnel cubital | Epicondilalgia medial (codo de golfista), Síndrome del túnel carpiano |
+
+### 🚶 Estenosis raquídea lumbar
+Compite contra: Radiculopatía lumbar, Lumbago mecánico inespecífico
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Progresivo en dos años, sin ningún esfuerzo que lo explique. | Estenosis raquídea lumbar | Lumbago mecánico inespecífico |
+| ¿Qué lo empeora y qué lo alivia? | Camina dos cuadras y debe sentarse; inclinado sobre el carro del súper anda mucho mejor. | Estenosis raquídea lumbar | Radiculopatía lumbar, Lumbago mecánico inespecífico |
+| ¿El dolor se corre a otra parte? | Pesadez y adormecimiento en AMBAS piernas, no en una sola. | Estenosis raquídea lumbar | Radiculopatía lumbar, Lumbago mecánico inespecífico |
+| Antecedentes de salud | 71 años, con artrosis de columna en las radiografías. | Estenosis raquídea lumbar | Lumbago mecánico inespecífico |
+| Tamizaje neurológico | Tamizaje casi normal en reposo, pero aparece déficit después de caminar. | Estenosis raquídea lumbar | Lumbago mecánico inespecífico |
+| Rango de movimiento activo | La extensión lumbar reproduce los síntomas y la flexión los alivia. | Estenosis raquídea lumbar | Radiculopatía lumbar |
+
+### 🦴 Artrosis de cadera
+Compite contra: Síndrome de dolor trocantérico, Radiculopatía lumbar
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Dolor de años que fue aumentando de a poco, sin trauma. | Artrosis de cadera, Síndrome de dolor trocantérico | Radiculopatía lumbar |
+| ¿El dolor se corre a otra parte? | Duele en la INGLE y a veces baja a la rodilla por delante. | Artrosis de cadera | Síndrome de dolor trocantérico, Radiculopatía lumbar |
+| Rango de movimiento pasivo | Rotación interna de cadera claramente limitada y dolorosa. | Artrosis de cadera | Síndrome de dolor trocantérico, Radiculopatía lumbar |
+| Palpación | El trocánter mayor NO duele a la palpación. | Artrosis de cadera | Síndrome de dolor trocantérico |
+| ¿Qué lo empeora y qué lo alivia? | Le cuesta ponerse los calcetines y pararse de la silla. | Artrosis de cadera | Síndrome de dolor trocantérico |
+| Rango de movimiento activo | Rigidez matinal breve y rango de cadera reducido en todos los planos. | Artrosis de cadera | Síndrome de dolor trocantérico, Radiculopatía lumbar |
+| Tamizaje neurológico | Sin déficit neurológico. | Artrosis de cadera, Síndrome de dolor trocantérico | Radiculopatía lumbar |
+
+### ⚽ Dolor inguinal del deportista
+Compite contra: Artrosis de cadera, Lesión muscular de isquiotibiales
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Apareció de a poco en pretemporada, con mucho remate y cambio de dirección. | Dolor inguinal del deportista | Artrosis de cadera |
+| ¿El dolor se corre a otra parte? | Duele en la INGLE, por delante y hacia el aductor. | Dolor inguinal del deportista, Artrosis de cadera | Lesión muscular de isquiotibiales |
+| Palpación | Dolor a la palpación del origen del aductor largo. | Dolor inguinal del deportista | Artrosis de cadera, Lesión muscular de isquiotibiales |
+| Rango de movimiento pasivo | Movilidad pasiva de cadera COMPLETA e indolora. | Dolor inguinal del deportista | Artrosis de cadera |
+| Fuerza muscular | Dolor y debilidad en la aducción resistida. | Dolor inguinal del deportista | Artrosis de cadera, Lesión muscular de isquiotibiales |
+| ¿Qué lo empeora y qué lo alivia? | Duele al patear, al acelerar y al hacer abdominales. | Dolor inguinal del deportista | Artrosis de cadera |
+
+### 💪 Rotura del manguito rotador
+Compite contra: Tendinopatía del supraespinoso, Capsulitis adhesiva (hombro congelado)
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Caída con apoyo del brazo hace tres semanas, sobre un hombro que ya molestaba. | Rotura del manguito rotador | Capsulitis adhesiva (hombro congelado) |
+| ¿Hubo golpe o caída? | Caída del andamio con apoyo del brazo. | Rotura del manguito rotador | Tendinopatía del supraespinoso, Capsulitis adhesiva (hombro congelado) |
+| Fuerza muscular | DEBILIDAD marcada: no sostiene el brazo elevado y se le cae. | Rotura del manguito rotador | Tendinopatía del supraespinoso, Capsulitis adhesiva (hombro congelado) |
+| Rango de movimiento activo | No logra mantener la elevación activa, pero deja que se la lleven pasivamente. | Rotura del manguito rotador | Capsulitis adhesiva (hombro congelado) |
+| Rango de movimiento pasivo | Rango PASIVO conservado: la articulación no está rígida. | Rotura del manguito rotador, Tendinopatía del supraespinoso | Capsulitis adhesiva (hombro congelado) |
+| ¿Le duele de noche? | Dolor nocturno intenso que no lo deja dormir de ese lado. | Rotura del manguito rotador, Tendinopatía del supraespinoso, Capsulitis adhesiva (hombro congelado) | — |
+| Inspección | Atrofia visible de la fosa infraespinosa. | Rotura del manguito rotador | Tendinopatía del supraespinoso, Capsulitis adhesiva (hombro congelado) |
+
+### 🖐️ Fractura de escafoides
+Compite contra: Tenosinovitis de De Quervain, Rigidez de muñeca tras fractura de radio distal
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Caída con la mano estirada hace cinco días. | Fractura de escafoides | Tenosinovitis de De Quervain |
+| ¿Hubo golpe o caída? | Cayó de un skate con la muñeca en extensión forzada. | Fractura de escafoides | Tenosinovitis de De Quervain, Rigidez de muñeca tras fractura de radio distal |
+| Palpación | Dolor EXQUISITO en la tabaquera anatómica. | Fractura de escafoides | Tenosinovitis de De Quervain, Rigidez de muñeca tras fractura de radio distal |
+| ¿Qué lo empeora y qué lo alivia? | Duele al apretar y al cargar peso con esa mano. | Fractura de escafoides, Tenosinovitis de De Quervain | — |
+| Radiografía | Radiografía sin fractura evidente, pero el dolor sigue localizado en el escafoides. | Fractura de escafoides | Tenosinovitis de De Quervain |
+| Preguntar por síntomas de alarma | En urgencias se lo tomaron como esguince y le dijeron que se moviera. | Fractura de escafoides | Tenosinovitis de De Quervain |
+| Inspección | Leve aumento de volumen sobre la tabaquera, sin deformidad. | Fractura de escafoides | Rigidez de muñeca tras fractura de radio distal |
+
+### 🦶 Disfunción del tibial posterior
+Compite contra: Fascitis plantar, Tendinopatía aquiliana
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Progresivo en un año, con muchas horas de pie. | Disfunción del tibial posterior, Fascitis plantar | Tendinopatía aquiliana |
+| Palpación | Dolor por DENTRO del tobillo, bajo el maléolo medial, siguiendo el tendón. | Disfunción del tibial posterior | Fascitis plantar, Tendinopatía aquiliana |
+| Inspección | Arco caído y "demasiados dedos" visibles al mirar el pie por detrás. | Disfunción del tibial posterior | Fascitis plantar, Tendinopatía aquiliana |
+| Fuerza muscular | No puede elevar el talón parada en un pie. | Disfunción del tibial posterior | Fascitis plantar, Tendinopatía aquiliana |
+| ¿Qué lo empeora y qué lo alivia? | Peor al final del día y al caminar en superficie irregular. | Disfunción del tibial posterior, Fascitis plantar | — |
+| Rango de movimiento activo | Inversión resistida débil y dolorosa. | Disfunción del tibial posterior | Fascitis plantar |
+
+### 👟 Neuroma de Morton
+Compite contra: Fascitis plantar, Disfunción del tibial posterior
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Meses con zapato angosto y taco, muchas horas de pie. | Neuroma de Morton, Fascitis plantar | — |
+| Palpación | Dolor al comprimir el espacio entre el tercer y cuarto metatarsiano. | Neuroma de Morton | Fascitis plantar, Disfunción del tibial posterior |
+| ¿El dolor se corre a otra parte? | Ardor y adormecimiento que se corre hacia los dedos. | Neuroma de Morton | Fascitis plantar, Disfunción del tibial posterior |
+| ¿Qué lo empeora y qué lo alivia? | Siente una piedra en el zapato y alivia al descalzarse y masajear. | Neuroma de Morton | Fascitis plantar |
+| Tamizaje neurológico | Hipoestesia entre el tercer y cuarto dedo. | Neuroma de Morton | Fascitis plantar, Disfunción del tibial posterior |
+| Inspección | Sin deformidad del arco ni signos inflamatorios en el talón. | Neuroma de Morton | Fascitis plantar, Disfunción del tibial posterior |
+
+### 🌀 Vértigo posicional paroxístico benigno
+Compite contra: ACV con hemiparesia, Esclerosis múltiple
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Empezó de un día para otro al levantarse; dura menos de un minuto cada vez. | Vértigo posicional paroxístico benigno | ACV con hemiparesia, Esclerosis múltiple |
+| ¿Qué lo empeora y qué lo alivia? | Se gatilla SOLO al cambiar de posición: acostarse, darse vuelta, mirar hacia arriba. | Vértigo posicional paroxístico benigno | ACV con hemiparesia, Esclerosis múltiple |
+| Tamizaje neurológico | Sin déficit motor, sensitivo ni de pares craneales. | Vértigo posicional paroxístico benigno | ACV con hemiparesia, Esclerosis múltiple |
+| Preguntar por síntomas de alarma | Sin cefalea, sin pérdida de audición y sin compromiso de conciencia. | Vértigo posicional paroxístico benigno | ACV con hemiparesia |
+| Antecedentes de salud | Sana, sin antecedentes vasculares ni episodios neurológicos previos. | Vértigo posicional paroxístico benigno | ACV con hemiparesia, Esclerosis múltiple |
+| Inspección | Marcha normal entre los episodios, sin ataxia. | Vértigo posicional paroxístico benigno | ACV con hemiparesia, Esclerosis múltiple |
+
+### 🧩 Esclerosis múltiple
+Compite contra: ACV con hemiparesia, Debilidad adquirida en UCI
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Meses de fatiga y piernas pesadas, con brotes que van y vienen. | Esclerosis múltiple | ACV con hemiparesia, Debilidad adquirida en UCI |
+| Antecedentes de salud | Hace dos años perdió visión de un ojo por semanas y se recuperó sola. | Esclerosis múltiple | ACV con hemiparesia, Debilidad adquirida en UCI |
+| Tamizaje neurológico | Compromiso en distintos territorios y en distintos momentos, no de un hemicuerpo. | Esclerosis múltiple | ACV con hemiparesia |
+| ¿Qué lo empeora y qué lo alivia? | Todo empeora con el calor y con el ejercicio prolongado. | Esclerosis múltiple | ACV con hemiparesia, Debilidad adquirida en UCI |
+| Fuerza muscular | Debilidad en ambas piernas con espasticidad, más que un hemicuerpo débil. | Esclerosis múltiple | ACV con hemiparesia |
+| Inspección | Marcha espástica y fatigable, sin patrón hemipléjico. | Esclerosis múltiple | ACV con hemiparesia |
+
+### 🧓 Fractura vertebral por osteoporosis
+Compite contra: Lumbago mecánico inespecífico, Estenosis raquídea lumbar
+
+| Acción | Hallazgo | ↑ | ↓ |
+|---|---|---|---|
+| ¿Cómo y cuándo empezó? | Dolor que apareció DE GOLPE al agacharse a recoger algo, sin caída. | Fractura vertebral por osteoporosis | Estenosis raquídea lumbar |
+| Preguntar por síntomas de alarma | 76 años, con trauma mínimo y pérdida de estatura en el último año. | Fractura vertebral por osteoporosis | Lumbago mecánico inespecífico, Estenosis raquídea lumbar |
+| Palpación | Dolor EXQUISITO a la percusión de una apófisis espinosa. | Fractura vertebral por osteoporosis | Lumbago mecánico inespecífico, Estenosis raquídea lumbar |
+| ¿Qué lo empeora y qué lo alivia? | Duele muchísimo al pasar de acostada a sentada y no cede en ninguna posición. | Fractura vertebral por osteoporosis | Lumbago mecánico inespecífico |
+| Inspección | Cifosis dorsal aumentada respecto al año pasado. | Fractura vertebral por osteoporosis | Lumbago mecánico inespecífico, Estenosis raquídea lumbar |
+| Antecedentes de salud | Menopausia temprana y una fractura de muñeca hace dos años. | Fractura vertebral por osteoporosis | Lumbago mecánico inespecífico |
+| Tamizaje neurológico | Sin déficit neurológico por ahora. | Fractura vertebral por osteoporosis, Lumbago mecánico inespecífico | Estenosis raquídea lumbar |
+
 ---
-## 3. Pruebas ortopédicas (33)
+## 3. Pruebas ortopédicas (39)
 
 **Sn** y **Sp** son valores de referencia aproximados: varían entre estudios y poblaciones, así que en el juego sirven para razonar con SnNout / SpPin, no para citarlos.
 
@@ -951,6 +1210,12 @@ Compite contra: Artrosis de rodilla, Lesión meniscal
 | **Test de marcha de 6 minutos** | respiratorio | — | — | Se mide la distancia caminada en seis minutos, con saturación y disnea antes y después. | la tolerancia al esfuerzo (es una medición, no un diagnóstico) |
 | **Escala de Ashworth modificada** | neurológico | — | — | Se moviliza pasivamente el segmento a velocidad rápida y se gradúa la resistencia. | el grado de espasticidad (es una escala, no un diagnóstico) |
 | **Pull test (retropulsión)** | neurológico | 0,75 | 0,60 | De pie y avisado, se tracciona al paciente hacia atrás desde los hombros y se observa la reacción. | alteración de los reflejos posturales |
+| **Dix-Hallpike** | neurológico | 0,79 | 0,75 | Sentado, se gira la cabeza 45° y se lleva rápido a decúbito con la cabeza colgando; se observa el nistagmo. | vértigo posicional paroxístico benigno del canal posterior |
+| **Lag de rotación externa** | hombro | 0,70 | 0,94 | Se lleva pasivamente el hombro a rotación externa máxima y se suelta: se observa si la mano se devuelve. | rotura del infraespinoso |
+| **Signo de Mulder** | pie | 0,62 | 0,71 | Se comprime el antepié transversalmente mientras se presiona el espacio intermetatarsiano; se busca un clic doloroso. | neuroma de Morton |
+| **Elevación de talones monopodal** | pie | 0,72 | 0,85 | De pie en un pie, se pide subir el talón varias veces y se mira si el retropié va a varo. | disfunción del tibial posterior |
+| **Compresión foraminal sostenida** | cervical | 0,35 | 0,92 | Extensión e inclinación cervical sostenidas 15 segundos, buscando síntomas en el brazo. | radiculopatía cervical |
+| **Romberg** | neurológico | 0,60 | 0,80 | De pie, pies juntos, se comparan ojos abiertos y cerrados. | compromiso propioceptivo o vestibular |
 
 ---
 ## 3b. Banderas amarillas (7)

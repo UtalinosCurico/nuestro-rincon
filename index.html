@@ -6163,6 +6163,12 @@ const KIN_PRUEBAS = [
   { id:'tm6m',      nom:'Test de marcha de 6 minutos', zona:'respiratorio', func:true, como:'Se mide la distancia caminada en seis minutos, con saturación y disnea antes y después.', sug:'la tolerancia al esfuerzo (es una medición, no un diagnóstico)' },
   { id:'ashworth',  nom:'Escala de Ashworth modificada', zona:'neurológico', func:true, como:'Se moviliza pasivamente el segmento a velocidad rápida y se gradúa la resistencia.', sug:'el grado de espasticidad (es una escala, no un diagnóstico)' },
   { id:'pulltest',  nom:'Pull test (retropulsión)', zona:'neurológico', sn:0.75, sp:0.60, como:'De pie y avisado, se tracciona al paciente hacia atrás desde los hombros y se observa la reacción.', sug:'alteración de los reflejos posturales' },
+  { id:'dixhall',   nom:'Dix-Hallpike',         zona:'neurológico', sn:0.79, sp:0.75, como:'Sentado, se gira la cabeza 45° y se lleva rápido a decúbito con la cabeza colgando; se observa el nistagmo.', sug:'vértigo posicional paroxístico benigno del canal posterior' },
+  { id:'lagER',     nom:'Lag de rotación externa', zona:'hombro', sn:0.70, sp:0.94, como:'Se lleva pasivamente el hombro a rotación externa máxima y se suelta: se observa si la mano se devuelve.', sug:'rotura del infraespinoso' },
+  { id:'mulder',    nom:'Signo de Mulder',      zona:'pie',      sn:0.62, sp:0.71, como:'Se comprime el antepié transversalmente mientras se presiona el espacio intermetatarsiano; se busca un clic doloroso.', sug:'neuroma de Morton' },
+  { id:'talon',     nom:'Elevación de talones monopodal', zona:'pie', sn:0.72, sp:0.85, como:'De pie en un pie, se pide subir el talón varias veces y se mira si el retropié va a varo.', sug:'disfunción del tibial posterior' },
+  { id:'spurling2', nom:'Compresión foraminal sostenida', zona:'cervical', sn:0.35, sp:0.92, como:'Extensión e inclinación cervical sostenidas 15 segundos, buscando síntomas en el brazo.', sug:'radiculopatía cervical' },
+  { id:'romberg',   nom:'Romberg',              zona:'neurológico', sn:0.60, sp:0.80, como:'De pie, pies juntos, se comparan ojos abiertos y cerrados.', sug:'compromiso propioceptivo o vestibular' },
 ];
 
 /* Umbrales para las reglas clásicas. Con sensibilidad alta, una NEGATIVA
@@ -6642,6 +6648,140 @@ const KIN_CASOS = [
     ttoMal:['Drenaje linfático y movilización suave','Ejercicio isométrico de cuádriceps','Hielo, reposo y control en una semana'],
     dato:'Monoartritis aguda, caliente, con fiebre y antecedente de punción: artritis séptica. En horas destruye el cartílago, no es un cuadro para tratar en box.',
   },
+
+  /* ---------- tanda nueva: más cuadros para que no se repita tanto ---------- */
+  {
+    id:'radicervical', ava:'💢', pac:'Fabián', nom:'Radiculopatía cervical C6', esp:'trauma', zona:'Cervical', dif:3,
+    edad:47, ocup:'soldador', motivo:'Le baja un corrientazo por el brazo hasta el pulgar',
+    mecanismo:'Empezó hace tres semanas sin golpe, y va peor al mirar hacia arriba trabajando.',
+    sintomas:['Dolor que baja del cuello al brazo y llega al pulgar','Hormigueo en pulgar e índice','Se le durmió la mano un par de veces en la noche'],
+    prueba:'spurling', hallazgo:'Positivo: reproduce el corrientazo que le baja al brazo.',
+    fase:'subaguda',
+    tto:'Descarga cervical y deslizamiento neural, ejercicio en la dirección que centraliza los síntomas y control de la postura de trabajo.',
+    ttoMal:['Fortalecimiento cervical con carga alta para estabilizar el segmento','Tracción cervical mantenida como único tratamiento','Movilización agresiva hacia la extensión para "abrir" el foramen'],
+    dato:'El territorio manda: C6 llega al pulgar, C7 al dedo medio, C8 al meñique. Y ojo, el túnel carpiano también hormiguea el pulgar, pero no duele el cuello.',
+  },
+  {
+    id:'cubital', ava:'🤙', pac:'Renato', nom:'Síndrome del túnel cubital', esp:'trauma', zona:'Codo', dif:2,
+    edad:38, ocup:'chofer de camión', motivo:'Se le duermen el meñique y el anular cuando maneja',
+    mecanismo:'Muchas horas con el codo flectado apoyado en la ventana.',
+    sintomas:['Hormigueo en meñique y mitad del anular','Peor con el codo doblado mucho rato','Le cuesta separar los dedos'],
+    prueba:'golf', hallazgo:'Negativo: no duele la epitróclea al resistir la flexión de muñeca.',
+    fase:'subaguda',
+    tto:'Evitar la flexión mantenida de codo, férula nocturna en extensión y deslizamiento del nervio cubital, más ajuste de la postura al manejar.',
+    ttoMal:['Fortalecimiento de flexopronadores con carga progresiva','Deslizamiento neural en tensión máxima varias veces al día','Órtesis de contrafuerza en el antebrazo'],
+    dato:'Meñique dormido es cubital, no mediano. El cubital pasa por detrás de la epitróclea, y por eso empeora justo con el codo doblado.',
+  },
+  {
+    id:'estenosis', ava:'🚶', pac:'Nibaldo', nom:'Estenosis raquídea lumbar', esp:'trauma', zona:'Lumbar', dif:3,
+    edad:71, ocup:'jubilado', motivo:'Camina dos cuadras y tiene que sentarse porque se le duermen las piernas',
+    mecanismo:'Progresivo en dos años, sin ningún golpe.',
+    sintomas:['Dolor y pesadez en las piernas al caminar, que cede al sentarse','Camina mejor inclinado sobre el carro del supermercado','En bicicleta no le pasa nada'],
+    prueba:'lasegue', hallazgo:'Negativo: la elevación de la pierna recta no reproduce nada.',
+    fase:'crónica',
+    tto:'Ejercicio en flexión y descarga, entrenamiento progresivo de la marcha con pausas y fortalecimiento global; educación sobre el patrón de síntomas.',
+    ttoMal:['Ejercicio en extensión lumbar para recuperar la lordosis','Caminata continua de treinta minutos diarios desde el inicio','Tracción lumbar y reposo hasta que ceda la pesadez'],
+    dato:'La clave es la postura: la claudicación neurógena mejora al flectarse (carro del súper, bicicleta) y la vascular no. Y el Lasègue suele ser negativo.',
+  },
+  {
+    id:'coxartrosis', ava:'🦴', pac:'Lidia', nom:'Artrosis de cadera', esp:'trauma', zona:'Cadera', dif:2,
+    edad:68, ocup:'jubilada', motivo:'Le duele la ingle al pararse y ya no puede ponerse los calcetines',
+    mecanismo:'Dolor de años que fue aumentando de a poco, sin trauma.',
+    sintomas:['Dolor en la INGLE, no en el costado','Perdió rotación interna de cadera','Rigidez de menos de treinta minutos en la mañana'],
+    prueba:'faber', hallazgo:'Positivo: reproduce el dolor inguinal y el rango está claramente limitado.',
+    fase:'crónica',
+    tto:'Ejercicio de fuerza de cadera y educación como primera línea, más manejo de la carga diaria y ayuda técnica si hace falta.',
+    ttoMal:['Estiramiento de flexores y rotadores como eje del tratamiento','Reposo de las caminatas hasta que ceda el dolor inguinal','Terapia manual de cadera sin programa de ejercicio'],
+    dato:'Dolor de cadera de verdad duele en la INGLE. Si duele en el costado sobre el trocánter, es tendinopatía glútea. La rotación interna limitada es el hallazgo más precoz.',
+  },
+  {
+    id:'pubalgia', ava:'⚽', pac:'Maicol', nom:'Dolor inguinal del deportista', esp:'deporte', zona:'Cadera', dif:2,
+    edad:25, ocup:'futbolista de club amateur', motivo:'Le duele la ingle al patear y al acelerar',
+    mecanismo:'Empezó de a poco en pretemporada, con mucho cambio de dirección y remate.',
+    sintomas:['Dolor en la ingle al patear, correr y hacer abdominales','Duele a la palpación del aductor largo','Sin dolor a la rotación pasiva de cadera'],
+    prueba:'faber', hallazgo:'Negativo: la rotación pasiva de cadera no reproduce el dolor.',
+    fase:'subaguda',
+    tto:'Programa progresivo de fuerza de aductores y core (tipo Copenhagen), con retorno gradual al gesto deportivo.',
+    ttoMal:['Reposo deportivo hasta que no duela y luego volver a entrenar','Estiramiento intenso de aductores todos los días','Fortalecimiento de abductores y glúteo medio'],
+    dato:'Lo que separa la pubalgia de la artrosis de cadera es que acá la movilidad pasiva está intacta: duele el gesto, no la articulación.',
+  },
+  {
+    id:'rotura', ava:'💪', pac:'Aliro', nom:'Rotura del manguito rotador', esp:'trauma', zona:'Hombro', dif:3,
+    edad:63, ocup:'maestro carpintero', motivo:'No puede levantar el brazo desde que se cayó del andamio',
+    mecanismo:'Caída con apoyo del brazo hace tres semanas. Antes ya le molestaba el hombro.',
+    sintomas:['No logra mantener el brazo levantado: se le cae','Debilidad clara en rotación externa','Dolor nocturno intenso'],
+    prueba:'lagER', hallazgo:'Positivo: al soltar, la mano se devuelve sola. No sostiene la rotación externa.',
+    fase:'subaguda',
+    tto:'Fortalecimiento del deltoides y del manguito remanente con trabajo en rangos tolerados y educación; derivar a evaluación quirúrgica por la magnitud del déficit.',
+    ttoMal:['Carga progresiva del manguito como en una tendinopatía','Movilización pasiva forzada para recuperar la elevación','Isométricos de rotación externa a carga máxima'],
+    dato:'La tendinopatía duele; la rotura DEBILITA. Si el brazo se cae al soltarlo o el lag es positivo, ya no es un problema de carga, es de continuidad del tendón.',
+  },
+  {
+    id:'escafoides', ava:'🖐️', pac:'Kevin', nom:'Fractura de escafoides', esp:'trauma', zona:'Muñeca', dif:3, derivar:true,
+    edad:21, ocup:'estudiante, anda en skate', motivo:'Se cayó con la mano estirada y le duele la muñeca del lado del pulgar',
+    mecanismo:'Caída con la mano en extensión hace cinco días. En urgencias le dijeron que era esguince.',
+    sintomas:['Dolor en la tabaquera anatómica','Duele al apretar y al mover el pulgar','La radiografía inicial no mostró nada'],
+    prueba:'finkel', hallazgo:'Negativo para De Quervain, pero duele exquisitamente la tabaquera anatómica.',
+    fase:'aguda',
+    tto:'Derivar para inmovilización y nueva imagen: una radiografía normal no descarta escafoides en los primeros días.',
+    ttoMal:['Movilización progresiva de muñeca como rigidez post-traumática','Órtesis de pulgar y ejercicio de agarre progresivo','Reposo relativo y control en tres semanas'],
+    dato:'El escafoides es el hueso que se pasa por alto: la primera radiografía sale normal hasta en un tercio de los casos. Si duele la tabaquera, se trata como fractura hasta demostrar lo contrario, porque se necrosa.',
+  },
+  {
+    id:'tibialpost', ava:'🦶', pac:'Berta', nom:'Disfunción del tibial posterior', esp:'trauma', zona:'Pie', dif:2,
+    edad:56, ocup:'auxiliar de aseo', motivo:'Se le está aplanando el pie y le duele por dentro del tobillo',
+    mecanismo:'Progresivo en un año, con muchas horas de pie.',
+    sintomas:['Dolor por dentro del tobillo, bajo el maléolo medial','El arco se le fue cayendo','No puede pararse en la punta de ese pie'],
+    prueba:'talon', hallazgo:'Positivo: no logra elevar el talón en un pie y el retropié no va a varo.',
+    fase:'crónica',
+    tto:'Fortalecimiento progresivo del tibial posterior y de la musculatura intrínseca, con órtesis de apoyo del arco y control de la carga diaria.',
+    ttoMal:['Fortalecer los peroneos y la musculatura lateral','Plantillas solamente, sin programa de ejercicio','Estiramiento del tríceps sural como eje del tratamiento'],
+    dato:'Que no pueda pararse en la punta de un pie es el signo que lo delata. Si se deja pasar, el pie plano se vuelve rígido y ahí ya no hay ejercicio que lo devuelva.',
+  },
+  {
+    id:'morton', ava:'👟', pac:'Solange', nom:'Neuroma de Morton', esp:'trauma', zona:'Pie', dif:2,
+    edad:44, ocup:'vendedora de tienda', motivo:'Siente que anda con una piedra en el zapato y se le duermen los dedos',
+    mecanismo:'Meses con zapato angosto y taco, muchas horas de pie.',
+    sintomas:['Ardor entre el tercer y cuarto dedo','Sensación de piedra o pliegue en el calcetín','Alivia al sacarse el zapato y masajear el pie'],
+    prueba:'mulder', hallazgo:'Positivo: clic doloroso al comprimir el antepié con presión en el espacio intermetatarsiano.',
+    fase:'crónica',
+    tto:'Cambio de calzado a horma ancha y sin taco, almohadilla metatarsiana y fortalecimiento de la musculatura intrínseca del pie.',
+    ttoMal:['Plantilla con apoyo bajo las cabezas metatarsianas','Movilización y masaje transverso del antepié en cada sesión','Fortalecimiento del tríceps sural con elevaciones de talón'],
+    dato:'El dato que lo distingue de la metatarsalgia común: acá hay síntoma NEURAL —ardor y adormecimiento entre los dedos— y alivia al descalzarse.',
+  },
+  {
+    id:'vppb', ava:'🌀', pac:'Herminia', nom:'Vértigo posicional paroxístico benigno', esp:'neuro', zona:'Neurológico', dif:2,
+    edad:64, ocup:'dueña de casa', motivo:'Se le da vuelta todo cuando se da vuelta en la cama',
+    mecanismo:'Empezó de un día para otro hace una semana, al levantarse en la mañana.',
+    sintomas:['Vértigo intenso de menos de un minuto al cambiar de posición','Se gatilla al acostarse, darse vuelta o mirar hacia arriba','Sin pérdida de audición ni síntomas neurológicos'],
+    prueba:'dixhall', hallazgo:'Positivo: nistagmo con latencia corta que se agota, junto con el vértigo.',
+    fase:'aguda',
+    tto:'Maniobra de reposicionamiento canalicular (Epley) y educación; controlar y repetir si persiste.',
+    ttoMal:['Ejercicios de habituación vestibular progresivos por seis semanas','Reposo en cama evitando los movimientos que lo gatillan','Fortalecimiento cervical y terapia manual del cuello'],
+    dato:'Es de los pocos cuadros que se resuelven en UNA sesión con la maniobra correcta. Dura segundos, se gatilla con la posición y el nistagmo se agota: eso lo separa de una causa central.',
+  },
+  {
+    id:'esclerosis', ava:'🧩', pac:'Yasna', nom:'Esclerosis múltiple', esp:'neuro', zona:'Neurológico', dif:3,
+    edad:34, ocup:'profesora de historia', motivo:'Anda con las piernas pesadas y se cansa con nada desde hace meses',
+    mecanismo:'Brotes: hace dos años perdió visión de un ojo por unas semanas y se recuperó.',
+    sintomas:['Fatiga desproporcionada, peor con el calor','Espasticidad y pesadez en ambas piernas','Episodios previos que aparecieron y se fueron'],
+    prueba:'ashworth', hallazgo:'Resistencia aumentada al movimiento pasivo rápido en ambos miembros inferiores.',
+    fase:'crónica',
+    tto:'Ejercicio aeróbico y de fuerza dosificado por fatiga, trabajo de equilibrio y marcha, evitando el sobrecalentamiento; programa sostenido en el tiempo.',
+    ttoMal:['Entrenamiento intensivo continuo para ganar resistencia rápido','Solo elongación y manejo de la espasticidad','Reposo en los períodos de más fatiga hasta que pase'],
+    dato:'Lo que la delata es el patrón: síntomas neurológicos separados en tiempo y espacio. Y ojo con el calor: sube la temperatura y los síntomas empeoran (fenómeno de Uhthoff).',
+  },
+  {
+    id:'fxvertebral', ava:'🧓', pac:'Amelia', nom:'Fractura vertebral por osteoporosis', esp:'trauma', zona:'Lumbar', dif:3, derivar:true,
+    edad:76, ocup:'jubilada', motivo:'Le empezó un dolor fuerte en la espalda después de agacharse a recoger algo',
+    mecanismo:'Sin caída: solo se agachó. El dolor apareció de inmediato y no cede.',
+    sintomas:['Dolor dorsolumbar intenso que apareció de golpe con un esfuerzo mínimo','Duele muchísimo al pasar de acostada a sentada','Perdió estatura y anda más encorvada este último año'],
+    prueba:null, hallazgo:'Dolor exquisito a la percusión de una apófisis espinosa, muy localizado.',
+    fase:'aguda',
+    tto:'Derivar para imagen y manejo médico del dolor y de la osteoporosis antes de cualquier programa kinésico.',
+    ttoMal:['Ejercicio de extensión dorsal para corregir la cifosis','Movilización y terapia manual de la zona dolorosa','Faja y reposo relativo con control en dos semanas'],
+    dato:'Fractura con trauma mínimo en una adulta mayor es fractura por fragilidad hasta demostrar lo contrario. El dolor puntual a la percusión y la pérdida de estatura son las señales.',
+  },
 ];
 
 /* Distractores de tratamiento. Los de las fichas eran absurdos ("reposo
@@ -6691,6 +6831,18 @@ const CL_TTO_MAL = {
   cardiaco:['Ejercicio de movilidad torácica y educación postural','Terapia manual dorsal suave y control en una semana','Reentrenamiento aeróbico progresivo supervisado'],
   fxestres:['Bajar el volumen a la mitad y mantener el trabajo de fuerza','Descarga con bota tres semanas y después progresar la carrera','Fortalecer tríceps sural y musculatura del pie, sin correr'],
   septica:['Crioterapia, descarga y movilización pasiva suave','Isométricos de cuádriceps y compresión para bajar el derrame','Reposo, elevación y control en 48 horas'],
+  radicervical:['Fortalecimiento cervical con carga alta para estabilizar el segmento','Tracción cervical mantenida como único tratamiento','Movilización hacia la extensión para abrir el foramen'],
+  cubital:['Carga progresiva de los flexopronadores','Deslizamiento neural en tensión máxima varias veces al día','Órtesis de contrafuerza en el antebrazo'],
+  estenosis:['Ejercicio en extensión lumbar para recuperar la lordosis','Caminata continua de treinta minutos diarios desde el inicio','Tracción lumbar y reposo hasta que ceda la pesadez'],
+  coxartrosis:['Estiramiento de flexores y rotadores como eje del tratamiento','Reposo de las caminatas hasta que ceda el dolor inguinal','Terapia manual de cadera sin programa de ejercicio'],
+  pubalgia:['Reposo deportivo hasta que no duela y ahí volver a entrenar','Estiramiento intenso de aductores todos los días','Fortalecimiento de abductores y glúteo medio'],
+  rotura:['Carga progresiva del manguito como en una tendinopatía','Movilización pasiva forzada para recuperar la elevación','Isométricos de rotación externa a carga máxima'],
+  escafoides:['Movilización progresiva de muñeca como rigidez post-traumática','Órtesis de pulgar y ejercicio de agarre progresivo','Reposo relativo y control en tres semanas'],
+  tibialpost:['Fortalecer peroneos y musculatura lateral del tobillo','Plantillas solamente, sin programa de ejercicio','Estiramiento del tríceps sural como eje del tratamiento'],
+  morton:['Plantilla con apoyo bajo las cabezas metatarsianas','Movilización y masaje transverso del antepié cada sesión','Elevaciones de talón para fortalecer el tríceps sural'],
+  vppb:['Ejercicios de habituación vestibular progresivos por seis semanas','Reposo evitando los movimientos que lo gatillan','Terapia manual cervical y fortalecimiento del cuello'],
+  esclerosis:['Entrenamiento intensivo continuo para ganar resistencia rápido','Solo elongación y manejo de la espasticidad','Reposo en los períodos de más fatiga hasta que pase'],
+  fxvertebral:['Ejercicio de extensión dorsal para corregir la cifosis','Movilización y terapia manual de la zona dolorosa','Faja y reposo relativo con control en dos semanas'],
 };
 
 /* Etiquetas cortas para el cuaderno: los nombres completos no caben
@@ -6709,6 +6861,10 @@ const CL_CORTO = {
   epimedial:'Epicondilalgia med.', isquios:'Isquiotibiales', cintilla:'Cintilla iliotibial',
   canillera:'Canillera', cauda:'Cauda equina', tvp:'TVP', compartimental:'Compartimental',
   cardiaco:'Dolor cardíaco', fxestres:'Fx por estrés', septica:'Artritis séptica',
+  radicervical:'Radiculopatía C6', cubital:'Túnel cubital', estenosis:'Estenosis lumbar',
+  coxartrosis:'Artrosis cadera', pubalgia:'Pubalgia', rotura:'Rotura manguito',
+  escafoides:'Fx escafoides', tibialpost:'Tibial posterior', morton:'Neuroma Morton',
+  vppb:'VPPB', esclerosis:'Esclerosis múltiple', fxvertebral:'Fx vertebral',
 };
 
 /* Lo que dicen los pacientes cuando vuelven a la clínica. La gracia del
@@ -6755,6 +6911,18 @@ const CL_REGRESO = {
   cardiaco:'Le pusieron dos stents. Viene derivado a rehabilitación cardíaca y trae pan amasado para todos.',
   fxestres:'Ocho semanas sin bailar. Volvió preguntando por la carga antes de subirla, que es lo que había que aprender.',
   septica:'Le hicieron aseo quirúrgico y salvó la rodilla. Vuelve a recuperar rango, con la glicemia bajo control.',
+  radicervical:'Le pasó el corrientazo del brazo. Ahora viene por el hombro del otro lado, de tanto compensar.',
+  cubital:'Cambió la postura al manejar y dejó de dormírsele el meñique. Vuelve a control, agradecido.',
+  estenosis:'Sigue saliendo a caminar, pero ahora con bastones y pausas. Llega mucho más lejos que antes.',
+  coxartrosis:'Se puso los calcetines sola por primera vez en un año y vino a contarlo.',
+  pubalgia:'Volvió a jugar y aguantó la temporada entera. Ahora trae a un compañero con lo mismo.',
+  rotura:'Lo operaron y volvió con la orden de rehabilitación. Trajo un banquito que hizo con la mano buena.',
+  escafoides:'Estuvo ocho semanas con yeso, pero consolidó. Vuelve a recuperar la muñeca, y sin skate por ahora.',
+  tibialpost:'Con las plantillas y los ejercicios el pie aguantó. Ya se para en la punta de ese pie.',
+  morton:'Botó los tacos y anda con zapatilla ancha. Dice que fue el mejor consejo que le han dado.',
+  vppb:'Le volvió el vértigo del otro lado. Esta vez llegó al día siguiente en vez de aguantar una semana.',
+  esclerosis:'Tuvo un brote y lo remontó. Sigue haciendo clases y viene a ajustar el programa.',
+  fxvertebral:'Consolidó y está en tratamiento de la osteoporosis. Viene ahora sí a hacer ejercicio, con calma.',
 };
 
 /* Músculos para el modo de repaso. Origen/inserción resumidos.
@@ -7341,6 +7509,145 @@ const KIN_DX = {
       insp:    p('Rodilla roja, brillante y con derrame a tensión.','septica','artrosis menisco'),
       palp:    p('Piel CALIENTE al tacto y dolor extremo a la palpación.','septica','artrosis menisco'),
       activo:  p('No tolera ningún grado de movimiento.','septica','artrosis'),
+    },
+  },
+
+  /* ---------- tanda nueva ---------- */
+  radicervical: {
+    dif:['radicervical','tunel','cervicalgia'],
+    c:{
+      inicio:  p('Tres semanas, sin golpe, y empeora al mirar hacia arriba trabajando.','radicervical','tunel'),
+      irradia: p('El dolor BAJA del cuello al brazo y llega al PULGAR.','radicervical','cervicalgia tunel'),
+      neuro:   p('Hipoestesia en pulgar e índice y reflejo braquiorradial disminuido.','radicervical','cervicalgia tunel'),
+      fuerza:  p('Debilidad de bíceps y de extensión de muñeca del lado sintomático.','radicervical','cervicalgia tunel'),
+      agrava:  p('Empeora con la extensión cervical y alivia al poner la mano sobre la cabeza.','radicervical','tunel cervicalgia'),
+      noche:   p('A veces despierta con la mano dormida, pero le duele el cuello igual.','radicervical tunel',''),
+      activo:  p('Rango cervical limitado y doloroso hacia el lado comprometido.','radicervical cervicalgia','tunel'),
+    },
+  },
+  cubital: {
+    dif:['cubital','epimedial','tunel'],
+    c:{
+      inicio:  p('Hormigueo progresivo con el codo doblado apoyado en la ventana.','cubital','epimedial'),
+      irradia: p('Compromete el MEÑIQUE y la mitad del anular. El pulgar no.','cubital','tunel epimedial'),
+      neuro:   p('Alteración sensitiva en territorio cubital y debilidad de los interóseos.','cubital','epimedial'),
+      palp:    p('Molestia al percutir el canal epitrocleoolecraneano; la epitróclea misma no duele.','cubital','epimedial'),
+      agrava:  p('Peor con el codo flectado mucho rato, mejor al estirarlo.','cubital','epimedial tunel'),
+      fuerza:  p('Le cuesta separar los dedos y sostener un papel entre pulgar e índice.','cubital','epimedial tunel'),
+    },
+  },
+  estenosis: {
+    dif:['estenosis','radiculopatia','lumbago'],
+    c:{
+      inicio:  p('Progresivo en dos años, sin ningún esfuerzo que lo explique.','estenosis','lumbago'),
+      agrava:  p('Camina dos cuadras y debe sentarse; inclinado sobre el carro del súper anda mucho mejor.','estenosis','radiculopatia lumbago'),
+      irradia: p('Pesadez y adormecimiento en AMBAS piernas, no en una sola.','estenosis','radiculopatia lumbago'),
+      antec:   p('71 años, con artrosis de columna en las radiografías.','estenosis','lumbago'),
+      neuro:   p('Tamizaje casi normal en reposo, pero aparece déficit después de caminar.','estenosis','lumbago'),
+      activo:  p('La extensión lumbar reproduce los síntomas y la flexión los alivia.','estenosis','radiculopatia'),
+    },
+  },
+  coxartrosis: {
+    dif:['coxartrosis','trocanterico','radiculopatia'],
+    c:{
+      inicio:  p('Dolor de años que fue aumentando de a poco, sin trauma.','coxartrosis trocanterico','radiculopatia'),
+      irradia: p('Duele en la INGLE y a veces baja a la rodilla por delante.','coxartrosis','trocanterico radiculopatia'),
+      pasivo:  p('Rotación interna de cadera claramente limitada y dolorosa.','coxartrosis','trocanterico radiculopatia'),
+      palp:    p('El trocánter mayor NO duele a la palpación.','coxartrosis','trocanterico'),
+      agrava:  p('Le cuesta ponerse los calcetines y pararse de la silla.','coxartrosis','trocanterico'),
+      activo:  p('Rigidez matinal breve y rango de cadera reducido en todos los planos.','coxartrosis','trocanterico radiculopatia'),
+      neuro:   p('Sin déficit neurológico.','coxartrosis trocanterico','radiculopatia'),
+    },
+  },
+  pubalgia: {
+    dif:['pubalgia','coxartrosis','isquios'],
+    c:{
+      inicio:  p('Apareció de a poco en pretemporada, con mucho remate y cambio de dirección.','pubalgia','coxartrosis'),
+      irradia: p('Duele en la INGLE, por delante y hacia el aductor.','pubalgia coxartrosis','isquios'),
+      palp:    p('Dolor a la palpación del origen del aductor largo.','pubalgia','coxartrosis isquios'),
+      pasivo:  p('Movilidad pasiva de cadera COMPLETA e indolora.','pubalgia','coxartrosis'),
+      fuerza:  p('Dolor y debilidad en la aducción resistida.','pubalgia','coxartrosis isquios'),
+      agrava:  p('Duele al patear, al acelerar y al hacer abdominales.','pubalgia','coxartrosis'),
+    },
+  },
+  rotura: {
+    dif:['rotura','manguito','capsulitis'],
+    c:{
+      inicio:  p('Caída con apoyo del brazo hace tres semanas, sobre un hombro que ya molestaba.','rotura','capsulitis'),
+      trauma:  p('Caída del andamio con apoyo del brazo.','rotura','manguito capsulitis'),
+      fuerza:  p('DEBILIDAD marcada: no sostiene el brazo elevado y se le cae.','rotura','manguito capsulitis'),
+      activo:  p('No logra mantener la elevación activa, pero deja que se la lleven pasivamente.','rotura','capsulitis'),
+      pasivo:  p('Rango PASIVO conservado: la articulación no está rígida.','rotura manguito','capsulitis'),
+      noche:   p('Dolor nocturno intenso que no lo deja dormir de ese lado.','rotura manguito capsulitis',''),
+      insp:    p('Atrofia visible de la fosa infraespinosa.','rotura','manguito capsulitis'),
+    },
+  },
+  escafoides: {
+    dif:['escafoides','dequervain','huaso'],
+    c:{
+      inicio:  p('Caída con la mano estirada hace cinco días.','escafoides','dequervain'),
+      trauma:  p('Cayó de un skate con la muñeca en extensión forzada.','escafoides','dequervain huaso'),
+      palp:    p('Dolor EXQUISITO en la tabaquera anatómica.','escafoides','dequervain huaso'),
+      agrava:  p('Duele al apretar y al cargar peso con esa mano.','escafoides dequervain',''),
+      imgRx:   p('Radiografía sin fractura evidente, pero el dolor sigue localizado en el escafoides.','escafoides','dequervain'),
+      alarma:  p('En urgencias se lo tomaron como esguince y le dijeron que se moviera.','escafoides','dequervain'),
+      insp:    p('Leve aumento de volumen sobre la tabaquera, sin deformidad.','escafoides','huaso'),
+    },
+  },
+  tibialpost: {
+    dif:['tibialpost','fascitis','aquiles'],
+    c:{
+      inicio:  p('Progresivo en un año, con muchas horas de pie.','tibialpost fascitis','aquiles'),
+      palp:    p('Dolor por DENTRO del tobillo, bajo el maléolo medial, siguiendo el tendón.','tibialpost','fascitis aquiles'),
+      insp:    p('Arco caído y "demasiados dedos" visibles al mirar el pie por detrás.','tibialpost','fascitis aquiles'),
+      fuerza:  p('No puede elevar el talón parada en un pie.','tibialpost','fascitis aquiles'),
+      agrava:  p('Peor al final del día y al caminar en superficie irregular.','tibialpost fascitis',''),
+      activo:  p('Inversión resistida débil y dolorosa.','tibialpost','fascitis'),
+    },
+  },
+  morton: {
+    dif:['morton','fascitis','tibialpost'],
+    c:{
+      inicio:  p('Meses con zapato angosto y taco, muchas horas de pie.','morton fascitis',''),
+      palp:    p('Dolor al comprimir el espacio entre el tercer y cuarto metatarsiano.','morton','fascitis tibialpost'),
+      irradia: p('Ardor y adormecimiento que se corre hacia los dedos.','morton','fascitis tibialpost'),
+      agrava:  p('Siente una piedra en el zapato y alivia al descalzarse y masajear.','morton','fascitis'),
+      neuro:   p('Hipoestesia entre el tercer y cuarto dedo.','morton','fascitis tibialpost'),
+      insp:    p('Sin deformidad del arco ni signos inflamatorios en el talón.','morton','fascitis tibialpost'),
+    },
+  },
+  vppb: {
+    dif:['vppb','acv','esclerosis'],
+    c:{
+      inicio:  p('Empezó de un día para otro al levantarse; dura menos de un minuto cada vez.','vppb','acv esclerosis'),
+      agrava:  p('Se gatilla SOLO al cambiar de posición: acostarse, darse vuelta, mirar hacia arriba.','vppb','acv esclerosis'),
+      neuro:   p('Sin déficit motor, sensitivo ni de pares craneales.','vppb','acv esclerosis'),
+      alarma:  p('Sin cefalea, sin pérdida de audición y sin compromiso de conciencia.','vppb','acv'),
+      antec:   p('Sana, sin antecedentes vasculares ni episodios neurológicos previos.','vppb','acv esclerosis'),
+      insp:    p('Marcha normal entre los episodios, sin ataxia.','vppb','acv esclerosis'),
+    },
+  },
+  esclerosis: {
+    dif:['esclerosis','acv','postuci'],
+    c:{
+      inicio:  p('Meses de fatiga y piernas pesadas, con brotes que van y vienen.','esclerosis','acv postuci'),
+      antec:   p('Hace dos años perdió visión de un ojo por semanas y se recuperó sola.','esclerosis','acv postuci'),
+      neuro:   p('Compromiso en distintos territorios y en distintos momentos, no de un hemicuerpo.','esclerosis','acv'),
+      agrava:  p('Todo empeora con el calor y con el ejercicio prolongado.','esclerosis','acv postuci'),
+      fuerza:  p('Debilidad en ambas piernas con espasticidad, más que un hemicuerpo débil.','esclerosis','acv'),
+      insp:    p('Marcha espástica y fatigable, sin patrón hemipléjico.','esclerosis','acv'),
+    },
+  },
+  fxvertebral: {
+    dif:['fxvertebral','lumbago','estenosis'],
+    c:{
+      inicio:  p('Dolor que apareció DE GOLPE al agacharse a recoger algo, sin caída.','fxvertebral','estenosis'),
+      alarma:  p('76 años, con trauma mínimo y pérdida de estatura en el último año.','fxvertebral','lumbago estenosis'),
+      palp:    p('Dolor EXQUISITO a la percusión de una apófisis espinosa.','fxvertebral','lumbago estenosis'),
+      agrava:  p('Duele muchísimo al pasar de acostada a sentada y no cede en ninguna posición.','fxvertebral','lumbago'),
+      insp:    p('Cifosis dorsal aumentada respecto al año pasado.','fxvertebral','lumbago estenosis'),
+      antec:   p('Menopausia temprana y una fractura de muñeca hace dos años.','fxvertebral','lumbago'),
+      neuro:   p('Sin déficit neurológico por ahora.','fxvertebral lumbago','estenosis'),
     },
   },
 };
@@ -8067,6 +8374,93 @@ const CL_EQUIPOS = [
 
 const CL_NOMBRES = ['Fernanda','Matías','Camila','Joaquín','Antonia','Vicente','Josefa','Benjamín','Isidora','Tomás','Florencia','Agustín'];
 
+/* ============================================================
+   GENERADOR DE PACIENTES
+   El contenido clínico son 55 cuadros revisados, pero la GENTE se arma
+   sola: nombre, apellido, edad, oficio y comuna. Así el mismo cuadro
+   llega mil veces sin que se sienta el mismo paciente.
+   Los pacientes con nombre propio (los de la ficha) se reservan para
+   los que vuelven: esos sí tienen historia y arco.
+   ============================================================ */
+const CL_NOM_F = ['Camila','Valentina','Javiera','Francisca','Constanza','Antonia','Isidora','Josefa','Fernanda',
+  'Martina','Florencia','Trinidad','Emilia','Sofía','Amanda','Rocío','Daniela','Carolina','Paulina','Marcela',
+  'Verónica','Patricia','Gloria','Elba','Rosa','Olga','Mónica','Ximena','Soledad','Pilar','Nicole','Bárbara',
+  'Denisse','Yasna','Millaray','Antonella','Ignacia','Magdalena','Catalina','Andrea','Claudia','Jacqueline'];
+const CL_NOM_M = ['Matías','Benjamín','Vicente','Joaquín','Agustín','Tomás','Cristóbal','Sebastián','Felipe',
+  'Nicolás','Ignacio','Gabriel','Martín','Bastián','Álvaro','Rodrigo','Cristián','Marcelo','Patricio','Jorge',
+  'Luis','Héctor','Manuel','Óscar','Nelson','Hernán','Guillermo','Ramón','Pablo','Andrés','Camilo','Esteban',
+  'Rubén','Alonso','Maximiliano','Lautaro','Emilio','Gonzalo','Mauricio','Ricardo','Sergio','Iván'];
+const CL_APELLIDOS = ['González','Muñoz','Rojas','Díaz','Pérez','Soto','Contreras','Silva','Martínez','Sepúlveda',
+  'Morales','Rodríguez','López','Fuentes','Hernández','Torres','Araya','Flores','Espinoza','Valenzuela','Castillo',
+  'Tapia','Reyes','Gutiérrez','Castro','Vargas','Álvarez','Vásquez','Sánchez','Ramírez','Carrasco','Gómez','Cortés',
+  'Herrera','Núñez','Jara','Vergara','Rivera','Figueroa','Riquelme','Bravo','Miranda','Orellana','Aguilera',
+  'Sandoval','Guzmán','Salazar','Vera','Campos','Fernández','Ortiz','Molina','Navarro','Pizarro','Cárdenas',
+  'Godoy','Ahumada','Zúñiga','Peña','Leiva','Catalán','Huenchul','Millán','Paillal','Curihual'];
+const CL_COMUNAS = ['La Florida','Puente Alto','Maipú','Curicó','Talca','Rancagua','Chillán','Temuco','Valdivia',
+  'Osorno','Concepción','Talcahuano','Valparaíso','Viña del Mar','Quilpué','La Serena','Coquimbo','Antofagasta',
+  'Calama','Iquique','Arica','Punta Arenas','Puerto Montt','Castro','Linares','San Fernando','Melipilla','Buin',
+  'Peñaflor','Renca','Recoleta','Ñuñoa','Macul','Quinta Normal','Estación Central','El Bosque','La Pintana',
+  'Colina','Lampa','Molina','Parral','Cauquenes','Angol','Villarrica','Ovalle','Illapel','Los Ángeles'];
+
+/* Oficios intercambiables por caso: tienen que seguir calzando con el
+   mecanismo de la ficha (el pintor y el estucador trabajan igual sobre la
+   cabeza; el minero y el portuario levantan el mismo peso). */
+const CL_OCUPS = {
+  huaso:['agricultor','temporero de la fruta','arriero'],
+  minero:['portuario','operador de maquinaria','conductor de camión minero'],
+  basquetbol:['voleibolista','jugador de balonmano','atleta de salto alto'],
+  carrete:['universitario','garzón','estudiante de pedagogía'],
+  banderas:['pensionado','ex funcionario público','jubilado de la construcción'],
+  pinzamiento:['estucador','maestro eléctrico','instalador de cielos','pintor de brocha gorda'],
+  capsulitis:['administrativa','profesora básica','cajera de banco'],
+  manguito:['nadadora máster','entrenadora de natación','waterpolista'],
+  epicondilalgia:['gásfiter','mueblista','soldador'],
+  tunel:['secretaria','cajera de supermercado','transcriptora'],
+  dequervain:['mamá de guagua','educadora de párvulos','cuidadora de adulto mayor'],
+  lumbago:['reponedor de supermercado','mudancista','operario de bodega'],
+  radiculopatia:['conductor de micro','taxista','camionero de larga distancia'],
+  trocanterico:['profesora','enfermera','vendedora de tienda'],
+  lca:['jugadora de fútbol','handbolista','esquiadora'],
+  menisco:['futbolista de barrio','árbitro','jugador de baby fútbol'],
+  patelofemoral:['corredora aficionada','estudiante de educación física','trotadora de parque'],
+  aquiles:['corredor de calle','profesor de gimnasia','maratonista aficionado'],
+  esguince:['basquetbolista','voleibolista','jugador de fútsal'],
+  fascitis:['vendedora ambulante','peluquera','garzona'],
+  cervicalgia:['programadora','call center','diseñadora gráfica'],
+  epoc:['ex minero','ex soldador','jubilado fumador de años'],
+  acv:['dueña de casa','jubilada','ex comerciante'],
+  bronquiolitis:['lactante','guagua de sala cuna','bebé de ocho meses'],
+  neumonia:['jubilado del campo','pensionado','adulto mayor que vive solo'],
+  postuci:['profesora','contadora','funcionaria municipal'],
+  parkinson:['jubilado','ex relojero','ex profesor de matemáticas'],
+  facial:['peluquera','vendedora','manicurista'],
+  artrosis:['feriante','comerciante de la vega','dueña de almacén'],
+  cadera:['jubilada','pensionada','abuela que cuida nietos'],
+  latigazo:['estudiante','oficinista','vendedora'],
+  epimedial:['albañil','jardinero','maestro de obra'],
+  isquios:['jugador de liga de barrio','velocista','jugador de rugby'],
+  cintilla:['corredora de trail','ciclista de montaña','montañista'],
+  canillera:['conscripto','recluta de carabineros','bombero voluntario'],
+  cauda:['camionero','operario','bodeguero'],
+  tvp:['costurera','tejedora','modista'],
+  compartimental:['rugbista','futbolista','jugador de hockey césped'],
+  cardiaco:['panadero','maestro pastelero','feriante'],
+  fxestres:['bailarina de ballet','gimnasta','bailarina de danza contemporánea'],
+  septica:['jubilado diabético','pensionado','adulto mayor con diabetes'],
+  radicervical:['maestro eléctrico','pintor de altura','instalador de cielos'],
+  cubital:['taxista','conductor de bus','operador de grúa'],
+  estenosis:['jubilado','pensionado','ex funcionario municipal'],
+  coxartrosis:['jubilada','dueña de casa','ex temporera'],
+  pubalgia:['futbolista de liga','jugador de rugby','mediocampista de club'],
+  rotura:['maestro mueblista','pintor','estucador'],
+  escafoides:['estudiante','repartidor en bicicleta','skater'],
+  tibialpost:['auxiliar de aseo','manipuladora de alimentos','vendedora de local'],
+  morton:['vendedora de tienda','recepcionista','garzona'],
+  vppb:['dueña de casa','jubilada','cuidadora'],
+  esclerosis:['profesora','educadora diferencial','bibliotecaria'],
+  fxvertebral:['jubilada','pensionada','abuela que vive sola'],
+};
+
 /* ---------- la clínica como lugar ----------
    Contexto que cambia en cada visita: no es lo mismo un paciente que
    viene del SAPU que uno derivado por la mutual. Es decoración honesta,
@@ -8101,6 +8495,41 @@ const CL_EVENTOS = [
   { id:'congreso', emo:'🏅', nom:'Semana del congreso',
     desc:'Media clínica está en el congreso: menos tiempo por paciente, pero lo que llega paga más.',
     ef:{ pago:1.4, tiempo:-3 } },
+
+  /* --- lo que pasa en Chile y le pega a la clínica --- */
+  { id:'temporal', emo:'⛈️', nom:'Temporal en la zona',
+    desc:'Lluvia con viento hace dos días. Se cortó la luz en el sector y la mitad no llegó a su hora.',
+    ef:{ sinImg:true, tiempo:-2, pago:0.85 } },
+  { id:'terremoto', emo:'🏚️', nom:'Terremoto anoche',
+    desc:'Un 7,2 a las tres de la mañana. Llegan caídas, golpes y mucha gente con el cuello agarrotado del susto.',
+    ef:{ rep:2.5, tiempo:-3, pago:0.8 } },
+  { id:'protestas', emo:'📢', nom:'Protestas en el centro',
+    desc:'Cortaron la alameda. Los que llegan vienen tarde, alterados y algunos con lesiones de la marcha.',
+    ef:{ tiempo:-2, rep:1.6 } },
+  { id:'paro', emo:'🚌', nom:'Paro de la locomoción',
+    desc:'No hay micros. Llega poca gente, pero la que llega caminó una hora y no se quiere ir sin ser atendida.',
+    ef:{ pago:1.5, tiempo:2 } },
+  { id:'sanitaria', emo:'😷', nom:'Alerta sanitaria',
+    desc:'Circular del Minsal: se priorizan los cuadros respiratorios y se refuerza la sala IRA.',
+    ef:{ esp:'respi', pago:1.3 } },
+  { id:'calor', emo:'🥵', nom:'Ola de calor',
+    desc:'38 grados y el aire acondicionado murió. Nadie rinde igual, ni los pacientes ni tú.',
+    ef:{ tiempo:-2, pago:1.1 } },
+  { id:'dieciocho', emo:'🇨🇱', nom:'Semana del dieciocho',
+    desc:'Fondas, cueca y asado. Llegan esguinces de baile, lumbagos de empanada y mucha gente de buen ánimo.',
+    ef:{ pago:1.7, rep:1.3, tiempo:-1 } },
+  { id:'smog', emo:'🌫️', nom:'Preemergencia ambiental',
+    desc:'Restricción vehicular y aire pesado. Se disparan las consultas respiratorias y la gente anda ahogada.',
+    ef:{ esp:'respi', tiempo:-1, rep:1.4 } },
+  { id:'aluvion', emo:'🌊', nom:'Aluvión en la quebrada',
+    desc:'Se cortó el agua en media ciudad. Operativo de emergencia: paga poco y se trabaja incómodo, pero la gente no lo olvida.',
+    ef:{ rep:2.2, pago:0.6, sinImg:true } },
+  { id:'maraton', emo:'🏃', nom:'Maratón de la ciudad',
+    desc:'Corrieron diez mil personas el domingo. El lunes la sala se llenó de rodillas, tendones y canillas.',
+    ef:{ esp:'deporte', pago:1.35 } },
+  { id:'invierno2', emo:'❄️', nom:'Heladas',
+    desc:'Amaneció con escarcha. Llegan caídas de adultos mayores y todo el mundo entra rígido.',
+    ef:{ tiempo:-1, rep:1.5, pago:1.15 } },
 ];
 const CL_EVENTO_DURA = 4;
 const CL_ESPERA_MAX = 3;
@@ -8258,6 +8687,38 @@ function clResumenHist(h){
   return partes.join(' · ');
 }
 
+/* ---------- generador de personas ----------
+   Los cuadros clínicos con nombre propio (Ramón, Rosa, Marcela) se
+   reservan para cuando VUELVEN: esos tienen historia, arco y notas.
+   El resto de las veces llega otra persona con el mismo cuadro. */
+const CL_FEM = ['capsulitis','manguito','dequervain','trocanterico','lca','patelofemoral','fascitis',
+  'cervicalgia','acv','bronquiolitis','postuci','facial','artrosis','cadera','cintilla','tvp','fxestres',
+  'coxartrosis','tibialpost','morton','vppb','esclerosis','fxvertebral'];
+
+function clGenPersona(caso){
+  const al = a => a[Math.floor(Math.random() * a.length)];
+  const fem = CL_FEM.indexOf(caso.id) !== -1;
+  const nom = al(fem ? CL_NOM_F : CL_NOM_M) + ' ' + al(CL_APELLIDOS);
+  let edad = caso.edad, edadTxt = caso.edadTxt || null;
+  if(!edadTxt){
+    const r = caso.edad >= 60 ? 9 : caso.edad <= 22 ? 4 : 7;
+    edad = Math.max(15, caso.edad + Math.floor(Math.random() * (r * 2 + 1)) - r);
+  }
+  const ocups = [caso.ocup].concat(CL_OCUPS[caso.id] || []);
+  return { nom, edad, edadTxt, ocup: al(ocups), comuna: al(CL_COMUNAS), fem };
+}
+
+/* Datos que se muestran: los del generado si lo hay, si no los de la ficha. */
+function clPacNom(caso, ficha){ return (ficha && ficha.gen) ? ficha.gen.nom : caso.pac; }
+function clPacOcup(caso, ficha){ return (ficha && ficha.gen) ? ficha.gen.ocup : caso.ocup; }
+function clPacEdad(caso, ficha){
+  if(ficha && ficha.gen) return ficha.gen.edadTxt || (ficha.gen.edad + ' años');
+  return clEdad(caso);
+}
+/* Solo el paciente de la ficha acumula historia, arco y notas: los
+   generados son otra persona, no "el mismo que volvió". */
+function clEsCanon(ficha){ return !(ficha && ficha.gen); }
+
 /* ---------- personalidad ---------- */
 function clRasgo(id){ return CL_RASGOS.find(r => r.id === id) || null; }
 function clAnimo(id){ return CL_ANIMOS.find(a => a.id === id) || null; }
@@ -8273,8 +8734,13 @@ function clFichaEspera(caso){
   const probAcomp = (caso.edad <= 15 || caso.edad >= 70) ? 0.85 : 0.28;
   // en los cuadros persistentes lo psicosocial pesa más y aparece más seguido
   const probAmarilla = caso.fase === 'crónica' ? CL_AMARILLA_PROB + 0.2 : CL_AMARILLA_PROB;
+  // el paciente de la ficha vuelve seguido si ya le diste el alta; si no,
+  // casi siempre llega otra persona distinta con el mismo cuadro
+  const h = clHist(caso.id);
+  const canon = (h && h.altas > 0) ? Math.random() < 0.5 : Math.random() < 0.22;
   return {
     id: caso.id,
+    gen: canon ? null : clGenPersona(caso),
     prev: al(CL_PREVISION),
     origen: al(CL_ORIGEN),
     espera: al(CL_ESPERA_FRASE),
@@ -8325,7 +8791,7 @@ function clSortearUrgencia(){
   ficha.espera = 'lo están estabilizando';
   c.urgencia = Object.assign(ficha, { hasta: Date.now() + CL_URGENCIA_SEG * 1000 });
   jxSonido('mal'); jxVibrar(40);
-  avisar('🚨 ¡Urgencia! Llegó ' + caso.pac + ' en ambulancia. Tienes poco tiempo.');
+  avisar('🚨 ¡Urgencia! Llegó ' + clPacNom(caso, c.urgencia) + ' en ambulancia. Tienes poco tiempo.');
 }
 function clSegUrgencia(){
   const c = clEstado();
@@ -8335,12 +8801,13 @@ function clSegUrgencia(){
 function clVencerUrgencia(){
   const c = clEstado();
   if(!c.urgencia || clSegUrgencia() > 0) return false;
-  const caso = KIN_CASOS.find(x => x.id === c.urgencia.id);
+  const ficha = c.urgencia;
+  const caso = KIN_CASOS.find(x => x.id === ficha.id);
   c.urgencia = null;
   c.reputacion = Math.max(0, c.reputacion - 5);
   c.racha = 0;
   jxSonido('mal'); jxVibrar(60);
-  avisar('🚑 Se llevaron a ' + (caso ? caso.pac : 'el paciente') + ' a otra clínica. −5 de reputación.');
+  avisar('🚑 Se llevaron a ' + (caso ? clPacNom(caso, ficha) : 'el paciente') + ' a otra clínica. −5 de reputación.');
   return true;
 }
 
@@ -8885,7 +9352,7 @@ function clPanelRecepcion(cont){
           '<span class="cl-urgencia-reloj" id="clUrReloj">' + clSegUrgencia() + 's</span></div>' +
         '<div class="cl-urgencia-cuerpo">' +
           '<div class="cl-pac-emo urg">' + (uc.ava || '🧍') + '</div>' +
-          '<div class="cl-pac-info"><div class="cl-pac-nom">' + uc.pac + ', ' + clEdad(uc) + '</div>' +
+          '<div class="cl-pac-info"><div class="cl-pac-nom">' + clPacNom(uc, c.urgencia) + ', ' + clPacEdad(uc, c.urgencia) + '</div>' +
           '<div class="cl-pac-mot">“' + uc.motivo + '”</div>' +
           '<div class="cl-pac-meta">Llegó en ambulancia · atiéndelo antes de que se lo lleven</div></div>' +
         '</div></button>';
@@ -8959,20 +9426,22 @@ function clPanelRecepcion(cont){
       const caso = KIN_CASOS.find(x => x.id === f.id);
       if(!caso) return '';
       const h = clHist(caso.id);
-      const vuelve = !!(h && h.veces);
+      const canon = clEsCanon(f);
+      const vuelve = canon && !!(h && h.veces);
       const esp = CL_ESPECIALIDADES[caso.esp];
       const ra = clRasgo(f.rasgo), an = clAnimo(f.animo);
       return '<button class="cl-pac' + (vuelve ? ' vuelve' : '') + '" data-atender="' + i + '">' +
         '<div class="cl-pac-emo"' + (vuelve ? ' style="background:#f6ead4"' : '') + '>' + (caso.ava || '🧍') + '</div>' +
         '<div class="cl-pac-info">' +
-          '<div class="cl-pac-nom">' + caso.pac + ', ' + clEdad(caso) +
+          '<div class="cl-pac-nom">' + clPacNom(caso, f) + ', ' + clPacEdad(caso, f) +
             (an ? '<span class="cl-badge sobrio">' + an.emo + ' ' + an.nom + '</span>' : '') +
             (ra ? '<span class="cl-badge sobrio">' + ra.emo + ' ' + ra.nom + '</span>' : '') +
             (vuelve ? '<span class="cl-badge oro">vuelve</span>' : '') +
-            (c.dominados.includes(caso.id) ? '<span class="cl-badge verde">dominado</span>' : '') +
+            (canon && c.dominados.includes(caso.id) ? '<span class="cl-badge verde">dominado</span>' : '') +
           '</div>' +
           '<div class="cl-pac-mot">“' + caso.motivo + '”</div>' +
-          '<div class="cl-pac-meta">' + esp.emo + ' ' + caso.ocup + ' · ' + f.prev + ' · ' + f.espera +
+          '<div class="cl-pac-meta">' + esp.emo + ' ' + clPacOcup(caso, f) +
+            (f.gen ? ' · ' + f.gen.comuna : '') + ' · ' + f.prev + ' · ' + f.espera +
             (f.acomp ? ' · ' + f.acomp.emo + ' con ' + f.acomp.nom : '') + '</div>' +
         '</div></button>';
     }).join('') + '</div>';
@@ -8998,7 +9467,7 @@ function clPanelRecepcion(cont){
         const adh = Math.round(p.adh);
         return '<button class="cl-item puede' + (p.alarma ? ' alerta' : '') + '" data-sesion="' + i + '">' +
           '<div class="cl-item-emo" style="background:#e8f0f4">' + (p.alarma ? '⚠️' : (cs.ava || '🧍')) + '</div>' +
-          '<div class="cl-item-info"><div class="cl-item-nom">' + cs.pac +
+          '<div class="cl-item-info"><div class="cl-item-nom">' + clPacNom(cs, p) +
             (p.alarma ? ' <span class="cl-badge roja">algo cambió</span>' : adh < 35 ? ' <span class="cl-badge roja">va a abandonar</span>' : '') + '</div>' +
           '<div class="cl-item-desc">' + cs.nom + ' · fase ' + f.nom + ' · adherencia ' + adh + '%</div>' +
           '<div class="cl-barra-mini"><div style="width:' + p.progreso + '%"></div></div></div>' +
@@ -9173,9 +9642,11 @@ function clIniciarCaso(i){
     // mirada psicosocial: la bandera amarilla se ve sin tener que preguntar
     amarillaVista: clTieneHabil('psico'),
     amarilla: clTieneHabil('psico') ? ficha.amarilla : null,
-    fallo: c.fallidos[caso.id] || null,       // lo que pasó la vez que se te fue
-    nota: clNotaDeOtro(caso.id),              // mensaje escondido del otro
+    // historia, deudas y notas son del paciente de la ficha, no de un generado
+    fallo: clEsCanon(ficha) ? (c.fallidos[caso.id] || null) : null,
+    nota: clEsCanon(ficha) ? clNotaDeOtro(caso.id) : null,
   };
+  if(!clEsCanon(ficha)) clTurno.hist = null;
   jxSonido('tap');
   clVista = 'recepcion'; clSesionAbierta = null;
   clPanel();
@@ -9404,8 +9875,9 @@ function clPanelCaso(cont){
     '<div class="cl-ficha' + (t.urgente ? ' urgente' : '') + '">' +
       '<div class="cl-ficha-top">' +
         '<div class="cl-ficha-avatar">' + (c.ava || '🧍') + '</div>' +
-        '<div><div class="cl-ficha-nom">' + c.pac + ', ' + clEdad(c) + '</div>' +
-        '<div class="cl-ficha-ocu">' + c.ocup + ' · consulta por ' + c.zona.toLowerCase() + '</div></div>' +
+        '<div><div class="cl-ficha-nom">' + clPacNom(c, f) + ', ' + clPacEdad(c, f) + '</div>' +
+        '<div class="cl-ficha-ocu">' + clPacOcup(c, f) + (f.gen ? ' · de ' + f.gen.comuna : '') +
+        ' · consulta por ' + c.zona.toLowerCase() + '</div></div>' +
       '</div>' +
       '<div class="cl-ficha-motivo">“' + c.motivo + '”</div>' +
       (an ? '<div class="cl-animo">' + an.emo + ' ' + an.frase + '</div>' : '') +
@@ -9685,7 +10157,9 @@ function clCerrarCaso(){
   e.vistos[c.id] = (e.vistos[c.id] || 0) + 1;
   // la ficha del álbum ahora exige acertar Y haber razonado bien
   if(perfecto && cuad.pct >= 70 && (e.vistos[c.id] || 0) >= 2 && !e.dominados.includes(c.id)) e.dominados.push(c.id);
-  const h = clHistCrear(c.id); h.veces++; h.ultima = Date.now();
+  // solo el paciente de la ficha suma historia: los generados son otra persona
+  const canon = clEsCanon(t.ficha);
+  if(canon){ const h = clHistCrear(c.id); h.veces++; h.ultima = Date.now(); }
   clGastarEvento();
 
   clAvanzarMision('atender', { zona:c.zona });
@@ -9697,12 +10171,14 @@ function clCerrarCaso(){
   // memoria de errores: si te equivocaste queda anotado; si esta vez
   // lo hiciste bien y venías debiendo, queda saldado
   let saldado = false;
-  if(!perfecto){
-    clAnotarFallo(c.id, 'Te equivocaste ' + t.errores + (t.errores === 1 ? ' vez' : ' veces') +
-      ' antes de dar con el cuadro, y ' + c.pac + ' se fue con un tratamiento que empezó torcido.');
-  }else if(cuad.pct >= 70 && clSaldarFallo(c.id)){
-    saldado = true;
-    e.reputacion += 2;
+  if(canon){
+    if(!perfecto){
+      clAnotarFallo(c.id, 'Te equivocaste ' + t.errores + (t.errores === 1 ? ' vez' : ' veces') +
+        ' antes de dar con el cuadro, y ' + c.pac + ' se fue con un tratamiento que empezó torcido.');
+    }else if(cuad.pct >= 70 && clSaldarFallo(c.id)){
+      saldado = true;
+      e.reputacion += 2;
+    }
   }
 
   const antes = clEspecialidadesAbiertas().length;
@@ -9725,8 +10201,9 @@ function clCerrarCaso(){
       // si no preguntaste por creencias, la bandera amarilla viaja escondida
       amarilla: t.ficha ? t.ficha.amarilla : null,
       amarillaVista: !!t.amarillaVista,
+      gen: t.ficha ? t.ficha.gen : null,      // quién es, para no perderlo en el tratamiento
     });
-    sub += ' · ' + c.pac + ' queda en tratamiento: llévalo hasta el alta.';
+    sub += ' · ' + clPacNom(c, t.ficha) + ' queda en tratamiento: llévalo hasta el alta.';
   }else if(c.derivar){
     sub += ' · Acertaste el cuadro, pero ojo: acá lo correcto era derivar sin tratar.';
   }
@@ -9813,7 +10290,7 @@ function clAlta(idx){
   c.altas = (c.altas || 0) + 1;
   c.pxHabil++;                                    // cada alta da un punto de habilidad
   if(limpio && !c.dominados.includes(caso.id)) c.dominados.push(caso.id);
-  if(!limpio) clAnotarFallo(caso.id, caso.pac + ' llegó al alta con ' + pac.recaidas +
+  if(!limpio && !pac.gen) clAnotarFallo(caso.id, caso.pac + ' llegó al alta con ' + pac.recaidas +
     (pac.recaidas === 1 ? ' recaída' : ' recaídas') + ' en el camino: la dosificación se te fue de las manos.');
   else clSaldarFallo(caso.id);
   const h = clHistCrear(caso.id);
@@ -9825,7 +10302,7 @@ function clAlta(idx){
   clGuardar(true); c3Poblar();
   jxCelebrar({
     titulo: limpio ? '¡Alta sin recaídas! 🎉' : 'Paciente de alta',
-    sub: caso.pac + ' terminó su tratamiento en ' + pac.sesion + ' sesiones. ' + caso.dato +
+    sub: clPacNom(caso, pac) + ' terminó su tratamiento en ' + pac.sesion + ' sesiones. ' + caso.dato +
          (h.altas > 1 ? ' Es la ' + h.altas + 'ª vez que le das el alta.' : ''),
     monedas: limpio ? 12 : 6, xp: 20 * caso.dif,
     subioNivel:r.subioNivel, nivel:r.nivel, textoNext:'Seguir',
@@ -9954,7 +10431,7 @@ function clResponderAlarma(idx, decision){
       clSesionAbierta = null;
       clGuardar(true); c3Poblar();
       jxCelebrar({ titulo:'Frenaste a tiempo 🚑',
-        sub:(caso ? caso.pac : 'El paciente') + ' quedó en manos del médico. ' + al.dice,
+        sub:(caso ? clPacNom(caso, pac) : 'El paciente') + ' quedó en manos del médico. ' + al.dice,
         monedas:10, xp:25, textoNext:'Volver a la clínica',
         onNext:()=>{ clVista='recepcion'; clPanel(); } });
       jxRecompensar(10, 25, { desde:document.getElementById('jxScreenClinica') });
@@ -9988,7 +10465,7 @@ function clPanelSesion(cont, idx){
     '<div class="cl-ficha">' +
       '<div class="cl-ficha-top">' +
         '<div class="cl-ficha-avatar">' + (caso.ava || '🧍') + '</div>' +
-        '<div><div class="cl-ficha-nom">' + caso.pac + ', ' + clEdad(caso) + '</div>' +
+        '<div><div class="cl-ficha-nom">' + clPacNom(caso, pac) + ', ' + clPacEdad(caso, pac) + '</div>' +
         '<div class="cl-ficha-ocu">' + caso.nom + '</div></div>' +
       '</div>' +
       (h && h.altas ? '<div class="cl-ficha-ctx"><span>Ya lo trataste antes · ' + clResumenHist(h) + '</span></div>' : '') +
