@@ -1101,6 +1101,37 @@
   .cl-sede-gana{background:rgba(226,240,228,.75);color:#3f6b4d;}
   .cl-sede-cuesta{background:rgba(250,219,215,.6);color:#a03c2e;}
   .cl-sede-req{margin-top:9px;font-size:.74rem;color:#4b7d99;font-weight:600;text-align:center;}
+  /* --- caso del día, marcador, habilidades, notas --- */
+  .cl-diario{display:block;width:100%;text-align:left;background:linear-gradient(150deg,#f2ecfa,#e6dcf5);
+    border:1.5px solid #cbbce8;border-radius:18px;padding:14px 16px;margin-bottom:14px;
+    font-family:'Jost',sans-serif;}
+  .cl-diario.listo{cursor:pointer;box-shadow:0 8px 22px rgba(155,127,200,.28);}
+  .cl-diario.listo:active{transform:scale(.99);}
+  .cl-diario.hecho{opacity:.95;}
+  .cl-diario-tit{font-family:'Playfair Display',serif;font-size:1.1rem;color:#5c4a80;}
+  .cl-diario p{margin:5px 0 0;font-size:.79rem;color:#6f5f8c;line-height:1.5;}
+  .cl-diario-racha{margin-top:8px;font-size:.72rem;color:#7a68a0;letter-spacing:.3px;}
+  .cl-quien{display:flex;gap:8px;margin-top:11px;}
+  .cl-quien button{flex:1;background:#fff;border:1.5px solid #cbbce8;border-radius:999px;padding:9px;
+    font-family:'Jost',sans-serif;font-size:.86rem;color:#5c4a80;cursor:pointer;}
+  .cl-quien button:active{transform:scale(.97);}
+  .cl-marcador{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+  .cl-marcador-fila{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.72);
+    border-radius:12px;padding:8px 12px;font-size:.82rem;color:#5c4a80;}
+  .cl-marcador-fila.yo{background:#fff;border:1.5px solid #b7a3dc;}
+  .cl-marcador-fila span{flex:1;}
+  .cl-marcador-fila b{font-family:'Playfair Display',serif;font-size:1.2rem;color:#5c4a80;}
+  .cl-marcador-fila small{font-size:.72rem;color:#8a79ad;}
+  .cl-px{font-size:.78rem;color:var(--gris);line-height:1.5;margin:0 2px 9px;}
+  .cl-px b{color:#4b7d99;font-size:.95rem;}
+  .cl-fallo{margin-top:10px;background:#fdeceb;border:1px solid #eec2bc;border-radius:13px;padding:10px 12px;}
+  .cl-fallo b{display:block;font-size:.72rem;color:#a03c2e;margin-bottom:3px;}
+  .cl-fallo p{margin:0;font-size:.8rem;color:#8a4034;line-height:1.5;}
+  .cl-fallo em{display:block;font-style:normal;font-size:.72rem;color:#b06655;margin-top:5px;}
+  .cl-nota-carta{margin-top:10px;background:linear-gradient(140deg,#fdeef2,#f8e0e8);border:1px solid #eec4d2;
+    border-radius:13px;padding:11px 13px;}
+  .cl-nota-carta b{display:block;font-size:.72rem;color:#a8547a;margin-bottom:4px;}
+  .cl-nota-carta p{margin:0;font-size:.85rem;color:#8c4763;line-height:1.55;font-style:italic;}
   .cl-grupos{display:flex;gap:6px;margin-bottom:10px;}
   .cl-grupo{flex:1;background:var(--blanco);border:1.5px solid var(--crema-oscuro);border-radius:999px;padding:7px 4px;
     font-family:"Jost",sans-serif;font-size:.76rem;color:var(--gris);cursor:pointer;transition:all .15s;}
@@ -4438,6 +4469,20 @@ function asegurarJuegos(){
   // urgencias, turno de noche, acreditación, misiones y examen
   if(k.urgencia && (typeof k.urgencia !== 'object' || !KIN_CASOS.some(c => c.id === k.urgencia.id))) k.urgencia = null;
   if(typeof k.urRoll !== 'number' || !isFinite(k.urRoll)) k.urRoll = -1;
+  // caso del día, árbol de habilidades, errores y notas escondidas
+  if(!k.diario || typeof k.diario !== 'object') k.diario = { fecha:null, puntaje:0, racha:0, mejorRacha:0, jugados:0 };
+  for(const campo of ['puntaje','racha','mejorRacha','jugados']){
+    if(typeof k.diario[campo] !== 'number' || !isFinite(k.diario[campo]) || k.diario[campo] < 0) k.diario[campo] = 0;
+  }
+  if(!k.diarioComp || typeof k.diarioComp !== 'object' || Array.isArray(k.diarioComp)) k.diarioComp = {};
+  if(!Array.isArray(k.habil)) k.habil = [];
+  k.habil = k.habil.filter(h => CL_HABILIDADES.some(x => x.id === h));
+  if(typeof k.pxHabil !== 'number' || !isFinite(k.pxHabil) || k.pxHabil < 0) k.pxHabil = 0;
+  if(!k.fallidos || typeof k.fallidos !== 'object' || Array.isArray(k.fallidos)) k.fallidos = {};
+  for(const id of Object.keys(k.fallidos)){
+    if(!KIN_CASOS.some(c => c.id === id)) delete k.fallidos[id];
+  }
+  if(!k.notasCaso || typeof k.notasCaso !== 'object' || Array.isArray(k.notasCaso)) k.notasCaso = {};
   if(typeof k.sede !== 'number' || !isFinite(k.sede) || k.sede < 0) k.sede = 0;
   k.sede = Math.min(k.sede, CL_SEDES.length - 1);
   if(!Array.isArray(k.fundadas)) k.fundadas = [];
@@ -7339,6 +7384,78 @@ const CL_ACOMP = [
   { nom:'su hijo',      emo:'👦' }, { nom:'una vecina', emo:'👵' },
 ];
 
+/* ---------- árbol de habilidades ----------
+   Progresión tuya, no de la clínica: sobrevive a las sedes. Se paga con
+   puntos que dan las altas, las acreditaciones y el caso del día. */
+const CL_HABILIDADES = [
+  { id:'oreja',     nom:'Buena oreja',      emo:'👂',  costo:1, desc:'Preguntar cuesta un tiempo menos' },
+  { id:'ojo',       nom:'Ojo clínico',      emo:'👁️',  costo:1, desc:'Las pruebas ortopédicas cuestan un tiempo menos' },
+  { id:'memoria',   nom:'Buena memoria',    emo:'🧠',  costo:1, desc:'Dos unidades más de tiempo con cada paciente' },
+  { id:'mano',      nom:'Mano firme',       emo:'🖐️',  costo:2, desc:'La primera prueba de cada paciente sale gratis' },
+  { id:'empatia',   nom:'Empatía',          emo:'🤝',  costo:2, desc:'Los pacientes parten con +15 de adherencia' },
+  { id:'imagen',    nom:'Convenio de imágenes', emo:'📷', costo:2, desc:'Radiografías y ecografías no cuestan plata' },
+  { id:'gestion',   nom:'Gestión',          emo:'📊',  costo:2, desc:'Arriendo y sueldos cuestan un cuarto menos' },
+  { id:'psico',     nom:'Mirada psicosocial', emo:'🟡', costo:3, desc:'Ves las banderas amarillas sin tener que preguntar' },
+  { id:'intuicion', nom:'Intuición',        emo:'💡',  costo:3, desc:'La pista se recarga en 3 minutos en vez de 5' },
+  { id:'docente',   nom:'Docencia',         emo:'🎓',  costo:3, desc:'Un tercio más de experiencia en todo' },
+];
+
+/* ---------- arcos ----------
+   Pacientes que dejan de ser un caso suelto: cada vez que vuelven hay un
+   capítulo nuevo. Cuando se acaban los capítulos cae de vuelta a CL_REGRESO. */
+const CL_ARCOS = {
+  huaso:[
+    'Volvió con una bolsa de nueces. La muñeca anda, pero ahora le tira el hombro de tanto compensar arreando.',
+    'Trajo a su hijo, que se cayó del mismo caballo. "Si a mí me resultó, a él también", dice.',
+    'Vino solo a saludar y a dejar un queso. Ya ensilla, ordeña y no se acuerda de la muñeca.',
+  ],
+  basquetbol:[
+    'Ganaron el campeonato. Trajo la foto del equipo y la rodilla molestando otra vez.',
+    'Lo llamaron de un club grande. Está aterrado de que la rodilla lo deje afuera justo ahora.',
+    'Firmó contrato. Viene una vez al mes a control y le manda saludos a toda la clínica.',
+  ],
+  dequervain:[
+    'La guagua pesa cuatro kilos más y el pulgar volvió a reclamar.',
+    'Volvió al trabajo y ahora carga a la niña con una mano y el bolso con la otra. Adivina qué pasó.',
+    'La niña ya camina sola. Vino a decir que por fin puede tomarla sin pensarlo.',
+  ],
+  epoc:[
+    'Lleva ocho meses sin fumar y lo cuenta apenas entra por la puerta.',
+    'Se metió al grupo de caminata del consultorio. Anda con podómetro y lo muestra.',
+    'Cumplió dos años sin fumar. Trajo torta para la sala de espera.',
+  ],
+  acv:[
+    'Llegó caminando con bastón y saludó con la mano que antes no levantaba.',
+    'Volvió a cocinar. Cuenta que picar cebolla fue el día más importante del año.',
+    'Camina sin bastón hasta la feria. Dice que va lento, pero que va.',
+  ],
+  lca:[
+    'Vuelve de la operación con la orden de rehabilitación y muchas ganas.',
+    'Está a un mes del alta deportiva y tiene pánico de volver a girar.',
+    'Volvió a jugar. Metió un gol y vino a contarlo antes que a nadie.',
+  ],
+  esguince:[
+    'Segundo esguince del mismo tobillo. Esta vez sí quiere hacer la propiocepción completa.',
+    'Tercer esguince. Ahora sí entendió y viene preguntando por el programa completo.',
+    'Un año sin torcerse. Sigue haciendo los ejercicios y convenció al equipo entero.',
+  ],
+  cadera:[
+    'Entró sin andador, con su hija atrás muerta de nervios.',
+    'Se cambió sola de casa al primer piso. Dice que no quiere volver a caerse nunca.',
+    'Vino a mostrar las fotos del matrimonio de su nieta: bailó dos canciones.',
+  ],
+  parkinson:[
+    'Trajo la lista de canciones que usa para caminar. Dice que con cueca le sale mejor.',
+    'Se cayó en la casa y volvió asustado, pero vino igual. Eso ya es una victoria.',
+    'Lleva un año sin caídas. Le enseñó el truco de las claves a dos vecinos.',
+  ],
+  minero:[
+    'Bajó del turno derecho a la clínica. "Esta vez vine antes de que se pusiera fea."',
+    'Lo cambiaron a un turno más corto y hace los ejercicios en el casino. Anda distinto.',
+    'Lo ascendieron a supervisor. Ahora manda a su gente a la clínica antes de que les duela.',
+  ],
+};
+
 /* ---------- banderas amarillas ----------
    Factores psicosociales. No cambian el diagnóstico, pero mandan en el
    pronóstico: si no se detectan y no se abordan, el tratamiento rinde
@@ -8063,6 +8180,12 @@ function clDefault(){
     pistaT:0,           // cuándo se usó la última pista (se recarga cada 5 min)
     sede:0,             // en qué sede vas: sube el pago y la dificultad
     fundadas:[],        // nombres de las sedes que dejaste andando
+    diario:{ fecha:null, puntaje:0, racha:0, mejorRacha:0, jugados:0 },
+    diarioComp:{},      // marcador compartido del caso del día, por persona
+    habil:[],           // habilidades desbloqueadas (sobreviven a las sedes)
+    pxHabil:0,          // puntos para gastar en el árbol
+    fallidos:{},        // casos que se te fueron, con lo que pasó
+    notasCaso:{},       // mensajes escondidos en un caso para el otro
     misiones:{ dia:null, lista:[] },
     rojo:0,             // segundos acumulados con la caja en negativo
     t:0,
@@ -8115,6 +8238,14 @@ function clHistCrear(id){
   if(!c.hist[id]) c.hist[id] = { veces:0, altas:0, recaidas:0, sesiones:0, ultima:0 };
   return c.hist[id];
 }
+/* El capítulo que toca según cuántas veces vino. Si el arco se acaba,
+   cae de vuelta al texto genérico de CL_REGRESO. */
+function clCapitulo(casoId, veces){
+  const arco = CL_ARCOS[casoId];
+  if(arco && veces >= 1 && arco[veces - 1]) return arco[veces - 1];
+  return CL_REGRESO[casoId] || 'Vuelve a la clínica.';
+}
+
 /* Lo que se le dice al jugador cuando reconoce a alguien que ya atendió. */
 function clResumenHist(h){
   if(!h || !h.veces) return '';
@@ -8337,6 +8468,177 @@ function clRepExtra(){
   CL_EQUIPOS.forEach(e => { if(e.ef.rep && clTieneEquipo(e.id)) n += e.ef.rep; });
   return n;
 }
+/* ============================================================
+   CASO DEL DÍA
+   Un paciente al día, el MISMO para los dos: se sortea desde la fecha,
+   así que no depende de quién ni de qué dispositivo. Una sola pasada,
+   sin reintentos, y una racha que se corta si fallas o si no entras.
+   ============================================================ */
+function clRngDia(fecha){
+  const s = String(fecha).replace(/[^0-9]/g, '');
+  let h = 2166136261;
+  for(let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  let x = (h >>> 0) || 1;
+  return () => {
+    x ^= x << 13; x >>>= 0;
+    x ^= x >> 17;
+    x ^= x << 5;  x >>>= 0;
+    return x / 4294967296;
+  };
+}
+
+/* La ficha del día también es determinista: mismo rasgo, mismo ánimo y
+   misma bandera amarilla para los dos, si no el marcador no se compara. */
+function clFichaDia(fecha){
+  const r = clRngDia(fecha);
+  const el = a => a[Math.floor(r() * a.length)];
+  const caso = el(KIN_CASOS);
+  return {
+    id: caso.id,
+    prev: el(CL_PREVISION),
+    origen: el(CL_ORIGEN),
+    espera: el(CL_ESPERA_FRASE),
+    rasgo: el(CL_RASGOS).id,
+    animo: el(CL_ANIMOS).id,
+    acomp: r() < 0.35 ? el(CL_ACOMP) : null,
+    amarilla: r() < 0.5 ? el(CL_AMARILLAS).id : null,
+  };
+}
+
+function clDiarioHecho(){
+  const c = clEstado();
+  return c.diario.fecha === jxHoyClave();
+}
+
+/* Quién está jugando en ESTE aparato. Va en localStorage, no en el estado
+   compartido: el marcador es de los dos, pero cada teléfono sabe quién es. */
+function clQuien(){
+  try{ return localStorage.getItem('rinconQuien') || null; }catch(e){ return null; }
+}
+function clFijarQuien(q){
+  try{ localStorage.setItem('rinconQuien', q); }catch(e){}
+  clPanel();
+}
+
+function clEmpezarDiario(){
+  const c = clEstado();
+  if(clDiarioHecho() || clTurno) return;
+  const hoy = jxHoyClave();
+  const ficha = clFichaDia(hoy);
+  const caso = KIN_CASOS.find(x => x.id === ficha.id);
+  if(!caso) return;
+
+  let { lista, dif } = clAccionesDe(caso);
+  if(ficha.acomp) lista.push({ id:'acomp', g:'anam', n:'Preguntarle a ' + ficha.acomp.nom, t:1 });
+  const conf = {}; dif.forEach(d => conf[d] = 0);
+  const tot = clTiempoTotal(ficha.rasgo);
+  clTurno = {
+    caso, ficha, acciones:lista, dif, conf, creencia:null,
+    hechas:[], pistas:[], imagenes:0, notas:{},
+    tiempo: tot, tiempoMax: tot,
+    fase:'investigar', errores:0, grupo:'anam',
+    hist: clHist(caso.id) ? Object.assign({}, clHist(caso.id)) : null,
+    noche:false, urgente:false,
+    diario:true,                       // sin reintentos y con puntaje
+    amarillaVista: clTieneHabil('psico'),
+    amarilla: clTieneHabil('psico') ? ficha.amarilla : null,
+  };
+  jxSonido('tap');
+  clVista = 'recepcion'; clSesionAbierta = null;
+  clPanel();
+}
+
+/* Puntaje sobre 100: razonar bien pesa más que acertar. */
+function clPuntajeDiario(t){
+  const cuad = t.correccion || clCorregirCuaderno(t);
+  const razon = Math.round(cuad.pct * 0.4);
+  const dx = t.dxFallado ? 0 : 30;
+  const tto = t.ttoFallado ? 0 : 20;
+  const tiempo = Math.round(Math.min(1, (t.tiempo || 0) / (t.tiempoMax || 1)) * 10);
+  return { razon, dx, tto, tiempo, total: razon + dx + tto + tiempo, cuad };
+}
+
+function clCerrarDiario(){
+  const t = clTurno, c = clEstado();
+  const hoy = jxHoyClave();
+  const p = clPuntajeDiario(t);
+  const ayer = new Date(Date.now() - 86400000);
+  const claveAyer = ayer.getFullYear() + '-' + String(ayer.getMonth()+1).padStart(2,'0') + '-' + String(ayer.getDate()).padStart(2,'0');
+
+  // la racha sigue si ayer jugaste y hoy aprobaste
+  if(p.total >= 50) c.diario.racha = (c.diario.fecha === claveAyer ? c.diario.racha : 0) + 1;
+  else c.diario.racha = 0;
+  if(c.diario.racha > c.diario.mejorRacha) c.diario.mejorRacha = c.diario.racha;
+  c.diario.fecha = hoy;
+  c.diario.puntaje = p.total;
+  c.diario.jugados++;
+  c.pxHabil++;                                   // el caso del día siempre da un punto
+
+  const quien = clQuien();
+  if(quien) c.diarioComp[quien] = { fecha:hoy, puntaje:p.total, racha:c.diario.racha, caso:t.caso.id };
+
+  const monedas = Math.round(p.total / 5);
+  const r = jxRecompensar(monedas, clXp(p.total), { desde:document.getElementById('jxScreenClinica') });
+  clTurno = null;
+  clGuardar(true);
+  jxCelebrar({
+    titulo: p.total >= 85 ? '¡Caso del día impecable! 🌟' : p.total >= 50 ? 'Caso del día resuelto' : 'Caso del día, con tropiezos',
+    sub: p.total + '/100 · razonamiento ' + p.razon + '/40 · diagnóstico ' + p.dx + '/30 · tratamiento ' + p.tto + '/20 · tiempo ' + p.tiempo + '/10' +
+         (c.diario.racha ? ' · 🔥 racha de ' + c.diario.racha + (c.diario.racha === 1 ? ' día' : ' días') : ' · se te cortó la racha'),
+    monedas, xp:clXp(p.total), subioNivel:r.subioNivel, nivel:r.nivel,
+    textoNext:'Ver el marcador',
+    onNext:()=>{ clVista='recepcion'; clSesionAbierta=null; clPanel(); },
+  });
+}
+
+/* ---------- habilidades ---------- */
+function clTieneHabil(id){ return clEstado().habil.indexOf(id) !== -1; }
+function clXp(n){ return Math.round(n * (clTieneHabil('docente') ? 1.34 : 1)); }
+function clComprarHabil(id){
+  const c = clEstado();
+  const h = CL_HABILIDADES.find(x => x.id === id);
+  if(!h || clTieneHabil(id) || c.pxHabil < h.costo){ jxSonido('mal'); return; }
+  c.pxHabil -= h.costo;
+  c.habil.push(id);
+  jxSonido('compra'); jxVibrar(20);
+  clGuardar(true);
+  avisar(h.emo + ' ' + h.nom + ' · ' + h.desc);
+  clPanel();
+}
+
+/* ---------- notas escondidas ----------
+   Un mensaje pegado a un caso: le aparece al OTRO cuando le toque ese
+   paciente. La gracia es que no sabes cuándo va a salir. */
+function clNotaDeOtro(casoId){
+  const c = clEstado();
+  const n = c.notasCaso[casoId];
+  if(!n || !n.texto) return null;
+  const yo = clQuien();
+  if(yo && n.de === yo) return null;      // la tuya no te la muestro
+  return n;
+}
+function clGuardarNota(casoId, texto){
+  const c = clEstado();
+  const yo = clQuien() || 'Alguien';
+  if(!texto || !texto.trim()){ delete c.notasCaso[casoId]; }
+  else c.notasCaso[casoId] = { texto: texto.trim().slice(0, 240), de: yo, fecha: Date.now() };
+  clGuardar(true);
+  jxSonido('bien');
+  clPanel();
+}
+
+/* ---------- casos que se te fueron ---------- */
+function clAnotarFallo(casoId, motivo){
+  const c = clEstado();
+  const f = c.fallidos[casoId] || (c.fallidos[casoId] = { veces:0, motivo:'', cuando:0 });
+  f.veces++; f.motivo = motivo; f.cuando = Date.now();
+}
+function clSaldarFallo(casoId){
+  const c = clEstado();
+  if(c.fallidos[casoId]){ delete c.fallidos[casoId]; return true; }
+  return false;
+}
+
 /* ---------- sedes ---------- */
 function clSede(){ const c = clEstado(); return CL_SEDES[Math.min(c.sede || 0, CL_SEDES.length - 1)]; }
 function clMultSede(){ return 1 + CL_SEDE_PAGO * (clEstado().sede || 0); }
@@ -8400,6 +8702,7 @@ function clGastoPorSegundo(){
   if(!c.personal.length) return 0;
   let g = CL_ARRIENDO_BASE + CL_ARRIENDO_SALA * clSalas();
   c.personal.forEach(p => { g += p.renta * CL_SUELDO_PROP; });
+  if(clTieneHabil('gestion')) g *= 0.75;
   return g;
 }
 function clNetoPorSegundo(){ return clIngresoPorSegundo() - clGastoPorSegundo(); }
@@ -8589,6 +8892,36 @@ function clPanelRecepcion(cont){
     }
   }
 
+  // --- caso del día ---
+  const hoy = jxHoyClave();
+  const yo = clQuien();
+  const hecho = clDiarioHecho();
+  if(!yo){
+    html += '<div class="cl-diario"><div class="cl-diario-tit">🗓️ Caso del día</div>' +
+      '<p>Un paciente al día, el mismo para los dos. ¿Quién está jugando en este teléfono?</p>' +
+      '<div class="cl-quien"><button data-quien="Catalina">Catalina</button><button data-quien="Diego">Diego</button></div></div>';
+  }else if(!hecho){
+    html += '<button class="cl-diario listo" id="clDiario">' +
+      '<div class="cl-diario-tit">🗓️ Caso del día</div>' +
+      '<p>Un paciente, una sola pasada, sin reintentos. El mismo para los dos.</p>' +
+      (c.diario.racha ? '<div class="cl-diario-racha">🔥 llevas ' + c.diario.racha +
+        (c.diario.racha === 1 ? ' día' : ' días') + ' seguidos</div>' : '') +
+      '</button>';
+  }else{
+    const otros = Object.keys(c.diarioComp).filter(q => c.diarioComp[q].fecha === hoy);
+    html += '<div class="cl-diario hecho"><div class="cl-diario-tit">🗓️ Caso del día · listo</div>' +
+      '<div class="cl-marcador">' + otros.map(q => {
+        const d = c.diarioComp[q];
+        return '<div class="cl-marcador-fila' + (q === yo ? ' yo' : '') + '">' +
+          '<span>' + q + (q === yo ? ' (tú)' : '') + '</span>' +
+          '<b>' + d.puntaje + '</b><small>🔥 ' + d.racha + '</small></div>';
+      }).join('') + '</div>' +
+      (otros.length < 2 ? '<p>Falta que juegue el otro. Vuelve más rato a ver cómo le fue.</p>'
+                        : '<p>Mañana hay uno nuevo.</p>') +
+      '<div class="cl-diario-racha">Tu mejor racha: ' + c.diario.mejorRacha + ' · ' + c.diario.jugados + ' casos del día jugados</div>' +
+      '</div>';
+  }
+
   if(ev){
     html += '<div class="cl-evento"><div class="cl-evento-emo">' + ev.emo + '</div><div>' +
       '<div class="cl-evento-nom">' + ev.nom + '</div>' +
@@ -8686,6 +9019,9 @@ function clPanelRecepcion(cont){
   cont.querySelectorAll('[data-sesion]').forEach(b => b.onclick = () => { clSesionAbierta = parseInt(b.dataset.sesion, 10); jxSonido('tap'); clPanel(); });
   cont.querySelectorAll('[data-urgencia]').forEach(b => b.onclick = () => clIniciarCaso('urgencia'));
   cont.querySelectorAll('[data-mision]').forEach(b => b.onclick = () => clCobrarMision(b.dataset.mision));
+  cont.querySelectorAll('[data-quien]').forEach(b => b.onclick = () => clFijarQuien(b.dataset.quien));
+  const bd = document.getElementById('clDiario');
+  if(bd) bd.onclick = clEmpezarDiario;
   const bn = document.getElementById('clNoche');
   if(bn) bn.onclick = clEmpezarNoche;
 }
@@ -8748,7 +9084,13 @@ function clResultadoPrueba(pruebaId, caso, dif){
 
 function clAccionesDe(caso){
   const dx = KIN_DX[caso.id];
-  const lista = CL_ACC.slice();
+  // las habilidades abaratan acciones: buena oreja preguntar, ojo clínico probar
+  const lista = CL_ACC.map(a => {
+    const b = Object.assign({}, a);
+    if(a.g === 'anam' && clTieneHabil('oreja')) b.t = Math.max(1, a.t - 1);
+    if(a.g === 'img' && clTieneHabil('imagen')) b.plata = 0;
+    return b;
+  });
   // pruebas ortopédicas de la zona (más un par de otras zonas, para que
   // elegir la prueba correcta signifique algo)
   const zona = (caso.zona || '').toLowerCase();
@@ -8763,9 +9105,9 @@ function clAccionesDe(caso){
       x.zona === caso.zona && dif.indexOf(x.id) === -1));
     dif = dif.concat(candidatos.slice(0, extra).map(x => x.id));
   }
-  void 0;
+  const costoTest = clTieneHabil('ojo') ? 1 : 2;
   [...propias, ...otras].forEach(p => lista.push({
-    id:'test_'+p.id, g:'test', n:'Prueba de '+p.nom, t:2, prueba:p.id,
+    id:'test_'+p.id, g:'test', n:'Prueba de '+p.nom, t:costoTest, prueba:p.id,
     // las propiedades van a la vista: elegir la prueba se decide con esto
     meta: p.func ? 'medición funcional'
                  : 'Sn ' + p.sn.toFixed(2).replace('.', ',') + ' · Sp ' + p.sp.toFixed(2).replace('.', ','),
@@ -8779,6 +9121,7 @@ function clTiempoTotal(rasgoId){
   if(c.noche) t += CL_NOCHE_TIEMPO;
   t += clEfRasgo(rasgoId, 'tiempo', 0);
   t -= (c.sede || 0);              // cada sede aprieta un poco más la consulta
+  if(clTieneHabil('memoria')) t += 2;
   return Math.max(6, t);
 }
 
@@ -8827,6 +9170,11 @@ function clIniciarCaso(i){
     hist: h ? Object.assign({}, h) : null,
     noche: !!c.noche,
     urgente: i === 'urgencia',
+    // mirada psicosocial: la bandera amarilla se ve sin tener que preguntar
+    amarillaVista: clTieneHabil('psico'),
+    amarilla: clTieneHabil('psico') ? ficha.amarilla : null,
+    fallo: c.fallidos[caso.id] || null,       // lo que pasó la vez que se te fue
+    nota: clNotaDeOtro(caso.id),              // mensaje escondido del otro
   };
   jxSonido('tap');
   clVista = 'recepcion'; clSesionAbierta = null;
@@ -8909,13 +9257,14 @@ function clCorto(id){ return CL_CORTO[id] || clNombreDx(id); }
    Se recarga sola cada cinco minutos de reloj real. No dice el
    diagnóstico: toma un hallazgo que ya conseguiste y te lo anota bien
    en el cuaderno, explicando por qué. Es una corrección, no una respuesta. */
+function clEsperaPista(){ return clTieneHabil('intuicion') ? 3 * 60 * 1000 : CL_PISTA_ESPERA; }
 function clPistaLista(){
   const c = clEstado();
-  return Date.now() - (c.pistaT || 0) >= CL_PISTA_ESPERA;
+  return Date.now() - (c.pistaT || 0) >= clEsperaPista();
 }
 function clPistaSegundos(){
   const c = clEstado();
-  return Math.max(0, Math.ceil((CL_PISTA_ESPERA - (Date.now() - (c.pistaT || 0))) / 1000));
+  return Math.max(0, Math.ceil((clEsperaPista() - (Date.now() - (c.pistaT || 0))) / 1000));
 }
 function clUsarPista(){
   const t = clTurno, c = clEstado();
@@ -8962,13 +9311,17 @@ function clHacerAccion(accId){
   if(t.hechas.includes(accId)) return;
   const acc = t.acciones.find(a => a.id === accId);
   if(!acc) return;
-  if(t.tiempo < acc.t){ jxSonido('mal'); avisar('⏳ No te queda tiempo para eso'); return; }
+  // mano firme: la primera prueba ortopédica de cada paciente sale gratis
+  const gratis = acc.g === 'test' && clTieneHabil('mano') && !t.usoMano;
+  const costo = gratis ? 0 : acc.t;
+  if(t.tiempo < costo){ jxSonido('mal'); avisar('⏳ No te queda tiempo para eso'); return; }
+  if(gratis) t.usoMano = true;
   if(acc.plata){
     const c = clEstado();
     if(c.dinero < acc.plata){ jxSonido('mal'); avisar('No alcanza la plata para ese examen'); return; }
     clAsentar(); c.dinero -= acc.plata;
   }
-  t.tiempo -= acc.t;
+  t.tiempo -= costo;
   t.hechas.push(accId);
   if(acc.g === 'img') t.imagenes++;
 
@@ -9063,8 +9416,17 @@ function clPanelCaso(cont){
         '<div><b>' + ra.nom + '</b><small>' + ra.aviso + '</small></div></div>' : '') +
       (t.creencia ? '<div class="cl-creencia">Llega convencido de que tiene <b>' + clNombreDx(t.creencia) + '</b>. Ojo con eso.</div>' : '') +
       (t.hist && t.hist.veces
-        ? '<div class="cl-historia"><b>Ya lo conoces</b><p>' + (CL_REGRESO[c.id] || 'Vuelve a la clínica.') + '</p>' +
+        ? '<div class="cl-historia"><b>' + (CL_ARCOS[c.id] && CL_ARCOS[c.id][t.hist.veces - 1]
+            ? 'Capítulo ' + (t.hist.veces + 1) : 'Ya lo conoces') + '</b>' +
+          '<p>' + clCapitulo(c.id, t.hist.veces) + '</p>' +
           '<em>' + clResumenHist(t.hist) + '</em></div>'
+        : '') +
+      (t.fallo
+        ? '<div class="cl-fallo"><b>⚠️ La última vez no te resultó</b><p>' + t.fallo.motivo + '</p>' +
+          '<em>Si esta vez lo haces bien, queda saldado.</em></div>'
+        : '') +
+      (t.nota
+        ? '<div class="cl-nota-carta"><b>💌 ' + t.nota.de + ' te dejó algo en este caso</b><p>' + t.nota.texto + '</p></div>'
         : '') +
       '<div class="cl-tiempo"><div class="cl-tiempo-barra"><div style="width:' + pctTiempo + '%"></div></div>' +
         '<span>⏳ ' + t.tiempo + '</span></div>' +
@@ -9178,7 +9540,7 @@ function clPanelCaso(cont){
     clMarcar(a, d);
   });
   const cr = document.getElementById('clCerrarRev');
-  if(cr) cr.onclick = clCerrarCaso;
+  if(cr) cr.onclick = () => (clTurno && clTurno.diario) ? clCerrarDiario() : clCerrarCaso();
   cont.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { t.grupo = b.dataset.g; jxSonido('tap'); clPanel(); });
   cont.querySelectorAll('[data-acc]').forEach(b => b.onclick = () => clHacerAccion(b.dataset.acc));
   cont.querySelectorAll('[data-dx]').forEach(b => b.onclick = () => clResponderDx(b.dataset.dx));
@@ -9238,9 +9600,18 @@ function clResponderDx(id){
   const t = clTurno, c = t.caso, e = clEstado();
   if(id !== c.id){
     t.errores++;
+    jxSonido('mal'); jxVibrar(30);
+    // en el caso del día no hay segunda oportunidad: se sigue igual
+    if(t.diario){
+      t.dxFallado = true;
+      avisar('❌ Era ' + c.nom + '. En el caso del día no hay reintentos.');
+      t.opcTto = clMezclar([{ txt:c.tto, ok:true }, ...clTtoMal(c).map(x => ({ txt:x, ok:false }))]);
+      t.fase = 'tratamiento';
+      clPanel();
+      return;
+    }
     e.reputacion = Math.max(0, e.reputacion - (clEfEvento('castigo', false) ? 2 : 1));
     e.racha = 0;
-    jxSonido('mal'); jxVibrar(30);
     const pan = document.getElementById('clPanel');
     pan.classList.remove('cl-error'); void pan.offsetWidth; pan.classList.add('cl-error');
     avisar('❌ Ese diagnóstico no explica todos los hallazgos · −1 reputación');
@@ -9258,6 +9629,16 @@ function clTtoMal(caso){ return CL_TTO_MAL[caso.id] || caso.ttoMal; }
 function clResponderTto(i){
   const t = clTurno, e = clEstado();
   if(!t.opcTto[i].ok){
+    // en el caso del día tampoco hay reintento acá
+    if(t.diario){
+      t.errores++; t.ttoFallado = true;
+      jxSonido('mal'); jxVibrar(30);
+      avisar('❌ Lo correcto era: ' + t.caso.tto);
+      t.correccion = clCorregirCuaderno(t);
+      t.fase = 'revision';
+      clPanel();
+      return;
+    }
     // elegir mal el manejo cuesta lo mismo que errar el diagnóstico:
     // se puede reintentar, pero el caso ya no cierra perfecto
     t.errores++;
@@ -9313,6 +9694,17 @@ function clCerrarCaso(){
     if(!t.imagenes) clAvanzarMision('sinImg');
   }
 
+  // memoria de errores: si te equivocaste queda anotado; si esta vez
+  // lo hiciste bien y venías debiendo, queda saldado
+  let saldado = false;
+  if(!perfecto){
+    clAnotarFallo(c.id, 'Te equivocaste ' + t.errores + (t.errores === 1 ? ' vez' : ' veces') +
+      ' antes de dar con el cuadro, y ' + c.pac + ' se fue con un tratamiento que empezó torcido.');
+  }else if(cuad.pct >= 70 && clSaldarFallo(c.id)){
+    saldado = true;
+    e.reputacion += 2;
+  }
+
   const antes = clEspecialidadesAbiertas().length;
   const r = jxRecompensar(monedas, 12 * c.dif, { desde: document.getElementById('jxScreenClinica') });
   const nuevas = clEspecialidadesAbiertas().length > antes;
@@ -9327,7 +9719,8 @@ function clCerrarCaso(){
   if(!enNoche && !c.derivar){
     e.activos.push({
       id:c.id, sesion:0, progreso:0, recaidas:0, nota:'', ultimaCarga:null,
-      adh: Math.max(15, Math.min(95, CL_ADH_INICIAL + clEfRasgo(t.ficha && t.ficha.rasgo, 'adherencia', 0))),
+      adh: Math.max(15, Math.min(95, CL_ADH_INICIAL + clEfRasgo(t.ficha && t.ficha.rasgo, 'adherencia', 0) +
+           (clTieneHabil('empatia') ? 15 : 0))),
       rasgo: t.ficha ? t.ficha.rasgo : null, alarma:null, faltas:0, visto:Date.now(),
       // si no preguntaste por creencias, la bandera amarilla viaja escondida
       amarilla: t.ficha ? t.ficha.amarilla : null,
@@ -9345,6 +9738,7 @@ function clCerrarCaso(){
   c3Poblar();
 
   sub = 'Razonamiento ' + cuad.pct + '%. ' + sub;
+  if(saldado) sub = '✓ Le devolviste la mano a ' + c.pac + ', que se te había ido antes. ' + sub;
   jxCelebrar({
     titulo: perfecto ? '¡Diagnóstico certero! 🎯' : 'Diagnóstico cerrado',
     sub, monedas, xp: 12 * c.dif, subioNivel: r.subioNivel, nivel: r.nivel,
@@ -9417,7 +9811,11 @@ function clAlta(idx){
   c.dinero += bono;
   c.reputacion += Math.round((limpio ? 3 + clRepExtra() : 1) * clEfEvento('rep', 1));
   c.altas = (c.altas || 0) + 1;
+  c.pxHabil++;                                    // cada alta da un punto de habilidad
   if(limpio && !c.dominados.includes(caso.id)) c.dominados.push(caso.id);
+  if(!limpio) clAnotarFallo(caso.id, caso.pac + ' llegó al alta con ' + pac.recaidas +
+    (pac.recaidas === 1 ? ' recaída' : ' recaídas') + ' en el camino: la dosificación se te fue de las manos.');
+  else clSaldarFallo(caso.id);
   const h = clHistCrear(caso.id);
   h.altas++; h.sesiones += pac.sesion; h.recaidas += pac.recaidas; h.ultima = Date.now();
   c.activos.splice(idx, 1);
@@ -9682,6 +10080,39 @@ function clPanelGestion(cont){
   });
   html += '</div>';
 
+  // --- árbol de habilidades: es tuyo, no de la clínica ---
+  html += '<div class="cl-sec">Tus habilidades</div>' +
+    '<div class="cl-px">Tienes <b>' + c.pxHabil + '</b> punto' + (c.pxHabil === 1 ? '' : 's') +
+    '. Se ganan con cada alta, cada acreditación y cada caso del día. No se pierden al abrir una sede nueva.</div>' +
+    '<div class="cl-lista">';
+  CL_HABILIDADES.forEach(h => {
+    const tiene = clTieneHabil(h.id);
+    const puede = !tiene && c.pxHabil >= h.costo;
+    html += '<button class="cl-item' + (tiene ? ' listo' : puede ? ' puede' : '') + '"' +
+      (puede ? ' data-habil="' + h.id + '"' : '') + '>' +
+      '<div class="cl-item-emo" style="background:#efeaf7">' + (tiene ? '✓' : h.emo) + '</div>' +
+      '<div class="cl-item-info"><div class="cl-item-nom">' + h.nom + '</div>' +
+      '<div class="cl-item-desc">' + h.desc + '</div></div>' +
+      '<div class="cl-item-costo">' + (tiene ? 'Tuya' : h.costo + ' pto' + (h.costo === 1 ? '' : 's')) + '</div></button>';
+  });
+  html += '</div>';
+
+  // --- casos que se te fueron ---
+  const deudas = Object.keys(c.fallidos);
+  if(deudas.length){
+    html += '<div class="cl-sec">Casos que se te fueron (' + deudas.length + ')</div>' +
+      '<div class="cl-nota izq">Si vuelven y esta vez lo haces bien, queda saldado y recuperas reputación.</div>' +
+      '<div class="cl-lista">';
+    deudas.forEach(id => {
+      const k = KIN_CASOS.find(x => x.id === id);
+      if(!k) return;
+      html += '<div class="cl-item alerta"><div class="cl-item-emo" style="background:#fadbd7">' + (k.ava || '🧍') + '</div>' +
+        '<div class="cl-item-info"><div class="cl-item-nom">' + k.pac + ' · ' + clCorto(id) + '</div>' +
+        '<div class="cl-item-desc">' + c.fallidos[id].motivo + '</div></div></div>';
+    });
+    html += '</div>';
+  }
+
   // --- expansión: abrir una sede nueva ---
   const prox = clSedeSiguiente();
   const sedeAct = clSede();
@@ -9714,6 +10145,7 @@ function clPanelGestion(cont){
   cont.querySelectorAll('[data-eq]').forEach(b => b.onclick = () => clComprarEquipo(b.dataset.eq));
   const bs = document.getElementById('clAbrirSede');
   if(bs) bs.onclick = clAbrirSede;
+  cont.querySelectorAll('[data-habil]').forEach(b => b.onclick = () => clComprarHabil(b.dataset.habil));
   cont.querySelectorAll('[data-acred]').forEach(b => b.onclick = (ev) => {
     ev.stopPropagation();
     clRepasoTipo = 'examen'; clVista = 'repaso';
@@ -9972,12 +10404,22 @@ function clPanelAlbum(cont){
   cont.querySelectorAll('[data-ficha]').forEach(b => b.onclick = () => {
     const x = KIN_CASOS.find(k => k.id === b.dataset.ficha);
     const pr = x.prueba ? KIN_PRUEBAS.find(p => p.id === x.prueba) : null;
+    const mia = c.notasCaso[x.id];
     jxSonido('tap');
     jxCelebrar({
       titulo: x.ava + ' ' + x.nom,
       sub: x.pac + ', ' + clEdad(x) + ' · ' + x.ocup + '. ' +
-           (pr ? 'Prueba: ' + pr.nom + '. ' : '') + x.dato,
-      monedas:0, xp:0, textoNext:'Cerrar', onNext:()=>{},
+           (pr ? 'Prueba: ' + pr.nom + '. ' : '') + x.dato +
+           (mia ? ' · 💌 Hay una nota de ' + mia.de + ' en este caso.' : ''),
+      monedas:0, xp:0,
+      textoNext: clQuien() ? '💌 Dejar una nota' : 'Cerrar',
+      onNext: () => {
+        if(!clQuien()) return;
+        const actual = mia ? mia.texto : '';
+        const txt = prompt('Mensaje para ' + (clQuien() === 'Catalina' ? 'Diego' : 'Catalina') +
+          ', escondido en este caso. Le va a aparecer cuando le toque este paciente:', actual);
+        if(txt !== null) clGuardarNota(x.id, txt);
+      },
     });
   });
 }

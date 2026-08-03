@@ -72,7 +72,15 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 
 **Sedes** — `c.sede` es el prestigio: `clAbrirSede()` resetea plata, equipo, personal, reputación y acreditaciones, pero conserva `dominados`, `hist`, `examen`, récords y misiones. Cada sede da `+CL_SEDE_PAGO` permanente vía `clMultPagoCaso()`, resta un punto de tiempo de consulta y agrega una hipótesis extra al diferencial en `clAccionesDe()`. La paleta del 3D cambia por sede.
 
-**Pistas** — `clUsarPista()` se recarga sola cada `CL_PISTA_ESPERA` (5 min de reloj real, en `c.pistaT`). No revela el diagnóstico: corrige una anotación del cuaderno que esté mala o falte.
+**Pistas** — `clUsarPista()` se recarga sola cada `clEsperaPista()` (5 min de reloj real, 3 con la habilidad `intuicion`; marca en `c.pistaT`). No revela el diagnóstico: corrige una anotación del cuaderno que esté mala o falte.
+
+**Caso del día** — `clFichaDia(fecha)` sortea paciente **y** ficha completa con `clRngDia()`, un PRNG sembrado desde la fecha: los dos dispositivos obtienen exactamente el mismo caso sin coordinarse. Una pasada al día, sin reintentos (`t.diario` corta el reintento en `clResponderDx` y `clResponderTto`). Puntaje sobre 100 en `clPuntajeDiario()` y racha en `c.diario`. El marcador compartido vive en `c.diarioComp[persona]`; **quién juega en este aparato va en localStorage** (`rinconQuien`, vía `clQuien()`), no en el estado sincronizado.
+
+**Habilidades** — `CL_HABILIDADES` se compra con `c.pxHabil` (1 punto por alta, acreditación y caso del día) y **no se pierde al abrir sede**. Los efectos se leen con `clTieneHabil()` y están repartidos: costo de acciones en `clAccionesDe()`, tiempo en `clTiempoTotal()`, costos en `clGastoPorSegundo()`, adherencia inicial en `clCerrarCaso()`, prueba gratis en `clHacerAccion()`, banderas amarillas en `clIniciarCaso()`.
+
+**Arcos y errores** — `CL_ARCOS[casoId]` es un array de capítulos que `clCapitulo()` sirve según `hist.veces`, con `CL_REGRESO` de respaldo. `c.fallidos[casoId]` guarda lo que salió mal (`clAnotarFallo`); si el paciente vuelve y esta vez se cierra bien, `clSaldarFallo()` lo borra y devuelve reputación.
+
+**Notas escondidas** — `c.notasCaso[casoId]` guarda un mensaje con su autor. `clNotaDeOtro()` **solo se lo muestra al otro**, nunca a quien la escribió. Se dejan desde el álbum.
 
 **Ciclo de un paciente** — sala de espera (`c.sala`, fichas con previsión, origen, rasgo, ánimo y acompañante que cambian en cada visita) → investigar con tiempo limitado → diagnóstico → tratamiento por sesiones hasta el alta. Cada paciente deja memoria en `c.hist[casoId]` (`veces`, `altas`, `recaidas`, `sesiones`) y al reaparecer se muestra su texto de `CL_REGRESO`.
 
