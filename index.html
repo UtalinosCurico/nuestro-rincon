@@ -1071,6 +1071,23 @@
   .cl-pista-item.vacia{background:var(--crema);color:var(--gris);}
   .cl-pista-item b{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;opacity:.75;margin-bottom:2px;}
   .cl-pista-item.nueva{box-shadow:0 0 0 2px rgba(91,138,166,.35);}
+  /* --- la consulta como chat --- */
+  .cl-chat{display:flex;flex-direction:column;gap:8px;}
+  .cl-msg{position:relative;max-width:88%;border-radius:15px;padding:9px 12px;font-size:.85rem;line-height:1.5;
+    animation:clMsg .22s ease both;}
+  @keyframes clMsg{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+  .cl-msg-de{display:block;font-size:.64rem;text-transform:uppercase;letter-spacing:.6px;opacity:.65;margin-bottom:2px;}
+  .cl-msg-hora{display:block;text-align:right;font-size:.6rem;opacity:.5;margin-top:3px;}
+  .cl-msg.pac{align-self:flex-start;background:var(--blanco);border:1px solid var(--crema-oscuro);
+    color:var(--tinta);border-bottom-left-radius:5px;}
+  .cl-msg.acomp{align-self:flex-start;background:#f4f1fa;border:1px solid #ddd5ef;color:#5c4a80;border-bottom-left-radius:5px;}
+  .cl-msg.kine{align-self:flex-end;background:linear-gradient(140deg,#dcecf4,#cfe3ee);border:1px solid #b9d5e4;
+    color:#31576b;border-bottom-right-radius:5px;}
+  .cl-msg.nota{align-self:stretch;max-width:100%;background:#eef4ef;border:1px dashed #b9cdbe;color:#3f6b4d;
+    font-size:.81rem;font-style:italic;}
+  .cl-msg.amarilla{background:#fdf3d8;border-color:#e8d089;color:#7a5f22;}
+  .cl-msg.nueva{box-shadow:0 0 0 2px rgba(91,138,166,.3);}
+  .cl-msg .cl-marcas{margin-top:7px;}
   .cl-marcas{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
   .cl-marca{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.75);border:1px solid var(--crema-oscuro);
     border-radius:999px;padding:3px 9px;font-family:'Jost',sans-serif;font-size:.68rem;color:var(--gris);
@@ -1175,6 +1192,8 @@
   .cl-evento-nom{font-family:'Playfair Display',serif;font-size:.98rem;color:#8a6224;}
   .cl-evento-desc{font-size:.78rem;color:#8a7355;line-height:1.45;margin-top:2px;}
   .cl-evento-quedan{font-size:.68rem;color:#a68a5f;margin-top:5px;letter-spacing:.3px;text-transform:uppercase;}
+  .cl-evento-relato{margin-top:7px;padding:8px 11px;background:rgba(255,255,255,.6);border-radius:11px;
+    font-size:.78rem;color:#8a7355;line-height:1.55;font-style:italic;}
   @keyframes clEntra{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
   .cl-espera{display:flex;flex-direction:column;gap:10px;}
   .cl-pac{display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;
@@ -4454,7 +4473,13 @@ function asegurarJuegos(){
   if(!k.vistos || typeof k.vistos !== 'object' || Array.isArray(k.vistos)) k.vistos = {};
   // sala de espera, memoria de pacientes y evento del día (se agregaron después)
   if(!Array.isArray(k.sala)) k.sala = [];
-  k.sala = k.sala.filter(x => x && typeof x === 'object' && KIN_CASOS.some(c => c.id === x.id));
+  // OJO: se limpia EN SITIO, sin crear un array nuevo. asegurarJuegos() corre
+  // dentro de cada clEstado(), así que reasignar k.sala acá dejaba huérfano el
+  // array que estuviera usando quien llenara la sala, y no entraba nadie.
+  for(let i = k.sala.length - 1; i >= 0; i--){
+    const x = k.sala[i];
+    if(!x || typeof x !== 'object' || !KIN_CASOS.some(c => c.id === x.id)) k.sala.splice(i, 1);
+  }
   if(!k.hist || typeof k.hist !== 'object' || Array.isArray(k.hist)) k.hist = {};
   for(const id of Object.keys(k.hist)){
     const h = k.hist[id];
@@ -8370,6 +8395,19 @@ const CL_EQUIPOS = [
   { id:'gym',      nom:'Sala de ejercicio',    emo:'🏋️', costo:16000,  desc:'+25% de ingreso por paciente',           ef:{pago:0.25} },
   { id:'plataforma',nom:'Plataforma de fuerza',emo:'📊', costo:42000,  desc:'+1 reputación extra por acierto perfecto', ef:{rep:1} },
   { id:'hidro',    nom:'Hidroterapia',         emo:'💧', costo:120000, desc:'+40% de ingreso por paciente',            ef:{pago:0.40} },
+  /* --- segunda tanda: cuando la clínica ya anda y se acababa qué comprar --- */
+  { id:'ficha',    nom:'Ficha clínica electrónica', emo:'💻', costo:280000,  desc:'La ficha llega hecha: +2 de tiempo con cada paciente', ef:{tiempo:2} },
+  { id:'camilla4', nom:'Cuarto box',           emo:'🛏️', costo:650000,   desc:'Otra sala más',                          ef:{salas:1} },
+  { id:'espera',   nom:'Sala de espera nueva', emo:'🛋️', costo:1200000,  desc:'Caben tres pacientes más en la fila',     ef:{espera:3} },
+  { id:'iso',      nom:'Dinamómetro isocinético', emo:'🦾', costo:2600000, desc:'+2 de reputación extra por acierto perfecto', ef:{rep:2} },
+  { id:'crio',     nom:'Cámara de crioterapia', emo:'🧊', costo:5400000,  desc:'+60% de ingreso por paciente',           ef:{pago:0.60} },
+  { id:'camilla5', nom:'Quinto box',           emo:'🛏️', costo:9800000,  desc:'Otra sala más',                          ef:{salas:1} },
+  { id:'marcha',   nom:'Laboratorio de marcha', emo:'👣', costo:18000000, desc:'+3 de tiempo y +25% de ingreso',         ef:{tiempo:3, pago:0.25} },
+  { id:'resonador',nom:'Convenio de resonancia', emo:'🧲', costo:34000000, desc:'Las imágenes salen gratis y dan más información', ef:{img:true} },
+  { id:'cardio',   nom:'Unidad de rehabilitación cardíaca', emo:'🫀', costo:62000000, desc:'+90% de ingreso por paciente', ef:{pago:0.90} },
+  { id:'exo',      nom:'Exoesqueleto de marcha', emo:'🤖', costo:120000000, desc:'+4 de reputación extra y +50% de ingreso', ef:{rep:4, pago:0.50} },
+  { id:'docencia', nom:'Campo clínico universitario', emo:'🎓', costo:240000000, desc:'Los internos atienden: +6 de tiempo con cada paciente', ef:{tiempo:6} },
+  { id:'ala',      nom:'Ala nueva de la clínica', emo:'🏛️', costo:500000000, desc:'Dos salas más y +100% de ingreso',    ef:{salas:2, pago:1.0} },
 ];
 
 const CL_NOMBRES = ['Fernanda','Matías','Camila','Joaquín','Antonia','Vicente','Josefa','Benjamín','Isidora','Tomás','Florencia','Agustín'];
@@ -8530,6 +8568,38 @@ const CL_EVENTOS = [
   { id:'invierno2', emo:'❄️', nom:'Heladas',
     desc:'Amaneció con escarcha. Llegan caídas de adultos mayores y todo el mundo entra rígido.',
     ef:{ tiempo:-1, rep:1.5, pago:1.15 } },
+
+  /* --- sucesos con anécdota: traen un relato y la sala se llena de golpe --- */
+  { id:'choque', emo:'🚗', nom:'Choque múltiple en la ruta',
+    desc:'Se chocaron cuatro autos en la curva de la salida norte.',
+    relato:'Llegó primero la mamá con la guagua, después el camionero caminando solo, y al rato los bomberos ' +
+           'trajeron a dos más. La sala quedó llena en veinte minutos y todos con el cuello duro.',
+    ef:{ llena:6, tiempo:-2, rep:2, pago:1.2 } },
+  { id:'derrumbe', emo:'⛏️', nom:'Derrumbe en la mina',
+    desc:'Colapsó una galería en el turno de noche.',
+    relato:'Salieron todos, pero salieron mal: golpes, aplastamientos y mucha gente que estuvo horas en una ' +
+           'posición imposible. La mutual mandó a todos para acá y dijo que no reparáramos en gastos.',
+    ef:{ llena:5, pago:2.2, rep:2.5, tiempo:-1 } },
+  { id:'incendio', emo:'🔥', nom:'Incendio forestal',
+    desc:'El humo llegó hasta la ciudad y no se ve el cerro.',
+    relato:'Los brigadistas llegan quemados de sol y con las manos destrozadas de la pala, y detrás vienen ' +
+           'los vecinos ahogándose con el humo. Nadie pregunta cuánto cuesta.',
+    ef:{ llena:5, esp:'respi', rep:2.4, pago:0.9 } },
+  { id:'final', emo:'🏆', nom:'Final del campeonato',
+    desc:'Jugó el equipo de la ciudad y ganó en los penales.',
+    relato:'El lunes amaneció con media cancha en la sala de espera: dos esguinces, un desgarro y un tipo que ' +
+           'celebró tan fuerte que se sacó el hombro. Vinieron todos con la camiseta puesta.',
+    ef:{ llena:5, esp:'deporte', pago:1.6, rep:1.5 } },
+  { id:'micro', emo:'🚐', nom:'Volcó una micro rural',
+    desc:'Se salió de la carretera camino a la costa, con veinte pasajeros.',
+    relato:'No hubo muertos, de milagro. Llegaron de a poco durante todo el día, la mayoría caminando y ' +
+           'diciendo que estaban bien, y a las horas empezaron a agarrotarse todos.',
+    ef:{ llena:6, rep:2.2, tiempo:-2 } },
+  { id:'fabrica', emo:'🏭', nom:'Accidente en la fábrica',
+    desc:'Falló una prensa en el turno de la mañana.',
+    relato:'La empresa mandó a todo el turno a control preventivo, más los tres que salieron lesionados de ' +
+           'verdad. Pagan ellos, y pagan bien, pero quieren informe de cada uno.',
+    ef:{ llena:4, pago:2.0, tiempo:-1 } },
 ];
 const CL_EVENTO_DURA = 4;
 const CL_ESPERA_MAX = 3;
@@ -8553,6 +8623,11 @@ const CL_NOCHE_REP = 50;           // reputación que lo desbloquea
 const CL_NOCHE_LARGO = 5;
 const CL_NOCHE_PAGO = 2.6;
 const CL_NOCHE_TIEMPO = -4;
+
+/* Tope de pacientes en tratamiento a la vez. Sin esto la lista crecía sin
+   freno (llegó a 44) y dejaba de ser manejable: no se puede seguir a esa
+   cantidad de gente, y el juego pierde el sentido de cerrar los casos. */
+const CL_ACTIVOS_MAX = 10;
 
 const CL_ADH_INICIAL = 60;
 const CL_ALARMA_PROB = 0.20;
@@ -8646,6 +8721,17 @@ function clSortearEvento(){
   const e = posibles[Math.floor(Math.random() * posibles.length)];
   c.evento = { id:e.id, restantes:CL_EVENTO_DURA };
   if(e.ef.esp) c.sala = [];                   // la sala se rehace con lo que trae el evento
+  // los sucesos con anécdota llenan la sala de golpe: llegan todos juntos
+  if(e.ef.llena){
+    c.sala = [];
+    let v = 0;
+    while(c.sala.length < e.ef.llena && v++ < 60){
+      const caso = clSiguienteCaso(c.sala.map(x => x.id));
+      if(!caso) break;
+      c.sala.push(clFichaEspera(caso));
+    }
+    jxVibrar(40);
+  }
   avisar(e.emo + ' ' + e.nom + ' · ' + e.desc);
 }
 function clGastarEvento(){
@@ -8685,6 +8771,67 @@ function clResumenHist(h){
   if(h.recaidas) partes.push(h.recaidas === 1 ? 'tuvo una recaída' : 'tuvo ' + h.recaidas + ' recaídas');
   else if(h.altas) partes.push('sin recaídas');
   return partes.join(' · ');
+}
+
+/* ============================================================
+   LA CONSULTA COMO CONVERSACIÓN
+   La anamnesis deja de ser una lista de botones y pasa a ser un chat:
+   tú preguntas, el paciente contesta. El rasgo y el ánimo cambian CÓMO
+   contesta, no solo qué dice, así que dos pacientes con el mismo cuadro
+   se sienten dos personas distintas.
+   ============================================================ */
+
+/* Lo primero que dicen al sentarse, según cómo llegan de ánimo. */
+const CL_SALUDO = {
+  adolorido:   ['Hola… disculpe, ando con dolor desde anoche.', 'Casi no dormí, la verdad.'],
+  esperanzado: ['¡Hola! Qué bueno que me pudo atender.', 'A ver si por fin le achuntamos a esto.'],
+  desconfiado: ['Buenas.', 'Le aviso al tiro: ya fui a otros dos y no me resultó nada.'],
+  agradecido:  ['¡Hola! Me mandó una amiga que quedó feliz acá.', 'Vengo con toda la fe.'],
+  apurado:     ['Hola, disculpe, dejé el auto en doble fila.', '¿Nos demoramos mucho?'],
+  asustado:    ['Hola…', 'Le voy a ser sincero: tengo miedo de que sea algo grave.'],
+};
+
+/* Cómo remata cada respuesta según la personalidad. `null` = no agrega nada. */
+const CL_MULETILLA = {
+  ansioso:    ['¿Eso es normal?', 'Pero eso no es grave, ¿cierto?', 'Perdón que pregunte tanto.'],
+  minimiza:   ['Pero tampoco es para tanto.', 'Igual uno se acostumbra.', 'No sé si valga la pena contarlo.'],
+  informado:  ['Yo estuve leyendo y puede ser algo del nervio.', 'Vi un video que decía otra cosa.', '¿No habría que hacer una resonancia?'],
+  cumplidor:  ['Lo tengo anotado, si quiere se lo muestro.', 'Hice todo lo que me dijeron la vez pasada.'],
+  porfiado:   ['Aunque a mí me dijeron otra cosa.', 'Yo lo hago a mi manera igual.', 'Mi cuñado dice que es de la columna.'],
+  impaciente: ['¿Y cuánto me va a tomar esto?', 'Yo necesito volver a entrenar esta semana.', '¿No hay algo más rápido?'],
+  conversador:['…y eso me pasó justo cuando estábamos con mi señora en Pichilemu, le contaba.', 'Perdón, me fui por las ramas.'],
+  estoico:    ['Pero uno aguanta nomás.', 'Nunca he faltado al trabajo por esto.'],
+};
+
+/* Cómo se anuncia cada examen: se escribe como nota clínica, no como chat. */
+const CL_VOZ_EXAM = {
+  insp:   'Lo miras con calma',
+  palp:   'Palpas la zona',
+  activo: 'Le pides que mueva',
+  pasivo: 'Mueves tú el segmento',
+  fuerza: 'Evalúas la fuerza',
+  neuro:  'Haces el tamizaje neurológico',
+  imgRx:  'Pides una radiografía',
+  imgEco: 'Pides una ecografía',
+};
+
+function clHora(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+/* Arma la respuesta del paciente: el hallazgo, dicho por él, con su tono. */
+function clVozPaciente(t, txt){
+  const msgs = [txt];
+  const r = t.ficha && t.ficha.rasgo;
+  const m = CL_MULETILLA[r];
+  // no en todas: si rematara siempre, cansa
+  if(m && Math.random() < 0.55) msgs.push(m[Math.floor(Math.random() * m.length)]);
+  return msgs;
+}
+
+function clDecir(t, de, txt, extra){
+  t.chat.push(Object.assign({ de, txt, hora: clHora() }, extra || {}));
 }
 
 /* ---------- generador de personas ----------
@@ -8755,7 +8902,8 @@ function clLlenarSala(){
   if(!Array.isArray(c.sala)) c.sala = [];
   c.sala = c.sala.filter(x => x && KIN_CASOS.some(k => k.id === x.id));
   let vueltas = 0;
-  while(c.sala.length < CL_ESPERA_MAX && vueltas++ < 40){
+  const tope = clEsperaMax();
+  while(c.sala.length < tope && vueltas++ < 60){
     const caso = clSiguienteCaso(c.sala.map(x => x.id));
     if(!caso) break;
     c.sala.push(clFichaEspera(caso));
@@ -9001,7 +9149,7 @@ function clEmpezarDiario(){
   const tot = clTiempoTotal(ficha.rasgo);
   clTurno = {
     caso, ficha, acciones:lista, dif, conf, creencia:null,
-    hechas:[], pistas:[], imagenes:0, notas:{},
+    hechas:[], pistas:[], imagenes:0, notas:{}, chat:[],
     tiempo: tot, tiempoMax: tot,
     fase:'investigar', errores:0, grupo:'anam',
     hist: clHist(caso.id) ? Object.assign({}, clHist(caso.id)) : null,
@@ -9010,6 +9158,7 @@ function clEmpezarDiario(){
     amarillaVista: clTieneHabil('psico'),
     amarilla: clTieneHabil('psico') ? ficha.amarilla : null,
   };
+  clAbrirConversacion(clTurno);
   jxSonido('tap');
   clVista = 'recepcion'; clSesionAbierta = null;
   clPanel();
@@ -9145,6 +9294,22 @@ function clAbrirSede(){
     textoNext:'Empezar en ' + nueva.nom,
     onNext:()=>{ clVista='recepcion'; clSesionAbierta=null; clMostrar(); },
   });
+}
+
+/* Efectos de la segunda tanda de equipamiento. */
+function clTiempoEquipo(){
+  let n = 0;
+  CL_EQUIPOS.forEach(e => { if(e.ef.tiempo && clTieneEquipo(e.id)) n += e.ef.tiempo; });
+  return n;
+}
+function clEsperaMax(){
+  const c = clEstado();
+  let n = CL_ESPERA_MAX;
+  CL_EQUIPOS.forEach(e => { if(e.ef.espera && clTieneEquipo(e.id)) n += e.ef.espera; });
+  return Math.min(12, n + Math.floor(c.reputacion / 45));   // la fama trae gente
+}
+function clImgGratis(){
+  return clTieneHabil('imagen') || CL_EQUIPOS.some(e => e.ef.img && clTieneEquipo(e.id));
 }
 
 /* Lo que paga un paciente atendido a mano: el equipamiento, el evento del día
@@ -9393,6 +9558,7 @@ function clPanelRecepcion(cont){
     html += '<div class="cl-evento"><div class="cl-evento-emo">' + ev.emo + '</div><div>' +
       '<div class="cl-evento-nom">' + ev.nom + '</div>' +
       '<div class="cl-evento-desc">' + ev.desc + '</div>' +
+      (ev.relato ? '<div class="cl-evento-relato">' + ev.relato + '</div>' : '') +
       '<div class="cl-evento-quedan">Quedan ' + ev.restantes + ' paciente' + (ev.restantes === 1 ? '' : 's') + '</div>' +
     '</div></div>';
   }
@@ -9459,7 +9625,11 @@ function clPanelRecepcion(cont){
     '</div>';
 
   if(c.activos.length){
-    html += '<div class="cl-sec">En tratamiento (' + c.activos.length + ')</div><div class="cl-lista">' +
+    const lleno = c.activos.length >= CL_ACTIVOS_MAX;
+    html += '<div class="cl-sec">En tratamiento (' + c.activos.length + ' de ' + CL_ACTIVOS_MAX + ')</div>' +
+      (lleno ? '<div class="cl-rojo">📋 Agenda llena. Los pacientes nuevos van a quedar con otro kinesiólogo ' +
+               'hasta que le des el alta a alguien.</div>' : '') +
+      '<div class="cl-lista">' +
       c.activos.map((p, i) => {
         const cs = KIN_CASOS.find(x => x.id === p.id);
         if(!cs) return '';
@@ -9557,7 +9727,7 @@ function clAccionesDe(caso){
   const lista = CL_ACC.map(a => {
     const b = Object.assign({}, a);
     if(a.g === 'anam' && clTieneHabil('oreja')) b.t = Math.max(1, a.t - 1);
-    if(a.g === 'img' && clTieneHabil('imagen')) b.plata = 0;
+    if(a.g === 'img' && clImgGratis()) b.plata = 0;
     return b;
   });
   // pruebas ortopédicas de la zona (más un par de otras zonas, para que
@@ -9586,7 +9756,7 @@ function clAccionesDe(caso){
 
 function clTiempoTotal(rasgoId){
   const c = clEstado();
-  let t = CL_TIEMPO_BASE + (clTieneEquipo('eco') ? 2 : 0) + clEfEvento('tiempo', 0);
+  let t = CL_TIEMPO_BASE + (clTieneEquipo('eco') ? 2 : 0) + clTiempoEquipo() + clEfEvento('tiempo', 0);
   if(c.noche) t += CL_NOCHE_TIEMPO;
   t += clEfRasgo(rasgoId, 'tiempo', 0);
   t -= (c.sede || 0);              // cada sede aprieta un poco más la consulta
@@ -9634,6 +9804,7 @@ function clIniciarCaso(i){
     caso, ficha, acciones:lista, dif, conf, creencia,
     hechas:[], pistas:[], imagenes:0,
     notas:{},                  // el cuaderno: lo que el jugador anota de cada hallazgo
+    chat:[],                   // la consulta como conversación
     tiempo: tot, tiempoMax: tot,
     fase:'investigar', errores:0, grupo:'anam',
     hist: h ? Object.assign({}, h) : null,
@@ -9647,9 +9818,20 @@ function clIniciarCaso(i){
     nota: clEsCanon(ficha) ? clNotaDeOtro(caso.id) : null,
   };
   if(!clEsCanon(ficha)) clTurno.hist = null;
+  clAbrirConversacion(clTurno);
   jxSonido('tap');
   clVista = 'recepcion'; clSesionAbierta = null;
   clPanel();
+}
+
+/* El paciente saluda y cuenta a qué viene, antes de que preguntes nada. */
+function clAbrirConversacion(t){
+  if(!t) return;
+  const an = clAnimo(t.ficha && t.ficha.animo);
+  const saludo = (an && CL_SALUDO[an.id]) || ['Hola, buenas.'];
+  saludo.forEach(x => clDecir(t, 'pac', x));
+  clDecir(t, 'pac', t.caso.motivo + '.');
+  if(t.ficha && t.ficha.acomp) clDecir(t, 'acomp', 'Yo lo acompaño, cualquier cosa pregúnteme a mí también.');
 }
 
 /* ---------- el cuaderno ----------
@@ -9833,6 +10015,12 @@ function clHacerAccion(accId){
   }else if(dx && dx.c[accId]){
     pista = dx.c[accId];
     jxSonido('bien');
+  }else if(acc.g === 'anam'){
+    // que conteste como persona, no como ficha clínica
+    const nada = ['No, nada de eso.', 'Mmm… no, la verdad no.', 'No que yo me acuerde.',
+                  'No, eso no me ha pasado.', 'No, nada raro por ese lado.'];
+    pista = { t: nada[Math.floor(Math.random() * nada.length)], s:[], n:[] };
+    jxSonido('tap');
   }else{
     pista = { t:'Sin hallazgos que aporten al caso.', s:[], n:[] };
     jxSonido('tap');
@@ -9841,14 +10029,27 @@ function clHacerAccion(accId){
   // el minimizador y el aguantador entregan la mitad de lo que preguntas
   const pobre = clEfRasgo(t.ficha && t.ficha.rasgo, 'pistasPobres', false) && acc.g === 'anam' && acc.id !== 'acomp';
   // OJO: acá ya no se toca t.conf. El tablero sale del cuaderno del jugador.
+  const textoFinal = pista.t + (pobre && pista.s.length ? ' (te lo cuenta a medias)' : '');
   t.pistas.push({
     accId: accIdPista,
     acc: etiqueta,
-    txt: pista.t + (pobre && pista.s.length ? ' (te lo cuenta a medias)' : ''),
+    txt: textoFinal,
     util: pista.s.length + pista.n.length > 0,
     amarilla: acc.id === 'creencias' && !!t.amarilla,
   });
   t.ultima = accIdPista;
+
+  // y lo mismo, contado como conversación
+  if(acc.g === 'anam'){
+    clDecir(t, 'kine', acc.n);
+    const quien = acc.id === 'acomp' ? 'acomp' : 'pac';
+    clVozPaciente(t, textoFinal).forEach((m, i) => {
+      clDecir(t, quien, m, i === 0 ? { accId:accIdPista, amarilla: acc.id === 'creencias' && !!t.amarilla } : null);
+    });
+  }else{
+    const voz = CL_VOZ_EXAM[acc.id] || (acc.g === 'test' ? 'Le haces la ' + (acc.n || '').replace('Prueba de ', 'prueba de ') : acc.n);
+    clDecir(t, 'nota', voz + ': ' + textoFinal, { accId:accIdPista });
+  }
 
   if(t.tiempo <= 0){
     t.tiempo = 0;
@@ -9917,25 +10118,33 @@ function clPanelCaso(cont){
   });
   html += '</div>';
 
-  // hallazgos: cada uno se anota a mano
-  if(t.pistas.length){
-    html += '<div class="cl-sec">Lo que has encontrado</div>';
+  // la consulta, como conversación
+  if(t.chat && t.chat.length){
+    html += '<div class="cl-sec">La consulta</div>';
     if(t.fase === 'investigar'){
-      html += '<div class="cl-nota izq">Anota qué te dice cada hallazgo: toca una hipótesis para ' +
+      html += '<div class="cl-nota izq">Bajo cada cosa que averigües, anota qué significa: toca una hipótesis para ' +
         'ciclar entre <b>–</b> no aporta, <b>↑</b> la apoya y <b>↓</b> la descarta. Al cerrar el caso te corrijo la anotación.</div>';
     }
-    html += '<div class="cl-pistas">';
-    t.pistas.forEach(p => {
-      html += '<div class="cl-pista-item' + (p.amarilla ? ' amarilla' : p.util ? '' : ' vacia') +
-        (p.accId === t.ultima ? ' nueva' : '') + '">' +
-        '<b>' + p.acc + '</b>' + p.txt;
-      if(p.accId && p.accId !== 'creencias' && t.fase === 'investigar'){
+    const nomPac = clPacNom(c, f).split(' ')[0];
+    html += '<div class="cl-chat">';
+    t.chat.forEach(m => {
+      const marcable = m.accId && m.accId !== 'creencias' && t.fase === 'investigar';
+      if(m.de === 'nota'){
+        html += '<div class="cl-msg nota' + (m.accId === t.ultima ? ' nueva' : '') + '">' + m.txt;
+      }else{
+        const quien = m.de === 'kine' ? 'Tú' : m.de === 'acomp' ? (f.acomp ? f.acomp.nom : 'Acompañante') : nomPac;
+        html += '<div class="cl-msg ' + m.de + (m.amarilla ? ' amarilla' : '') +
+          (m.accId === t.ultima ? ' nueva' : '') + '">' +
+          '<span class="cl-msg-de">' + quien + '</span>' + m.txt +
+          '<span class="cl-msg-hora">' + m.hora + '</span>';
+      }
+      if(marcable){
         html += '<div class="cl-marcas">';
         t.dif.forEach(d => {
-          const m = (t.notas[p.accId] || {})[d] || 0;
-          html += '<button class="cl-marca' + (m === 1 ? ' sube' : m === -1 ? ' baja' : '') +
-            '" data-marca="' + p.accId + '|' + d + '">' +
-            '<i>' + (m === 1 ? '↑' : m === -1 ? '↓' : '–') + '</i>' + clCorto(d) + '</button>';
+          const mk = (t.notas[m.accId] || {})[d] || 0;
+          html += '<button class="cl-marca' + (mk === 1 ? ' sube' : mk === -1 ? ' baja' : '') +
+            '" data-marca="' + m.accId + '|' + d + '">' +
+            '<i>' + (mk === 1 ? '↑' : mk === -1 ? '↓' : '–') + '</i>' + clCorto(d) + '</button>';
         });
         html += '</div>';
       }
@@ -10134,7 +10343,7 @@ function clCerrarCaso(){
   const t = clTurno, c = t.caso, e = clEstado();
   const perfecto = t.errores === 0;
   const eficiencia = 1 + (t.tiempo || 0) / 20;   // llegar con tiempo de sobra paga más
-  const base = 95 * c.dif;
+  const base = 130 * c.dif;
   const vuelve = !!(t.hist && t.hist.veces);
   const confianza = vuelve ? 1.15 : 1;           // el que ya te conoce llega con la ficha hecha
   const gracia = clEfRasgo(t.ficha && t.ficha.rasgo, 'pago', 1);  // el conversador recomienda
@@ -10192,7 +10401,11 @@ function clCerrarCaso(){
   // fuera del turno, el paciente queda EN TRATAMIENTO hasta el alta.
   // Los de bandera roja no: esos se van derivados igual.
   let sub = c.dato;
-  if(!enNoche && !c.derivar){
+  const agendaLlena = e.activos.length >= CL_ACTIVOS_MAX;
+  if(!enNoche && !c.derivar && agendaLlena){
+    sub += ' · Tu agenda de tratamiento está llena (' + CL_ACTIVOS_MAX + '), así que ' +
+           clPacNom(c, t.ficha) + ' queda con otro kinesiólogo del equipo. Dale de alta a alguien para poder seguirlos tú.';
+  }else if(!enNoche && !c.derivar){
     e.activos.push({
       id:c.id, sesion:0, progreso:0, recaidas:0, nota:'', ultimaCarga:null,
       adh: Math.max(15, Math.min(95, CL_ADH_INICIAL + clEfRasgo(t.ficha && t.ficha.rasgo, 'adherencia', 0) +
@@ -10641,7 +10854,7 @@ function clContratar(){
   c.personal.push({
     nom: CL_NOMBRES[Math.floor(Math.random() * CL_NOMBRES.length)],
     esp, emo:'🧑‍⚕️',
-    renta: Math.round(4 * Math.pow(2.1, c.personal.length) * 10) / 10,
+    renta: Math.round(4 * Math.pow(2.35, c.personal.length) * 10) / 10,
   });
   jxSonido('compra'); jxVibrar(20);
   clGuardar(true);
