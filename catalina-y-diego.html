@@ -1257,6 +1257,21 @@
   .cl-mision.lista .cl-mision-premio{background:#7fae96;color:#fff;border-radius:999px;padding:4px 12px;}
   .cl-badge.sobrio{background:var(--crema);color:var(--gris);font-weight:500;text-transform:none;letter-spacing:0;}
   .cl-badge.roja{background:#fadbd7;color:#a03c2e;}
+  .cl-badge.azul{background:#dcecf4;color:#31576b;}
+  .cl-tema-sem{background:#eef4f8;border:1px solid #cfe0ea;border-radius:13px;padding:8px 13px;margin-bottom:12px;
+    font-size:.78rem;color:#4b7d99;}
+  .cl-tema-sem b{color:#31576b;}
+  .cl-espera-alerta{color:#c0803c;font-weight:600;}
+  .cl-msg-aviso{background:linear-gradient(140deg,#e4f0f7,#d4e6f0);border:1.5px solid #a8cbdf;border-radius:16px;
+    padding:12px 14px;margin-bottom:12px;}
+  .cl-msg-aviso b{display:block;font-family:'Playfair Display',serif;font-size:1rem;color:#31576b;}
+  .cl-msg-aviso small{display:block;font-size:.76rem;color:#4b7d99;margin-top:3px;line-height:1.45;}
+  .cl-resumen{background:linear-gradient(150deg,#fdf6ea,#f8ecd8);border:1.5px solid #e8d3ab;border-radius:18px;
+    padding:15px 16px;margin-bottom:14px;}
+  .cl-resumen-tit{font-family:'Playfair Display',serif;font-size:1.1rem;color:#8a6224;margin-bottom:10px;}
+  .cl-resumen p{margin:9px 0 0;font-size:.8rem;color:#8a7355;line-height:1.55;}
+  .cl-resumen b{color:#7a5f22;}
+  .cl-resumen .cl-btn-grande{margin-top:12px;}
   .cl-item.alerta{border-color:#e07a6a;box-shadow:0 6px 18px rgba(224,122,106,.22);}
   .cl-animo{font-size:.8rem;color:var(--gris);font-style:italic;margin-bottom:8px;}
   .cl-rasgo{display:flex;gap:10px;align-items:flex-start;background:#f4f1fa;border:1px solid #ddd5ef;
@@ -1277,6 +1292,12 @@
   .cl-alarma b{display:block;font-family:'Playfair Display',serif;color:#b1392a;font-size:.98rem;margin-bottom:4px;}
   .cl-alarma p{margin:0;font-size:.84rem;color:#8a4034;line-height:1.5;}
   .cl-opc.educar{border-style:dashed;border-color:#b9cdbe;}
+  .cl-alarma.grave{background:linear-gradient(140deg,#fbe0dc,#f6cdc6);border-color:#d98a7a;}
+  .cl-alarma.grave b{color:#8f2d1f;}
+  .cl-medidas{display:flex;gap:7px;margin-top:10px;}
+  .cl-medidas div{flex:1;background:var(--crema);border-radius:11px;padding:7px 5px;text-align:center;}
+  .cl-medidas b{display:block;font-family:'Playfair Display',serif;color:#4b7d99;font-size:.95rem;line-height:1.2;}
+  .cl-medidas span{display:block;font-size:.6rem;color:var(--gris);margin-top:2px;}
   .cl-opc.amarilla{border-color:#e0c25a;background:linear-gradient(140deg,#fffaea,var(--blanco));}
   .cl-amarilla{background:linear-gradient(140deg,#fff9e6,#fdf1cf);border:1.5px solid #e8d089;border-radius:16px;
     padding:12px 14px;margin-bottom:12px;}
@@ -4508,6 +4529,21 @@ function asegurarJuegos(){
     if(!KIN_CASOS.some(c => c.id === id)) delete k.fallidos[id];
   }
   if(!k.notasCaso || typeof k.notasCaso !== 'object' || Array.isArray(k.notasCaso)) k.notasCaso = {};
+  if(!k.deriv || typeof k.deriv !== 'object' || Array.isArray(k.deriv)) k.deriv = {};
+  CL_DERIVADORES.forEach(d => {
+    const v = k.deriv[d.id];
+    if(!v || typeof v !== 'object' || typeof v.conf !== 'number' || !isFinite(v.conf))
+      k.deriv[d.id] = { conf:50, enviados:0 };
+    else k.deriv[d.id].conf = Math.max(0, Math.min(100, v.conf));
+  });
+  if(k.semana && (typeof k.semana !== 'object' || typeof k.semana.n !== 'number')) k.semana = null;
+  k.activos.forEach(pac => {
+    if(pac.msg && (typeof pac.msg !== 'object' || !CL_MENSAJES.some(m => m.id === pac.msg.id))) pac.msg = null;
+    if(pac.compl && !CL_COMPLICACIONES.some(x => x.id === pac.compl)) pac.compl = null;
+    if(!pac.med || typeof pac.med !== 'object') pac.med = { dolor:6, rango:50, hito:0 };
+    pac.med.hito = Math.max(0, Math.min(4, pac.med.hito || 0));
+  });
+  k.sala.forEach(f => { if(typeof f.llegada !== 'number' || !isFinite(f.llegada)) f.llegada = Date.now(); });
   if(typeof k.sede !== 'number' || !isFinite(k.sede) || k.sede < 0) k.sede = 0;
   k.sede = Math.min(k.sede, CL_SEDES.length - 1);
   if(!Array.isArray(k.fundadas)) k.fundadas = [];
@@ -7825,6 +7861,106 @@ const CL_AMARILLAS = [
 ];
 const CL_AMARILLA_PROB = 0.45;
 
+/* ============================================================
+   MENSAJES ENTRE SESIONES
+   El paciente te escribe cuando NO estás jugando. Al abrir la clínica
+   hay mensajes sin leer y hay que contestarlos: la respuesta correcta
+   sube la adherencia, ignorarlos la hunde. `ok` es la opción correcta.
+   ============================================================ */
+const CL_MENSAJES = [
+  { id:'duele', txt:'Doctora, me duele más desde ayer en la noche. ¿Voy igual mañana?',
+    ops:[
+      { txt:'Vaya igual, vemos juntos qué pasó y ajustamos la carga.', ok:true,
+        dice:'Un aumento de dolor no es motivo para suspender: es motivo para reevaluar y ajustar.' },
+      { txt:'Mejor descanse y nos vemos la próxima semana.', ok:false,
+        dice:'Suspender ante cada molestia enseña que moverse es peligroso y rompe la adherencia.' },
+      { txt:'Tómese un analgésico y siga con los mismos ejercicios.', ok:false,
+        dice:'Sin reevaluar no sabes si es respuesta normal a la carga o algo nuevo.' },
+    ] },
+  { id:'tirante', txt:'Hice los ejercicios pero me quedó tirante la zona al otro día. ¿Está bien eso?',
+    ops:[
+      { txt:'Sí, es normal si va cediendo solo. Siga igual y me cuenta.', ok:true,
+        dice:'El dolor muscular tardío que cede es respuesta esperable a la carga.' },
+      { txt:'Pare los ejercicios hasta la próxima sesión.', ok:false,
+        dice:'Frenar por una molestia normal retrasa todo el proceso.' },
+      { txt:'Súbale las repeticiones para que se acostumbre más rápido.', ok:false,
+        dice:'Subir la dosis sin haberlo evaluado es cómo se llega a la recaída.' },
+    ] },
+  { id:'falto', txt:'Disculpe que no fui el martes, se me complicó la pega. ¿Perdí lo que llevaba?',
+    ops:[
+      { txt:'No perdió nada. Retomamos donde íbamos, lo importante es que vuelva.', ok:true,
+        dice:'Culpar al paciente por faltar es la forma más rápida de que no vuelva nunca.' },
+      { txt:'Sí, hay que empezar casi de cero. Trate de no faltar más.', ok:false,
+        dice:'Es falso y además lo desmotiva: la adaptación no se pierde en una semana.' },
+      { txt:'No se preocupe, deje el tratamiento y vuelva cuando pueda.', ok:false,
+        dice:'Soltarle la mano cuando falla es abandonarlo, no acompañarlo.' },
+    ] },
+  { id:'internet', txt:'Vi un video que dice que esto se arregla con una infiltración. ¿No sería más rápido?',
+    ops:[
+      { txt:'Conversémoslo en la sesión, le explico qué dice la evidencia para su caso.', ok:true,
+        dice:'No se descalifica lo que trae el paciente: se conversa, si no se va a buscarlo por su cuenta.' },
+      { txt:'No haga caso a lo que ve en internet.', ok:false,
+        dice:'Cerrarle la puerta rompe la confianza y no cambia lo que cree.' },
+      { txt:'Puede ser, pregúntele al médico y vemos.', ok:false,
+        dice:'Lavarse las manos deja al paciente sin la información que sí le puedes dar.' },
+    ] },
+  { id:'trabajo', txt:'En el trabajo me están apurando para que vuelva al turno completo. ¿Qué hago?',
+    ops:[
+      { txt:'Volvamos por etapas: le armo un plan de reintegro y lo conversamos con la mutual.', ok:true,
+        dice:'El retorno laboral gradual y coordinado es parte del tratamiento, no un trámite aparte.' },
+      { txt:'Dígales que no puede hasta que le dé el alta.', ok:false,
+        dice:'Alargar la licencia sin plan empeora el pronóstico y el conflicto laboral.' },
+      { txt:'Vuelva nomás, total el ejercicio lo puede hacer igual.', ok:false,
+        dice:'Volver de golpe a la carga completa es la receta de la recaída.' },
+    ] },
+  { id:'mejor', txt:'Estoy mucho mejor, casi no me duele. ¿Ya puedo dejar de ir?',
+    ops:[
+      { txt:'Que no duela no es el alta: falta recuperar fuerza y tolerancia. Sigamos un poco más.', ok:true,
+        dice:'El dolor cede mucho antes que la capacidad. Ahí es donde se producen las recaídas.' },
+      { txt:'Sí, si ya no le duele podemos darle el alta.', ok:false,
+        dice:'Dar el alta por ausencia de dolor es la causa más común de recaída.' },
+      { txt:'Siga viniendo igual, hay que completar las diez sesiones.', ok:false,
+        dice:'El alta es por criterios, no por un número fijo de sesiones.' },
+    ] },
+  { id:'noche', txt:'Anoche me despertó el dolor y no se me pasó con nada. Nunca me había pasado.',
+    ops:[
+      { txt:'Eso hay que verlo antes de seguir. Véngase mañana y si hace falta lo derivo.', ok:true,
+        dice:'Dolor nocturno nuevo que no cede es bandera roja: se reevalúa antes de seguir cargando.' },
+      { txt:'Puede ser por la carga de la última sesión, vamos a bajarla.', ok:false,
+        dice:'Asumir que es la carga sin evaluar es cómo se pasan por alto las banderas rojas.' },
+      { txt:'Tómese algo para el dolor y nos vemos en la sesión programada.', ok:false,
+        dice:'Postergar un síntoma de alarma nunca es la respuesta.' },
+    ] },
+  { id:'gracias', txt:'Solo quería contarle que hoy subí las escaleras sin agarrarme del pasamanos 🙌',
+    ops:[
+      { txt:'¡Qué bueno! Eso es exactamente lo que estábamos buscando. Anótelo.', ok:true,
+        dice:'Reconocer los hitos funcionales sube la adherencia más que cualquier técnica.' },
+      { txt:'Bien, pero no se confíe todavía.', ok:false,
+        dice:'Bajarle el logro apaga justo lo que estaba funcionando.' },
+      { txt:'Perfecto, entonces ya podemos darle el alta.', ok:false,
+        dice:'Un hito no es el alta: hay que consolidarlo.' },
+    ] },
+];
+/* Con baja probabilidad el caso se tuerce de verdad: lo que parecía una
+   cosa era otra, y hay que atreverse a frenar y derivar aunque el
+   tratamiento viniera bien. Enseña que el diagnóstico no es para siempre. */
+const CL_COMPLICACIONES = [
+  { id:'rotura', txt:'Venía mejorando, pero esta semana perdió fuerza de golpe y ya no sostiene el brazo elevado.',
+    dice:'Lo que se estaba tratando como tendinopatía terminó siendo una rotura. La pérdida brusca de fuerza no es evolución: es lesión nueva.' },
+  { id:'tvp', txt:'Llega con la pantorrilla hinchada, roja y caliente después de dos semanas de poca actividad.',
+    dice:'Post inmovilización o reposo prolongado, una pantorrilla caliente e hinchada es TVP hasta demostrar lo contrario.' },
+  { id:'roja', txt:'A la tercera sesión aparece dolor nocturno que no cede y ha bajado de peso sin proponérselo.',
+    dice:'Las banderas rojas pueden aparecer DESPUÉS. Por eso se reevalúa en cada sesión, no solo al principio.' },
+  { id:'infeccion', txt:'La zona operada está caliente, con secreción y él anda con fiebre desde ayer.',
+    dice:'Signos de infección en un post operado: se frena todo y se deriva el mismo día.' },
+  { id:'fractura', txt:'El dolor se concentró en un punto exacto del hueso y ahora también le duele en reposo.',
+    dice:'Dolor que se localiza en un punto y aparece en reposo: fractura por estrés. Seguir cargando la completa.' },
+];
+const CL_COMPL_PROB = 0.05;
+
+const CL_MSG_PROB = 0.5;           // probabilidad de que escriba, si corresponde
+const CL_MSG_ESPERA = 3 * 60000;   // no escriben antes de tres minutos de la última sesión
+
 /* Alarmas que aparecen en plena sesión de tratamiento.
    `ok` es la decisión correcta: seguir, bajar o derivar. */
 const CL_ALARMAS = [
@@ -8505,6 +8641,19 @@ const CL_OCUPS = {
    no afecta el diagnóstico, pero hace que la sala de espera se sienta
    un lugar y no una cola de fichas. */
 const CL_PREVISION = ['Fonasa B','Fonasa C','Fonasa D','Isapre','Mutual','GES'];
+
+/* Quién te manda los pacientes. Es una relación: si les resuelves bien te
+   mandan más y mejor pagados; si les devuelves gente mal manejada, dejan
+   de derivarte. Explica de dónde sale el flujo en vez de que aparezcan
+   de la nada. */
+const CL_DERIVADORES = [
+  { id:'cesfam',  nom:'CESFAM del sector',   emo:'🏥', pago:0.85, desc:'Manda mucha gente, paga poco y agradece harto' },
+  { id:'mutual',  nom:'Mutual de seguridad', emo:'🦺', pago:1.55, desc:'Accidentes del trabajo: pagan bien y piden informe' },
+  { id:'trauma',  nom:'Traumatólogo del barrio', emo:'🩻', pago:1.30, desc:'Post operados y casos ya estudiados' },
+  { id:'club',    nom:'Club deportivo',      emo:'⚽', pago:1.20, desc:'Deportistas que necesitan volver a jugar' },
+  { id:'hospital',nom:'Hospital regional',   emo:'🏨', pago:1.0,  desc:'Altas complejas que necesitan seguimiento' },
+  { id:'boca',    nom:'Boca a boca',         emo:'💬', pago:1.15, desc:'Los que llegan porque alguien habló bien de ti' },
+];
 const CL_ORIGEN = ['derivado del CESFAM','viene del SAPU','derivado del hospital','viene por su cuenta',
   'derivado por el traumatólogo','viene de la posta rural','derivado del policlínico de la mutual','lo mandó su médico de cabecera'];
 const CL_ESPERA_FRASE = ['Lleva 20 minutos en la sala','Llegó antes de la hora','Pidió hora hace tres semanas',
@@ -8629,6 +8778,12 @@ const CL_NOCHE_TIEMPO = -4;
    cantidad de gente, y el juego pierde el sentido de cerrar los casos. */
 const CL_ACTIVOS_MAX = 10;
 
+/* Cuánto aguanta alguien en la sala antes de irse a otra clínica. */
+const CL_PACIENCIA = 6 * 60000;
+
+/* Zonas que rotan como tema de la semana. */
+const CL_TEMAS = ['Hombro','Rodilla','Lumbar','Cervical','Tobillo','Muñeca','Cadera','Pie','Codo','Respiratorio','Neurológico','Muslo'];
+
 const CL_ADH_INICIAL = 60;
 const CL_ALARMA_PROB = 0.20;
 
@@ -8690,6 +8845,8 @@ function clDefault(){
     pxHabil:0,          // puntos para gastar en el árbol
     fallidos:{},        // casos que se te fueron, con lo que pasó
     notasCaso:{},       // mensajes escondidos en un caso para el otro
+    deriv:{},           // confianza de cada derivador
+    semana:null,
     misiones:{ dia:null, lista:[] },
     rojo:0,             // segundos acumulados con la caja en negativo
     t:0,
@@ -8887,8 +9044,10 @@ function clFichaEspera(caso){
   const canon = (h && h.altas > 0) ? Math.random() < 0.5 : Math.random() < 0.22;
   return {
     id: caso.id,
+    llegada: Date.now(),
     gen: canon ? null : clGenPersona(caso),
     prev: al(CL_PREVISION),
+    deriv: clSortearDerivador(),
     origen: al(CL_ORIGEN),
     espera: al(CL_ESPERA_FRASE),
     rasgo: al(CL_RASGOS).id,
@@ -8915,6 +9074,78 @@ function clJornada(){
   const dia = 1 + Math.floor(c.atendidos / 4);
   const bloque = c.atendidos % 4;
   return { dia, nom: bloque < 2 ? 'jornada de la mañana' : 'jornada de la tarde', emo: bloque < 2 ? '🌤️' : '🌇' };
+}
+
+/* ---------- derivadores ---------- */
+function clDerivador(id){ return CL_DERIVADORES.find(d => d.id === id) || CL_DERIVADORES[0]; }
+/* Elige quién manda al paciente, con peso por la confianza que te tienen. */
+function clSortearDerivador(){
+  const c = clEstado();
+  const pesos = CL_DERIVADORES.map(d => 5 + (c.deriv[d.id] ? c.deriv[d.id].conf : 50));
+  const total = pesos.reduce((a2,b2) => a2+b2, 0);
+  let r = Math.random() * total;
+  for(let i = 0; i < CL_DERIVADORES.length; i++){
+    r -= pesos[i];
+    if(r <= 0) return CL_DERIVADORES[i].id;
+  }
+  return CL_DERIVADORES[0].id;
+}
+function clMoverConfianza(id, n){
+  const c = clEstado();
+  if(!id || !c.deriv[id]) return;
+  c.deriv[id].conf = Math.max(0, Math.min(100, c.deriv[id].conf + n));
+}
+
+/* ---------- semana temática ----------
+   Rota por semana ISO, así que a los dos les toca la misma zona. */
+function clSemanaN(){
+  const d = new Date();
+  const ini = new Date(d.getFullYear(), 0, 1);
+  return Math.floor(((d - ini) / 86400000 + ini.getDay()) / 7);
+}
+function clTemaSemana(){ return CL_TEMAS[clSemanaN() % CL_TEMAS.length]; }
+function clEsTema(caso){ return caso && caso.zona === clTemaSemana(); }
+
+/* ---------- la gente se aburre de esperar ----------
+   Con la sala de hasta doce, tomarlos con calma uno por uno ya no va:
+   hay que decidir a quién atiendes primero. */
+function clEsperaMin(f){
+  return Math.floor((Date.now() - (f.llegada || Date.now())) / 60000);
+}
+function clRevisarPaciencia(){
+  const c = clEstado();
+  const ahora = Date.now();
+  const antes = c.sala.length;
+  const idos = [];
+  for(let i = c.sala.length - 1; i >= 0; i--){
+    const f = c.sala[i];
+    if(!f.llegada) { f.llegada = ahora; continue; }
+    if(ahora - f.llegada < CL_PACIENCIA) continue;
+    const k = KIN_CASOS.find(x => x.id === f.id);
+    idos.push(k ? clPacNom(k, f).split(' ')[0] : 'alguien');
+    c.sala.splice(i, 1);
+  }
+  if(idos.length){
+    c.reputacion = Math.max(0, c.reputacion - idos.length);
+    avisar('🚪 Se cansaron de esperar y se fueron: ' + idos.join(', ') + '. −' + idos.length + ' de reputación.');
+  }
+  return antes - c.sala.length;
+}
+
+/* ---------- resumen semanal ---------- */
+function clSemanaEstado(){
+  const c = clEstado();
+  if(!c.semana || typeof c.semana !== 'object') c.semana = null;
+  const n = clSemanaN();
+  if(!c.semana || c.semana.n !== n){
+    const previa = c.semana;
+    c.semana = { n, atendidos:0, aciertos:0, altas:0, derivados:0, puntos:0, previa: previa || null, vista:false };
+  }
+  return c.semana;
+}
+function clSumarSemana(campo, n){
+  const w = clSemanaEstado();
+  w[campo] = (w[campo] || 0) + (n || 1);
 }
 
 /* ---------- urgencias con reloj ----------
@@ -9483,6 +9714,9 @@ function clPanelRecepcion(cont){
   // justo al terminar), se liquida acá en vez de bloquear los siguientes.
   if(c.noche && c.noche.quedan <= 0 && !clTurno){ clCerrarNoche(); return; }
   clVencerUrgencia();
+  clRevisarPaciencia();
+  clCaducarMensajes();
+  clSortearMensajes();
   clRevisarAbandonos();
   clSortearEvento();
   clSortearUrgencia();
@@ -9500,6 +9734,10 @@ function clPanelRecepcion(cont){
         '<small>' + j.nom + ' · ' + c.sala.length + ' en la sala de espera' +
         (c.racha > 1 ? ' · 🔥 ' + c.racha + ' seguidos' : '') +
         (c.sede ? ' · pago ×' + clMultSede().toFixed(2).replace('.', ',') : '') + '</small></div>' +
+      '<div class="cl-jornada-sol">' + j.emo + '</div>' +
+    '</div>' +
+    '<div class="cl-tema-sem">📌 Semana de <b>' + clTemaSemana() + '</b> · esos casos pagan 45% más</div>' +
+    '<div style="display:none">' +
       '<div class="cl-jornada-sol">' + j.emo + '</div>' +
     '</div>';
 
@@ -9522,6 +9760,31 @@ function clPanelRecepcion(cont){
           '<div class="cl-pac-meta">Llegó en ambulancia · atiéndelo antes de que se lo lleven</div></div>' +
         '</div></button>';
     }
+  }
+
+  // --- resumen de la semana pasada ---
+  const w = clSemanaEstado();
+  if(w.previa && !w.vista && w.previa.atendidos){
+    const pv = w.previa;
+    const prec = pv.atendidos ? Math.round(pv.aciertos / pv.atendidos * 100) : 0;
+    const ex = c.examen.tema, temas = Object.keys(ex).filter(k => ex[k].n);
+    const flojo = temas.sort((a2,b2) => (ex[a2].ok/ex[a2].n) - (ex[b2].ok/ex[b2].n))[0];
+    html += '<div class="cl-resumen"><div class="cl-resumen-tit">📅 Cómo les fue la semana pasada</div>' +
+      '<div class="cl-stats">' +
+        '<div><b>' + pv.atendidos + '</b><span>atendidos</span></div>' +
+        '<div><b>' + prec + '%</b><span>perfectos</span></div>' +
+        '<div><b>' + pv.altas + '</b><span>altas</span></div>' +
+      '</div>' +
+      (pv.derivados ? '<p>Derivaste bien ' + pv.derivados + ' caso' + (pv.derivados === 1 ? '' : 's') + ' de bandera roja.</p>' : '') +
+      (flojo ? '<p>Donde más fallas en el examen es <b>' + flojo + '</b>: ahí conviene apuntar esta semana.</p>' : '') +
+      '<button class="cl-btn-grande" id="clCerrarResumen">Empezar la semana</button></div>';
+  }
+
+  // --- mensajes sin responder ---
+  const pend = clMensajesPendientes();
+  if(pend){
+    html += '<div class="cl-msg-aviso"><b>💬 ' + pend + ' mensaje' + (pend === 1 ? '' : 's') + ' sin responder</b>' +
+      '<small>Te escribieron entre sesiones. Si no contestas, se desmotivan.</small></div>';
   }
 
   // --- caso del día ---
@@ -9602,12 +9865,16 @@ function clPanelRecepcion(cont){
           '<div class="cl-pac-nom">' + clPacNom(caso, f) + ', ' + clPacEdad(caso, f) +
             (an ? '<span class="cl-badge sobrio">' + an.emo + ' ' + an.nom + '</span>' : '') +
             (ra ? '<span class="cl-badge sobrio">' + ra.emo + ' ' + ra.nom + '</span>' : '') +
+            (clEsTema(caso) ? '<span class="cl-badge azul">📌 tema</span>' : '') +
             (vuelve ? '<span class="cl-badge oro">vuelve</span>' : '') +
             (canon && c.dominados.includes(caso.id) ? '<span class="cl-badge verde">dominado</span>' : '') +
           '</div>' +
           '<div class="cl-pac-mot">“' + caso.motivo + '”</div>' +
-          '<div class="cl-pac-meta">' + esp.emo + ' ' + clPacOcup(caso, f) +
-            (f.gen ? ' · ' + f.gen.comuna : '') + ' · ' + f.prev + ' · ' + f.espera +
+          '<div class="cl-pac-meta">' + (clEsperaMin(f) >= 3 ? '<b class="cl-espera-alerta">⏱ ' + clEsperaMin(f) + ' min esperando</b> · ' : '') +
+            esp.emo + ' ' + clPacOcup(caso, f) +
+            (f.gen ? ' · ' + f.gen.comuna : '') + ' · ' + f.prev +
+            (f.deriv ? ' · ' + clDerivador(f.deriv).emo + ' ' + clDerivador(f.deriv).nom : '') +
+            ' · ' + f.espera +
             (f.acomp ? ' · ' + f.acomp.emo + ' con ' + f.acomp.nom : '') + '</div>' +
         '</div></button>';
     }).join('') + '</div>';
@@ -9638,7 +9905,7 @@ function clPanelRecepcion(cont){
         return '<button class="cl-item puede' + (p.alarma ? ' alerta' : '') + '" data-sesion="' + i + '">' +
           '<div class="cl-item-emo" style="background:#e8f0f4">' + (p.alarma ? '⚠️' : (cs.ava || '🧍')) + '</div>' +
           '<div class="cl-item-info"><div class="cl-item-nom">' + clPacNom(cs, p) +
-            (p.alarma ? ' <span class="cl-badge roja">algo cambió</span>' : adh < 35 ? ' <span class="cl-badge roja">va a abandonar</span>' : '') + '</div>' +
+            (p.compl ? ' <span class="cl-badge roja">🚨 se torció</span>' : p.msg ? ' <span class="cl-badge azul">💬 te escribió</span>' : p.alarma ? ' <span class="cl-badge roja">algo cambió</span>' : adh < 35 ? ' <span class="cl-badge roja">va a abandonar</span>' : '') + '</div>' +
           '<div class="cl-item-desc">' + cs.nom + ' · fase ' + f.nom + ' · adherencia ' + adh + '%</div>' +
           '<div class="cl-barra-mini"><div style="width:' + p.progreso + '%"></div></div></div>' +
           '<div class="cl-item-costo">' + Math.round(p.progreso) + '%</div></button>';
@@ -9661,6 +9928,8 @@ function clPanelRecepcion(cont){
   cont.querySelectorAll('[data-quien]').forEach(b => b.onclick = () => clFijarQuien(b.dataset.quien));
   const bd = document.getElementById('clDiario');
   if(bd) bd.onclick = clEmpezarDiario;
+  const br = document.getElementById('clCerrarResumen');
+  if(br) br.onclick = () => { clSemanaEstado().vista = true; jxSonido('tap'); clGuardar(true); clPanel(); };
   const bn = document.getElementById('clNoche');
   if(bn) bn.onclick = clEmpezarNoche;
 }
@@ -10082,7 +10351,8 @@ function clPanelCaso(cont){
       '</div>' +
       '<div class="cl-ficha-motivo">“' + c.motivo + '”</div>' +
       (an ? '<div class="cl-animo">' + an.emo + ' ' + an.frase + '</div>' : '') +
-      (f.prev ? '<div class="cl-ficha-ctx"><span>' + f.prev + '</span><span>' + f.origen + '</span>' +
+      (f.prev ? '<div class="cl-ficha-ctx"><span>' + f.prev + '</span>' +
+        (f.deriv ? '<span>' + clDerivador(f.deriv).emo + ' ' + clDerivador(f.deriv).nom + '</span>' : '<span>' + f.origen + '</span>') +
         '<span>' + CL_ESPECIALIDADES[c.esp].emo + ' ' + CL_ESPECIALIDADES[c.esp].nom + '</span>' +
         (f.acomp ? '<span>' + f.acomp.emo + ' viene con ' + f.acomp.nom + '</span>' : '') + '</div>' : '') +
       (ra ? '<div class="cl-rasgo"><span class="cl-rasgo-emo">' + ra.emo + '</span>' +
@@ -10250,6 +10520,7 @@ function clDerivarPaciente(){
     const h = clHistCrear(c.id); h.veces++; h.ultima = Date.now();
     clGastarEvento();
     clAvanzarMision('derivar'); clAvanzarMision('atender', { zona:c.zona });
+    clSumarSemana('atendidos'); clSumarSemana('derivados');
     if(t.noche && e.noche){ e.noche.aciertos++; e.noche.plata += plata; e.noche.quedan--; }
     const r = jxRecompensar(urgente ? 16 : 10, urgente ? 40 : 25, { desde:document.getElementById('jxScreenClinica') });
     const seguir = t.noche;
@@ -10348,10 +10619,13 @@ function clCerrarCaso(){
   const confianza = vuelve ? 1.15 : 1;           // el que ya te conoce llega con la ficha hecha
   const gracia = clEfRasgo(t.ficha && t.ficha.rasgo, 'pago', 1);  // el conversador recomienda
   const noche = t.noche && e.noche ? CL_NOCHE_PAGO : 1;
+  const tema = clEsTema(c) ? 1.45 : 1;   // la zona de la semana paga más
+  const der = t.ficha && t.ficha.deriv ? clDerivador(t.ficha.deriv) : null;
+  const pagoDer = der ? der.pago : 1;
   // el cuaderno pesa: acertar de suerte paga la mitad que razonar bien
   const cuad = t.correccion || clCorregirCuaderno(t);
   const razon = 0.6 + (cuad.pct / 100) * 0.6;    // entre 0,6x y 1,2x
-  const dinero = Math.round(base * clMultPagoCaso() * (perfecto ? 1.5 : 1) * eficiencia * confianza * gracia * noche * razon);
+  const dinero = Math.round(base * clMultPagoCaso() * (perfecto ? 1.5 : 1) * eficiencia * confianza * gracia * noche * razon * tema * pagoDer);
   let rep = perfecto ? 2 + clRepExtra() : 1;
   if(perfecto && cuad.pct >= 85) rep += 1;       // razonar bien también suma prestigio
   if(!perfecto && clEfEvento('castigo', false)) rep = 0;   // con la tele mirando, el error no suma
@@ -10372,6 +10646,9 @@ function clCerrarCaso(){
   clGastarEvento();
 
   clAvanzarMision('atender', { zona:c.zona });
+  clSumarSemana('atendidos'); if(perfecto) clSumarSemana('aciertos');
+  if(der){ clMoverConfianza(der.id, perfecto ? 4 : -5); e.deriv[der.id].enviados++; }
+  if(clEsTema(c)) clSumarSemana('puntos', 2);
   if(perfecto){
     clAvanzarMision('racha');
     if(!t.imagenes) clAvanzarMision('sinImg');
@@ -10415,6 +10692,9 @@ function clCerrarCaso(){
       amarilla: t.ficha ? t.ficha.amarilla : null,
       amarillaVista: !!t.amarillaVista,
       gen: t.ficha ? t.ficha.gen : null,      // quién es, para no perderlo en el tratamiento
+      // mediciones que se van moviendo sesión a sesión
+      med: { dolor: 6 + Math.floor(Math.random()*3), rango: 45 + Math.floor(Math.random()*20), hito:0 },
+      compl: null,
     });
     sub += ' · ' + clPacNom(c, t.ficha) + ' queda en tratamiento: llévalo hasta el alta.';
   }else if(c.derivar){
@@ -10486,6 +10766,64 @@ function clRevisarAbandonos(){
   if(olvidados) avisar('📉 ' + olvidados + ' paciente(s) llevaban días sin sesión: bajó su adherencia y tu reputación.');
 }
 
+/* ---------- mensajes entre sesiones ----------
+   Se generan al volver a la clínica, según el tiempo real que pasó desde
+   la última sesión. El que está peor escribe más seguido. */
+function clSortearMensajes(){
+  const c = clEstado();
+  const ahora = Date.now();
+  c.activos.forEach(pac => {
+    if(pac.msg || pac.alarma) return;
+    if(ahora - (pac.visto || 0) < CL_MSG_ESPERA) return;
+    if(Math.random() > CL_MSG_PROB) return;
+    // el que va bien manda el mensaje bueno; el que va mal, uno de problema
+    const buenos = ['gracias','mejor','tirante'];
+    const malos  = ['duele','falto','internet','trabajo','noche'];
+    const pool = (pac.adh >= 65 && pac.progreso >= 40) ? buenos : malos;
+    const id = pool[Math.floor(Math.random() * pool.length)];
+    pac.msg = { id, cuando: ahora };
+  });
+}
+function clMensajesPendientes(){
+  return clEstado().activos.filter(p => p.msg).length;
+}
+function clResponderMensaje(idx, op){
+  const c = clEstado();
+  const pac = c.activos[idx];
+  if(!pac || !pac.msg) return;
+  const m = CL_MENSAJES.find(x => x.id === pac.msg.id);
+  const o = m && m.ops[op];
+  if(!o) return;
+  pac.msg = null;
+  pac.visto = Date.now();
+  if(o.ok){
+    pac.adh = Math.min(100, pac.adh + 12);
+    c.reputacion += 1;
+    jxSonido('bien'); jxVibrar(12);
+    avisar('💬 ' + o.dice);
+  }else{
+    pac.adh = Math.max(0, pac.adh - 14);
+    jxSonido('mal'); jxVibrar(25);
+    avisar('💬 ' + o.dice);
+  }
+  clGuardar(true);
+  clPanel();
+}
+/* Si no le contestas, el paciente se desmotiva solo. */
+function clCaducarMensajes(){
+  const c = clEstado();
+  const ahora = Date.now();
+  let ignorados = 0;
+  c.activos.forEach(pac => {
+    if(!pac.msg) return;
+    if(ahora - pac.msg.cuando < 20 * 60000) return;   // veinte minutos sin respuesta
+    pac.msg = null;
+    pac.adh = Math.max(0, pac.adh - 10);
+    ignorados++;
+  });
+  if(ignorados) avisar('💬 ' + ignorados + ' mensaje(s) quedaron sin responder y bajó la adherencia.');
+}
+
 function clPagarSesion(caso){
   const c = clEstado();
   clAsentar();
@@ -10501,6 +10839,7 @@ function clAlta(idx){
   c.dinero += bono;
   c.reputacion += Math.round((limpio ? 3 + clRepExtra() : 1) * clEfEvento('rep', 1));
   c.altas = (c.altas || 0) + 1;
+  clSumarSemana('altas');
   c.pxHabil++;                                    // cada alta da un punto de habilidad
   if(limpio && !c.dominados.includes(caso.id)) c.dominados.push(caso.id);
   if(!limpio && !pac.gen) clAnotarFallo(caso.id, caso.pac + ' llegó al alta con ' + pac.recaidas +
@@ -10609,9 +10948,22 @@ function clSesion(idx, cargaId){
   }
   if(clEfRasgo(pac.rasgo, 'seAburre', false)) pac.adh = Math.max(0, pac.adh - 5);
   pac.progreso = Math.max(0, Math.min(100, pac.progreso + delta));
+  // las mediciones siguen al progreso: el dolor baja y el rango sube
+  if(!pac.med) pac.med = { dolor:6, rango:50, hito:0 };
+  pac.med.dolor = Math.max(0, Math.round((10 - pac.progreso / 12) * 10) / 10);
+  pac.med.rango = Math.min(100, Math.round(45 + pac.progreso * 0.55));
+  pac.med.hito = Math.floor(pac.progreso / 25);
   pac.nota = nota;
   pac.ultimaCarga = cargaId;
   clPagarSesion(caso);
+
+  // muy de vez en cuando el caso se tuerce de verdad y hay que derivar
+  if(pac.progreso < 100 && !pac.compl && pac.sesion >= 2 && Math.random() < CL_COMPL_PROB){
+    pac.compl = CL_COMPLICACIONES[Math.floor(Math.random() * CL_COMPLICACIONES.length)].id;
+    jxSonido('mal'); jxVibrar(50);
+    clGuardar(true); clPanel();
+    return;
+  }
 
   // a veces aparece un signo nuevo y hay que decidir en el momento
   if(pac.progreso < 100 && !pac.alarma && Math.random() < CL_ALARMA_PROB){
@@ -10624,6 +10976,38 @@ function clSesion(idx, cargaId){
   if(pac.progreso >= 100){ clAlta(idx); return; }
   clGuardar(true);
   clPanel();
+}
+
+/* La complicación solo tiene una salida correcta: frenar y derivar. */
+function clResponderComplicacion(idx, decision){
+  const c = clEstado();
+  const pac = c.activos[idx];
+  if(!pac || !pac.compl) return;
+  const co = CL_COMPLICACIONES.find(x => x.id === pac.compl);
+  const caso = KIN_CASOS.find(x => x.id === pac.id);
+  pac.compl = null;
+  if(decision === 'derivar'){
+    c.reputacion += 4;
+    c.activos.splice(idx, 1);
+    clSesionAbierta = null;
+    clSumarSemana('derivados');
+    const r = jxRecompensar(14, clXp(35), { desde:document.getElementById('jxScreenClinica') });
+    clGuardar(true); c3Poblar();
+    jxCelebrar({ titulo:'Lo pescaste a tiempo 🚑',
+      sub:(caso ? clPacNom(caso, pac) : 'El paciente') + ' quedó con el médico. ' + co.dice,
+      monedas:14, xp:clXp(35), subioNivel:r.subioNivel, nivel:r.nivel,
+      textoNext:'Volver a la clínica', onNext:()=>{ clVista='recepcion'; clPanel(); } });
+    return;
+  }
+  // seguir tratando algo que ya no es lo que creías
+  c.reputacion = Math.max(0, c.reputacion - 5);
+  pac.recaidas++;
+  pac.adh = Math.max(0, pac.adh - 20);
+  pac.progreso = Math.max(0, pac.progreso - 25);
+  pac.nota = '✗ Seguiste tratando y el cuadro empeoró. ' + co.dice;
+  if(!pac.gen) clAnotarFallo(pac.id, 'Se te torció el caso y seguiste tratando igual. ' + co.dice);
+  jxSonido('mal'); jxVibrar(40);
+  clGuardar(true); clPanel();
 }
 
 /* Alarma en plena sesión: seguir, bajar la carga o derivar. */
@@ -10691,6 +11075,11 @@ function clPanelSesion(cont, idx){
       '<div class="cl-adh-fila"><span>Adherencia</span>' +
         '<div class="cl-adh"><div class="' + (adh < 35 ? 'baja' : adh < 70 ? 'media' : '') + '" style="width:' + adh + '%"></div></div>' +
         '<span>' + adh + '% · ' + adhNom + '</span></div>' +
+      (pac.med ? '<div class="cl-medidas">' +
+        '<div><b>' + pac.med.dolor.toFixed(1).replace('.', ',') + '</b><span>dolor / 10</span></div>' +
+        '<div><b>' + pac.med.rango + '%</b><span>del rango</span></div>' +
+        '<div><b>' + ['—','se viste solo','sube escaleras','camina 30 min','vuelve a lo suyo'][pac.med.hito] + '</b><span>hito logrado</span></div>' +
+        '</div>' : '') +
       (pac.nota ? '<div class="cl-nota-sesion">' + pac.nota + '</div>' : '') +
     '</div>';
 
@@ -10699,6 +11088,36 @@ function clPanelSesion(cont, idx){
   if(am){
     html += '<div class="cl-amarilla"><b>' + am.emo + ' Bandera amarilla: ' + am.nom + '</b>' +
       '<p>' + am.dice + '</p><em>' + am.abordaje + '</em></div>';
+  }
+
+  // el caso se torció: hay que decidir antes que nada
+  const compl = pac.compl ? CL_COMPLICACIONES.find(x => x.id === pac.compl) : null;
+  if(compl){
+    html += '<div class="cl-alarma grave"><b>🚨 Esto ya no es lo que creías</b><p>' + compl.txt + '</p></div>' +
+      '<div class="cl-preg">¿Qué haces?</div><div class="cl-opciones">' +
+      '<button class="cl-opc" data-compl="derivar"><b>🚑 Frenar y derivar hoy mismo</b><small>Esto se salió de lo kinésico</small></button>' +
+      '<button class="cl-opc" data-compl="seguir"><b>▶️ Seguir con el tratamiento</b><small>Puede ser parte de la evolución</small></button>' +
+      '</div><button class="cl-btn-derivar" id="clVolverRecep">‹ Volver a la clínica</button>';
+    cont.innerHTML = html;
+    cont.querySelectorAll('[data-compl]').forEach(b2 => b2.onclick = () => clResponderComplicacion(idx, b2.dataset.compl));
+    document.getElementById('clVolverRecep').onclick = () => { clSesionAbierta = null; jxSonido('tap'); clPanel(); };
+    return;
+  }
+
+  // mensaje sin responder: manda sobre todo lo demás
+  const msg = pac.msg ? CL_MENSAJES.find(x => x.id === pac.msg.id) : null;
+  if(msg){
+    html += '<div class="cl-chat" style="margin-bottom:12px">' +
+      '<div class="cl-msg pac"><span class="cl-msg-de">' + clPacNom(caso, pac) + '</span>' + msg.txt +
+      '<span class="cl-msg-hora">' + new Date(pac.msg.cuando).getHours().toString().padStart(2,'0') + ':' +
+      new Date(pac.msg.cuando).getMinutes().toString().padStart(2,'0') + '</span></div></div>' +
+      '<div class="cl-preg">¿Qué le contestas?</div><div class="cl-opciones">' +
+      msg.ops.map((o, i) => '<button class="cl-opc larga" data-msg="' + i + '">' + o.txt + '</button>').join('') +
+      '</div><button class="cl-btn-derivar" id="clVolverRecep">‹ Volver a la clínica</button>';
+    cont.innerHTML = html;
+    cont.querySelectorAll('[data-msg]').forEach(b => b.onclick = () => clResponderMensaje(idx, parseInt(b.dataset.msg, 10)));
+    document.getElementById('clVolverRecep').onclick = () => { clSesionAbierta = null; jxSonido('tap'); clPanel(); };
+    return;
   }
 
   if(alarma){
@@ -10802,6 +11221,21 @@ function clPanelGestion(cont){
     });
     html += '</div>';
   }
+
+  // --- quiénes te derivan ---
+  html += '<div class="cl-sec">Quiénes te derivan</div>' +
+    '<div class="cl-nota izq">Resuélveles bien y te mandan más gente. Devuélveles pacientes mal manejados y dejan de derivarte.</div>' +
+    '<div class="cl-lista">';
+  CL_DERIVADORES.forEach(d => {
+    const v = c.deriv[d.id] || { conf:50, enviados:0 };
+    const nivel = v.conf >= 75 ? 'te tienen fe' : v.conf >= 45 ? 'relación normal' : v.conf >= 20 ? 'desconfían' : 'casi no te mandan';
+    html += '<div class="cl-item listo"><div class="cl-item-emo" style="background:#eef4f8">' + d.emo + '</div>' +
+      '<div class="cl-item-info"><div class="cl-item-nom">' + d.nom + '</div>' +
+      '<div class="cl-item-desc">' + d.desc + ' · paga ×' + d.pago.toFixed(2).replace('.', ',') + '</div>' +
+      '<div class="cl-barra-mini"><div style="width:' + v.conf + '%"></div></div></div>' +
+      '<div class="cl-item-costo">' + Math.round(v.conf) + '%<br><small style="font-size:.6rem">' + nivel + '</small></div></div>';
+  });
+  html += '</div>';
 
   // --- expansión: abrir una sede nueva ---
   const prox = clSedeSiguiente();

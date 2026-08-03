@@ -66,6 +66,16 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 
 **La consulta es un chat** — la anamnesis se muestra como conversación en `t.chat` (`clDecir()`): tus preguntas van como burbuja `kine`, las respuestas como `pac` o `acomp`, y los exámenes/pruebas como nota clínica (`nota`). `CL_SALUDO` abre según el ánimo y `CL_MULETILLA` remata según el rasgo. Las marcas del cuaderno cuelgan de la burbuja que trae el hallazgo, así que **todo mensaje con `accId` debe ser anotable**.
 
+**Mensajes entre sesiones** — `CL_MENSAJES` se sortea en `clSortearMensajes()` al entrar a la recepción, según el tiempo real desde la última sesión (`pac.visto`). El que va bien manda mensajes buenos, el que va mal manda problemas. Responder bien sube adherencia y reputación; `clCaducarMensajes()` castiga a los 20 min sin respuesta.
+
+**Complicaciones** — `CL_COMPLICACIONES` (5% por sesión desde la 2ª) tuerce el caso: lo único correcto es derivar. Distinto de `CL_ALARMAS`, donde a veces corresponde seguir.
+
+**Derivadores** — `CL_DERIVADORES` con `c.deriv[id].conf` (0-100). `clSortearDerivador()` pondera por confianza, así que resolver bien trae más pacientes de ese origen. Cada uno tiene su multiplicador de pago.
+
+**Semana temática y resumen** — `clTemaSemana()` rota por semana ISO (igual para los dos); esos casos pagan 45% más. `clSemanaEstado()` acumula la semana y muestra el resumen del domingo con el tema más flojo del examen.
+
+**Impaciencia** — `f.llegada` marca cuándo llegó cada uno; `clRevisarPaciencia()` los saca a los `CL_PACIENCIA` (6 min) y cuesta reputación.
+
 **Tope de tratamiento** — `CL_ACTIVOS_MAX` (10). Pasado el tope el paciente se cierra igual pero queda con otro kinesiólogo en vez de entrar a `c.activos`: la lista llegaba a 44 y dejaba de ser jugable.
 
 **Cuidado con reasignar arrays en `asegurarJuegos()`** — corre dentro de cada `clEstado()`. Si limpia con `k.sala = k.sala.filter(...)` y alguien está llenando la sala, `c.sala.push(clFichaEspera(...))` empuja al array viejo y no entra nadie. La limpieza de `sala` va **en sitio** con `splice`.
