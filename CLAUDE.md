@@ -62,7 +62,17 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 
 **Rincón de juegos** (consola `jx*`, pantalla completa). Juegos actuales: Sudoku (`sd*`), Zip (`zip*`), 2048 (`dm*`), Snake (`sn*`), Nuestro Jardín (`jar*`, incremental) y Clínica Kinésica (`cl*`, con motor de diagnóstico y tratamiento por sesiones). Economía compartida: monedas + mascota + clóset. Se eliminaron Detective, Tres en raya y Memorice.
 
-**Contenido clínico** — `KIN_CASOS` (41 casos, 7 de ellos `derivar:true` y 5 además `urgente:true`), `KIN_PRUEBAS` (33), `KIN_MUSCULOS` (30), `KIN_RANGOS` (15) y el motor de diferencial `KIN_DX` en `index.html` son la única fuente de verdad. `REVISION-KINESIOLOGIA.md` se **genera** desde esos datos, no se edita a mano: si cambia el contenido clínico, regenerar el documento. Pendiente de revisión por Catalina antes de publicar.
+**Contenido clínico** — `KIN_CASOS` (41 casos, 7 de ellos `derivar:true` y 5 además `urgente:true`), `KIN_PRUEBAS` (33, con `sn`/`sp`), `KIN_MUSCULOS` (30), `KIN_RANGOS` (15), `CL_TTO_MAL` (distractores), `CL_AMARILLAS` y el motor de diferencial `KIN_DX` en `index.html` son la única fuente de verdad. `REVISION-KINESIOLOGIA.md` se **genera** desde esos datos, no se edita a mano: si cambia el contenido clínico, regenerar el documento. Pendiente de revisión por Catalina antes de publicar.
+
+**El cuaderno** — el tablero de hipótesis ya NO lo calcula el juego. Cada hallazgo se anota a mano en `t.notas[accId][hipId]` (1 apoya / −1 descarta / 0 no aporta) y `clConfianzas()` sale de ahí. Al responder el tratamiento se pasa por la fase `revision`, donde `clCorregirCuaderno()` compara las marcas contra `KIN_DX` y `clResultadoPrueba()`. El porcentaje modula pago, reputación y el desbloqueo del álbum. **Nunca volver a mover `t.conf` desde `clHacerAccion()`**: eso reventaría la mecánica entera.
+
+**Pruebas con Sn/Sp** — `clResultadoPrueba()` aplica SnNout (negativa con `sn ≥ KIN_SN_ALTA` descarta) y SpPin (positiva con `sp ≥ KIN_SP_ALTA` confirma). `KIN_PRUEBA_NEG` lista los casos cuya prueba de ficha sale **negativa**: sin eso, el Lasègue negativo del lumbago "confirmaría" un lumbago. `func:true` marca mediciones que no son pruebas diagnósticas (TM6M, Ashworth).
+
+**Banderas amarillas** — `CL_AMARILLAS` se asigna por visita en `clFichaEspera()`. Solo se descubre con la acción `creencias`; si no se pregunta, viaja escondida al tratamiento y lo frena a la mitad (`factorAm`) sin que el jugador sepa por qué. Se limpia con la carga `amarilla`, que solo aparece si `pac.amarillaVista`.
+
+**Sedes** — `c.sede` es el prestigio: `clAbrirSede()` resetea plata, equipo, personal, reputación y acreditaciones, pero conserva `dominados`, `hist`, `examen`, récords y misiones. Cada sede da `+CL_SEDE_PAGO` permanente vía `clMultPagoCaso()`, resta un punto de tiempo de consulta y agrega una hipótesis extra al diferencial en `clAccionesDe()`. La paleta del 3D cambia por sede.
+
+**Pistas** — `clUsarPista()` se recarga sola cada `CL_PISTA_ESPERA` (5 min de reloj real, en `c.pistaT`). No revela el diagnóstico: corrige una anotación del cuaderno que esté mala o falte.
 
 **Ciclo de un paciente** — sala de espera (`c.sala`, fichas con previsión, origen, rasgo, ánimo y acompañante que cambian en cada visita) → investigar con tiempo limitado → diagnóstico → tratamiento por sesiones hasta el alta. Cada paciente deja memoria en `c.hist[casoId]` (`veces`, `altas`, `recaidas`, `sesiones`) y al reaparecer se muestra su texto de `CL_REGRESO`.
 

@@ -8,12 +8,15 @@ const RAIZ = path.join(__dirname, '..');
 const RUTA = path.join(RAIZ, 'index.html');
 const txt = fs.readFileSync(RUTA, 'utf8');
 const lineas = txt.split('\n');
+/* Se extrae todo el bloque de datos clínicos: desde KIN_PRUEBAS hasta justo
+   antes del código 3D. Incluye KIN_DX y las tablas de rasgos, banderas
+   amarillas y alarmas, que también se documentan. */
 const ini = lineas.findIndex(l => l.startsWith('const KIN_PRUEBAS = ['));
-const fin = lineas.findIndex((l, i) => i > ini && l.startsWith('const KIN_DX = {'));
-const finDx = lineas.findIndex((l, i) => i > fin && l === '};');
-const bloque = lineas.slice(ini, finDx + 1).join('\n');
-const D = new Function(bloque + '\nreturn { KIN_PRUEBAS, KIN_CASOS, CL_REGRESO, KIN_MUSCULOS, KIN_RANGOS, CL_ACC, KIN_DX };')();
-const { KIN_PRUEBAS, KIN_CASOS, CL_REGRESO, KIN_MUSCULOS, KIN_RANGOS, CL_ACC, KIN_DX } = D;
+const tope = lineas.findIndex((l, i) => i > ini && l.includes('CLÍNICA EN 3D'));
+if(ini < 0 || tope < 0) throw new Error('no encontré el bloque de contenido clínico en index.html');
+const bloque = lineas.slice(ini, tope - 1).join('\n');
+const D = new Function(bloque + '\nreturn { KIN_PRUEBAS, KIN_CASOS, CL_REGRESO, CL_TTO_MAL, KIN_MUSCULOS, KIN_RANGOS, CL_ACC, KIN_DX, CL_AMARILLAS };')();
+const { KIN_PRUEBAS, KIN_CASOS, CL_REGRESO, CL_TTO_MAL, KIN_MUSCULOS, KIN_RANGOS, CL_ACC, KIN_DX, CL_AMARILLAS } = D;
 
 const nom = id => (KIN_CASOS.find(c => c.id === id) || {}).nom || id;
 const accNom = id => (CL_ACC.find(a => a.id === id) || {}).n || id;
@@ -27,7 +30,7 @@ Catalina: esto es todo lo que enseña la Clínica del Rincón. Está publicado.
 Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en un solo lugar y el juego entero queda corregido.
 
 - Los **rangos articulares** son de AAOS.
-- Las **pruebas ortopédicas** orientan, no diagnostican solas; el juego las simplifica para que la mecánica funcione.
+- Las **pruebas ortopédicas** ya no son "positiva = sugiere X": llevan sensibilidad y especificidad, y el juego razona con SnNout y SpPin (sección 3).
 - En los **músculos**, entre paréntesis van las raíces nerviosas.
 - Lo más importante de revisar es la **sección 2**: son las pistas con las que se descartan hipótesis.
 
@@ -48,6 +51,8 @@ for(const esp of ['trauma','deporte','respi','neuro']){
     o += `- **Prueba:** ${pr ? pr : '_(no aplica)_'} → ${c.hallazgo}\n`;
     o += `- **Tratamiento correcto** (fase ${c.fase}): ${c.tto}\n`;
     o += `- **Se le enseña:** _${c.dato}_\n`;
+    const mal = CL_TTO_MAL[c.id] || c.ttoMal;
+    o += `- **Distractores** (razonables pero equivocados): ${mal.map(x => `_${x}_`).join(' · ')}\n`;
     o += `- **Cuando vuelve:** ${CL_REGRESO[c.id]}\n`;
   }
 }
@@ -64,8 +69,32 @@ for(const c of KIN_CASOS){
   }
 }
 
-o += `\n---\n## 3. Pruebas ortopédicas (${KIN_PRUEBAS.length})\n\n| Prueba | Zona | Cómo se hace | Positiva sugiere |\n|---|---|---|---|\n`;
-KIN_PRUEBAS.forEach(p => { o += `| **${esc(p.nom)}** | ${p.zona} | ${esc(p.como)} | ${esc(p.sug)} |\n`; });
+o += `\n---\n## 3. Pruebas ortopédicas (${KIN_PRUEBAS.length})
+
+**Sn** y **Sp** son valores de referencia aproximados: varían entre estudios y poblaciones, así que en el juego sirven para razonar con SnNout / SpPin, no para citarlos.
+
+- **SnNout**: sensibilidad alta (≥ 0,85) → una **negativa** descarta.
+- **SpPin**: especificidad alta (≥ 0,85) → una **positiva** confirma.
+
+| Prueba | Zona | Sn | Sp | Cómo se hace | Positiva sugiere |
+|---|---|---|---|---|---|
+`;
+KIN_PRUEBAS.forEach(p => {
+  const n = p.func ? '—' : p.sn.toFixed(2).replace('.', ',');
+  const s = p.func ? '—' : p.sp.toFixed(2).replace('.', ',');
+  o += `| **${esc(p.nom)}** | ${p.zona} | ${n} | ${s} | ${esc(p.como)} | ${esc(p.sug)} |\n`;
+});
+
+o += `\n---\n## 3b. Banderas amarillas (${CL_AMARILLAS.length})
+
+Factores psicosociales. No cambian el diagnóstico, pero mandan en el pronóstico: en el juego, si no se detectan preguntando por creencias y expectativas, el tratamiento rinde la mitad.
+
+| Bandera | Lo que dice el paciente | Cómo se aborda | Por qué importa |
+|---|---|---|---|
+`;
+CL_AMARILLAS.forEach(a => {
+  o += `| **${esc(a.nom)}** | ${esc(a.dice)} | ${esc(a.abordaje)} | ${esc(a.ensena)} |\n`;
+});
 
 o += `\n---\n## 4. Músculos (${KIN_MUSCULOS.length})\n\n| Músculo | Origen | Inserción | Inervación | Acción |\n|---|---|---|---|---|\n`;
 KIN_MUSCULOS.forEach(m => { o += `| **${esc(m.nom)}** | ${esc(m.origen)} | ${esc(m.insercion)} | ${esc(m.nervio)} | ${esc(m.accion)} |\n`; });

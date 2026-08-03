@@ -1070,6 +1070,37 @@
   .cl-pista-item{background:#eaf4ec;border-radius:11px;padding:8px 11px;font-size:.78rem;color:#3f6b4d;line-height:1.45;}
   .cl-pista-item.vacia{background:var(--crema);color:var(--gris);}
   .cl-pista-item b{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;opacity:.75;margin-bottom:2px;}
+  .cl-pista-item.nueva{box-shadow:0 0 0 2px rgba(91,138,166,.35);}
+  .cl-marcas{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+  .cl-marca{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.75);border:1px solid var(--crema-oscuro);
+    border-radius:999px;padding:3px 9px;font-family:'Jost',sans-serif;font-size:.68rem;color:var(--gris);
+    cursor:pointer;transition:all .12s;}
+  .cl-marca i{font-style:normal;font-weight:700;font-size:.8rem;line-height:1;}
+  .cl-marca.sube{background:#e2f0e4;border-color:#7fae96;color:#3f6b4d;}
+  .cl-marca.baja{background:#fadbd7;border-color:#d1705f;color:#a03c2e;}
+  .cl-marca:active{transform:scale(.94);}
+  .cl-revision{text-align:center;background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:18px;
+    padding:16px 14px;margin-bottom:14px;}
+  .cl-revision-tit{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--tinta);}
+  .cl-revision-pct{font-family:'Playfair Display',serif;font-size:2.6rem;color:#4b7d99;line-height:1.1;margin:4px 0;}
+  .cl-revision-sub{font-size:.78rem;color:var(--gris);}
+  .cl-pista-btn{width:100%;background:var(--crema);border:1.5px dashed var(--crema-oscuro);border-radius:15px;
+    padding:11px;margin-bottom:9px;cursor:pointer;font-family:'Jost',sans-serif;font-size:.88rem;color:var(--gris);}
+  .cl-pista-btn small{display:block;font-size:.7rem;opacity:.85;margin-top:2px;}
+  .cl-pista-btn.lista{background:linear-gradient(140deg,#fff8e2,#fdeec8);border-style:solid;border-color:#e6c874;color:#8a6b1f;}
+  .cl-pista-btn:active{transform:scale(.985);}
+  .cl-sede{background:linear-gradient(150deg,#eef3f7,#e2ecf2);border:1.5px solid #c4d8e4;border-radius:18px;
+    padding:14px 15px;}
+  .cl-sede.puede{border-color:#5b8aa6;box-shadow:0 8px 22px rgba(91,138,166,.22);cursor:pointer;}
+  .cl-sede.puede:active{transform:scale(.99);}
+  .cl-sede-top{display:flex;gap:12px;align-items:flex-start;margin-bottom:9px;}
+  .cl-sede-emo{font-size:1.7rem;line-height:1;}
+  .cl-sede-top b{display:block;font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--tinta);}
+  .cl-sede-top small{display:block;font-size:.75rem;color:var(--gris);line-height:1.45;margin-top:2px;}
+  .cl-sede-gana,.cl-sede-cuesta{font-size:.76rem;line-height:1.5;border-radius:11px;padding:8px 11px;margin-top:6px;}
+  .cl-sede-gana{background:rgba(226,240,228,.75);color:#3f6b4d;}
+  .cl-sede-cuesta{background:rgba(250,219,215,.6);color:#a03c2e;}
+  .cl-sede-req{margin-top:9px;font-size:.74rem;color:#4b7d99;font-weight:600;text-align:center;}
   .cl-grupos{display:flex;gap:6px;margin-bottom:10px;}
   .cl-grupo{flex:1;background:var(--blanco);border:1.5px solid var(--crema-oscuro);border-radius:999px;padding:7px 4px;
     font-family:"Jost",sans-serif;font-size:.76rem;color:var(--gris);cursor:pointer;transition:all .15s;}
@@ -1081,6 +1112,8 @@
   .cl-acc:active{transform:scale(.985);}
   .cl-acc:hover{border-color:#5b8aa6;}
   .cl-acc small{color:var(--gris);font-size:.72rem;white-space:nowrap;}
+  .cl-acc span i{display:block;font-style:normal;font-size:.68rem;color:#4b7d99;letter-spacing:.3px;margin-top:2px;
+    font-variant-numeric:tabular-nums;}
   .cl-acc.ya{opacity:.45;cursor:default;}
   .cl-btn-derivar{width:100%;margin-top:8px;background:transparent;border:1.5px dashed var(--crema-oscuro);
     border-radius:14px;padding:11px;font-family:"Jost",sans-serif;font-size:.85rem;color:var(--gris);cursor:pointer;}
@@ -1194,6 +1227,13 @@
   .cl-alarma b{display:block;font-family:'Playfair Display',serif;color:#b1392a;font-size:.98rem;margin-bottom:4px;}
   .cl-alarma p{margin:0;font-size:.84rem;color:#8a4034;line-height:1.5;}
   .cl-opc.educar{border-style:dashed;border-color:#b9cdbe;}
+  .cl-opc.amarilla{border-color:#e0c25a;background:linear-gradient(140deg,#fffaea,var(--blanco));}
+  .cl-amarilla{background:linear-gradient(140deg,#fff9e6,#fdf1cf);border:1.5px solid #e8d089;border-radius:16px;
+    padding:12px 14px;margin-bottom:12px;}
+  .cl-amarilla b{display:block;font-family:'Playfair Display',serif;color:#8a6b1f;font-size:.98rem;margin-bottom:4px;}
+  .cl-amarilla p{margin:0;font-size:.84rem;color:#7a5f22;line-height:1.5;font-style:italic;}
+  .cl-amarilla em{display:block;font-style:normal;font-size:.76rem;color:#a3853f;margin-top:6px;line-height:1.45;}
+  .cl-pista-item.amarilla{background:#fdf3d8;color:#7a5f22;}
   .cl-acred-btn{background:#5b8aa6;color:#fff;border-radius:999px;padding:5px 13px;font-size:.75rem;cursor:pointer;}
   .cl-nota.izq{text-align:left;font-style:normal;margin:0 2px 9px;opacity:1;line-height:1.5;}
 
@@ -4398,15 +4438,19 @@ function asegurarJuegos(){
   // urgencias, turno de noche, acreditación, misiones y examen
   if(k.urgencia && (typeof k.urgencia !== 'object' || !KIN_CASOS.some(c => c.id === k.urgencia.id))) k.urgencia = null;
   if(typeof k.urRoll !== 'number' || !isFinite(k.urRoll)) k.urRoll = -1;
+  if(typeof k.sede !== 'number' || !isFinite(k.sede) || k.sede < 0) k.sede = 0;
+  k.sede = Math.min(k.sede, CL_SEDES.length - 1);
+  if(!Array.isArray(k.fundadas)) k.fundadas = [];
   if(!Array.isArray(k.acred)) k.acred = ['trauma'];
   if(!k.acred.includes('trauma')) k.acred.push('trauma');
   k.acred = k.acred.filter(x => CL_ESPECIALIDADES[x]);
   // ojo: `quedan === 0` es válido — es el turno recién terminado que todavía
   // no pasa por clCerrarNoche(). Si se borra acá, el récord nunca se guarda.
   if(k.noche && (typeof k.noche !== 'object' || typeof k.noche.quedan !== 'number' || k.noche.quedan < 0)) k.noche = null;
-  for(const campo of ['nocheMejor','racha','mejorRacha','rojo']){
+  for(const campo of ['nocheMejor','racha','mejorRacha','rojo','pistaT']){
     if(typeof k[campo] !== 'number' || !isFinite(k[campo]) || k[campo] < 0) k[campo] = 0;
   }
+  if(k.pistaT > Date.now()) k.pistaT = 0;   // reloj movido hacia atrás
   if(!k.examen || typeof k.examen !== 'object') k.examen = { mejor:0, intentos:0, tema:{} };
   if(typeof k.examen.mejor !== 'number' || !isFinite(k.examen.mejor)) k.examen.mejor = 0;
   if(typeof k.examen.intentos !== 'number' || !isFinite(k.examen.intentos)) k.examen.intentos = 0;
@@ -4419,6 +4463,8 @@ function asegurarJuegos(){
     pac.adh = Math.max(0, Math.min(100, pac.adh));
     if(pac.rasgo && !CL_RASGOS.some(r => r.id === pac.rasgo)) pac.rasgo = null;
     if(pac.alarma && !CL_ALARMAS.some(a => a.id === pac.alarma)) pac.alarma = null;
+    if(pac.amarilla && !CL_AMARILLAS.some(a => a.id === pac.amarilla)) pac.amarilla = null;
+    if(typeof pac.amarillaVista !== 'boolean') pac.amarillaVista = false;
     if(typeof pac.faltas !== 'number' || !isFinite(pac.faltas) || pac.faltas < 0) pac.faltas = 0;
     if(typeof pac.visto !== 'number' || !isFinite(pac.visto)) pac.visto = Date.now();
   });
@@ -6033,41 +6079,57 @@ function jarPintarLienzo(t, dt){
      la mecánica funcione.
    ============================================================ */
 
+/* `sn` y `sp` son valores de referencia aproximados de la literatura:
+   varían bastante entre estudios y poblaciones, así que sirven para
+   razonar con las reglas SnNout / SpPin, no para citarlos en un informe.
+   `func:true` marca lo que NO es una prueba diagnóstica sino una medición:
+   describe cómo está el paciente, no dice qué tiene. */
 const KIN_PRUEBAS = [
-  { id:'neer',      nom:'Neer',                 zona:'hombro',   como:'Elevación pasiva del brazo en rotación interna, estabilizando la escápula.', sug:'pinzamiento subacromial' },
-  { id:'hawkins',   nom:'Hawkins-Kennedy',      zona:'hombro',   como:'Hombro y codo a 90°, se lleva a rotación interna.',                          sug:'pinzamiento subacromial' },
-  { id:'jobe',      nom:'Jobe (lata vacía)',    zona:'hombro',   como:'Brazo a 90° de abducción, 30° de flexión horizontal y pulgar hacia abajo; se resiste.', sug:'compromiso del supraespinoso' },
-  { id:'patte',     nom:'Patte',                zona:'hombro',   como:'Rotación externa resistida con el brazo a 90° de abducción.',                sug:'compromiso del infraespinoso y redondo menor' },
-  { id:'gerber',    nom:'Gerber (lift-off)',    zona:'hombro',   como:'Mano en la zona lumbar, se pide separarla de la espalda.',                   sug:'compromiso del subescapular' },
-  { id:'speed',     nom:'Speed',                zona:'hombro',   como:'Flexión anterior resistida del hombro con el codo extendido y antebrazo supinado.', sug:'tendinopatía de la porción larga del bíceps' },
-  { id:'aprension', nom:'Aprensión anterior',   zona:'hombro',   como:'Abducción y rotación externa progresiva del hombro.',                        sug:'inestabilidad anterior de hombro' },
-  { id:'cozen',     nom:'Cozen',                zona:'codo',     como:'Extensión resistida de muñeca con el codo en extensión y antebrazo pronado.', sug:'epicondilalgia lateral' },
-  { id:'golf',      nom:'Epitrocleítis (flexión resistida)', zona:'codo', como:'Flexión de muñeca resistida con el codo extendido.',                 sug:'epicondilalgia medial' },
-  { id:'phalen',    nom:'Phalen',               zona:'muñeca',   como:'Flexión palmar máxima de ambas muñecas sostenida cerca de un minuto.',        sug:'síndrome del túnel carpiano' },
-  { id:'tinel',     nom:'Tinel',                zona:'muñeca',   como:'Percusión sobre el trayecto del nervio (en el túnel del carpo, sobre el mediano).', sug:'irritación del nervio percutido' },
-  { id:'finkel',    nom:'Finkelstein',          zona:'muñeca',   como:'Pulgar dentro del puño y desviación cubital de la muñeca.',                  sug:'tenosinovitis de De Quervain' },
-  { id:'lasegue',   nom:'Lasègue (elevación de pierna recta)', zona:'lumbar', como:'En decúbito supino se eleva la pierna extendida.',               sug:'compromiso radicular lumbar' },
-  { id:'slump',     nom:'Slump',                zona:'lumbar',   como:'Sentado, se suma flexión cervical, extensión de rodilla y dorsiflexión.',    sug:'tensión neural adversa' },
-  { id:'thomas',    nom:'Thomas',               zona:'cadera',   como:'Se lleva una cadera a flexión máxima y se observa la contraria.',            sug:'acortamiento de flexores de cadera' },
-  { id:'ober',      nom:'Ober',                 zona:'cadera',   como:'En decúbito lateral se abduce y extiende el muslo y se deja caer.',          sug:'tensión de la banda iliotibial' },
-  { id:'faber',     nom:'FABER (Patrick)',      zona:'cadera',   como:'Flexión, abducción y rotación externa de cadera, con la pierna en 4.',       sug:'compromiso de cadera o sacroilíaca' },
-  { id:'trendel',   nom:'Trendelenburg',        zona:'cadera',   como:'Apoyo monopodal; se observa el descenso de la pelvis contralateral.',         sug:'insuficiencia del glúteo medio' },
-  { id:'lachman',   nom:'Lachman',              zona:'rodilla',  como:'Rodilla a 20-30° de flexión, se traslada la tibia hacia anterior.',           sug:'lesión del ligamento cruzado anterior' },
-  { id:'cajon_a',   nom:'Cajón anterior',       zona:'rodilla',  como:'Rodilla a 90°, se tracciona la tibia hacia anterior.',                        sug:'lesión del ligamento cruzado anterior' },
-  { id:'mcmurray',  nom:'McMurray',             zona:'rodilla',  como:'Desde flexión máxima se extiende la rodilla con rotación de la tibia.',       sug:'lesión meniscal' },
-  { id:'valgo',     nom:'Estrés en valgo',      zona:'rodilla',  como:'Fuerza en valgo con la rodilla a 0° y a 30°.',                                sug:'lesión del ligamento colateral medial' },
-  { id:'thompson',  nom:'Thompson',             zona:'tobillo',  como:'En prono se comprime la pantorrilla y se observa la flexión plantar.',        sug:'rotura completa del tendón de Aquiles' },
-  { id:'cajon_ant', nom:'Cajón anterior de tobillo', zona:'tobillo', como:'Se tracciona el retropié hacia anterior con el tobillo en leve flexión plantar.', sug:'insuficiencia del ligamento peroneoastragalino anterior' },
-  { id:'windlass',  nom:'Windlass',             zona:'pie',      como:'Extensión pasiva del hallux en carga.',                                       sug:'fascitis plantar' },
-  { id:'spurling',  nom:'Spurling',             zona:'cervical', como:'Extensión, inclinación y rotación cervical hacia el lado sintomático, con compresión axial suave.', sug:'radiculopatía cervical' },
-  { id:'distracc',  nom:'Distracción cervical', zona:'cervical', como:'Se tracciona suavemente la cabeza hacia arriba y se pregunta si alivia.',      sug:'origen radicular cervical (si alivia)' },
-  { id:'noble',     nom:'Noble',                zona:'rodilla',  como:'Se comprime el cóndilo femoral lateral mientras se extiende la rodilla desde 90°.', sug:'síndrome de la cintilla iliotibial' },
-  { id:'thessaly',  nom:'Thessaly',             zona:'rodilla',  como:'En apoyo monopodal con 20° de flexión, el paciente rota el cuerpo sobre la rodilla.', sug:'lesión meniscal' },
-  { id:'iso90',     nom:'Flexión resistida 90-90', zona:'muslo', como:'Cadera y rodilla a 90°; se resiste la flexión de rodilla y se compara con el otro lado.', sug:'lesión de isquiotibiales' },
-  { id:'tm6m',      nom:'Test de marcha de 6 minutos', zona:'respiratorio', como:'Se mide la distancia caminada en seis minutos, con saturación y disnea antes y después.', sug:'limitación de la tolerancia al esfuerzo' },
-  { id:'ashworth',  nom:'Escala de Ashworth modificada', zona:'neurológico', como:'Se moviliza pasivamente el segmento a velocidad rápida y se gradúa la resistencia.', sug:'espasticidad' },
-  { id:'pulltest',  nom:'Pull test (retropulsión)', zona:'neurológico', como:'De pie y avisado, se tracciona al paciente hacia atrás desde los hombros y se observa la reacción.', sug:'alteración de los reflejos posturales' },
+  { id:'neer',      nom:'Neer',                 zona:'hombro',   sn:0.79, sp:0.53, como:'Elevación pasiva del brazo en rotación interna, estabilizando la escápula.', sug:'pinzamiento subacromial' },
+  { id:'hawkins',   nom:'Hawkins-Kennedy',      zona:'hombro',   sn:0.79, sp:0.59, como:'Hombro y codo a 90°, se lleva a rotación interna.',                          sug:'pinzamiento subacromial' },
+  { id:'jobe',      nom:'Jobe (lata vacía)',    zona:'hombro',   sn:0.69, sp:0.62, como:'Brazo a 90° de abducción, 30° de flexión horizontal y pulgar hacia abajo; se resiste.', sug:'compromiso del supraespinoso' },
+  { id:'patte',     nom:'Patte',                zona:'hombro',   sn:0.72, sp:0.60, como:'Rotación externa resistida con el brazo a 90° de abducción.',                sug:'compromiso del infraespinoso y redondo menor' },
+  { id:'gerber',    nom:'Gerber (lift-off)',    zona:'hombro',   sn:0.62, sp:0.92, como:'Mano en la zona lumbar, se pide separarla de la espalda.',                   sug:'compromiso del subescapular' },
+  { id:'speed',     nom:'Speed',                zona:'hombro',   sn:0.68, sp:0.55, como:'Flexión anterior resistida del hombro con el codo extendido y antebrazo supinado.', sug:'tendinopatía de la porción larga del bíceps' },
+  { id:'aprension', nom:'Aprensión anterior',   zona:'hombro',   sn:0.72, sp:0.96, como:'Abducción y rotación externa progresiva del hombro.',                        sug:'inestabilidad anterior de hombro' },
+  { id:'cozen',     nom:'Cozen',                zona:'codo',     sn:0.84, sp:0.50, como:'Extensión resistida de muñeca con el codo en extensión y antebrazo pronado.', sug:'epicondilalgia lateral' },
+  { id:'golf',      nom:'Epitrocleítis (flexión resistida)', zona:'codo', sn:0.65, sp:0.81, como:'Flexión de muñeca resistida con el codo extendido.',                 sug:'epicondilalgia medial' },
+  { id:'phalen',    nom:'Phalen',               zona:'muñeca',   sn:0.68, sp:0.73, como:'Flexión palmar máxima de ambas muñecas sostenida cerca de un minuto.',        sug:'síndrome del túnel carpiano' },
+  { id:'tinel',     nom:'Tinel',                zona:'muñeca',   sn:0.50, sp:0.77, como:'Percusión sobre el trayecto del nervio (en el túnel del carpo, sobre el mediano).', sug:'irritación del nervio percutido' },
+  { id:'finkel',    nom:'Finkelstein',          zona:'muñeca',   sn:0.81, sp:0.50, como:'Pulgar dentro del puño y desviación cubital de la muñeca.',                  sug:'tenosinovitis de De Quervain' },
+  { id:'lasegue',   nom:'Lasègue (elevación de pierna recta)', zona:'lumbar', sn:0.91, sp:0.26, como:'En decúbito supino se eleva la pierna extendida.',               sug:'compromiso radicular lumbar' },
+  { id:'slump',     nom:'Slump',                zona:'lumbar',   sn:0.84, sp:0.83, como:'Sentado, se suma flexión cervical, extensión de rodilla y dorsiflexión.',    sug:'tensión neural adversa' },
+  { id:'thomas',    nom:'Thomas',               zona:'cadera',   sn:0.89, sp:0.92, como:'Se lleva una cadera a flexión máxima y se observa la contraria.',            sug:'acortamiento de flexores de cadera' },
+  { id:'ober',      nom:'Ober',                 zona:'cadera',   sn:0.61, sp:0.60, como:'En decúbito lateral se abduce y extiende el muslo y se deja caer.',          sug:'tensión de la banda iliotibial' },
+  { id:'faber',     nom:'FABER (Patrick)',      zona:'cadera',   sn:0.60, sp:0.75, como:'Flexión, abducción y rotación externa de cadera, con la pierna en 4.',       sug:'compromiso de cadera o sacroilíaca' },
+  { id:'trendel',   nom:'Trendelenburg',        zona:'cadera',   sn:0.55, sp:0.72, como:'Apoyo monopodal; se observa el descenso de la pelvis contralateral.',         sug:'insuficiencia del glúteo medio' },
+  { id:'lachman',   nom:'Lachman',              zona:'rodilla',  sn:0.85, sp:0.94, como:'Rodilla a 20-30° de flexión, se traslada la tibia hacia anterior.',           sug:'lesión del ligamento cruzado anterior' },
+  { id:'cajon_a',   nom:'Cajón anterior',       zona:'rodilla',  sn:0.62, sp:0.88, como:'Rodilla a 90°, se tracciona la tibia hacia anterior.',                        sug:'lesión del ligamento cruzado anterior' },
+  { id:'mcmurray',  nom:'McMurray',             zona:'rodilla',  sn:0.61, sp:0.84, como:'Desde flexión máxima se extiende la rodilla con rotación de la tibia.',       sug:'lesión meniscal' },
+  { id:'valgo',     nom:'Estrés en valgo',      zona:'rodilla',  sn:0.86, sp:0.72, como:'Fuerza en valgo con la rodilla a 0° y a 30°.',                                sug:'lesión del ligamento colateral medial' },
+  { id:'thompson',  nom:'Thompson',             zona:'tobillo',  sn:0.96, sp:0.93, como:'En prono se comprime la pantorrilla y se observa la flexión plantar.',        sug:'rotura completa del tendón de Aquiles' },
+  { id:'cajon_ant', nom:'Cajón anterior de tobillo', zona:'tobillo', sn:0.78, sp:0.75, como:'Se tracciona el retropié hacia anterior con el tobillo en leve flexión plantar.', sug:'insuficiencia del ligamento peroneoastragalino anterior' },
+  { id:'windlass',  nom:'Windlass',             zona:'pie',      sn:0.32, sp:1.00, como:'Extensión pasiva del hallux en carga.',                                       sug:'fascitis plantar' },
+  { id:'spurling',  nom:'Spurling',             zona:'cervical', sn:0.30, sp:0.93, como:'Extensión, inclinación y rotación cervical hacia el lado sintomático, con compresión axial suave.', sug:'radiculopatía cervical' },
+  { id:'distracc',  nom:'Distracción cervical', zona:'cervical', sn:0.44, sp:0.90, como:'Se tracciona suavemente la cabeza hacia arriba y se pregunta si alivia.',      sug:'origen radicular cervical (si alivia)' },
+  { id:'noble',     nom:'Noble',                zona:'rodilla',  sn:0.65, sp:0.70, como:'Se comprime el cóndilo femoral lateral mientras se extiende la rodilla desde 90°.', sug:'síndrome de la cintilla iliotibial' },
+  { id:'thessaly',  nom:'Thessaly',             zona:'rodilla',  sn:0.75, sp:0.87, como:'En apoyo monopodal con 20° de flexión, el paciente rota el cuerpo sobre la rodilla.', sug:'lesión meniscal' },
+  { id:'iso90',     nom:'Flexión resistida 90-90', zona:'muslo', sn:0.70, sp:0.75, como:'Cadera y rodilla a 90°; se resiste la flexión de rodilla y se compara con el otro lado.', sug:'lesión de isquiotibiales' },
+  { id:'tm6m',      nom:'Test de marcha de 6 minutos', zona:'respiratorio', func:true, como:'Se mide la distancia caminada en seis minutos, con saturación y disnea antes y después.', sug:'la tolerancia al esfuerzo (es una medición, no un diagnóstico)' },
+  { id:'ashworth',  nom:'Escala de Ashworth modificada', zona:'neurológico', func:true, como:'Se moviliza pasivamente el segmento a velocidad rápida y se gradúa la resistencia.', sug:'el grado de espasticidad (es una escala, no un diagnóstico)' },
+  { id:'pulltest',  nom:'Pull test (retropulsión)', zona:'neurológico', sn:0.75, sp:0.60, como:'De pie y avisado, se tracciona al paciente hacia atrás desde los hombros y se observa la reacción.', sug:'alteración de los reflejos posturales' },
 ];
+
+/* Umbrales para las reglas clásicas. Con sensibilidad alta, una NEGATIVA
+   descarta (SnNout). Con especificidad alta, una POSITIVA confirma (SpPin). */
+const KIN_SN_ALTA = 0.85, KIN_SP_ALTA = 0.85;
+
+/* Casos cuya prueba de ficha sale NEGATIVA (o no se puede realizar). Sin
+   esto el motor daría por positiva toda prueba que aparezca en la ficha, y
+   el Lasègue negativo del lumbago pasaría a "confirmar" un lumbago.
+   Va explícito a propósito: deducirlo del texto del hallazgo es frágil. */
+const KIN_PRUEBA_NEG = ['minero','basquetbol','capsulitis','lumbago','aquiles',
+  'cervicalgia','artrosis','latigazo','tvp','cardiaco','septica'];
 
 /* Cada caso es un paciente del juego. El jugador elige prueba,
    luego diagnóstico, luego tratamiento según la fase. */
@@ -6537,6 +6599,73 @@ const KIN_CASOS = [
   },
 ];
 
+/* Distractores de tratamiento. Los de las fichas eran absurdos ("reposo
+   absoluto", "infiltrar y seguir igual") y se descartaban sin pensar.
+   Estos son razonables pero equivocados: la intervención correcta en la
+   fase equivocada, la dosis mal puesta, el tratamiento del cuadro que
+   competía, o algo bien hecho pero incompleto. Hay que leer la fase. */
+const CL_TTO_MAL = {
+  huaso:['Movilización pasiva agresiva en rangos máximos para ganar rango rápido','Fortalecimiento de agarre con carga alta desde la primera sesión','Órtesis de muñeca y ejercicio isométrico suave, sin progresar el rango'],
+  minero:['Control motor aislado del transverso, sin progresar nunca la carga','Programa de fuerza de tronco de alta intensidad desde la primera semana','Educación en dolor y reposo relativo hasta que baje la intensidad'],
+  basquetbol:['Isométricos de cuádriceps manteniendo el reposo deportivo hasta que no duela','Excéntricos a carga máxima tres veces al día desde el inicio','Trabajo de cadera y core, sin cargar el tendón rotuliano'],
+  carrete:['Movilidad pasiva a rotación externa máxima para recuperar el rango','Manguito en cadena abierta con carga alta en los rangos de riesgo','Cabestrillo cuatro semanas más y después empezar el ejercicio'],
+  banderas:['Ejercicio progresivo de tronco con educación en dolor persistente','Movilización lumbar suave y control motor mientras llega la imagen','Reposo relativo y control en dos semanas para ver cómo evoluciona'],
+  pinzamiento:['Fortalecimiento del manguito sobre 90° de abducción desde el inicio','Movilización glenohumeral en todos los planos, sin trabajo escapular','Solo control escapular y educación, sin llegar a cargar el manguito'],
+  capsulitis:['Movilización pasiva forzada hasta el rango máximo tolerable cada sesión','Fortalecimiento del manguito rotador como eje del tratamiento','Ejercicio pendular y calor local, esperando que el cuadro se resuelva solo'],
+  manguito:['Isométricos indefinidos, sin progresar nunca a carga dinámica','Volver al volumen de nado completo apenas ceda el dolor','Corrección escapular y estiramiento capsular posterior, sin cargar el tendón'],
+  epicondilalgia:['Excéntricos de extensores a carga máxima desde la primera sesión','Órtesis de contrafuerza y reposo del gesto, sin ejercicio progresivo','Fortalecimiento global de hombro y escápula, sin cargar los extensores'],
+  tunel:['Deslizamiento neural en tensión máxima, varias veces al día','Férula nocturna sola, sin cambiar nada del puesto de trabajo','Fortalecimiento de la musculatura tenar como eje del tratamiento'],
+  dequervain:['Excéntricos del abductor largo a carga alta desde el primer día','Órtesis de pulgar permanente seis semanas, sin reintroducir carga','Masaje transverso profundo del primer compartimento todos los días'],
+  lumbago:['Control motor específico antes de retomar la actividad normal','Reposo relativo tres días y reevaluar antes de empezar a mover','Programa de fuerza de tronco de alta carga desde la primera sesión'],
+  radiculopatia:['Ejercicio en la dirección que aumenta los síntomas, para "soltar" la raíz','Tracción lumbar mecánica como tratamiento principal','Fuerza de tronco en carga alta, postergando el trabajo neural'],
+  trocanterico:['Estiramiento sostenido de banda iliotibial y glúteo en aducción','Abductores en máquina con carga alta desde la primera sesión','Reposo de las caminatas hasta que deje de dolerle al dormir'],
+  lca:['Cuádriceps en cadena abierta con carga alta para frenar la atrofia','Trabajo propioceptivo y de agilidad en cancha desde la primera semana','Inmovilizar y esperar la cirugía sin intervención kinésica'],
+  menisco:['Trabajo en flexión profunda con rotación para recuperar el rango completo','Reposo deportivo hasta que desaparezcan los chasquidos','Cuádriceps isométrico únicamente, sin progresar a carga dinámica'],
+  patelofemoral:['Cuádriceps en cadena abierta a 90° con carga alta','Vendaje rotuliano y elongación de cintilla, con el mismo volumen de trote','Suspender la carrera seis semanas y volver al mismo kilometraje'],
+  aquiles:['Excéntricos a carga máxima dos veces al día desde la primera sesión','Elongación sostenida del tríceps sural como eje del tratamiento','Talonera y reposo de la carrera hasta que no duela nada'],
+  esguince:['Reposo con descarga total hasta que baje todo el edema','Peroneos en carga alta antes de recuperar el apoyo completo','Movilización y propiocepción, postergando el apoyo a la segunda semana'],
+  fascitis:['Estiramiento de fascia plantar y gemelo, sin fortalecer nada','Plantillas personalizadas y reposo, esperando que ceda solo','Trabajo intrínseco con saltos y carga alta desde el inicio'],
+  cervicalgia:['Fortalecimiento cervical con carga alta desde la primera sesión','Masaje y calor local en trapecios, más pausas activas','Solo flexores profundos, sin trabajo escapular ni ajuste de la jornada'],
+  epoc:['Fuerza de extremidades inferiores como eje del manejo del ingreso','Higiene bronquial solamente, sin reentrenar la tolerancia al esfuerzo','Espirometría incentivada y reposo hasta que baje la disnea'],
+  acv:['Facilitación neuromuscular en camilla, sin tareas funcionales','Marcha en suspensión únicamente, sin trabajo de extremidad superior','Fortalecimiento analítico del hemicuerpo antes de entrenar tareas'],
+  bronquiolitis:['Aspiración nasofaríngea repetida como único manejo','Espiración lenta prolongada más nebulización de rutina cada cuatro horas','Kinesiterapia diaria intensiva hasta que desaparezcan las sibilancias'],
+  neumonia:['Higiene bronquial tres veces al día, con reposo entre sesiones','Entrenamiento aeróbico en cicloergómetro desde el ingreso','Movilización precoz solamente, sin trabajar la vía aérea'],
+  postuci:['Electroestimulación neuromuscular como único tratamiento','Fuerza al 80% de 1RM desde la primera semana','Movilización pasiva y posicionamiento hasta que recupere fuerza sola'],
+  parkinson:['Fuerza progresiva sin trabajar marcha ni claves externas','Marcha en cinta a velocidad fija, sin claves auditivas ni visuales','Amplitud y equilibrio por seis semanas y después el alta'],
+  facial:['Electroestimulación de la musculatura facial desde la primera sesión','Ejercicios faciales a máxima intensidad, varias veces al día','Protección ocular y esperar la resolución, sin reeducación motora'],
+  artrosis:['Ejercicio de fuerza más terapia manual y ultrasonido cada sesión','Cuádriceps solamente, sin trabajar cadera ni educar sobre la carga','Bajar el impacto: suspender escaleras y caminatas mientras duela'],
+  cadera:['Abductores en decúbito, postergando el entrenamiento de marcha','Marcha sin andador desde la primera sesión para ganar confianza','Movilidad de cadera en todos los rangos para recuperar el arco completo'],
+  latigazo:['Collar blando las primeras dos semanas y después movilizar','Fuerza cervical progresiva desde la primera sesión','Terapia manual y masaje cervical, sin educación ni reactivación'],
+  epimedial:['Órtesis de contrafuerza y reposo del gesto por un mes','Excéntricos de flexopronadores a carga máxima desde el inicio','Fortalecimiento de extensores de muñeca y movilidad de codo'],
+  isquios:['Excéntricos a longitudes largas con carga máxima desde el primer día','Reposo y elongación suave hasta caminar sin dolor, y ahí correr','Isométricos solamente, sin reintroducir la carrera antes del alta'],
+  cintilla:['Liberación miofascial de la banda iliotibial en cada sesión','Abductores de cadera sin ajustar el volumen ni las bajadas','Suspender la carrera seis semanas y volver al mismo plan'],
+  canillera:['Reposo de la instrucción hasta que no duela y después retomar igual','Tríceps sural con saltos desde la primera semana','Plantillas y cambio de calzado, con el mismo volumen de trote'],
+  cauda:['Ejercicio con preferencia direccional y deslizamiento neural','Reposo relativo, analgesia y control en 48 horas','Tracción lumbar y educación, con la derivación programada'],
+  tvp:['Movilización activa suave de tobillo y compresión elástica','Reposo con elevación de la extremidad y control en una semana','Isométricos de gemelos, evitando el masaje de la zona'],
+  compartimental:['Descarga con bastones, hielo intermitente y control en 24 horas','Movilización activa suave de tobillo y dedos para bajar el edema','Vendaje elástico no compresivo y reevaluación por la tarde'],
+  cardiaco:['Ejercicio de movilidad torácica y educación postural','Terapia manual dorsal suave y control en una semana','Reentrenamiento aeróbico progresivo supervisado'],
+  fxestres:['Bajar el volumen a la mitad y mantener el trabajo de fuerza','Descarga con bota tres semanas y después progresar la carrera','Fortalecer tríceps sural y musculatura del pie, sin correr'],
+  septica:['Crioterapia, descarga y movilización pasiva suave','Isométricos de cuádriceps y compresión para bajar el derrame','Reposo, elevación y control en 48 horas'],
+};
+
+/* Etiquetas cortas para el cuaderno: los nombres completos no caben
+   en una fila de marcas y hay que poder leerlos de un vistazo. */
+const CL_CORTO = {
+  huaso:'Rigidez post-yeso', minero:'Lumbago crónico', basquetbol:'Tend. rotuliana',
+  carrete:'Luxación hombro', banderas:'Banderas rojas', pinzamiento:'Pinzamiento',
+  capsulitis:'Capsulitis', manguito:'Tend. supraespinoso', epicondilalgia:'Epicondilalgia lat.',
+  tunel:'Túnel carpiano', dequervain:'De Quervain', lumbago:'Lumbago mecánico',
+  radiculopatia:'Radiculopatía', trocanterico:'Dolor trocantérico', lca:'LCA',
+  menisco:'Menisco', patelofemoral:'Patelofemoral', aquiles:'Tend. aquiliana',
+  esguince:'Esguince tobillo', fascitis:'Fascitis plantar', cervicalgia:'Cervicalgia',
+  epoc:'EPOC', acv:'ACV', bronquiolitis:'Bronquiolitis', neumonia:'Neumonía',
+  postuci:'Debilidad UCI', parkinson:'Parkinson', facial:'Parálisis facial',
+  artrosis:'Artrosis rodilla', cadera:'Prótesis cadera', latigazo:'Latigazo',
+  epimedial:'Epicondilalgia med.', isquios:'Isquiotibiales', cintilla:'Cintilla iliotibial',
+  canillera:'Canillera', cauda:'Cauda equina', tvp:'TVP', compartimental:'Compartimental',
+  cardiaco:'Dolor cardíaco', fxestres:'Fx por estrés', septica:'Artritis séptica',
+};
+
 /* Lo que dicen los pacientes cuando vuelven a la clínica. La gracia del
    juego no es solo acertar: es que la gente vuelva y uno se acuerde. */
 const CL_REGRESO = {
@@ -6663,6 +6792,7 @@ const CL_ACC = [
   { id:'agrava',  g:'anam', n:'¿Qué lo empeora y qué lo alivia?', t:1 },
   { id:'antec',   g:'anam', n:'Antecedentes de salud',         t:1 },
   { id:'alarma',  g:'anam', n:'Preguntar por síntomas de alarma', t:1 },
+  { id:'creencias', g:'anam', n:'¿Qué cree que tiene y qué espera?', t:1 },
   { id:'insp',    g:'exam', n:'Inspección',                    t:1 },
   { id:'palp',    g:'exam', n:'Palpación',                     t:1 },
   { id:'activo',  g:'exam', n:'Rango de movimiento activo',    t:2 },
@@ -7209,6 +7339,43 @@ const CL_ACOMP = [
   { nom:'su hijo',      emo:'👦' }, { nom:'una vecina', emo:'👵' },
 ];
 
+/* ---------- banderas amarillas ----------
+   Factores psicosociales. No cambian el diagnóstico, pero mandan en el
+   pronóstico: si no se detectan y no se abordan, el tratamiento rinde
+   mucho menos y el jugador no entiende por qué. Se descubren preguntando
+   por creencias y expectativas, y se tratan con una sesión dedicada. */
+const CL_AMARILLAS = [
+  { id:'kinesiofobia', nom:'Kinesiofobia', emo:'🚷',
+    dice:'“Me da miedo moverme, siento que se me va a salir algo.”',
+    abordaje:'Exposición gradual al movimiento con educación: mostrarle que moverse es seguro.',
+    ensena:'El miedo al movimiento predice peor resultado que la lesión misma. Se trata exponiendo, no protegiendo.' },
+  { id:'catastrofismo', nom:'Catastrofismo', emo:'🌧️',
+    dice:'“Esto no se va a mejorar nunca, voy a terminar en silla de ruedas.”',
+    abordaje:'Educación en dolor y metas cortas y alcanzables que le devuelvan control.',
+    ensena:'El catastrofismo es de los predictores más fuertes de cronicidad. Se aborda con educación y logros concretos, no con más terapia pasiva.' },
+  { id:'estructural', nom:'Creencia estructural', emo:'🦴',
+    dice:'“Tengo una vértebra fuera de lugar, hay que ponerla en su sitio.”',
+    abordaje:'Explicar qué significa de verdad el hallazgo y correr el foco a la función.',
+    ensena:'Creer que algo está “fuera de lugar” lleva a buscar el arreglo pasivo eterno. Los hallazgos de imagen son frecuentes en gente sin dolor.' },
+  { id:'laboral', nom:'Conflicto laboral', emo:'📄',
+    dice:'“Estoy peleando con la mutual, la licencia depende de esto.”',
+    abordaje:'Ser transparente con el objetivo funcional y coordinar el retorno laboral gradual.',
+    ensena:'El conflicto laboral y el litigio empeoran el pronóstico. No se ignora ni se juzga: se conversa y se planifica el retorno.' },
+  { id:'expectativa', nom:'Baja expectativa', emo:'🤷',
+    dice:'“La verdad no creo que la kine sirva, vengo porque me mandaron.”',
+    abordaje:'Alinear expectativas y mostrar un cambio medible en las primeras sesiones.',
+    ensena:'Lo que el paciente espera de la terapia predice lo que va a conseguir. Un cambio objetivo temprano da vuelta la expectativa.' },
+  { id:'hipervigilancia', nom:'Hipervigilancia', emo:'🔍',
+    dice:'“Ando midiendo el dolor todo el día, del uno al diez, a cada rato.”',
+    abordaje:'Sacar el foco del dolor y ponerlo en hitos de función y en la dosis del día.',
+    ensena:'Vigilar el dolor todo el día lo amplifica. El norte pasa a ser lo que puede hacer, no cuánto le duele.' },
+  { id:'aislamiento', nom:'Sin red de apoyo', emo:'🏚️',
+    dice:'“Vivo solo y no tengo quién me ayude con los ejercicios.”',
+    abordaje:'Simplificar el programa a lo mínimo que se pueda hacer sin ayuda y asegurar seguimiento.',
+    ensena:'Un programa que el paciente no puede ejecutar en su contexto real no sirve, por bien prescrito que esté.' },
+];
+const CL_AMARILLA_PROB = 0.45;
+
 /* Alarmas que aparecen en plena sesión de tratamiento.
    `ok` es la decisión correcta: seguir, bajar o derivar. */
 const CL_ALARMAS = [
@@ -7603,14 +7770,16 @@ function c3Construir(lienzo){
   esc.add(sol);
 
   // piso completo y anillo de selección
-  const piso = new THREE.Mesh(new THREE.BoxGeometry(C3_ANCHO, 0.2, C3_FONDO), c3Mat(C3_PALETA.piso));
+  // cada sede tiene su propia paleta: se nota que cambiaste de ciudad
+  const sede = clSede();
+  const piso = new THREE.Mesh(new THREE.BoxGeometry(C3_ANCHO, 0.2, C3_FONDO), c3Mat(sede.piso));
   piso.position.y = -0.1; piso.receiveShadow = true; esc.add(piso);
   c3Piso = piso;
   c3Anillo = new THREE.Mesh(new THREE.RingGeometry(0.24, 0.3, 20), c3Mat(0xf5c542, { transparent:true, opacity:0.9 }));
   c3Anillo.rotation.x = -Math.PI/2; c3Anillo.position.y = 0.02; c3Anillo.visible = false; esc.add(c3Anillo);
 
   // muro del fondo y muros laterales
-  const muroF = new THREE.Mesh(new THREE.BoxGeometry(C3_ANCHO, 3.2, 0.2), c3Mat(C3_PALETA.muro));
+  const muroF = new THREE.Mesh(new THREE.BoxGeometry(C3_ANCHO, 3.2, 0.2), c3Mat(sede.muro));
   muroF.position.set(0, 1.6, -C3_FONDO/2 + 0.1); muroF.receiveShadow = true; esc.add(muroF);
   for(const lado of [-1, 1]){
     const muroL = new THREE.Mesh(new THREE.BoxGeometry(0.2, 3.2, C3_FONDO), c3Mat(C3_PALETA.muroBajo));
@@ -7842,6 +8011,32 @@ const CL_NOCHE_TIEMPO = -4;
 const CL_ADH_INICIAL = 60;
 const CL_ALARMA_PROB = 0.20;
 
+/* Pista de emergencia: una cada cinco minutos reales. No regala el
+   diagnóstico, corrige el cuaderno de un hallazgo que ya conseguiste. */
+const CL_PISTA_ESPERA = 5 * 60 * 1000;
+
+/* ---------- sedes ----------
+   El problema de que el juego se termine: la clínica se completaba y ahí
+   moría. Ahora, cuando la tienes andando, puedes abrir una sede nueva en
+   otra ciudad. Se parte de cero en plata, equipo y reputación, pero te
+   llevas TODO lo aprendido (álbum, pacientes conocidos, récords y
+   acreditaciones) y cada sede paga más y exige más: menos tiempo por
+   paciente, diferenciales más largos y más urgencias. */
+const CL_SEDES = [
+  { nom:'Curicó',      emo:'🌻', muro:0xf3efe7, piso:0xe6ddd2 },
+  { nom:'Talca',       emo:'🍇', muro:0xeef1f5, piso:0xe0dcd4 },
+  { nom:'Rancagua',    emo:'⛏️', muro:0xf5efe3, piso:0xe4d9c8 },
+  { nom:'Concepción',  emo:'🌊', muro:0xe9f0f2, piso:0xdde3e2 },
+  { nom:'Valparaíso',  emo:'🚋', muro:0xfaeee6, piso:0xe8d9cc },
+  { nom:'Santiago',    emo:'🏙️', muro:0xf0f0f2, piso:0xdedee2 },
+  { nom:'Antofagasta', emo:'🏜️', muro:0xf7f0e2, piso:0xe9dcc2 },
+  { nom:'Chiloé',      emo:'🌧️', muro:0xe8efe9, piso:0xd9e0d8 },
+  { nom:'Punta Arenas',emo:'🐧', muro:0xeef2f6, piso:0xdce2e8 },
+];
+const CL_SEDE_REP = 100;        // reputación base para poder expandirse
+const CL_SEDE_COSTO = 250000;   // plata base
+const CL_SEDE_PAGO = 0.30;      // +30% de pago permanente por sede abierta
+
 const CL_TOPE_OFFLINE = 8 * 3600 * 1000;
 const CL_TASA_OFFLINE = 0.5;
 
@@ -7865,6 +8060,9 @@ function clDefault(){
     nocheMejor:0,
     racha:0, mejorRacha:0,
     examen:{ mejor:0, intentos:0, tema:{} },
+    pistaT:0,           // cuándo se usó la última pista (se recarga cada 5 min)
+    sede:0,             // en qué sede vas: sube el pago y la dificultad
+    fundadas:[],        // nombres de las sedes que dejaste andando
     misiones:{ dia:null, lista:[] },
     rojo:0,             // segundos acumulados con la caja en negativo
     t:0,
@@ -7942,6 +8140,8 @@ function clFichaEspera(caso){
   const al = a => a[Math.floor(Math.random() * a.length)];
   // los muy chicos y los muy grandes casi siempre llegan acompañados
   const probAcomp = (caso.edad <= 15 || caso.edad >= 70) ? 0.85 : 0.28;
+  // en los cuadros persistentes lo psicosocial pesa más y aparece más seguido
+  const probAmarilla = caso.fase === 'crónica' ? CL_AMARILLA_PROB + 0.2 : CL_AMARILLA_PROB;
   return {
     id: caso.id,
     prev: al(CL_PREVISION),
@@ -7950,6 +8150,7 @@ function clFichaEspera(caso){
     rasgo: al(CL_RASGOS).id,
     animo: al(CL_ANIMOS).id,
     acomp: Math.random() < probAcomp ? al(CL_ACOMP) : null,
+    amarilla: Math.random() < probAmarilla ? al(CL_AMARILLAS).id : null,
   };
 }
 function clLlenarSala(){
@@ -8136,9 +8337,51 @@ function clRepExtra(){
   CL_EQUIPOS.forEach(e => { if(e.ef.rep && clTieneEquipo(e.id)) n += e.ef.rep; });
   return n;
 }
-/* Lo que paga un paciente atendido a mano: el equipamiento más el evento del día.
+/* ---------- sedes ---------- */
+function clSede(){ const c = clEstado(); return CL_SEDES[Math.min(c.sede || 0, CL_SEDES.length - 1)]; }
+function clMultSede(){ return 1 + CL_SEDE_PAGO * (clEstado().sede || 0); }
+function clSedeSiguiente(){ const c = clEstado(); return CL_SEDES[(c.sede || 0) + 1] || null; }
+function clSedeCosto(){ return Math.round(CL_SEDE_COSTO * Math.pow(2.2, clEstado().sede || 0)); }
+function clSedeRep(){ return CL_SEDE_REP + 25 * (clEstado().sede || 0); }
+function clPuedeAbrirSede(){
+  const c = clEstado();
+  return !!clSedeSiguiente() && c.reputacion >= clSedeRep() && c.dinero >= clSedeCosto() && !clTurno && !c.noche;
+}
+
+/* Se parte de cero en el negocio, pero el conocimiento se conserva. */
+function clAbrirSede(){
+  const c = clEstado();
+  if(!clPuedeAbrirSede()) return;
+  const nueva = clSedeSiguiente();
+  const anterior = clSede();
+  c.fundadas.push(anterior.nom);
+  c.sede++;
+  // el negocio vuelve a empezar
+  c.dinero = 0; c.reputacion = 0; c.equipos = []; c.personal = [];
+  c.salas = 1; c.sala = []; c.activos = []; c.evento = null; c.evRoll = -1;
+  c.urgencia = null; c.urRoll = -1; c.noche = null; c.racha = 0; c.rojo = 0;
+  c.acred = ['trauma'];
+  c.t = Date.now();
+  // lo aprendido se queda: dominados, hist, examen, récords y misiones
+  jxSonido('gana'); jxVibrar(40);
+  const r = jxRecompensar(40, 150, { desde:document.getElementById('jxScreenClinica') });
+  clGuardar(true);
+  c3Destruir();
+  jxCelebrar({
+    titulo:'Abriste la sede de ' + nueva.nom + ' ' + nueva.emo,
+    sub:'Dejaste andando ' + anterior.nom + ' y partes de nuevo acá: sin plata, sin equipo y sin reputación. ' +
+        'Te llevas el álbum, los pacientes que ya conoces y tus récords. ' +
+        'Desde ahora todo paga ' + Math.round(clMultSede() * 100) + '% y los casos vienen más difíciles.',
+    monedas:40, xp:150, subioNivel:r.subioNivel, nivel:r.nivel,
+    textoNext:'Empezar en ' + nueva.nom,
+    onNext:()=>{ clVista='recepcion'; clSesionAbierta=null; clMostrar(); },
+  });
+}
+
+/* Lo que paga un paciente atendido a mano: el equipamiento, el evento del día
+   y el bono permanente de las sedes que llevas abiertas.
    La renta pasiva del equipo NO se toca, para que un evento no dispare el idle. */
-function clMultPagoCaso(){ return clMultPago() * clEfEvento('pago', 1); }
+function clMultPagoCaso(){ return clMultPago() * clEfEvento('pago', 1) * clMultSede(); }
 function clCostoKine(){
   const c = clEstado();
   return Math.ceil(2200 * Math.pow(2.6, c.personal.length));
@@ -8315,10 +8558,13 @@ function clPanelRecepcion(cont){
   const prox = Object.keys(CL_ESPECIALIDADES).find(k => !abiertas.includes(k));
   const precision = c.atendidos ? Math.round(c.aciertos / (c.aciertos + c.fallos) * 100) : 0;
 
+  const sede = clSede();
   let html = '<div class="cl-recep">' +
     '<div class="cl-jornada">' +
-      '<div class="cl-jornada-dia">Día ' + j.dia + '<small>' + j.nom + ' · ' + c.sala.length + ' en la sala de espera' +
-        (c.racha > 1 ? ' · 🔥 ' + c.racha + ' seguidos' : '') + '</small></div>' +
+      '<div class="cl-jornada-dia">' + sede.emo + ' Sede ' + sede.nom + ' · día ' + j.dia +
+        '<small>' + j.nom + ' · ' + c.sala.length + ' en la sala de espera' +
+        (c.racha > 1 ? ' · 🔥 ' + c.racha + ' seguidos' : '') +
+        (c.sede ? ' · pago ×' + clMultSede().toFixed(2).replace('.', ',') : '') + '</small></div>' +
       '<div class="cl-jornada-sol">' + j.emo + '</div>' +
     '</div>';
 
@@ -8449,6 +8695,57 @@ function clPanelRecepcion(cont){
    No hay alternativas que adivinar. Se juntan pistas con tiempo
    limitado y el tablero muestra cómo se mueven las hipótesis. */
 
+/* ---------- resultado de una prueba ortopédica ----------
+   Ya no es "la correcta confirma y las demás no dicen nada". Cada prueba
+   informa según sus propiedades: una NEGATIVA en un test muy sensible
+   descarta (SnNout) y una POSITIVA en uno muy específico confirma (SpPin).
+   Lo demás orienta y poco más, que es justo lo que hay que aprender. */
+function clResultadoPrueba(pruebaId, caso, dif){
+  const pr = KIN_PRUEBAS.find(x => x.id === pruebaId);
+  if(!pr) return { t:'Esa prueba no está disponible.', s:[], n:[] };
+
+  if(pr.func){
+    return { t:(caso.prueba === pruebaId && caso.hallazgo ? caso.hallazgo + ' ' : '') +
+                'Es una medición funcional, no una prueba diagnóstica: te dice cómo está, no qué tiene.',
+             s:[], n:[] };
+  }
+
+  // hipótesis del diferencial para las que ESTA prueba saldría positiva
+  const apunta = dif.filter(d => {
+    const k = KIN_CASOS.find(x => x.id === d);
+    return k && k.prueba === pruebaId && KIN_PRUEBA_NEG.indexOf(d) === -1;
+  });
+  const esSuya = caso.prueba === pruebaId;
+  const positiva = esSuya && KIN_PRUEBA_NEG.indexOf(caso.id) === -1;
+  const hall = esSuya && caso.hallazgo ? caso.hallazgo + ' ' : '';
+  const sn = pr.sn || 0, sp = pr.sp || 0;
+  const fmt = v => v.toFixed(2).replace('.', ',');
+
+  if(positiva){
+    if(sp >= KIN_SP_ALTA){
+      return { t:hall + 'Especificidad ' + fmt(sp) + ': con una positiva acá puedes CONFIRMAR (SpPin).',
+               s:[caso.id], n:dif.filter(d => d !== caso.id) };
+    }
+    return { t:hall + 'Pero ojo: especificidad ' + fmt(sp) +
+               ', da hartos falsos positivos. Orienta, no confirma por sí sola.',
+             s:[caso.id], n:[] };
+  }
+
+  const cabeza = hall || 'Negativa. ';
+  if(!apunta.length){
+    return { t:cabeza + 'Esa prueba evalúa ' + pr.sug + ', que no está en juego en este diferencial: no aporta.',
+             s:[], n:[] };
+  }
+  if(sn >= KIN_SN_ALTA){
+    return { t:cabeza + 'Sensibilidad ' + fmt(sn) + ': una negativa acá DESCARTA (SnNout) ' +
+               apunta.map(clCorto).join(' y ') + '.',
+             s:[], n:apunta };
+  }
+  return { t:cabeza + 'Pero con sensibilidad ' + fmt(sn) +
+             ' se le escapan muchos casos: una negativa NO permite descartar.',
+           s:[], n:[] };
+}
+
 function clAccionesDe(caso){
   const dx = KIN_DX[caso.id];
   const lista = CL_ACC.slice();
@@ -8457,8 +8754,23 @@ function clAccionesDe(caso){
   const zona = (caso.zona || '').toLowerCase();
   const propias = KIN_PRUEBAS.filter(p => zona.startsWith(p.zona.slice(0,4)) || p.id === caso.prueba);
   const otras = KIN_PRUEBAS.filter(p => !propias.includes(p)).slice(0, 3);
-  [...propias, ...otras].forEach(p => lista.push({ id:'test_'+p.id, g:'test', n:'Prueba de '+p.nom, t:2, prueba:p.id }));
-  return { lista, dif: dx ? dx.dif : [caso.id] };
+  // desde la segunda sede el diferencial trae hipótesis de más: hay que
+  // descartar cuadros que ni siquiera venían servidos en la lista
+  let dif = dx ? dx.dif.slice() : [caso.id];
+  const extra = Math.min(clEstado().sede || 0, 3);
+  if(extra){
+    const candidatos = clMezclar(KIN_CASOS.filter(x =>
+      x.zona === caso.zona && dif.indexOf(x.id) === -1));
+    dif = dif.concat(candidatos.slice(0, extra).map(x => x.id));
+  }
+  void 0;
+  [...propias, ...otras].forEach(p => lista.push({
+    id:'test_'+p.id, g:'test', n:'Prueba de '+p.nom, t:2, prueba:p.id,
+    // las propiedades van a la vista: elegir la prueba se decide con esto
+    meta: p.func ? 'medición funcional'
+                 : 'Sn ' + p.sn.toFixed(2).replace('.', ',') + ' · Sp ' + p.sp.toFixed(2).replace('.', ','),
+  }));
+  return { lista, dif };
 }
 
 function clTiempoTotal(rasgoId){
@@ -8466,6 +8778,7 @@ function clTiempoTotal(rasgoId){
   let t = CL_TIEMPO_BASE + (clTieneEquipo('eco') ? 2 : 0) + clEfEvento('tiempo', 0);
   if(c.noche) t += CL_NOCHE_TIEMPO;
   t += clEfRasgo(rasgoId, 'tiempo', 0);
+  t -= (c.sede || 0);              // cada sede aprieta un poco más la consulta
   return Math.max(6, t);
 }
 
@@ -8495,20 +8808,20 @@ function clIniciarCaso(i){
   if(ficha.acomp) lista.push({ id:'acomp', g:'anam', n:'Preguntarle a ' + ficha.acomp.nom, t:1 });
 
   const conf = {}; dif.forEach(d => conf[d] = 0);
-  // "llega leído": parte convencido de un diagnóstico que no es el suyo
+  // "llega leído": parte convencido de un diagnóstico que no es el suyo.
+  // Ya no infla el tablero (ahora el tablero es tuyo): te lo dice a la cara
+  // para ver si te dejas llevar.
   let creencia = null;
   if(clEfRasgo(ficha.rasgo, 'pistaFalsa', false)){
     const otras = dif.filter(d => d !== caso.id);
-    if(otras.length){
-      creencia = otras[Math.floor(Math.random() * otras.length)];
-      conf[creencia] += 4;
-    }
+    if(otras.length) creencia = otras[Math.floor(Math.random() * otras.length)];
   }
   const h = clHist(caso.id);
   const tot = clTiempoTotal(ficha.rasgo);
   clTurno = {
     caso, ficha, acciones:lista, dif, conf, creencia,
     hechas:[], pistas:[], imagenes:0,
+    notas:{},                  // el cuaderno: lo que el jugador anota de cada hallazgo
     tiempo: tot, tiempoMax: tot,
     fase:'investigar', errores:0, grupo:'anam',
     hist: h ? Object.assign({}, h) : null,
@@ -8520,10 +8833,32 @@ function clIniciarCaso(i){
   clPanel();
 }
 
-/* Reparte 100% entre las hipótesis según lo que se ha juntado. */
+/* ---------- el cuaderno ----------
+   El juego ya no calcula solo qué tan probable es cada hipótesis: eso lo
+   marca el jugador. Cada hallazgo se anota como ↑ (apoya), ↓ (descarta)
+   o – (no aporta), y el tablero refleja SU razonamiento, no la verdad.
+   Al cerrar el caso se corrige la anotación, que es donde se aprende. */
+function clMarcar(accId, hip){
+  const t = clTurno;
+  if(!t || t.fase !== 'investigar') return;
+  if(!t.notas[accId]) t.notas[accId] = {};
+  const actual = t.notas[accId][hip] || 0;
+  t.notas[accId][hip] = actual === 0 ? 1 : actual === 1 ? -1 : 0;
+  jxSonido('tap');
+  clPanel();
+}
+
+/* Reparte 100% entre las hipótesis según lo que anotó el jugador. */
 function clConfianzas(){
   const t = clTurno;
-  const vals = t.dif.map(d => t.conf[d]);
+  const vals = t.dif.map(d => {
+    let v = 0;
+    Object.keys(t.notas).forEach(k => {
+      const m = t.notas[k][d] || 0;
+      if(m === 1) v += 2; else if(m === -1) v -= 3;
+    });
+    return v;
+  });
   const min = Math.min(...vals);
   const desp = vals.map(v => v - min + 1);
   const suma = desp.reduce((a,b) => a+b, 0);
@@ -8532,9 +8867,94 @@ function clConfianzas(){
   return r;
 }
 
+/* Qué decía de verdad cada hallazgo, para corregir el cuaderno. */
+function clVerdadPista(t, accId){
+  const dx = KIN_DX[t.caso.id];
+  if(accId && accId.indexOf('test_') === 0) return clResultadoPrueba(accId.slice(5), t.caso, t.dif);
+  if(dx && dx.c[accId]) return dx.c[accId];
+  return { s:[], n:[] };
+}
+
+function clCorregirCuaderno(t){
+  let aciertos = 0, relevantes = 0, falsos = 0;
+  const fallos = [];
+  t.pistas.forEach(p => {
+    if(!p.accId || p.accId === 'creencias') return;
+    const verdad = clVerdadPista(t, p.accId);
+    const marcas = t.notas[p.accId] || {};
+    t.dif.forEach(d => {
+      const esperado = verdad.s.includes(d) ? 1 : verdad.n.includes(d) ? -1 : 0;
+      const marcado = marcas[d] || 0;
+      if(esperado !== 0){
+        relevantes++;
+        if(marcado === esperado) aciertos++;
+        else fallos.push({ pista:p.acc, hip:d, esperado, marcado });
+      }else if(marcado !== 0){
+        falsos++;
+        fallos.push({ pista:p.acc, hip:d, esperado:0, marcado });
+      }
+    });
+  });
+  const total = relevantes + falsos;
+  return { aciertos, relevantes, falsos, total, pct: total ? Math.round(aciertos / total * 100) : 100, fallos };
+}
+
 function clNombreDx(id){
   const c = KIN_CASOS.find(x => x.id === id);
   return c ? c.nom : id;
+}
+function clCorto(id){ return CL_CORTO[id] || clNombreDx(id); }
+
+/* ---------- pista con recarga ----------
+   Se recarga sola cada cinco minutos de reloj real. No dice el
+   diagnóstico: toma un hallazgo que ya conseguiste y te lo anota bien
+   en el cuaderno, explicando por qué. Es una corrección, no una respuesta. */
+function clPistaLista(){
+  const c = clEstado();
+  return Date.now() - (c.pistaT || 0) >= CL_PISTA_ESPERA;
+}
+function clPistaSegundos(){
+  const c = clEstado();
+  return Math.max(0, Math.ceil((CL_PISTA_ESPERA - (Date.now() - (c.pistaT || 0))) / 1000));
+}
+function clUsarPista(){
+  const t = clTurno, c = clEstado();
+  if(!t || t.fase !== 'investigar') return;
+  if(!clPistaLista()){
+    const s = clPistaSegundos();
+    avisar('💡 La pista se recarga en ' + Math.floor(s/60) + ':' + String(s % 60).padStart(2,'0'));
+    jxSonido('mal');
+    return;
+  }
+  // busca un hallazgo ya conseguido cuya anotación esté mal o falte
+  const candidatos = [];
+  t.pistas.forEach(p => {
+    if(!p.accId || p.accId === 'creencias') return;
+    const verdad = clVerdadPista(t, p.accId);
+    const marcas = t.notas[p.accId] || {};
+    t.dif.forEach(d => {
+      const esperado = verdad.s.includes(d) ? 1 : verdad.n.includes(d) ? -1 : 0;
+      if(esperado !== 0 && (marcas[d] || 0) !== esperado) candidatos.push({ p, d, esperado });
+    });
+  });
+
+  if(!candidatos.length){
+    avisar(t.pistas.length
+      ? '💡 Tu cuaderno está impecable con lo que llevas: la pista se guarda para cuando la necesites.'
+      : '💡 Todavía no has evaluado nada. Junta un hallazgo y vuelvo a mirarlo contigo.');
+    jxSonido('tap');
+    return;
+  }
+
+  const el = candidatos[Math.floor(Math.random() * candidatos.length)];
+  if(!t.notas[el.p.accId]) t.notas[el.p.accId] = {};
+  t.notas[el.p.accId][el.d] = el.esperado;
+  c.pistaT = Date.now();
+  t.pistasUsadas = (t.pistasUsadas || 0) + 1;
+  jxSonido('bien'); jxVibrar(15);
+  avisar('💡 "' + el.p.acc + '" ' + (el.esperado === 1 ? 'APOYA' : 'DESCARTA') + ' ' + clCorto(el.d) + '. Te lo dejé anotado.');
+  clGuardar(true);
+  clPanel();
 }
 
 function clHacerAccion(accId){
@@ -8553,9 +8973,22 @@ function clHacerAccion(accId){
   if(acc.g === 'img') t.imagenes++;
 
   const dx = KIN_DX[caso.id];
-  let pista = null, etiqueta = acc.n;
+  let pista = null, etiqueta = acc.n, accIdPista = acc.id;
 
-  if(acc.id === 'acomp'){
+  if(acc.id === 'creencias'){
+    // acá se pesca (o no) la bandera amarilla: si no preguntas, el
+    // tratamiento después rinde la mitad y no vas a saber por qué
+    const am = t.ficha && t.ficha.amarilla ? CL_AMARILLAS.find(a => a.id === t.ficha.amarilla) : null;
+    t.amarillaVista = true;
+    if(am){
+      t.amarilla = am.id;
+      pista = { t: am.dice + ' — bandera amarilla: ' + am.nom.toLowerCase() + '.', s:[], n:[] };
+      jxSonido('mal'); jxVibrar(20);
+    }else{
+      pista = { t:'Entiende lo que le pasa, no tiene miedo a moverse y espera mejorar. Sin banderas amarillas.', s:[], n:[] };
+      jxSonido('bien');
+    }
+  }else if(acc.id === 'acomp'){
     // el acompañante cuenta algo que el paciente no había dicho
     const pendientes = dx ? Object.keys(dx.c).filter(k => !t.hechas.includes(k)) : [];
     if(pendientes.length){
@@ -8564,20 +8997,15 @@ function clHacerAccion(accId){
       const base = dx.c[k];
       pista = { t:'“' + base.t + '”', s:base.s, n:base.n };
       etiqueta = 'Dice ' + t.ficha.acomp.nom;
+      accIdPista = k;              // se anota como el hallazgo que revela
       jxSonido('bien');
     }else{
       pista = { t:'Confirma lo que ya te contó el paciente.', s:[], n:[] };
       jxSonido('tap');
     }
   }else if(acc.g === 'test'){
-    if(acc.prueba === caso.prueba){
-      pista = { t: caso.hallazgo, s:[caso.id], n:t.dif.filter(d => d !== caso.id) };
-      jxSonido('bien');
-    }else{
-      const pr = KIN_PRUEBAS.find(x => x.id === acc.prueba);
-      pista = { t:'Negativa. Esa prueba evalúa ' + pr.sug + '.', s:[], n:[] };
-      jxSonido('tap');
-    }
+    pista = clResultadoPrueba(acc.prueba, caso, t.dif);
+    jxSonido(pista.s.length || pista.n.length ? 'bien' : 'tap');
   }else if(dx && dx.c[accId]){
     pista = dx.c[accId];
     jxSonido('bien');
@@ -8588,14 +9016,15 @@ function clHacerAccion(accId){
 
   // el minimizador y el aguantador entregan la mitad de lo que preguntas
   const pobre = clEfRasgo(t.ficha && t.ficha.rasgo, 'pistasPobres', false) && acc.g === 'anam' && acc.id !== 'acomp';
-  const sube = pobre ? 1 : 2, baja = pobre ? 1 : 3;
-  pista.s.forEach(d => { if(t.conf[d] !== undefined) t.conf[d] += sube; });
-  pista.n.forEach(d => { if(t.conf[d] !== undefined) t.conf[d] -= baja; });
+  // OJO: acá ya no se toca t.conf. El tablero sale del cuaderno del jugador.
   t.pistas.push({
+    accId: accIdPista,
     acc: etiqueta,
     txt: pista.t + (pobre && pista.s.length ? ' (te lo cuenta a medias)' : ''),
     util: pista.s.length + pista.n.length > 0,
+    amarilla: acc.id === 'creencias' && !!t.amarilla,
   });
+  t.ultima = accIdPista;
 
   if(t.tiempo <= 0){
     t.tiempo = 0;
@@ -8642,8 +9071,10 @@ function clPanelCaso(cont){
       (ev ? '<div class="cl-ficha-ctx"><span>' + ev.emo + ' ' + ev.nom + '</span></div>' : '') +
     '</div>';
 
-  // tablero de hipótesis
-  html += '<div class="cl-tablero"><div class="cl-tablero-tit">Hipótesis</div>';
+  // tablero: refleja el cuaderno del jugador, no la verdad
+  const anotado = Object.keys(t.notas).some(k => Object.keys(t.notas[k]).some(d => t.notas[k][d]));
+  html += '<div class="cl-tablero"><div class="cl-tablero-tit">Tu cuaderno' +
+    (anotado ? '' : ' · todavía sin anotar nada') + '</div>';
   t.dif.slice().sort((a,b) => conf[b] - conf[a]).forEach(d => {
     const pc = conf[d];
     html += '<div class="cl-hip"><div class="cl-hip-nom">' + clNombreDx(d) + '</div>' +
@@ -8652,11 +9083,30 @@ function clPanelCaso(cont){
   });
   html += '</div>';
 
-  // lo que ya se encontró
+  // hallazgos: cada uno se anota a mano
   if(t.pistas.length){
-    html += '<div class="cl-sec">Lo que has encontrado</div><div class="cl-pistas">';
-    t.pistas.forEach(p => html += '<div class="cl-pista-item' + (p.util ? '' : ' vacia') + '">' +
-      '<b>' + p.acc + '</b>' + p.txt + '</div>');
+    html += '<div class="cl-sec">Lo que has encontrado</div>';
+    if(t.fase === 'investigar'){
+      html += '<div class="cl-nota izq">Anota qué te dice cada hallazgo: toca una hipótesis para ' +
+        'ciclar entre <b>–</b> no aporta, <b>↑</b> la apoya y <b>↓</b> la descarta. Al cerrar el caso te corrijo la anotación.</div>';
+    }
+    html += '<div class="cl-pistas">';
+    t.pistas.forEach(p => {
+      html += '<div class="cl-pista-item' + (p.amarilla ? ' amarilla' : p.util ? '' : ' vacia') +
+        (p.accId === t.ultima ? ' nueva' : '') + '">' +
+        '<b>' + p.acc + '</b>' + p.txt;
+      if(p.accId && p.accId !== 'creencias' && t.fase === 'investigar'){
+        html += '<div class="cl-marcas">';
+        t.dif.forEach(d => {
+          const m = (t.notas[p.accId] || {})[d] || 0;
+          html += '<button class="cl-marca' + (m === 1 ? ' sube' : m === -1 ? ' baja' : '') +
+            '" data-marca="' + p.accId + '|' + d + '">' +
+            '<i>' + (m === 1 ? '↑' : m === -1 ? '↓' : '–') + '</i>' + clCorto(d) + '</button>';
+        });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
     html += '</div>';
   }
 
@@ -8671,9 +9121,15 @@ function clPanelCaso(cont){
       const ya = t.hechas.includes(a.id);
       const caro = a.plata ? ' · ' + clPlata(a.plata) : '';
       html += '<button class="cl-acc' + (ya ? ' ya' : '') + '"' + (ya ? '' : ' data-acc="' + a.id + '"') + '>' +
-        '<span>' + a.n + '</span><small>' + (ya ? 'ya lo hiciste' : '⏳ ' + a.t + caro) + '</small></button>';
+        '<span>' + a.n + (a.meta ? '<i>' + a.meta + '</i>' : '') + '</span>' +
+        '<small>' + (ya ? 'ya lo hiciste' : '⏳ ' + a.t + caro) + '</small></button>';
     });
     html += '</div>';
+    const lista = clPistaLista();
+    const s = clPistaSegundos();
+    html += '<button class="cl-pista-btn' + (lista ? ' lista' : '') + '" id="clPista">' +
+      (lista ? '💡 Usar una pista' : '💡 Pista en ' + Math.floor(s/60) + ':' + String(s % 60).padStart(2,'0')) +
+      '<small>' + (lista ? 'Te corrige una anotación del cuaderno y te explica por qué' : 'Se recarga sola cada 5 minutos') + '</small></button>';
     html += '<button class="cl-btn-grande" id="clCerrarDx">🧠 Ya sé qué tiene · dar diagnóstico</button>';
     html += '<button class="cl-btn-derivar" id="clDerivar">↗ Derivar a médico</button>';
   }
@@ -8692,7 +9148,37 @@ function clPanelCaso(cont){
       '</div>';
   }
 
+  // corrección del cuaderno: la pantalla donde de verdad se aprende
+  if(t.fase === 'revision'){
+    const r = t.correccion;
+    const nota = r.pct >= 85 ? 'Razonamiento impecable' : r.pct >= 65 ? 'Bien encaminado' : 'Hay que afinar la lectura';
+    html += '<div class="cl-revision"><div class="cl-revision-tit">' + nota + '</div>' +
+      '<div class="cl-revision-pct">' + r.pct + '%</div>' +
+      '<div class="cl-revision-sub">' + r.aciertos + ' de ' + r.total + ' anotaciones correctas' +
+      (r.falsos ? ' · ' + r.falsos + ' marcadas de más' : '') + '</div></div>';
+    if(r.fallos.length){
+      html += '<div class="cl-sec">Lo que leíste distinto</div><div class="cl-pistas">';
+      r.fallos.slice(0, 8).forEach(f => {
+        const dice = f.esperado === 1 ? 'APOYA' : f.esperado === -1 ? 'DESCARTA' : 'no aporta a';
+        const pusiste = f.marcado === 1 ? '↑ apoya' : f.marcado === -1 ? '↓ descarta' : '– no aporta';
+        html += '<div class="cl-pista-item vacia"><b>' + f.pista + '</b>' +
+          'Anotaste “' + pusiste + '” para <b style="display:inline">' + clCorto(f.hip) + '</b>, ' +
+          'pero ese hallazgo <b style="display:inline">' + dice + '</b> esa hipótesis.</div>';
+      });
+      html += '</div>';
+    }else{
+      html += '<div class="cl-nota izq">No se te escapó ninguna. Leíste todos los hallazgos como correspondía.</div>';
+    }
+    html += '<button class="cl-btn-grande" id="clCerrarRev">Cerrar el caso</button>';
+  }
+
   cont.innerHTML = html;
+  cont.querySelectorAll('[data-marca]').forEach(b => b.onclick = () => {
+    const [a, d] = b.dataset.marca.split('|');
+    clMarcar(a, d);
+  });
+  const cr = document.getElementById('clCerrarRev');
+  if(cr) cr.onclick = clCerrarCaso;
   cont.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { t.grupo = b.dataset.g; jxSonido('tap'); clPanel(); });
   cont.querySelectorAll('[data-acc]').forEach(b => b.onclick = () => clHacerAccion(b.dataset.acc));
   cont.querySelectorAll('[data-dx]').forEach(b => b.onclick = () => clResponderDx(b.dataset.dx));
@@ -8701,6 +9187,8 @@ function clPanelCaso(cont){
   if(cd) cd.onclick = () => { t.fase = 'diagnostico'; jxSonido('tap'); clPanel(); };
   const dv = document.getElementById('clDerivar');
   if(dv) dv.onclick = clDerivarPaciente;
+  const bp = document.getElementById('clPista');
+  if(bp) bp.onclick = clUsarPista;
 }
 
 function clDerivarPaciente(){
@@ -8759,10 +9247,13 @@ function clResponderDx(id){
     return;
   }
   jxSonido('bien');
-  t.opcTto = clMezclar([{ txt:c.tto, ok:true }, ...c.ttoMal.map(x => ({ txt:x, ok:false }))]);
+  t.opcTto = clMezclar([{ txt:c.tto, ok:true }, ...clTtoMal(c).map(x => ({ txt:x, ok:false }))]);
   t.fase = 'tratamiento';
   clPanel();
 }
+
+/* Los distractores plausibles reemplazan a los de la ficha. */
+function clTtoMal(caso){ return CL_TTO_MAL[caso.id] || caso.ttoMal; }
 
 function clResponderTto(i){
   const t = clTurno, e = clEstado();
@@ -8780,7 +9271,10 @@ function clResponderTto(i){
     return;
   }
   jxSonido('gana');
-  clCerrarCaso();
+  // antes de cerrar, se corrige el cuaderno
+  t.correccion = clCorregirCuaderno(t);
+  t.fase = 'revision';
+  clPanel();
 }
 
 function clCerrarCaso(){
@@ -8792,8 +9286,12 @@ function clCerrarCaso(){
   const confianza = vuelve ? 1.15 : 1;           // el que ya te conoce llega con la ficha hecha
   const gracia = clEfRasgo(t.ficha && t.ficha.rasgo, 'pago', 1);  // el conversador recomienda
   const noche = t.noche && e.noche ? CL_NOCHE_PAGO : 1;
-  const dinero = Math.round(base * clMultPagoCaso() * (perfecto ? 1.5 : 1) * eficiencia * confianza * gracia * noche);
+  // el cuaderno pesa: acertar de suerte paga la mitad que razonar bien
+  const cuad = t.correccion || clCorregirCuaderno(t);
+  const razon = 0.6 + (cuad.pct / 100) * 0.6;    // entre 0,6x y 1,2x
+  const dinero = Math.round(base * clMultPagoCaso() * (perfecto ? 1.5 : 1) * eficiencia * confianza * gracia * noche * razon);
   let rep = perfecto ? 2 + clRepExtra() : 1;
+  if(perfecto && cuad.pct >= 85) rep += 1;       // razonar bien también suma prestigio
   if(!perfecto && clEfEvento('castigo', false)) rep = 0;   // con la tele mirando, el error no suma
   rep = Math.round(rep * clEfEvento('rep', 1));
   const monedas = perfecto ? 8 : 4;
@@ -8804,7 +9302,8 @@ function clCerrarCaso(){
   if(perfecto){ e.aciertos++; e.racha++; if(e.racha > e.mejorRacha) e.mejorRacha = e.racha; }
   else { e.aciertos++; e.fallos += t.errores; e.racha = 0; }
   e.vistos[c.id] = (e.vistos[c.id] || 0) + 1;
-  if(perfecto && (e.vistos[c.id] || 0) >= 2 && !e.dominados.includes(c.id)) e.dominados.push(c.id);
+  // la ficha del álbum ahora exige acertar Y haber razonado bien
+  if(perfecto && cuad.pct >= 70 && (e.vistos[c.id] || 0) >= 2 && !e.dominados.includes(c.id)) e.dominados.push(c.id);
   const h = clHistCrear(c.id); h.veces++; h.ultima = Date.now();
   clGastarEvento();
 
@@ -8830,6 +9329,9 @@ function clCerrarCaso(){
       id:c.id, sesion:0, progreso:0, recaidas:0, nota:'', ultimaCarga:null,
       adh: Math.max(15, Math.min(95, CL_ADH_INICIAL + clEfRasgo(t.ficha && t.ficha.rasgo, 'adherencia', 0))),
       rasgo: t.ficha ? t.ficha.rasgo : null, alarma:null, faltas:0, visto:Date.now(),
+      // si no preguntaste por creencias, la bandera amarilla viaja escondida
+      amarilla: t.ficha ? t.ficha.amarilla : null,
+      amarillaVista: !!t.amarillaVista,
     });
     sub += ' · ' + c.pac + ' queda en tratamiento: llévalo hasta el alta.';
   }else if(c.derivar){
@@ -8842,6 +9344,7 @@ function clCerrarCaso(){
   clGuardar(true);
   c3Poblar();
 
+  sub = 'Razonamiento ' + cuad.pct + '%. ' + sub;
   jxCelebrar({
     titulo: perfecto ? '¡Diagnóstico certero! 🎯' : 'Diagnóstico cerrado',
     sub, monedas, xp: 12 * c.dif, subioNivel: r.subioNivel, nivel: r.nivel,
@@ -8943,6 +9446,22 @@ function clSesion(idx, cargaId){
   const fase = clFaseDe(pac.progreso);
   pac.visto = Date.now();
 
+  // sesión dedicada a la bandera amarilla: solo se puede si la detectaste
+  if(cargaId === 'amarilla'){
+    const am = CL_AMARILLAS.find(a => a.id === pac.amarilla);
+    if(!am || !pac.amarillaVista) return;
+    pac.sesion++;
+    pac.amarilla = null;
+    pac.adh = Math.min(100, pac.adh + 18);
+    pac.progreso = Math.min(100, pac.progreso + 6);
+    pac.nota = '🟡 Abordaste ' + am.nom.toLowerCase() + '. ' + am.ensena + ' Desde ahora el tratamiento rinde completo.';
+    jxSonido('bien'); jxVibrar(15);
+    clPagarSesion(caso);
+    clAvanzarMision('sesion');
+    clGuardar(true); clPanel();
+    return;
+  }
+
   // sesión de educación: no carga tejido, pero recupera al paciente
   if(cargaId === 'educar'){
     pac.sesion++;
@@ -8971,16 +9490,25 @@ function clSesion(idx, cargaId){
 
   const dist = Math.abs(clIdxCarga(cargaId) - clIdxCarga(fase.carga));
   const factorAdh = 0.55 + (pac.adh / 100) * 0.65;   // entre 0,55x y 1,2x
+  // una bandera amarilla sin abordar frena el tratamiento, la hayas visto o no
+  const factorAm = pac.amarilla ? 0.5 : 1;
   pac.sesion++;
   clAvanzarMision('sesion');
   let nota, delta;
   if(dist === 0){
-    delta = Math.round((16 + Math.floor(Math.random() * 6)) * factorAdh);
+    delta = Math.round((16 + Math.floor(Math.random() * 6)) * factorAdh * factorAm);
     nota = '✓ Buena dosificación. ' + fase.nota;
     pac.adh = Math.min(100, pac.adh + 6);
     jxSonido('bien');
+    if(pac.amarilla){
+      // la pista sin regalar la respuesta: la dosis estaba bien y no avanza
+      nota += pac.amarillaVista
+        ? ' Pero la bandera amarilla sigue ahí y le está frenando el progreso.'
+        : ' Aun así avanza mucho menos de lo que debería: algo no está en el tejido.';
+      pac.adh = Math.max(0, pac.adh - 5);
+    }
   }else if(dist === 1){
-    delta = Math.round((5 + Math.floor(Math.random() * 4)) * factorAdh);
+    delta = Math.round((5 + Math.floor(Math.random() * 4)) * factorAdh * factorAm);
     nota = '~ Avanza, pero la carga no era la ideal para fase ' + fase.nom.toLowerCase() + '. ' + fase.nota;
     pac.adh = Math.max(0, pac.adh - 7);
     jxSonido('tap');
@@ -9078,6 +9606,13 @@ function clPanelSesion(cont, idx){
       (pac.nota ? '<div class="cl-nota-sesion">' + pac.nota + '</div>' : '') +
     '</div>';
 
+  // solo se ve si preguntaste por creencias durante la evaluación
+  const am = (pac.amarilla && pac.amarillaVista) ? CL_AMARILLAS.find(a => a.id === pac.amarilla) : null;
+  if(am){
+    html += '<div class="cl-amarilla"><b>' + am.emo + ' Bandera amarilla: ' + am.nom + '</b>' +
+      '<p>' + am.dice + '</p><em>' + am.abordaje + '</em></div>';
+  }
+
   if(alarma){
     html += '<div class="cl-alarma"><b>⚠️ Algo cambió</b><p>' + alarma.txt + '</p></div>' +
       '<div class="cl-preg">¿Qué haces?</div><div class="cl-opciones">' +
@@ -9090,6 +9625,8 @@ function clPanelSesion(cont, idx){
       CL_CARGAS.map(x => '<button class="cl-opc" data-carga="' + x.id + '"><b>' + x.emo + ' ' + x.nom + '</b><small>' + x.desc + '</small></button>').join('') +
       '<button class="cl-opc educar" data-carga="educar"><b>📘 Educar y reforzar</b>' +
       '<small>No carga tejido, pero sube fuerte la adherencia. Vale oro cuando está por abandonar.</small></button>' +
+      (am ? '<button class="cl-opc amarilla" data-carga="amarilla"><b>' + am.emo + ' Abordar ' + am.nom.toLowerCase() + '</b>' +
+            '<small>' + am.abordaje + '</small></button>' : '') +
       '</div>';
   }
   html += '<button class="cl-btn-derivar" id="clVolverRecep">‹ Volver a la clínica</button>';
@@ -9144,9 +9681,39 @@ function clPanelGestion(cont){
       '</div>';
   });
   html += '</div>';
+
+  // --- expansión: abrir una sede nueva ---
+  const prox = clSedeSiguiente();
+  const sedeAct = clSede();
+  html += '<div class="cl-sec">Expansión</div>';
+  if(!prox){
+    html += '<div class="cl-vacio">Ya tienes clínica de Curicó a Punta Arenas. No queda dónde crecer: ahora es puro oficio.</div>';
+  }else{
+    const puede = clPuedeAbrirSede();
+    const faltaRep = Math.max(0, clSedeRep() - c.reputacion);
+    const faltaPlata = Math.max(0, clSedeCosto() - c.dinero);
+    html += '<div class="cl-sede' + (puede ? ' puede' : '') + '"' + (puede ? ' id="clAbrirSede"' : '') + '>' +
+      '<div class="cl-sede-top"><span class="cl-sede-emo">' + prox.emo + '</span>' +
+        '<div><b>Abrir sede en ' + prox.nom + '</b>' +
+        '<small>Dejas ' + sedeAct.nom + ' andando y partes de cero acá: sin plata, sin equipo, sin reputación.</small></div></div>' +
+      '<div class="cl-sede-gana"><b>Te llevas</b> el álbum, los pacientes que ya conoces, tus récords del examen y las acreditaciones rendidas. ' +
+        'Cada sede paga <b>+' + Math.round(CL_SEDE_PAGO * 100) + '%</b> para siempre.</div>' +
+      '<div class="cl-sede-cuesta"><b>Y cuesta más:</b> un minuto menos de consulta por paciente y un diagnóstico extra en cada diferencial.</div>' +
+      '<div class="cl-sede-req">' +
+        (puede ? '✓ Listo para abrir · toca acá'
+               : (faltaRep ? 'Faltan ⭐' + faltaRep + ' de reputación' : '✓ reputación') + ' · ' +
+                 (faltaPlata ? 'faltan ' + clPlata(faltaPlata) : '✓ plata')) +
+      '</div></div>';
+  }
+  if(c.fundadas.length){
+    html += '<div class="cl-nota izq">Sedes que dejaste andando: ' + c.fundadas.join(' · ') + '.</div>';
+  }
+
   cont.innerHTML = html;
   document.getElementById('clContratar').onclick = clContratar;
   cont.querySelectorAll('[data-eq]').forEach(b => b.onclick = () => clComprarEquipo(b.dataset.eq));
+  const bs = document.getElementById('clAbrirSede');
+  if(bs) bs.onclick = clAbrirSede;
   cont.querySelectorAll('[data-acred]').forEach(b => b.onclick = (ev) => {
     ev.stopPropagation();
     clRepasoTipo = 'examen'; clVista = 'repaso';

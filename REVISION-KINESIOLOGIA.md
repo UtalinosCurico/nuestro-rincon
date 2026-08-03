@@ -5,7 +5,7 @@ Catalina: esto es todo lo que enseña la Clínica del Rincón. Está publicado.
 Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en un solo lugar y el juego entero queda corregido.
 
 - Los **rangos articulares** son de AAOS.
-- Las **pruebas ortopédicas** orientan, no diagnostican solas; el juego las simplifica para que la mecánica funcione.
+- Las **pruebas ortopédicas** ya no son "positiva = sugiere X": llevan sensibilidad y especificidad, y el juego razona con SnNout y SpPin (sección 3).
 - En los **músculos**, entre paréntesis van las raíces nerviosas.
 - Lo más importante de revisar es la **sección 2**: son las pistas con las que se descartan hipótesis.
 
@@ -20,6 +20,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** _(no aplica)_ → Rango pasivo y activo limitados por igual, sin dolor puntual en un tendón.
 - **Tratamiento correcto** (fase subaguda): Movilización progresiva de muñeca y antebrazo, y ejercicio de agarre; volver de a poco a las tareas del campo.
 - **Se le enseña:** _Tras una inmovilización larga lo que limita no es el dolor sino la rigidez: el tratamiento es recuperar movimiento y carga, no seguir protegiendo._
+- **Distractores** (razonables pero equivocados): _Movilización pasiva agresiva en rangos máximos para ganar rango rápido_ · _Fortalecimiento de agarre con carga alta desde la primera sesión_ · _Órtesis de muñeca y ejercicio isométrico suave, sin progresar el rango_
 - **Cuando vuelve:** Volvió con una bolsa de nueces del campo. Ya ensilla solo, pero quiere que le revisen la muñeca otra vez.
 
 #### 👷 Lumbago crónico ocupacional  `Lumbar`
@@ -28,6 +29,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Lasègue (elevación de pierna recta) → Negativo: no reproduce dolor por debajo de la rodilla.
 - **Tratamiento correcto** (fase crónica): Ejercicio progresivo de fuerza y resistencia de tronco, educación en dolor persistente y ajuste de la carga del turno.
 - **Se le enseña:** _En dolor lumbar persistente el reposo y la faja empeoran el pronóstico: lo que funciona es moverse, ganar fuerza y entender el dolor._
+- **Distractores** (razonables pero equivocados): _Control motor aislado del transverso, sin progresar nunca la carga_ · _Programa de fuerza de tronco de alta intensidad desde la primera semana_ · _Educación en dolor y reposo relativo hasta que baje la intensidad_
 - **Cuando vuelve:** Bajó del turno derecho a la clínica. "Esta vez vine antes de que se pusiera fea", dice.
 
 #### 🕺 Luxación de hombro (primer episodio)  `Hombro`
@@ -36,6 +38,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Aprensión anterior → Aprensión clara al llevar el hombro a abducción y rotación externa.
 - **Tratamiento correcto** (fase subaguda): Fortalecimiento del manguito rotador y estabilizadores de escápula, ganando control antes de volver a los rangos de riesgo.
 - **Se le enseña:** _Tras una primera luxación el riesgo mayor es que se repita, sobre todo en gente joven: el trabajo es ganar estabilidad, no recuperar rango a la fuerza._
+- **Distractores** (razonables pero equivocados): _Movilidad pasiva a rotación externa máxima para recuperar el rango_ · _Manguito en cadena abierta con carga alta en los rangos de riesgo_ · _Cabestrillo cuatro semanas más y después empezar el ejercicio_
 - **Cuando vuelve:** Volvió con el mismo hombro y la misma cara de susto. Esta vez fue jugando a la pelota.
 
 #### 🧓 Dolor lumbar con banderas rojas  `Lumbar`  ⚠️ **lo correcto es DERIVAR**
@@ -45,6 +48,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** _(no aplica)_ → El dolor no se modifica con ninguna posición ni movimiento.
 - **Tratamiento correcto** (fase aguda): Derivar a evaluación médica antes de cualquier tratamiento kinésico.
 - **Se le enseña:** _Dolor que no cede con el reposo, baja de peso no buscada y dolor nocturno son banderas rojas: acá lo correcto es derivar, no tratar._
+- **Distractores** (razonables pero equivocados): _Ejercicio progresivo de tronco con educación en dolor persistente_ · _Movilización lumbar suave y control motor mientras llega la imagen_ · _Reposo relativo y control en dos semanas para ver cómo evoluciona_
 - **Cuando vuelve:** Volvió con los exámenes en la mano y quiere que se los expliquen con calma.
 
 #### 🧑‍🎨 Síndrome de pinzamiento subacromial  `Hombro`
@@ -53,6 +57,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Neer → Dolor al elevar pasivamente el brazo en rotación interna.
 - **Tratamiento correcto** (fase subaguda): Corregir el ritmo escapulohumeral y fortalecer manguito rotador y estabilizadores de escápula, evitando el trabajo sobre la cabeza al inicio.
 - **Se le enseña:** _El arco doloroso entre 60° y 120° orienta a compromiso subacromial: es el rango donde el espacio se estrecha._
+- **Distractores** (razonables pero equivocados): _Fortalecimiento del manguito sobre 90° de abducción desde el inicio_ · _Movilización glenohumeral en todos los planos, sin trabajo escapular_ · _Solo control escapular y educación, sin llegar a cargar el manguito_
 - **Cuando vuelve:** Terminó de pintar la casa entera. Adivina qué hombro le está doliendo.
 
 #### 👩‍💼 Capsulitis adhesiva (hombro congelado)  `Hombro`
@@ -61,6 +66,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Aprensión anterior → No hay aprensión, pero la movilidad pasiva está claramente restringida en todos los planos.
 - **Tratamiento correcto** (fase crónica): Movilización articular progresiva y ejercicio en rangos tolerados, con educación sobre lo prolongado del cuadro.
 - **Se le enseña:** _La clave que la distingue del pinzamiento: acá la limitación es TAMBIÉN pasiva, y la rotación externa es la más comprometida._
+- **Distractores** (razonables pero equivocados): _Movilización pasiva forzada hasta el rango máximo tolerable cada sesión_ · _Fortalecimiento del manguito rotador como eje del tratamiento_ · _Ejercicio pendular y calor local, esperando que el cuadro se resuelva solo_
 - **Cuando vuelve:** Ahora viene por el otro hombro. Sabe lo que le espera y trajo anotados sus ejercicios.
 
 #### 🏊‍♀️ Tendinopatía del supraespinoso  `Hombro`
@@ -69,6 +75,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Jobe (lata vacía) → Dolor y debilidad al resistir con el brazo en abducción y pulgar hacia abajo.
 - **Tratamiento correcto** (fase subaguda): Carga progresiva del tendón con ejercicio isométrico y luego excéntrico, ajustando el volumen de entrenamiento.
 - **Se le enseña:** _El supraespinoso inicia la abducción; por eso se evalúa resistiendo en ese rango._
+- **Distractores** (razonables pero equivocados): _Isométricos indefinidos, sin progresar nunca a carga dinámica_ · _Volver al volumen de nado completo apenas ceda el dolor_ · _Corrección escapular y estiramiento capsular posterior, sin cargar el tendón_
 - **Cuando vuelve:** Clasificó al nacional de aguas abiertas. Quiere ajustar la carga antes de que el hombro reclame.
 
 #### 🪚 Epicondilalgia lateral (codo de tenista)  `Codo`
@@ -77,6 +84,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Cozen → Dolor en el epicóndilo lateral al resistir la extensión de muñeca.
 - **Tratamiento correcto** (fase crónica): Ejercicio excéntrico de extensores de muñeca con carga progresiva y corrección del gesto de trabajo.
 - **Se le enseña:** _Compromete el origen de los extensores de muñeca, sobre todo el segundo radial externo._
+- **Distractores** (razonables pero equivocados): _Excéntricos de extensores a carga máxima desde la primera sesión_ · _Órtesis de contrafuerza y reposo del gesto, sin ejercicio progresivo_ · _Fortalecimiento global de hombro y escápula, sin cargar los extensores_
 - **Cuando vuelve:** Trajo un banquito de madera que hizo él para la sala de espera.
 
 #### ⌨️ Síndrome del túnel carpiano  `Muñeca`
@@ -85,6 +93,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Phalen → Reproduce el hormigueo en el territorio del nervio mediano al sostener la flexión.
 - **Tratamiento correcto** (fase subaguda): Férula nocturna en posición neutra, deslizamiento neural del mediano y ajuste ergonómico del puesto.
 - **Se le enseña:** _El territorio respeta el meñique: si también se duerme el meñique, hay que pensar en el nervio cubital, no en el mediano._
+- **Distractores** (razonables pero equivocados): _Deslizamiento neural en tensión máxima, varias veces al día_ · _Férula nocturna sola, sin cambiar nada del puesto de trabajo_ · _Fortalecimiento de la musculatura tenar como eje del tratamiento_
 - **Cuando vuelve:** La guagua ya camina. Ahora es la otra mano la que se le duerme.
 
 #### 🤱 Tenosinovitis de De Quervain  `Muñeca`
@@ -93,6 +102,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Finkelstein → Dolor intenso en la estiloides radial al desviar la muñeca con el pulgar dentro del puño.
 - **Tratamiento correcto** (fase aguda): Reposo relativo del gesto doloroso, órtesis de pulgar y carga progresiva cuando cede el dolor.
 - **Se le enseña:** _Compromete los tendones del abductor largo y extensor corto del pulgar en el primer compartimento dorsal._
+- **Distractores** (razonables pero equivocados): _Excéntricos del abductor largo a carga alta desde el primer día_ · _Órtesis de pulgar permanente seis semanas, sin reintroducir carga_ · _Masaje transverso profundo del primer compartimento todos los días_
 - **Cuando vuelve:** La guagua pesa cuatro kilos más y el pulgar volvió a reclamar.
 
 #### 📦 Lumbago mecánico inespecífico  `Lumbar`
@@ -101,6 +111,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Lasègue (elevación de pierna recta) → Negativo: no reproduce dolor irradiado por debajo de la rodilla.
 - **Tratamiento correcto** (fase aguda): Mantener actividad dentro de lo tolerable, educación en dolor y progresión de ejercicio; evitar el reposo en cama.
 - **Se le enseña:** _Es el cuadro lumbar más frecuente. La evidencia es consistente en que el reposo en cama empeora el pronóstico._
+- **Distractores** (razonables pero equivocados): _Control motor específico antes de retomar la actividad normal_ · _Reposo relativo tres días y reevaluar antes de empezar a mover_ · _Programa de fuerza de tronco de alta carga desde la primera sesión_
 - **Cuando vuelve:** Lo ascendieron a jefe de bodega. Levanta menos cajas y anda con menos susto.
 
 #### 🚚 Radiculopatía lumbar  `Lumbar`
@@ -109,6 +120,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Lasègue (elevación de pierna recta) → Positivo: reproduce el dolor irradiado entre los 30° y 70° de elevación.
 - **Tratamiento correcto** (fase subaguda): Ejercicio con preferencia direccional, deslizamiento neural y educación; derivar si aparece déficit progresivo.
 - **Se le enseña:** _Lo que la separa del lumbago simple es el patrón por dermatoma y el compromiso neural, no la intensidad del dolor._
+- **Distractores** (razonables pero equivocados): _Ejercicio en la dirección que aumenta los síntomas, para "soltar" la raíz_ · _Tracción lumbar mecánica como tratamiento principal_ · _Fuerza de tronco en carga alta, postergando el trabajo neural_
 - **Cuando vuelve:** Le cambiaron el asiento de la micro y viene a control. La pierna ya no le baja hasta el pie.
 
 #### 👩‍🏫 Síndrome de dolor trocantérico  `Cadera`
@@ -117,6 +129,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Trendelenburg → Descenso de la pelvis contralateral en apoyo monopodal.
 - **Tratamiento correcto** (fase subaguda): Fortalecimiento progresivo de abductores de cadera y corrección de posiciones que comprimen el tendón (evitar cruzar la pierna).
 - **Se le enseña:** _Hoy se entiende como tendinopatía de glúteo medio y menor más que como bursitis pura._
+- **Distractores** (razonables pero equivocados): _Estiramiento sostenido de banda iliotibial y glúteo en aducción_ · _Abductores en máquina con carga alta desde la primera sesión_ · _Reposo de las caminatas hasta que deje de dolerle al dormir_
 - **Cuando vuelve:** Se compró zapatillas nuevas y volvió a caminar el cerro. La cadera se hizo notar.
 
 #### 🛒 Fascitis plantar  `Pie`
@@ -125,6 +138,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Windlass → Dolor al extender pasivamente el hallux en carga.
 - **Tratamiento correcto** (fase crónica): Ejercicio de fortalecimiento de la musculatura intrínseca del pie y del tríceps sural, más manejo de la carga diaria.
 - **Se le enseña:** _El dolor de los primeros pasos de la mañana es el rasgo más característico del cuadro._
+- **Distractores** (razonables pero equivocados): _Estiramiento de fascia plantar y gemelo, sin fortalecer nada_ · _Plantillas personalizadas y reposo, esperando que ceda solo_ · _Trabajo intrínseco con saltos y carga alta desde el inicio_
 - **Cuando vuelve:** Cambió de local y ahora está de pie sobre cerámica. El talón lo notó altiro.
 
 #### 💻 Cervicalgia mecánica  `Cervical`
@@ -133,6 +147,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Slump → Negativo: no reproduce síntomas neurales a distancia.
 - **Tratamiento correcto** (fase subaguda): Ejercicio de resistencia de flexores profundos y musculatura escapular, más pausas activas en la jornada.
 - **Se le enseña:** _Sin signos neurológicos ni banderas rojas, se maneja como dolor mecánico: movimiento y carga, no inmovilización._
+- **Distractores** (razonables pero equivocados): _Fortalecimiento cervical con carga alta desde la primera sesión_ · _Masaje y calor local en trapecios, más pausas activas_ · _Solo flexores profundos, sin trabajo escapular ni ajuste de la jornada_
 - **Cuando vuelve:** Quedó en teletrabajo permanente. Trajo una foto de su escritorio para que se lo revisen.
 
 #### 🧺 Artrosis de rodilla  `Rodilla`
@@ -141,6 +156,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** McMurray → Negativo: sin chasquido ni dolor localizado en la interlínea al rotar.
 - **Tratamiento correcto** (fase crónica): Ejercicio terapéutico de fuerza de cuádriceps y cadera, educación y manejo de la carga diaria y del peso.
 - **Se le enseña:** _En artrosis de rodilla el ejercicio y la educación son primera línea, antes que cualquier fármaco o cirugía: mejoran dolor y función aunque la radiografía no cambie nada._
+- **Distractores** (razonables pero equivocados): _Ejercicio de fuerza más terapia manual y ultrasonido cada sesión_ · _Cuádriceps solamente, sin trabajar cadera ni educar sobre la carga_ · _Bajar el impacto: suspender escaleras y caminatas mientras duela_
 - **Cuando vuelve:** Sigue en la Vega, pero ahora con un piso alto para no estar tantas horas parada.
 
 #### 🩼 Prótesis total de cadera tras fractura  `Cadera`
@@ -149,6 +165,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Trendelenburg → Descenso de la pelvis contralateral al apoyar sobre el lado operado.
 - **Tratamiento correcto** (fase subaguda): Carga progresiva según indicación quirúrgica, fuerza de abductores y cuádriceps, reeducación de la marcha y entrenamiento del equilibrio para prevenir caídas.
 - **Se le enseña:** _Después de una prótesis de cadera el objetivo no es solo volver a caminar: es que no se vuelva a caer. Y al inicio hay que cuidar las posiciones que luxan la prótesis._
+- **Distractores** (razonables pero equivocados): _Abductores en decúbito, postergando el entrenamiento de marcha_ · _Marcha sin andador desde la primera sesión para ganar confianza_ · _Movilidad de cadera en todos los rangos para recuperar el arco completo_
 - **Cuando vuelve:** Entró sin andador, con su hija atrás muerta de nervios.
 
 #### 🚌 Esguince cervical (latigazo)  `Cervical`
@@ -157,6 +174,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Spurling → Negativo: no reproduce dolor irradiado al brazo.
 - **Tratamiento correcto** (fase aguda): Reactivación temprana, movilidad cervical dentro de lo tolerable y educación tranquilizadora sobre la buena evolución habitual.
 - **Se le enseña:** _En el latigazo la evidencia es contundente: seguir con la vida normal gana. El collar y el reposo alargan los síntomas._
+- **Distractores** (razonables pero equivocados): _Collar blando las primeras dos semanas y después movilizar_ · _Fuerza cervical progresiva desde la primera sesión_ · _Terapia manual y masaje cervical, sin educación ni reactivación_
 - **Cuando vuelve:** Otro choque, otra micro. Esta vez llegó a la semana y no al mes.
 
 #### ⛏️ Epicondilalgia medial (codo de golfista)  `Codo`
@@ -165,6 +183,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Epitrocleítis (flexión resistida) → Dolor en la epitróclea al resistir la flexión de muñeca.
 - **Tratamiento correcto** (fase crónica): Carga progresiva de los flexopronadores con trabajo excéntrico y corrección del gesto y del agarre de la herramienta.
 - **Se le enseña:** _Compromete el origen de los flexopronadores. Ojo con el nervio cubital, que pasa justo por detrás de la epitróclea: si hay hormigueo en el meñique, el cuadro es otro._
+- **Distractores** (razonables pero equivocados): _Órtesis de contrafuerza y reposo del gesto por un mes_ · _Excéntricos de flexopronadores a carga máxima desde el inicio_ · _Fortalecimiento de extensores de muñeca y movilidad de codo_
 - **Cuando vuelve:** Le cambió el mango a la pala. El codo se lo agradeció.
 
 #### 🚨 Síndrome de cauda equina  `Lumbar`  ⚠️ **lo correcto es DERIVAR**
@@ -174,6 +193,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Lasègue (elevación de pierna recta) → Positivo bilateral, y con déficit motor en ambas piernas.
 - **Tratamiento correcto** (fase aguda): Derivar de inmediato a urgencia: es una emergencia quirúrgica con ventana de horas.
 - **Se le enseña:** _Anestesia en silla de montar, retención urinaria y déficit bilateral son cauda equina: de las poquísimas urgencias quirúrgicas reales que llegan a kinesiología. Cada hora cuenta._
+- **Distractores** (razonables pero equivocados): _Ejercicio con preferencia direccional y deslizamiento neural_ · _Reposo relativo, analgesia y control en 48 horas_ · _Tracción lumbar y educación, con la derivación programada_
 - **Cuando vuelve:** Lo operaron esa misma noche. Vuelve caminando, a rehabilitar y a agradecer que lo mandaran altiro.
 
 #### 🩸 Trombosis venosa profunda  `Tobillo`  ⚠️ **lo correcto es DERIVAR**
@@ -183,6 +203,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Thompson → Negativo: se conserva la flexión plantar. Pero la pantorrilla está tensa y caliente.
 - **Tratamiento correcto** (fase aguda): Derivar a evaluación médica urgente antes de cualquier masaje, movilización o ejercicio.
 - **Se le enseña:** _Pantorrilla hinchada, caliente y con antecedente de inmovilización o viaje largo: TVP hasta demostrar lo contrario. Masajear ahí puede soltar el trombo._
+- **Distractores** (razonables pero equivocados): _Movilización activa suave de tobillo y compresión elástica_ · _Reposo con elevación de la extremidad y control en una semana_ · _Isométricos de gemelos, evitando el masaje de la zona_
 - **Cuando vuelve:** Estuvo anticoagulada tres meses. Recién ahora viene a rehabilitar el tobillo, con el alta del internista en la mano.
 
 #### ❤️‍🩹 Dolor torácico de origen cardíaco  `Cervical`  ⚠️ **lo correcto es DERIVAR**
@@ -192,6 +213,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Spurling → Negativo: no reproduce el dolor ni lo irradia al brazo.
 - **Tratamiento correcto** (fase aguda): Derivar a evaluación médica urgente: el patrón es de origen cardíaco, no musculoesquelético.
 - **Se le enseña:** _Dolor que aparece con el esfuerzo, cede con el reposo y trae sudoración o disnea NO es musculoesquelético. Que ningún movimiento lo reproduzca es el dato que lo delata._
+- **Distractores** (razonables pero equivocados): _Ejercicio de movilidad torácica y educación postural_ · _Terapia manual dorsal suave y control en una semana_ · _Reentrenamiento aeróbico progresivo supervisado_
 - **Cuando vuelve:** Le pusieron dos stents. Viene derivado a rehabilitación cardíaca y trae pan amasado para todos.
 
 #### 🌡️ Artritis séptica de rodilla  `Rodilla`  ⚠️ **lo correcto es DERIVAR**
@@ -201,6 +223,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** McMurray → No se puede realizar: cualquier movimiento provoca dolor intenso.
 - **Tratamiento correcto** (fase aguda): Derivar de inmediato: articulación caliente con fiebre es artritis séptica hasta demostrar lo contrario.
 - **Se le enseña:** _Monoartritis aguda, caliente, con fiebre y antecedente de punción: artritis séptica. En horas destruye el cartílago, no es un cuadro para tratar en box._
+- **Distractores** (razonables pero equivocados): _Crioterapia, descarga y movilización pasiva suave_ · _Isométricos de cuádriceps y compresión para bajar el derrame_ · _Reposo, elevación y control en 48 horas_
 - **Cuando vuelve:** Le hicieron aseo quirúrgico y salvó la rodilla. Vuelve a recuperar rango, con la glicemia bajo control.
 
 ### Especialidad Deportiva (11)
@@ -211,6 +234,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** McMurray → Negativo: sin chasquido ni dolor en la interlínea.
 - **Tratamiento correcto** (fase crónica): Carga progresiva del tendón rotuliano con isométricos y luego excéntricos, ajustando el volumen de saltos.
 - **Se le enseña:** _El dolor puntual en el polo inferior de la rótula al saltar es el sello de la tendinopatía rotuliana: se trata cargando el tendón, no descansándolo._
+- **Distractores** (razonables pero equivocados): _Isométricos de cuádriceps manteniendo el reposo deportivo hasta que no duela_ · _Excéntricos a carga máxima tres veces al día desde el inicio_ · _Trabajo de cadera y core, sin cargar el tendón rotuliano_
 - **Cuando vuelve:** Ganaron el campeonato. Trajo la foto del equipo y también la rodilla reclamando de nuevo.
 
 #### ⚽ Lesión del ligamento cruzado anterior  `Rodilla`
@@ -219,6 +243,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Lachman → Aumento del desplazamiento anterior de la tibia con tope blando.
 - **Tratamiento correcto** (fase aguda): Control del derrame, recuperar la extensión completa y activar el cuádriceps antes de progresar la carga.
 - **Se le enseña:** _El derrame en las primeras horas orienta a lesión intraarticular con sangrado. Lachman es más sensible que el cajón anterior._
+- **Distractores** (razonables pero equivocados): _Cuádriceps en cadena abierta con carga alta para frenar la atrofia_ · _Trabajo propioceptivo y de agilidad en cancha desde la primera semana_ · _Inmovilizar y esperar la cirugía sin intervención kinésica_
 - **Cuando vuelve:** Vuelve con la orden de rehabilitación en la mano y muchas ganas de volver a la cancha.
 
 #### 🥅 Lesión meniscal  `Rodilla`
@@ -227,6 +252,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** McMurray → Chasquido doloroso al extender la rodilla con rotación.
 - **Tratamiento correcto** (fase subaguda): Ejercicio progresivo con control de la carga en rotación, fortalecimiento de cuádriceps y trabajo propioceptivo.
 - **Se le enseña:** _El derrame lento (horas o días) diferencia al menisco del LCA, que se hincha rápido._
+- **Distractores** (razonables pero equivocados): _Trabajo en flexión profunda con rotación para recuperar el rango completo_ · _Reposo deportivo hasta que desaparezcan los chasquidos_ · _Cuádriceps isométrico únicamente, sin progresar a carga dinámica_
 - **Cuando vuelve:** Sigue jugando los domingos. Dice que la rodilla "le avisa" antes de bloquearse.
 
 #### 🏃‍♀️ Síndrome de dolor patelofemoral  `Rodilla`
@@ -235,6 +261,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Trendelenburg → Control deficiente de la pelvis y valgo dinámico en apoyo monopodal.
 - **Tratamiento correcto** (fase crónica): Fortalecimiento de cuádriceps y de abductores/rotadores externos de cadera, con ajuste de la carga de carrera.
 - **Se le enseña:** _El "signo del cine" (dolor al estar mucho rato sentada con la rodilla flectada) es bien característico._
+- **Distractores** (razonables pero equivocados): _Cuádriceps en cadena abierta a 90° con carga alta_ · _Vendaje rotuliano y elongación de cintilla, con el mismo volumen de trote_ · _Suspender la carrera seis semanas y volver al mismo kilometraje_
 - **Cuando vuelve:** Se inscribió en la maratón de Santiago y viene a que la ayuden a llegar entera.
 
 #### 🏃 Tendinopatía aquiliana  `Tobillo`
@@ -243,6 +270,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Thompson → Negativo: se conserva la flexión plantar al comprimir la pantorrilla (descarta rotura completa).
 - **Tratamiento correcto** (fase crónica): Carga progresiva del tendón con trabajo excéntrico e isométrico, ajustando el volumen de carrera.
 - **Se le enseña:** _La rigidez matinal que cede al entrar en calor es el patrón típico de tendinopatía._
+- **Distractores** (razonables pero equivocados): _Excéntricos a carga máxima dos veces al día desde la primera sesión_ · _Elongación sostenida del tríceps sural como eje del tratamiento_ · _Talonera y reposo de la carrera hasta que no duela nada_
 - **Cuando vuelve:** Volvió a las zapatillas viejas y el tendón volvió a hablar.
 
 #### 🏀 Esguince lateral de tobillo  `Tobillo`
@@ -251,6 +279,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Cajón anterior de tobillo → Aumento del desplazamiento anterior del retropié comparado con el otro lado.
 - **Tratamiento correcto** (fase aguda): Carga precoz protegida y trabajo propioceptivo temprano, progresando a fuerza de peroneos.
 - **Se le enseña:** _El ligamento que se lesiona primero es el peroneoastragalino anterior. La propiocepción temprana reduce la recurrencia._
+- **Distractores** (razonables pero equivocados): _Reposo con descarga total hasta que baje todo el edema_ · _Peroneos en carga alta antes de recuperar el apoyo completo_ · _Movilización y propiocepción, postergando el apoyo a la segunda semana_
 - **Cuando vuelve:** Segundo esguince del mismo tobillo. Esta vez sí quiere hacer la propiocepción completa.
 
 #### 🏃‍♂️ Lesión muscular de isquiotibiales  `Muslo`
@@ -259,6 +288,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Flexión resistida 90-90 → Dolor y debilidad al resistir la flexión de rodilla, comparado con el otro lado.
 - **Tratamiento correcto** (fase aguda): Carga progresiva precoz con ejercicio excéntrico a longitudes largas y reintroducción dosificada de la carrera antes de volver a competir.
 - **Se le enseña:** _Los isquiotibiales se rompen frenando excéntricamente el sprint. Por eso lo que baja la recurrencia es el trabajo excéntrico a longitudes largas, no elongar._
+- **Distractores** (razonables pero equivocados): _Excéntricos a longitudes largas con carga máxima desde el primer día_ · _Reposo y elongación suave hasta caminar sin dolor, y ahí correr_ · _Isométricos solamente, sin reintroducir la carrera antes del alta_
 - **Cuando vuelve:** Volvió a jugar y volvió el tirón, en el mismo muslo. Ahora quiere hacerlo bien.
 
 #### 🥾 Síndrome de la cintilla iliotibial  `Rodilla`
@@ -267,6 +297,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Noble → Dolor en el cóndilo femoral lateral alrededor de los 30° de flexión.
 - **Tratamiento correcto** (fase crónica): Fuerza de abductores y rotadores externos de cadera, ajuste temporal del volumen y de las bajadas, y progresión ordenada de vuelta a la carrera.
 - **Se le enseña:** _La cintilla iliotibial casi no se elonga: es tejido muy poco extensible. Lo que cambia el cuadro es el control de cadera y la dosis de carrera._
+- **Distractores** (razonables pero equivocados): _Liberación miofascial de la banda iliotibial en cada sesión_ · _Abductores de cadera sin ajustar el volumen ni las bajadas_ · _Suspender la carrera seis semanas y volver al mismo plan_
 - **Cuando vuelve:** Terminó el trail de 30K. Viene a preparar el siguiente sin dolor.
 
 #### 🎖️ Síndrome de estrés tibial medial  `Tobillo`
@@ -275,6 +306,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** _(no aplica)_ → Dolor difuso a la palpación del borde posteromedial de la tibia, sin punto exquisito.
 - **Tratamiento correcto** (fase subaguda): Bajar y redistribuir la carga de impacto, fortalecer tríceps sural y musculatura intrínseca del pie, y progresar la carrera de forma controlada.
 - **Se le enseña:** _Si el dolor se concentra en UN punto de la tibia y aparece en reposo o de noche, hay que pensar en fractura por estrés y derivar: eso ya no es canillera._
+- **Distractores** (razonables pero equivocados): _Reposo de la instrucción hasta que no duela y después retomar igual_ · _Tríceps sural con saltos desde la primera semana_ · _Plantillas y cambio de calzado, con el mismo volumen de trote_
 - **Cuando vuelve:** Terminó el servicio militar. Ahora corre por gusto y quiere hacerlo sin dolerse.
 
 #### 🦵 Síndrome compartimental agudo  `Tobillo`  ⚠️ **lo correcto es DERIVAR**
@@ -284,6 +316,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** _(no aplica)_ → El estiramiento pasivo de los dedos dispara un dolor desproporcionado.
 - **Tratamiento correcto** (fase aguda): Derivar de inmediato a urgencia: sin fasciotomía a tiempo el músculo se necrosa.
 - **Se le enseña:** _Dolor desproporcionado que aumenta y que se dispara al estirar pasivamente: síndrome compartimental. Ojo, comprimir y poner hielo lo empeoran, y el pulso puede estar normal igual._
+- **Distractores** (razonables pero equivocados): _Descarga con bastones, hielo intermitente y control en 24 horas_ · _Movilización activa suave de tobillo y dedos para bajar el edema_ · _Vendaje elástico no compresivo y reevaluación por la tarde_
 - **Cuando vuelve:** Alcanzaron a hacerle la fasciotomía. Muestra la cicatriz como trofeo y quiere volver al rugby.
 
 #### 🩻 Fractura por estrés de tibia  `Tobillo`  ⚠️ **lo correcto es DERIVAR**
@@ -293,6 +326,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** _(no aplica)_ → Dolor exquisito en un punto único del borde tibial, con dolor al salto monopodal.
 - **Tratamiento correcto** (fase aguda): Derivar para estudio de imagen y descarga: no se sigue cargando una fractura por estrés.
 - **Se le enseña:** _La canillera duele difuso y mejora al entrar en calor; la fractura por estrés duele en un punto, en reposo y de noche. Esa es la línea entre tratar y derivar._
+- **Distractores** (razonables pero equivocados): _Bajar el volumen a la mitad y mantener el trabajo de fuerza_ · _Descarga con bota tres semanas y después progresar la carrera_ · _Fortalecer tríceps sural y musculatura del pie, sin correr_
 - **Cuando vuelve:** Ocho semanas sin bailar. Volvió preguntando por la carga antes de subirla, que es lo que había que aprender.
 
 ### Especialidad Respiratoria (4)
@@ -303,6 +337,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** _(no aplica)_ → Auscultación con ruidos agregados y espiración prolongada.
 - **Tratamiento correcto** (fase aguda): Técnicas de higiene bronquial para movilizar secreciones, reeducación del patrón respiratorio y ejercicio dosificado según tolerancia.
 - **Se le enseña:** _En EPOC el objetivo kinésico es la permeabilidad de la vía aérea y la tolerancia al esfuerzo, no "curar" la obstrucción._
+- **Distractores** (razonables pero equivocados): _Fuerza de extremidades inferiores como eje del manejo del ingreso_ · _Higiene bronquial solamente, sin reentrenar la tolerancia al esfuerzo_ · _Espirometría incentivada y reposo hasta que baje la disnea_
 - **Cuando vuelve:** Lleva ocho meses sin fumar y lo cuenta apenas entra por la puerta.
 
 #### 👶 Bronquiolitis por VRS  `Respiratorio`
@@ -311,6 +346,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** _(no aplica)_ → Auscultación con sibilancias difusas y crepitaciones finas en ambos campos.
 - **Tratamiento correcto** (fase aguda): Kinesiterapia respiratoria con técnicas de flujo espiratorio lento adaptadas al lactante, educación a la mamá en signos de alarma y control en 24 horas.
 - **Se le enseña:** _La vía aérea del lactante es pequeña y colapsable: se trabaja con flujo espiratorio lento, no con percusiones. Y lo que más cambia el desenlace es que la mamá reconozca los signos de alarma._
+- **Distractores** (razonables pero equivocados): _Aspiración nasofaríngea repetida como único manejo_ · _Espiración lenta prolongada más nebulización de rutina cada cuatro horas_ · _Kinesiterapia diaria intensiva hasta que desaparezcan las sibilancias_
 - **Cuando vuelve:** La misma guagua, un invierno después. La mamá ya reconoce sola los signos de alarma.
 
 #### 🫁 Neumonía adquirida en la comunidad  `Respiratorio`
@@ -319,6 +355,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** _(no aplica)_ → Crepitaciones localizadas en la base derecha y menor entrada de aire en esa zona.
 - **Tratamiento correcto** (fase aguda): Movilización precoz fuera de la cama, permeabilización de la vía aérea según secreción y reentrenamiento progresivo al esfuerzo.
 - **Se le enseña:** _En el paciente hospitalizado el reposo en cama es un factor de riesgo por sí solo: la movilización precoz acorta la estadía y frena la pérdida de masa muscular._
+- **Distractores** (razonables pero equivocados): _Higiene bronquial tres veces al día, con reposo entre sesiones_ · _Entrenamiento aeróbico en cicloergómetro desde el ingreso_ · _Movilización precoz solamente, sin trabajar la vía aérea_
 - **Cuando vuelve:** Salió del hospital y volvió a su huerta. Viene a que le controlen la tolerancia al esfuerzo.
 
 #### 🛏️ Debilidad adquirida en UCI  `Respiratorio`
@@ -327,6 +364,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Test de marcha de 6 minutos → Camina poco más de 200 metros en seis minutos y debe detenerse dos veces por fatiga.
 - **Tratamiento correcto** (fase subaguda): Reentrenamiento de fuerza progresivo y trabajo aeróbico dosificado por síntomas, avanzando de sedente a bípedo y a la marcha.
 - **Se le enseña:** _La debilidad adquirida en UCI es simétrica y proximal, y compromete también al diafragma. Se revierte con carga progresiva, nunca con reposo._
+- **Distractores** (razonables pero equivocados): _Electroestimulación neuromuscular como único tratamiento_ · _Fuerza al 80% de 1RM desde la primera semana_ · _Movilización pasiva y posicionamiento hasta que recupere fuerza sola_
 - **Cuando vuelve:** Volvió a hacer clases. Todavía se cansa, pero ya sube sola los dos pisos del colegio.
 
 ### Especialidad Neurológica (3)
@@ -337,6 +375,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** _(no aplica)_ → Disminución del control motor selectivo del lado afectado.
 - **Tratamiento correcto** (fase subaguda): Entrenamiento orientado a tareas funcionales con alta repetición, trabajo de equilibrio y cuidado del hombro afectado.
 - **Se le enseña:** _La evidencia favorece el entrenamiento orientado a tareas con muchas repeticiones por sobre el trabajo analítico aislado._
+- **Distractores** (razonables pero equivocados): _Facilitación neuromuscular en camilla, sin tareas funcionales_ · _Marcha en suspensión únicamente, sin trabajo de extremidad superior_ · _Fortalecimiento analítico del hemicuerpo antes de entrenar tareas_
 - **Cuando vuelve:** Llegó caminando con bastón y saludó con la mano que antes no levantaba.
 
 #### 🧑‍🦳 Enfermedad de Parkinson  `Neurológico`
@@ -345,6 +384,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** Pull test (retropulsión) → Da más de dos pasos hacia atrás para recuperarse: reflejos posturales alterados.
 - **Tratamiento correcto** (fase crónica): Entrenamiento de marcha con claves externas auditivas y visuales, trabajo de equilibrio y ejercicio de alta amplitud, sostenido en el tiempo.
 - **Se le enseña:** _Las claves externas —una cumbia con pulso marcado, líneas en el suelo— saltan el circuito que está fallando y alargan el paso al instante._
+- **Distractores** (razonables pero equivocados): _Fuerza progresiva sin trabajar marcha ni claves externas_ · _Marcha en cinta a velocidad fija, sin claves auditivas ni visuales_ · _Amplitud y equilibrio por seis semanas y después el alta_
 - **Cuando vuelve:** Trajo la lista de canciones que usa para caminar. Dice que con cueca le sale mejor.
 
 #### 😐 Parálisis facial periférica (de Bell)  `Neurológico`
@@ -353,6 +393,7 @@ Si algo está mal o lo ven distinto en la U, dímelo y lo corrijo: se cambia en 
 - **Prueba:** _(no aplica)_ → La debilidad compromete TODA la hemicara, incluida la frente.
 - **Tratamiento correcto** (fase aguda): Protección ocular, reeducación motora facial frente al espejo con movimientos suaves y educación sobre el pronóstico habitualmente favorable.
 - **Se le enseña:** _La clave está en la frente: si NO puede levantar la ceja, la lesión es periférica. Si la frente se mueve, hay que pensar en una lesión central, y eso es una urgencia._
+- **Distractores** (razonables pero equivocados): _Electroestimulación de la musculatura facial desde la primera sesión_ · _Ejercicios faciales a máxima intensidad, varias veces al día_ · _Protección ocular y esperar la resolución, sin reeducación motora_
 - **Cuando vuelve:** La cara volvió a su lugar. Viene por otra cosa y, de paso, a dar las gracias.
 
 ---
@@ -870,41 +911,61 @@ Compite contra: Artrosis de rodilla, Lesión meniscal
 ---
 ## 3. Pruebas ortopédicas (33)
 
-| Prueba | Zona | Cómo se hace | Positiva sugiere |
+**Sn** y **Sp** son valores de referencia aproximados: varían entre estudios y poblaciones, así que en el juego sirven para razonar con SnNout / SpPin, no para citarlos.
+
+- **SnNout**: sensibilidad alta (≥ 0,85) → una **negativa** descarta.
+- **SpPin**: especificidad alta (≥ 0,85) → una **positiva** confirma.
+
+| Prueba | Zona | Sn | Sp | Cómo se hace | Positiva sugiere |
+|---|---|---|---|---|---|
+| **Neer** | hombro | 0,79 | 0,53 | Elevación pasiva del brazo en rotación interna, estabilizando la escápula. | pinzamiento subacromial |
+| **Hawkins-Kennedy** | hombro | 0,79 | 0,59 | Hombro y codo a 90°, se lleva a rotación interna. | pinzamiento subacromial |
+| **Jobe (lata vacía)** | hombro | 0,69 | 0,62 | Brazo a 90° de abducción, 30° de flexión horizontal y pulgar hacia abajo; se resiste. | compromiso del supraespinoso |
+| **Patte** | hombro | 0,72 | 0,60 | Rotación externa resistida con el brazo a 90° de abducción. | compromiso del infraespinoso y redondo menor |
+| **Gerber (lift-off)** | hombro | 0,62 | 0,92 | Mano en la zona lumbar, se pide separarla de la espalda. | compromiso del subescapular |
+| **Speed** | hombro | 0,68 | 0,55 | Flexión anterior resistida del hombro con el codo extendido y antebrazo supinado. | tendinopatía de la porción larga del bíceps |
+| **Aprensión anterior** | hombro | 0,72 | 0,96 | Abducción y rotación externa progresiva del hombro. | inestabilidad anterior de hombro |
+| **Cozen** | codo | 0,84 | 0,50 | Extensión resistida de muñeca con el codo en extensión y antebrazo pronado. | epicondilalgia lateral |
+| **Epitrocleítis (flexión resistida)** | codo | 0,65 | 0,81 | Flexión de muñeca resistida con el codo extendido. | epicondilalgia medial |
+| **Phalen** | muñeca | 0,68 | 0,73 | Flexión palmar máxima de ambas muñecas sostenida cerca de un minuto. | síndrome del túnel carpiano |
+| **Tinel** | muñeca | 0,50 | 0,77 | Percusión sobre el trayecto del nervio (en el túnel del carpo, sobre el mediano). | irritación del nervio percutido |
+| **Finkelstein** | muñeca | 0,81 | 0,50 | Pulgar dentro del puño y desviación cubital de la muñeca. | tenosinovitis de De Quervain |
+| **Lasègue (elevación de pierna recta)** | lumbar | 0,91 | 0,26 | En decúbito supino se eleva la pierna extendida. | compromiso radicular lumbar |
+| **Slump** | lumbar | 0,84 | 0,83 | Sentado, se suma flexión cervical, extensión de rodilla y dorsiflexión. | tensión neural adversa |
+| **Thomas** | cadera | 0,89 | 0,92 | Se lleva una cadera a flexión máxima y se observa la contraria. | acortamiento de flexores de cadera |
+| **Ober** | cadera | 0,61 | 0,60 | En decúbito lateral se abduce y extiende el muslo y se deja caer. | tensión de la banda iliotibial |
+| **FABER (Patrick)** | cadera | 0,60 | 0,75 | Flexión, abducción y rotación externa de cadera, con la pierna en 4. | compromiso de cadera o sacroilíaca |
+| **Trendelenburg** | cadera | 0,55 | 0,72 | Apoyo monopodal; se observa el descenso de la pelvis contralateral. | insuficiencia del glúteo medio |
+| **Lachman** | rodilla | 0,85 | 0,94 | Rodilla a 20-30° de flexión, se traslada la tibia hacia anterior. | lesión del ligamento cruzado anterior |
+| **Cajón anterior** | rodilla | 0,62 | 0,88 | Rodilla a 90°, se tracciona la tibia hacia anterior. | lesión del ligamento cruzado anterior |
+| **McMurray** | rodilla | 0,61 | 0,84 | Desde flexión máxima se extiende la rodilla con rotación de la tibia. | lesión meniscal |
+| **Estrés en valgo** | rodilla | 0,86 | 0,72 | Fuerza en valgo con la rodilla a 0° y a 30°. | lesión del ligamento colateral medial |
+| **Thompson** | tobillo | 0,96 | 0,93 | En prono se comprime la pantorrilla y se observa la flexión plantar. | rotura completa del tendón de Aquiles |
+| **Cajón anterior de tobillo** | tobillo | 0,78 | 0,75 | Se tracciona el retropié hacia anterior con el tobillo en leve flexión plantar. | insuficiencia del ligamento peroneoastragalino anterior |
+| **Windlass** | pie | 0,32 | 1,00 | Extensión pasiva del hallux en carga. | fascitis plantar |
+| **Spurling** | cervical | 0,30 | 0,93 | Extensión, inclinación y rotación cervical hacia el lado sintomático, con compresión axial suave. | radiculopatía cervical |
+| **Distracción cervical** | cervical | 0,44 | 0,90 | Se tracciona suavemente la cabeza hacia arriba y se pregunta si alivia. | origen radicular cervical (si alivia) |
+| **Noble** | rodilla | 0,65 | 0,70 | Se comprime el cóndilo femoral lateral mientras se extiende la rodilla desde 90°. | síndrome de la cintilla iliotibial |
+| **Thessaly** | rodilla | 0,75 | 0,87 | En apoyo monopodal con 20° de flexión, el paciente rota el cuerpo sobre la rodilla. | lesión meniscal |
+| **Flexión resistida 90-90** | muslo | 0,70 | 0,75 | Cadera y rodilla a 90°; se resiste la flexión de rodilla y se compara con el otro lado. | lesión de isquiotibiales |
+| **Test de marcha de 6 minutos** | respiratorio | — | — | Se mide la distancia caminada en seis minutos, con saturación y disnea antes y después. | la tolerancia al esfuerzo (es una medición, no un diagnóstico) |
+| **Escala de Ashworth modificada** | neurológico | — | — | Se moviliza pasivamente el segmento a velocidad rápida y se gradúa la resistencia. | el grado de espasticidad (es una escala, no un diagnóstico) |
+| **Pull test (retropulsión)** | neurológico | 0,75 | 0,60 | De pie y avisado, se tracciona al paciente hacia atrás desde los hombros y se observa la reacción. | alteración de los reflejos posturales |
+
+---
+## 3b. Banderas amarillas (7)
+
+Factores psicosociales. No cambian el diagnóstico, pero mandan en el pronóstico: en el juego, si no se detectan preguntando por creencias y expectativas, el tratamiento rinde la mitad.
+
+| Bandera | Lo que dice el paciente | Cómo se aborda | Por qué importa |
 |---|---|---|---|
-| **Neer** | hombro | Elevación pasiva del brazo en rotación interna, estabilizando la escápula. | pinzamiento subacromial |
-| **Hawkins-Kennedy** | hombro | Hombro y codo a 90°, se lleva a rotación interna. | pinzamiento subacromial |
-| **Jobe (lata vacía)** | hombro | Brazo a 90° de abducción, 30° de flexión horizontal y pulgar hacia abajo; se resiste. | compromiso del supraespinoso |
-| **Patte** | hombro | Rotación externa resistida con el brazo a 90° de abducción. | compromiso del infraespinoso y redondo menor |
-| **Gerber (lift-off)** | hombro | Mano en la zona lumbar, se pide separarla de la espalda. | compromiso del subescapular |
-| **Speed** | hombro | Flexión anterior resistida del hombro con el codo extendido y antebrazo supinado. | tendinopatía de la porción larga del bíceps |
-| **Aprensión anterior** | hombro | Abducción y rotación externa progresiva del hombro. | inestabilidad anterior de hombro |
-| **Cozen** | codo | Extensión resistida de muñeca con el codo en extensión y antebrazo pronado. | epicondilalgia lateral |
-| **Epitrocleítis (flexión resistida)** | codo | Flexión de muñeca resistida con el codo extendido. | epicondilalgia medial |
-| **Phalen** | muñeca | Flexión palmar máxima de ambas muñecas sostenida cerca de un minuto. | síndrome del túnel carpiano |
-| **Tinel** | muñeca | Percusión sobre el trayecto del nervio (en el túnel del carpo, sobre el mediano). | irritación del nervio percutido |
-| **Finkelstein** | muñeca | Pulgar dentro del puño y desviación cubital de la muñeca. | tenosinovitis de De Quervain |
-| **Lasègue (elevación de pierna recta)** | lumbar | En decúbito supino se eleva la pierna extendida. | compromiso radicular lumbar |
-| **Slump** | lumbar | Sentado, se suma flexión cervical, extensión de rodilla y dorsiflexión. | tensión neural adversa |
-| **Thomas** | cadera | Se lleva una cadera a flexión máxima y se observa la contraria. | acortamiento de flexores de cadera |
-| **Ober** | cadera | En decúbito lateral se abduce y extiende el muslo y se deja caer. | tensión de la banda iliotibial |
-| **FABER (Patrick)** | cadera | Flexión, abducción y rotación externa de cadera, con la pierna en 4. | compromiso de cadera o sacroilíaca |
-| **Trendelenburg** | cadera | Apoyo monopodal; se observa el descenso de la pelvis contralateral. | insuficiencia del glúteo medio |
-| **Lachman** | rodilla | Rodilla a 20-30° de flexión, se traslada la tibia hacia anterior. | lesión del ligamento cruzado anterior |
-| **Cajón anterior** | rodilla | Rodilla a 90°, se tracciona la tibia hacia anterior. | lesión del ligamento cruzado anterior |
-| **McMurray** | rodilla | Desde flexión máxima se extiende la rodilla con rotación de la tibia. | lesión meniscal |
-| **Estrés en valgo** | rodilla | Fuerza en valgo con la rodilla a 0° y a 30°. | lesión del ligamento colateral medial |
-| **Thompson** | tobillo | En prono se comprime la pantorrilla y se observa la flexión plantar. | rotura completa del tendón de Aquiles |
-| **Cajón anterior de tobillo** | tobillo | Se tracciona el retropié hacia anterior con el tobillo en leve flexión plantar. | insuficiencia del ligamento peroneoastragalino anterior |
-| **Windlass** | pie | Extensión pasiva del hallux en carga. | fascitis plantar |
-| **Spurling** | cervical | Extensión, inclinación y rotación cervical hacia el lado sintomático, con compresión axial suave. | radiculopatía cervical |
-| **Distracción cervical** | cervical | Se tracciona suavemente la cabeza hacia arriba y se pregunta si alivia. | origen radicular cervical (si alivia) |
-| **Noble** | rodilla | Se comprime el cóndilo femoral lateral mientras se extiende la rodilla desde 90°. | síndrome de la cintilla iliotibial |
-| **Thessaly** | rodilla | En apoyo monopodal con 20° de flexión, el paciente rota el cuerpo sobre la rodilla. | lesión meniscal |
-| **Flexión resistida 90-90** | muslo | Cadera y rodilla a 90°; se resiste la flexión de rodilla y se compara con el otro lado. | lesión de isquiotibiales |
-| **Test de marcha de 6 minutos** | respiratorio | Se mide la distancia caminada en seis minutos, con saturación y disnea antes y después. | limitación de la tolerancia al esfuerzo |
-| **Escala de Ashworth modificada** | neurológico | Se moviliza pasivamente el segmento a velocidad rápida y se gradúa la resistencia. | espasticidad |
-| **Pull test (retropulsión)** | neurológico | De pie y avisado, se tracciona al paciente hacia atrás desde los hombros y se observa la reacción. | alteración de los reflejos posturales |
+| **Kinesiofobia** | “Me da miedo moverme, siento que se me va a salir algo.” | Exposición gradual al movimiento con educación: mostrarle que moverse es seguro. | El miedo al movimiento predice peor resultado que la lesión misma. Se trata exponiendo, no protegiendo. |
+| **Catastrofismo** | “Esto no se va a mejorar nunca, voy a terminar en silla de ruedas.” | Educación en dolor y metas cortas y alcanzables que le devuelvan control. | El catastrofismo es de los predictores más fuertes de cronicidad. Se aborda con educación y logros concretos, no con más terapia pasiva. |
+| **Creencia estructural** | “Tengo una vértebra fuera de lugar, hay que ponerla en su sitio.” | Explicar qué significa de verdad el hallazgo y correr el foco a la función. | Creer que algo está “fuera de lugar” lleva a buscar el arreglo pasivo eterno. Los hallazgos de imagen son frecuentes en gente sin dolor. |
+| **Conflicto laboral** | “Estoy peleando con la mutual, la licencia depende de esto.” | Ser transparente con el objetivo funcional y coordinar el retorno laboral gradual. | El conflicto laboral y el litigio empeoran el pronóstico. No se ignora ni se juzga: se conversa y se planifica el retorno. |
+| **Baja expectativa** | “La verdad no creo que la kine sirva, vengo porque me mandaron.” | Alinear expectativas y mostrar un cambio medible en las primeras sesiones. | Lo que el paciente espera de la terapia predice lo que va a conseguir. Un cambio objetivo temprano da vuelta la expectativa. |
+| **Hipervigilancia** | “Ando midiendo el dolor todo el día, del uno al diez, a cada rato.” | Sacar el foco del dolor y ponerlo en hitos de función y en la dosis del día. | Vigilar el dolor todo el día lo amplifica. El norte pasa a ser lo que puede hacer, no cuánto le duele. |
+| **Sin red de apoyo** | “Vivo solo y no tengo quién me ayude con los ejercicios.” | Simplificar el programa a lo mínimo que se pueda hacer sin ayuda y asegurar seguimiento. | Un programa que el paciente no puede ejecutar en su contexto real no sirve, por bien prescrito que esté. |
 
 ---
 ## 4. Músculos (30)
