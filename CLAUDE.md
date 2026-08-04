@@ -62,6 +62,24 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 
 **Rincón de juegos** (consola `jx*`, pantalla completa). Juegos actuales: Sudoku (`sd*`), Zip (`zip*`), 2048 (`dm*`), Snake (`sn*`), Nuestro Jardín (`jar*`, incremental) y Clínica Kinésica (`cl*`, con motor de diagnóstico y tratamiento por sesiones). Economía compartida: monedas + mascota + clóset. Se eliminaron Detective, Tres en raya y Memorice.
 
+**Invernadero** — el único juego que **no** vive en `index.html`. Es una página aparte en `juegos/invernadero/` (`index.html` + `style.css` + `script.js`, sin build ni dependencias) con su propio estado en localStorage (`invernaderoRincon_v1`); **no toca Neon ni el objeto `datos`**. La portada solo aporta la tarjeta del hub (`data-url="juegos/invernadero/"`) y lee el recuento del herbario con `invHerbarioTxt()`. Se separó a propósito: `index.html` ya pasa de 12.000 líneas.
+
+- **Genética real**: 12 loci diploides en `LOCI` (dosis, dominancia completa, dominancia incompleta, codominancia y una serie alélica de cuatro alelos). `meiosis()` reparte un alelo al azar por locus, así que salvo mutación **todo alelo del hijo viene de un padre**. `fenotipo()` es la única fuente de verdad visual y de precio.
+- **Colores por dosis**: los pigmentos azul (`A`), rojo (`B`) y amarillo (`C`) suman 0-2 dosis y `COLORES` traduce las 27 combinaciones + albina. Azul+amarillo=verde, rojo+amarillo=naranja, azul+rojo=violeta. Es lo que hace deducible la genética.
+- **`CLAVES_COLOR` se construye a mano, nunca con `Object.keys(COLORES)`**: claves como `'100'` o `'222'` son índices de array válidos y el motor las devuelve primero y reordenadas, lo que descolocaba el herbario.
+- **336 especies** (4 corolas × 28 colores × 3 hojas) + 20 cultivares secretos en `SECRETOS` con condiciones exactas = 356 entradas de herbario. Las plantas se dibujan con SVG generado en `svgPlanta()`; no hay imágenes.
+- **Curvas de premio polinómicas, no exponenciales**: subir de nivel y las misiones diarias escalaban con potencias de base >1 sobre el nivel y a nivel 70 pagaban más que toda la partida junta. El nivel deja de escalar los premios de misión en el 30.
+- **El almacén es el cuello de botella del idle**: cada cosecha devuelve más semillas de las que gasta. `despejarAlmacen()` (parte de `aut5`) vende lo más barato cuando se llena; sin eso la automatización se paraba en seco. Ojo: con genotipos únicos casi todos los montones tienen **una sola** unidad, así que no se puede filtrar por `n > 1`.
+- Simulación fuera de línea y de pestaña dormida en `simularOffline()`; el bucle usa reloj real, no fotogramas.
+
+**Invernadero · nube y marcador** — cada persona tiene **su propio invernadero**: el estado completo vive en el localStorage de su aparato y nunca se mezcla con el del otro. A Neon suben solo dos ramas, bajo `datos.invernadero` y separadas por persona: `marcador` (resumen chico para picarse, se ve en la vista **Vitrina**) y `respaldo` (copia del guardado por si se cambia de teléfono). Quién juega en este aparato sale de `rinconQuien` en localStorage, la **misma clave que usa la clínica** (`Catalina` / `Diego`).
+
+- El API mezcla por clave de primer nivel (`{...dataActual, ...data}`), así que el juego postea solo `{ data: { invernadero: … } }` y no toca fotos, cartas ni notas.
+- `Nube.escribir()` **relee justo antes de postear**: sin eso, cada aparato borraba la rama del otro al subir la suya.
+- Se mantienen las dos guardas contra pérdida de progreso: no se escribe nada antes de una lectura correcta (`Nube.lista`), y una partida recién empezada (`progresoDe(E) < 60`) **nunca pisa** un respaldo con más avance. Restaurar siempre lo confirma la persona, con las dos partidas a la vista.
+- Salvavidas local: `guardar()` aparta el guardado anterior en `invernaderoRincon_v1_copia` antes de pisarlo, y `cargar()` lo usa si el principal falta o está corrupto.
+- `fenotipoDeEspecie()` tolera ids desconocidos (guardados viejos o respaldos dañados) devolviendo una ficha neutra en vez de reventar el herbario.
+
 **Contenido clínico** — `KIN_CASOS` (53 casos, 9 de ellos `derivar:true` y 5 además `urgente:true`), `KIN_PRUEBAS` (39, con `sn`/`sp`), `KIN_MUSCULOS` (30), `KIN_RANGOS` (15), `CL_TTO_MAL` (distractores), `CL_AMARILLAS` y el motor de diferencial `KIN_DX` en `index.html` son la única fuente de verdad. Un caso nuevo necesita entrada en **seis** tablas: `KIN_CASOS`, `KIN_DX`, `CL_CORTO`, `CL_REGRESO`, `CL_TTO_MAL` y `CL_OCUPS` (más `CL_FEM` si la paciente es mujer).
 
 **Pauta del docente** — el objetivo real del juego es que Catalina ensaye su **simulación clínica**: entra a una sala, un docente la observa y la evalúan por cómo conduce la atención, no solo por acertar. `CL_PAUTA` (17 ítems en cinco dominios: Trato, Anamnesis, Examen, Razonamiento, Plan) evalúa eso al cerrar el caso. Se prende con `clSimulacion()`, que vive en **localStorage** (`rinconSimulacion`), no en el estado compartido: ella practica con pauta mientras el otro juega el tycoon. Cada ítem tiene `aplica(t)` para que la pauta se adapte al caso — a un EPOC no se le exige movilidad pasiva. Los ítems se leen de `t.hechas`, así que **una acción nueva que la pauta evalúe tiene que quedar registrada ahí**.
@@ -123,7 +141,8 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 ## Rules for editing
 
 - If `index.html` is modified, always sync the same change to `catalina-y-diego.html`.
-- Sube `CACHE_NAME` en `sw.js` cada vez que cambie `index.html`, o los teléfonos siguen sirviendo el HTML viejo desde la caché.
+- Sube `CACHE_NAME` en `sw.js` cada vez que cambie `index.html` **o cualquier archivo de `juegos/invernadero/`**, o los teléfonos siguen sirviendo la versión vieja desde la caché. El service worker sirve esos archivos cache-first.
+- El service worker solo guarda la portada bajo la clave `"/"`. Cualquier otra navegación se cachea con su propia URL: si no, entrar a `/juegos/invernadero/` dejaba el HTML del juego como página principal sin conexión.
 - Keep `localStorage` as fallback — never remove it.
 - Never connect to Neon directly from the browser; all DB access goes through `/api/`.
 - **Nada escribe a Neon antes de que la primera lectura responda** (`cargaInicialLista`). Un dispositivo con localStorage vacío que suba su estado por defecto borra la página entera: ya pasó el 29-jun-2026.

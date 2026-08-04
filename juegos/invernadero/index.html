@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
+<meta name="theme-color" content="#f3efe3">
+<meta name="description" content="Invernadero de Nuestro Rincón: cruza flores, descubre genética y completa la colección botánica.">
+<title>Invernadero · Nuestro Rincón</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌷%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ FONDO ANIMADO ============ -->
+<div class="escena" id="escena" aria-hidden="true">
+  <div class="cielo" id="cielo"></div>
+  <div class="astro" id="astro"></div>
+  <div class="capa-nubes" id="capaNubes"></div>
+  <div class="colinas">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none" class="colina lejos">
+      <path d="M0,220 C180,150 300,250 460,205 C640,155 760,235 940,195 C1120,155 1280,225 1440,185 L1440,320 L0,320Z"/>
+    </svg>
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none" class="colina medio">
+      <path d="M0,255 C160,205 340,285 520,245 C700,205 860,275 1050,240 C1230,205 1340,265 1440,240 L1440,320 L0,320Z"/>
+    </svg>
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none" class="colina cerca">
+      <path d="M0,285 C200,255 380,305 600,280 C820,255 1000,300 1200,278 C1330,265 1390,288 1440,280 L1440,320 L0,320Z"/>
+    </svg>
+  </div>
+  <canvas id="lienzoClima"></canvas>
+  <div class="rayos" id="rayos"></div>
+  <div class="vineta"></div>
+</div>
+
+<!-- ============ CARGA ============ -->
+<div class="pantalla-carga" id="pantallaCarga">
+  <div class="carga-maceta">🌱</div>
+  <h1 class="carga-tit">Invernadero</h1>
+  <p class="carga-sub">de Nuestro Rincón</p>
+  <div class="carga-barra"><i></i></div>
+</div>
+
+<!-- ============ BARRA SUPERIOR ============ -->
+<header class="barra-top vidrio" id="barraTop">
+  <button class="marca" id="btnInicio" title="Volver a Nuestro Rincón">
+    <span class="marca-icono">🌷</span>
+    <span class="marca-txt">Invernadero</span>
+  </button>
+
+  <div class="top-stats">
+    <div class="stat stat-oro" id="statOro" title="Monedas">
+      <span class="stat-ico">🪙</span>
+      <span class="stat-val" id="valOro">0</span>
+    </div>
+    <div class="stat stat-gema" id="statGema" title="Polen dorado — moneda rara">
+      <span class="stat-ico">✨</span>
+      <span class="stat-val" id="valGema">0</span>
+    </div>
+    <div class="stat stat-ciencia" id="statCiencia" title="Puntos de investigación">
+      <span class="stat-ico">🔬</span>
+      <span class="stat-val" id="valCiencia">0</span>
+    </div>
+    <div class="stat stat-nivel" id="statNivel" title="Nivel y experiencia">
+      <span class="nivel-globo" id="valNivel">1</span>
+      <div class="xp-mini"><i id="barraXP"></i></div>
+      <span class="xp-txt" id="txtXP">0/100</span>
+    </div>
+  </div>
+
+  <div class="top-mundo">
+    <div class="mundo-chip" id="chipEstacion" title="Estación"><span>🌸</span><b>Primavera</b></div>
+    <div class="mundo-chip" id="chipDia" title="Día"><span>📅</span><b>Día 1</b></div>
+    <div class="mundo-chip" id="chipClima" title="Clima"><span>☀️</span><b>Soleado</b></div>
+    <div class="mundo-chip reloj" id="chipHora" title="Hora del invernadero"><span>🕐</span><b>08:00</b></div>
+  </div>
+
+  <div class="top-botones">
+    <button class="ico-btn" id="btnSonido" title="Audio" aria-label="Audio">🔊</button>
+    <button class="ico-btn" id="btnAjustes" title="Ajustes" aria-label="Ajustes">⚙️</button>
+    <button class="ico-btn solo-movil" id="btnMenuMovil" title="Menú" aria-label="Menú">☰</button>
+  </div>
+</header>
+
+<!-- ============ LAYOUT ============ -->
+<div class="tablero" id="tablero">
+
+  <!-- ---------- IZQUIERDA ---------- -->
+  <aside class="panel panel-izq" id="panelIzq">
+    <div class="panel-tabs" role="tablist">
+      <button class="ptab activa" data-inv="semillas" role="tab">Semillas</button>
+      <button class="ptab" data-inv="plantas" role="tab">Flores</button>
+      <button class="ptab" data-inv="coleccion" role="tab">Colección</button>
+    </div>
+    <div class="panel-busca">
+      <input type="search" id="buscaInv" placeholder="Buscar…" aria-label="Buscar en el inventario">
+      <select id="ordenInv" aria-label="Ordenar">
+        <option value="rareza">Rareza</option>
+        <option value="nombre">Nombre</option>
+        <option value="precio">Precio</option>
+        <option value="nuevo">Recientes</option>
+      </select>
+    </div>
+    <div class="panel-cuerpo" id="cuerpoInv"></div>
+    <div class="panel-pie" id="pieInv">
+      <span id="capacidadTxt">Almacén 0/40</span>
+      <div class="mini-barra"><i id="capacidadBarra"></i></div>
+    </div>
+  </aside>
+
+  <!-- ---------- CENTRO ---------- -->
+  <main class="centro" id="centro">
+    <nav class="nav-vistas" id="navVistas">
+      <button class="nav-btn activa" data-vista="invernadero"><span>🪴</span><b>Invernadero</b></button>
+      <button class="nav-btn" data-vista="laboratorio"><span>🧬</span><b>Laboratorio</b></button>
+      <button class="nav-btn" data-vista="mercado"><span>🛒</span><b>Mercado</b></button>
+      <button class="nav-btn" data-vista="investigacion"><span>🔬</span><b>Investigación</b></button>
+      <button class="nav-btn" data-vista="equipo"><span>👥</span><b>Equipo</b></button>
+      <button class="nav-btn" data-vista="misiones"><span>📜</span><b>Misiones</b></button>
+      <button class="nav-btn" data-vista="decoracion"><span>🏮</span><b>Decoración</b></button>
+      <button class="nav-btn" data-vista="enciclopedia"><span>📖</span><b>Herbario</b></button>
+      <button class="nav-btn" data-vista="logros"><span>🏆</span><b>Logros</b></button>
+      <button class="nav-btn" data-vista="vitrina"><span>🏅</span><b>Vitrina</b></button>
+    </nav>
+
+    <div class="vistas" id="vistas">
+      <!-- INVERNADERO -->
+      <section class="vista activa" id="vistaInvernadero">
+        <div class="inv-cabecera vidrio">
+          <div class="inv-titulo">
+            <h2 id="tituloInvernadero">Invernadero</h2>
+            <p id="subInvernadero">Toca una parcela para plantar</p>
+          </div>
+          <div class="inv-acciones">
+            <button class="btn btn-suave" id="btnRegarTodo">💧 Regar todo</button>
+            <button class="btn btn-suave" id="btnCosecharTodo">🧺 Cosechar todo</button>
+            <button class="btn btn-oro" id="btnAmpliar">＋ Ampliar</button>
+          </div>
+        </div>
+        <div class="deco-estante" id="decoEstante"></div>
+        <div class="parcelas" id="parcelas"></div>
+        <div class="inv-pie vidrio">
+          <div class="pie-dato"><span>🌡️</span><b id="datoTemp">22°</b><small>clima</small></div>
+          <div class="pie-dato"><span>💧</span><b id="datoRiego">Manual</b><small>riego</small></div>
+          <div class="pie-dato"><span>🌱</span><b id="datoSuelo">Tierra simple</b><small>suelo</small></div>
+          <div class="pie-dato"><span>💡</span><b id="datoLuz">Natural</b><small>luz</small></div>
+          <div class="pie-dato"><span>⚡</span><b id="datoVel">×1.00</b><small>crecimiento</small></div>
+        </div>
+      </section>
+
+      <!-- LABORATORIO -->
+      <section class="vista" id="vistaLaboratorio"></section>
+      <!-- MERCADO -->
+      <section class="vista" id="vistaMercado"></section>
+      <!-- INVESTIGACIÓN -->
+      <section class="vista" id="vistaInvestigacion"></section>
+      <!-- EQUIPO -->
+      <section class="vista" id="vistaEquipo"></section>
+      <!-- MISIONES -->
+      <section class="vista" id="vistaMisiones"></section>
+      <!-- DECORACIÓN -->
+      <section class="vista" id="vistaDecoracion"></section>
+      <!-- ENCICLOPEDIA -->
+      <section class="vista" id="vistaEnciclopedia"></section>
+      <!-- LOGROS -->
+      <section class="vista" id="vistaLogros"></section>
+      <!-- VITRINA (marcador compartido) -->
+      <section class="vista" id="vistaVitrina"></section>
+    </div>
+  </main>
+
+  <!-- ---------- DERECHA ---------- -->
+  <aside class="panel panel-der" id="panelDer">
+    <div class="panel-cuerpo" id="cuerpoDetalle"></div>
+  </aside>
+</div>
+
+<!-- ============ REGISTRO INFERIOR ============ -->
+<footer class="registro vidrio" id="registro">
+  <button class="reg-toggle" id="regToggle" title="Mostrar/ocultar registro">▾</button>
+  <div class="reg-cabecera">
+    <span class="reg-tit">📋 Bitácora</span>
+    <div class="reg-filtros" id="regFiltros">
+      <button class="rf activa" data-f="todo">Todo</button>
+      <button class="rf" data-f="cosecha">Cosecha</button>
+      <button class="rf" data-f="genetica">Genética</button>
+      <button class="rf" data-f="venta">Ventas</button>
+      <button class="rf" data-f="evento">Eventos</button>
+    </div>
+  </div>
+  <div class="reg-lista" id="regLista"></div>
+</footer>
+
+<!-- ============ CAPAS FLOTANTES ============ -->
+<div class="avisos" id="avisos" aria-live="polite"></div>
+<div class="flotantes" id="flotantes" aria-hidden="true"></div>
+<div class="modal-fondo" id="modalFondo"><div class="modal vidrio" id="modal"></div></div>
+<div class="tooltip" id="tooltip" role="tooltip"></div>
+
+<nav class="nav-movil vidrio" id="navMovil">
+  <button data-movil="izq"><span>🎒</span><b>Bolsa</b></button>
+  <button class="activa" data-movil="centro"><span>🪴</span><b>Juego</b></button>
+  <button data-movil="der"><span>🔍</span><b>Detalle</b></button>
+  <button data-movil="log"><span>📋</span><b>Bitácora</b></button>
+</nav>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,12 +1,16 @@
 // Subir esta versión en cada cambio de index.html: fuerza a los teléfonos a
 // descartar el HTML viejo en vez de seguir ejecutándolo desde la caché.
-const CACHE_NAME = "nuestro-rincon-v25";
+const CACHE_NAME = "nuestro-rincon-v27";
 const APP_SHELL = [
   "/",
   "/index.html",
   "/manifest.webmanifest",
   "/assets/icons/icon.svg",
-  "/assets/icons/icon-maskable.svg"
+  "/assets/icons/icon-maskable.svg",
+  "/juegos/invernadero/",
+  "/juegos/invernadero/index.html",
+  "/juegos/invernadero/style.css",
+  "/juegos/invernadero/script.js"
 ];
 
 self.addEventListener("install", (event) => {
@@ -33,14 +37,18 @@ self.addEventListener("fetch", (event) => {
   if (url.pathname.startsWith("/assets/audio/")) return;
 
   if (event.request.mode === "navigate") {
+    // Ojo: solo la portada se guarda bajo "/". Antes se cacheaba cualquier
+    // navegacion en esa clave, asi que entrar a /juegos/invernadero/ dejaba el
+    // HTML del juego como pagina principal sin conexion.
+    const esPortada = url.pathname === "/" || url.pathname === "/index.html";
     event.respondWith(
       fetch(event.request)
         .then((response) => {
           const copia = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put("/", copia));
+          caches.open(CACHE_NAME).then((cache) => cache.put(esPortada ? "/" : event.request, copia));
           return response;
         })
-        .catch(() => caches.match("/") || caches.match("/index.html"))
+        .catch(() => caches.match(event.request).then((c) => c || caches.match("/") || caches.match("/index.html")))
     );
     return;
   }

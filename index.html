@@ -1446,6 +1446,7 @@
   .jar-mini-stats b{display:block;font-family:'Playfair Display',serif;color:var(--dorado);font-size:1.05rem;}
   .jar-mini-stats span{font-size:.66rem;color:var(--gris);line-height:1.25;display:block;margin-top:2px;}
   .jx-card.jardin{background:linear-gradient(150deg,#8ec98f,#5f9f74);}
+  .jx-card.invernadero{background:linear-gradient(150deg,#c2a5d8,#8a9a7b);}
   @media (max-width:400px){
     .jar-lienzo{height:180px;}
     .jar-petalos{font-size:1.7rem;}
@@ -4822,6 +4823,19 @@ function jxCerrarApp(){
 }
 function jxAtras(){ if(jxPantalla === 'hub') jxCerrarApp(); else jxIr('hub'); }
 
+
+/* ===== Invernadero (juego aparte, en /juegos/invernadero/) ===== */
+const INV_CLAVE = 'invernaderoRincon_v1';
+const INV_ESPECIES_TOTAL = 356;
+function invHerbarioTxt(){
+  try {
+    const bruto = localStorage.getItem(INV_CLAVE);
+    if(!bruto) return 'nuevo';
+    const d = JSON.parse(bruto);
+    const n = d && d.herbario ? Object.keys(d.herbario).length : 0;
+    return n + '/' + INV_ESPECIES_TOTAL;
+  } catch(e){ return 'nuevo'; }
+}
 /* ===== Lanzador + repintado ===== */
 function pintarJuegos(){
   asegurarJuegos();
@@ -4889,6 +4903,10 @@ function jxRenderHub(){
         '<div style="flex:1"><div class="jx-card-nom">Clínica Kinésica</div>' +
         '<div class="jx-card-desc">Evalúa, diagnostica y trata pacientes de verdad; hazla crecer</div></div>' +
         '<span class="jx-card-stat">⭐ ' + j.clinica.reputacion + '</span></button>' +
+      '<button class="jx-card invernadero full" data-url="juegos/invernadero/"><div class="sheen"></div><div class="jx-card-emo">🌷</div>' +
+        '<div style="flex:1"><div class="jx-card-nom">Invernadero</div>' +
+        '<div class="jx-card-desc">Cruza flores, descubre genética de verdad y completa un herbario de 356 especies</div></div>' +
+        '<span class="jx-card-stat">📖 ' + invHerbarioTxt() + '</span></button>' +
       '<button class="jx-card closet full" data-ir="closet"><div class="sheen"></div><div class="jx-card-emo">👗</div>' +
         '<div style="flex:1"><div class="jx-card-nom">Clóset de ' + m.nombre + '</div>' +
         '<div class="jx-card-desc">Viste y decora a tu gatito con lo que ganas</div></div></button>' +
@@ -4903,6 +4921,11 @@ function jxRenderHub(){
   document.getElementById('jxEditNom').onclick = (e) => { e.stopPropagation(); jxRenombrar(); };
   document.getElementById('jxPetHolder').onclick = () => { jxSonido('tap'); jxIr('closet'); };
   el.querySelectorAll('[data-ir]').forEach(b => b.onclick = () => { jxSonido('tap'); jxIr(b.dataset.ir); });
+  el.querySelectorAll('[data-url]').forEach(b => b.onclick = () => {
+    jxSonido('tap');
+    guardar();
+    location.href = b.dataset.url;
+  });
   document.getElementById('jxReset').onclick = jxReiniciarProgreso;
   const daily = document.getElementById('jxDaily');
   daily.onclick = disp ? jxReclamarDiario : null;
