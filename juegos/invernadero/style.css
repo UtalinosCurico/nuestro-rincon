@@ -47,6 +47,7 @@
   /* Superficies */
   --vidrio:rgba(253,251,246,.72);
   --vidrio-2:rgba(253,251,246,.55);
+  --vidrio-solido:rgba(252,249,241,.93);   /* recambio sin desenfoque */
   --vidrio-borde:rgba(255,255,255,.62);
   --sombra-s:0 2px 8px rgba(80,66,48,.08);
   --sombra-m:0 8px 26px rgba(80,66,48,.13);
@@ -86,6 +87,7 @@ body.noche{
   --tinta-tenue:#8e8778;
   --vidrio:rgba(44,45,52,.74);
   --vidrio-2:rgba(44,45,52,.55);
+  --vidrio-solido:rgba(41,43,50,.95);
   --vidrio-borde:rgba(255,255,255,.12);
   --sombra-s:0 2px 8px rgba(0,0,0,.28);
   --sombra-m:0 8px 26px rgba(0,0,0,.34);
@@ -498,6 +500,8 @@ body.noche .inv-titulo h2{color:var(--salvia);}
 .btn-rojo{background:linear-gradient(140deg,#e0a0a0,#c47070);color:#fff;box-shadow:0 5px 14px rgba(196,112,112,.34);}
 .btn-lila{background:linear-gradient(140deg,var(--lavanda),#9d8dd0);color:#fff;box-shadow:0 5px 14px rgba(157,141,208,.34);}
 .btn-mini{padding:5px 11px;font-size:.74rem;}
+.btn.urgente{animation:latidoBtn 1.9s ease-in-out infinite;}
+@keyframes latidoBtn{0%,100%{box-shadow:0 5px 14px rgba(176,140,60,.38)}50%{box-shadow:0 0 0 5px rgba(217,138,138,.3),0 5px 14px rgba(176,140,60,.5)}}
 .btn-bloque{width:100%;}
 
 .tarjeta{
@@ -966,6 +970,35 @@ body.noche .nav-movil button.activa{color:var(--salvia);}
   .marca{padding:4px 6px;}
   .top-stats .stat-gema{display:none;}
 }
+
+/* ============ AHORRO DE BATERÍA ============
+   El `backdrop-filter` es, de lejos, lo más caro de esta interfaz: obliga a
+   la GPU a re-desenfocar el fondo en cada capa y en cada fotograma, y en el
+   teléfono eso se nota en la mano. En pantallas chicas y en modo ahorro se
+   cambia por un fondo sólido translúcido, que se ve casi igual.            */
+@media (max-width:820px){
+  .vidrio,.panel,.nav-vistas,.tarjeta,.aviso,.modal{
+    backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+    background:var(--vidrio-solido);
+  }
+  .modal-fondo{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(60,52,40,.55);}
+  /* Animaciones decorativas en bucle: bonitas en el escritorio, caras aquí. */
+  .marca-icono,.deco-pieza,.vacio-emo,.cliente-cara,.det-lienzo svg,.helice i{animation:none!important;}
+  .rayos{display:none;}
+  .parcela::before{background:none;}
+}
+body.ahorro .escena{display:none;}
+body.ahorro{background:linear-gradient(180deg,#e8eee0,#f5efe1);}
+body.ahorro.noche{background:linear-gradient(180deg,#262a31,#2f333b);}
+body.ahorro .vidrio,body.ahorro .panel,body.ahorro .nav-vistas,
+body.ahorro .tarjeta,body.ahorro .aviso,body.ahorro .modal{
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  background:var(--vidrio-solido);
+}
+body.ahorro *,body.ahorro *::before,body.ahorro *::after{
+  animation-duration:0s!important;animation-iteration-count:1!important;
+}
+body.ahorro .btn::after,body.ahorro .ficha::after,body.ahorro .sheen{display:none;}
 
 /* Accesibilidad: menos movimiento */
 @media (prefers-reduced-motion:reduce){

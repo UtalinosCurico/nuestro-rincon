@@ -17,22 +17,26 @@
    0. CONSTANTES
    ============================================================ */
 const JUEGO = {
-  version: '1.1.0',
-  clave: 'invernaderoRincon_v1',
-  claveCopia: 'invernaderoRincon_v1_copia',   // salvavidas local
+  version: '1.2.0',
+  claveVieja: 'invernaderoRincon_v1',         // guardado anterior, sin dueño
   api: '/api/estado',
   marcadorCada: 60000,        // ms entre publicaciones del marcador
   respaldoCada: 300000,       // ms entre respaldos completos a la nube
   guardadoCada: 12000,        // ms entre autoguardados
-  tickMs: 100,                // paso de simulación
   diaMs: 6 * 60 * 1000,       // duración real de un día del juego
   diasPorEstacion: 7,
   offlineMax: 14 * 60 * 60 * 1000,
   parcelasIniciales: 6,
   parcelasMax: 48,
-  almacenInicial: 40,
+  almacenInicial: 60,
   registroMax: 140,
 };
+
+/* El guardado es de la PERSONA, no del aparato. Antes había una sola clave y
+   al cambiar de perfil se heredaba la partida del otro (y encima se subía a su
+   nombre). Cada quien tiene la suya y cambiar de perfil cambia de invernadero. */
+const claveDe = persona => JUEGO.claveVieja + '__' + (persona || 'invitado');
+const claveCopiaDe = persona => claveDe(persona) + '_copia';
 
 const ESTACIONES = [
   { id:'primavera', nombre:'Primavera', emo:'🌸', crec:1.15, agua:1.0,  mut:1.10, precio:1.00,
@@ -62,6 +66,17 @@ const HORAS = { amanecer:[5,8], mañana:[8,12], tarde:[12,18], atardecer:[18,20]
    ============================================================ */
 const $  = (s, c) => (c || document).querySelector(s);
 const $$ = (s, c) => Array.from((c || document).querySelectorAll(s));
+
+/* Se calcula una vez: en el móvil se recorta calidad para no achicharrar
+   la batería (menos fps, menos partículas, sin desenfoque de cristal). */
+let _movil = null;
+function esMovil() {
+  if (_movil === null) {
+    _movil = window.matchMedia('(max-width:820px)').matches ||
+             /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+  }
+  return _movil;
+}
 
 const lim   = (v, a, b) => v < a ? a : v > b ? b : v;
 const azar  = (a, b) => a + Math.random() * (b - a);
@@ -562,7 +577,7 @@ function precioBase(f) {
   return Math.round(p);
 }
 /** XP que da cosechar esta flor. */
-const xpDe = f => Math.round(4 + f.puntos * 1.6 + rarezaPorId(f.rareza).xp * 5);
+const xpDe = f => Math.round(3 + f.puntos * 1.1 + rarezaPorId(f.rareza).xp * 3.2);
 
 /* ============================================================
    4. DIBUJO DE PLANTAS (SVG generado)
@@ -1139,7 +1154,8 @@ function estadoNuevo() {
     evento: null,
     registro: [],
     stats: {},
-    ajustes: { musica: true, sfx: true, volMusica: 0.35, volSfx: 0.55, particulas: true, tema: 'auto' },
+    ajustes: { musica: true, sfx: true, volMusica: 0.35, volSfx: 0.55, particulas: true,
+               tema: 'auto', ahorro: false, autoDespejar: true },
   };
   for (let i = 0; i < JUEGO.parcelasMax; i++) {
     e.parcelas.push({ i, abierta: i < JUEGO.parcelasIniciales, planta: null, agua: 100, plaga: 0 });
@@ -1154,29 +1170,47 @@ function guardar(forzar) {
   if (!E) return;
   if (!forzar && !sucio) return;
   E.t = Date.now();
+  E.duenio = quien() || null;
   try {
+    const clave = claveDe(E.duenio);
     const txt = JSON.stringify(E);
     // Antes de pisar el guardado bueno se aparta una copia: si la escritura
     // se corta a medias o el estado se corrompe, queda de dónde volver.
-    const previo = localStorage.getItem(JUEGO.clave);
-    if (previo && previo.length > 40) localStorage.setItem(JUEGO.claveCopia, previo);
-    localStorage.setItem(JUEGO.clave, txt);
+    const previo = localStorage.getItem(clave);
+    if (previo && previo.length > 40) localStorage.setItem(claveCopiaDe(E.duenio), previo);
+    localStorage.setItem(clave, txt);
     sucio = false;
   } catch (err) {
     aviso('⚠️', 'No se pudo guardar', 'El almacenamiento del navegador está lleno.', 'malo');
   }
 }
-function cargar() {
-  let bruto = null;
-  try { bruto = localStorage.getItem(JUEGO.clave); } catch (err) { bruto = null; }
-  if (!bruto) {
-    // Si el guardado principal desapareció pero queda la copia, se usa esa
-    // antes de dar por perdida la partida.
-    try { bruto = localStorage.getItem(JUEGO.claveCopia); } catch (err) { bruto = null; }
-    if (bruto) log && console.info('Invernadero: recuperado desde la copia local.');
+
+/** Carga el invernadero de una persona (o el del invitado si no hay perfil). */
+function cargar(persona) {
+  const leer = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  let bruto = leer(claveDe(persona));
+  if (!bruto) bruto = leer(claveCopiaDe(persona));
+  if (!bruto && persona) {
+    // Migración: el guardado antiguo no tenía dueño. Se le entrega a la primera
+    // persona que entre, y solo si ella todavía no tiene invernadero propio.
+    const viejo = leer(JUEGO.claveVieja);
+    if (viejo) {
+      bruto = viejo;
+      try {
+        localStorage.setItem(claveDe(persona), viejo);
+        localStorage.removeItem(JUEGO.claveVieja);
+        localStorage.removeItem(JUEGO.claveVieja + '_copia');
+      } catch (e) { /* sin sitio: se sigue igual */ }
+    }
   }
   if (!bruto) return estadoNuevo();
   return revivir(bruto) || estadoNuevo();
+}
+
+/** ¿Esta persona ya tiene invernadero en este aparato? */
+function tienePartida(persona) {
+  try { return !!(localStorage.getItem(claveDe(persona)) || localStorage.getItem(claveCopiaDe(persona))); }
+  catch (e) { return false; }
 }
 /** Convierte el texto guardado en un estado completo, o null si no se puede. */
 function revivir(bruto) {
@@ -1221,7 +1255,7 @@ function importarPartida(txt) {
   try {
     const d = JSON.parse(decodeURIComponent(escape(atob(txt.trim()))));
     if (!d || !d.parcelas) throw new Error('formato');
-    localStorage.setItem(JUEGO.clave, JSON.stringify(d));
+    localStorage.setItem(claveDe(quien()), JSON.stringify(d));
     location.reload();
   } catch (err) {
     aviso('⚠️', 'Archivo inválido', 'Ese texto no es una partida de Invernadero.', 'malo');
@@ -1279,7 +1313,10 @@ function sumar(stat, n) {
   E.stats[stat] = (E.stats[stat] || 0) + (n === undefined ? 1 : n);
   tocar();
 }
-const xpNecesaria = niv => Math.round(100 * Math.pow(niv, 1.62));
+/* Curva de nivel. Estaba floja: con 30 cosechas ya se iba por el nivel 5 y el
+   juego se destapaba entero en una tarde. Sube más rápido con el nivel para
+   que las semillas y las mejoras caras tarden en llegar. */
+const xpNecesaria = niv => Math.round(140 * Math.pow(niv, 2.05));
 function darXP(n) {
   E.xp += n;
   sumar('xpTotal', n);
@@ -1670,7 +1707,7 @@ function descubrir(f, cod) {
   E.herbario[f.especie] = { fecha: Date.now(), veces: 1, vendidas: 0, mejor: 0, cod, gen: E.mundo.dia };
   E.stats.especies = Object.keys(E.herbario).filter(k => !k.startsWith('sec-')).length;
   E.stats.secretos = Object.keys(E.herbario).filter(k => k.startsWith('sec-')).length;
-  darXP(30 + f.puntos * 4);
+  darXP(18 + f.puntos * 2.2);
   log(`Nueva especie en el herbario: <b>${f.nombre}</b>`, 'genetica');
   aviso(f.emo, '¡Especie nueva!', f.nombre + ' · ' + rarezaPorId(f.rareza).nombre, f.secreto ? 'logro' : 'oro');
   sonido(f.secreto ? 'secreto' : 'descubrir');
@@ -1741,6 +1778,20 @@ function regar(idx, silencio) {
   tocar();
   return true;
 }
+/** Vacía el almacén de lo más barato hasta dejarlo a media carga. */
+function despejarAMano() {
+  if (ocupado() < capacidad() * 0.35) {
+    aviso('📦', 'Almacén holgado', 'Todavía tienes sitio de sobra.');
+    return;
+  }
+  const antes = ocupado();
+  const total = despejarAlmacen(0.5);
+  if (!total) { aviso('📦', 'Nada que despejar', 'Guarda al menos ' + DESPEJE_RESERVA + ' montones de semillas.'); return; }
+  sonido('moneda');
+  flotar('+' + monedas(total) + ' 🪙', '#b08c3c');
+  aviso('🧹', 'Almacén despejado', `Liberaste ${antes - ocupado()} espacios y ganaste ${monedas(total)} 🪙.`, 'oro');
+  pintarTodo();
+}
 function regarTodo() {
   let n = 0;
   E.parcelas.forEach(p => { if (p.abierta && p.agua < 99) { if (regar(p.i, true)) n++; } });
@@ -1764,22 +1815,23 @@ function cosechar(idx, silencio) {
   if (!p || !p.planta || p.planta.prog < 1) return false;
   const pl = p.planta;
   const f = fen(pl.cod);
-  if (!hayEspacio(2)) {
-    if (!silencio) aviso('📦', 'Almacén lleno', 'Vende o amplía el almacén antes de cosechar.', 'malo');
-    return false;
-  }
   const b = bonos();
-  // La flor cosechada
+  // Cosechar NUNCA se bloquea: la flor siempre se recoge. Antes, con el
+  // almacén lleno no se podía cosechar nada y el juego se trababa entero.
   darFlor(genDec(pl.cod));
-  // Semillas: autofecundación, así que los recesivos se reparten de verdad
-  let nSem = 1 + b.semillasExtra + (suerte(0.32) ? 1 : 0) + (pl.salud > 85 ? 1 : 0);
+  // Semillas: autofecundación, así que los recesivos se reparten de verdad.
+  // Solo entran las que caben; si sobran, se avisa en vez de trabar la partida.
+  let nSem = 1 + b.semillasExtra + (suerte(0.28) ? 1 : 0) + (pl.salud > 85 ? 1 : 0);
   if (pl.salud < 45) nSem = Math.max(0, nSem - 1);
   const mut = probMutacion();
-  for (let i = 0; i < nSem && hayEspacio(); i++) {
+  let perdidas = 0;
+  for (let i = 0; i < nSem; i++) {
+    if (!hayEspacio()) { perdidas = nSem - i; break; }
     const hijo = autofecundar(genDec(pl.cod), mut);
     darSemilla(hijo.gen, 'cosecha');
     if (hijo.mutados.length) sumar('mutaciones');
   }
+  if (perdidas) avisarAlmacenLleno(perdidas);
   const xp = Math.round(xpDe(f) * (0.55 + pl.salud / 200));
   darXP(xp);
   sumar('cosechas');
@@ -1804,6 +1856,19 @@ function cosechar(idx, silencio) {
   }
   tocar();
   return true;
+}
+/* Un solo aviso cada tanto, con la solución a un toque, en vez de repetirlo
+   en cada cosecha. */
+let ultimoAvisoAlmacen = 0;
+function avisarAlmacenLleno(perdidas) {
+  sumar('semillasPerdidas', perdidas);
+  // Con el auto-despeje encendido esto casi no pasa; y si pasa, no hace falta
+  // repetirlo cada rato: el botón «Despejar» ya late en la cabecera.
+  if (window.__silencio || E.ajustes.autoDespejar) return;
+  const ahora = Date.now();
+  if (ahora - ultimoAvisoAlmacen < 180000) return;
+  ultimoAvisoAlmacen = ahora;
+  aviso('📦', 'Almacén lleno', 'Las flores se siguen cosechando, pero las semillas de más se pierden. Toca «Despejar» o enciende el auto-despeje en Ajustes.', 'malo');
 }
 function cosecharTodo() {
   let n = 0;
@@ -2134,7 +2199,7 @@ function despedir(id) {
 /* ============================================================
    MOTOR: un tick simula todo lo que pasa en `dt` milisegundos
    ============================================================ */
-const auto = { riego: 0, ciencia: 0, colecc: 0, cosecha: 0, venta: 0 };
+const auto = { riego: 0, ciencia: 0, colecc: 0, cosecha: 0, venta: 0, despeje: 0 };
 
 function motorTick(dt) {
   if (!E) return;
@@ -2236,6 +2301,17 @@ function motorTick(dt) {
       if (ocupado() > capacidad() * 0.75) venderSemillasSobrantes(['comun', 'poco'], 3);
       // Y si aún así sigue lleno, se vende lo más barato para no atascarse.
       if (ocupado() > capacidad() * 0.82) despejarAlmacen();
+    }
+  }
+
+  // --- Auto-despeje del almacén (gratis y de serie)
+  // Antes esto solo llegaba con `aut5`, que cuesta medio millón: hasta
+  // entonces el almacén se llenaba y el juego se trababa.
+  if (E.ajustes.autoDespejar) {
+    auto.despeje += dt;
+    if (auto.despeje > 8000) {
+      auto.despeje = 0;
+      if (ocupado() > capacidad() * 0.9) despejarAlmacen(0.7);
     }
   }
 
@@ -2417,6 +2493,15 @@ function pintarTop() {
   const barra = $('#capacidadBarra');
   barra.style.width = lim(ocu / cap * 100, 0, 100) + '%';
   barra.classList.toggle('lleno', ocu >= cap);
+  // El botón de despejar se enciende cuando el almacén empieza a apretar.
+  const bd = $('#btnDespejar');
+  if (bd) {
+    const apreta = ocu >= cap * 0.85;
+    bd.classList.toggle('btn-oro', apreta);
+    bd.classList.toggle('btn-suave', !apreta);
+    bd.classList.toggle('urgente', apreta);
+    bd.innerHTML = apreta ? `📦 Despejar · ${ocu}/${cap}` : '📦 Despejar';
+  }
   $('#subInvernadero').textContent = subtituloInvernadero();
   $('#btnAmpliar').innerHTML = parcelasAbiertas() >= JUEGO.parcelasMax
     ? '🏡 Completo' : `＋ Ampliar · ${monedas(costoParcela())} 🪙`;
@@ -3509,6 +3594,12 @@ function modalAjustes() {
       <input type="range" min="0" max="100" value="${a.volSfx * 100}" data-vol="sfx"></div>
     <div class="ajuste-fila"><div class="ajuste-txt"><b>Partículas</b><small>Confeti, chispas y gotas</small></div>
       <div class="interruptor ${a.particulas ? 'on' : ''}" data-toggle="particulas"></div></div>
+    <div class="ajuste-fila"><div class="ajuste-txt"><b>Auto-despejar el almacén</b>
+      <small>Cuando se llena, vende solo lo más barato y guarda los ${DESPEJE_RESERVA} montones de semillas más valiosos.</small></div>
+      <div class="interruptor ${a.autoDespejar ? 'on' : ''}" data-toggle="autoDespejar"></div></div>
+    <div class="ajuste-fila"><div class="ajuste-txt"><b>Ahorro de batería</b>
+      <small>Quita el fondo animado y los efectos. Si el teléfono se calienta, enciéndelo.</small></div>
+      <div class="interruptor ${a.ahorro ? 'on' : ''}" data-toggle="ahorro"></div></div>
     <div class="ajuste-fila"><div class="ajuste-txt"><b>Tema</b><small>El fondo también cambia con la hora del juego</small></div>
       <select id="selTema" style="padding:7px 13px;border-radius:99px;border:1px solid rgba(140,125,105,.22);background:var(--vidrio-2)">
         <option value="auto" ${a.tema === 'auto' ? 'selected' : ''}>Automático</option>
@@ -3681,9 +3772,11 @@ const Fondo = {
     this.crearHojas();
   },
   medir() {
-    const d = Math.min(2, window.devicePixelRatio || 1);
+    // Dibujar a 2× en un móvil es cuadruplicar píxeles para unas gotas de
+    // lluvia: se recorta la resolución del lienzo, que no se nota y ahorra mucho.
+    const d = Math.min(esMovil() ? 1.25 : 1.6, window.devicePixelRatio || 1);
     this.ancho = window.innerWidth; this.alto = window.innerHeight;
-    this.lienzo.width = this.ancho * d; this.lienzo.height = this.alto * d;
+    this.lienzo.width = Math.round(this.ancho * d); this.lienzo.height = Math.round(this.alto * d);
     this.ctx.setTransform(d, 0, 0, d, 0, 0);
   },
   crearNubes() {
@@ -3741,10 +3834,11 @@ const Fondo = {
   clima(dt) {
     const c = this.ctx;
     c.clearRect(0, 0, this.ancho, this.alto);
-    if (!E.ajustes.particulas) return;
+    if (!E.ajustes.particulas || E.ajustes.ahorro) { this.particulas.length = 0; return; }
     const cl = E.mundo.clima;
-    const objetivo = cl === 'lluvia' ? 140 : cl === 'tormenta' ? 240 : cl === 'nieve' ? 110 :
-                     cl === 'niebla' ? 26 : cl === 'viento' ? 30 : E.mundo.estacion === 0 ? 26 : 0;
+    let objetivo = cl === 'lluvia' ? 140 : cl === 'tormenta' ? 240 : cl === 'nieve' ? 110 :
+                   cl === 'niebla' ? 26 : cl === 'viento' ? 30 : E.mundo.estacion === 0 ? 26 : 0;
+    if (esMovil()) objetivo = Math.round(objetivo * 0.4);
     // Ajusta la cantidad de partículas poco a poco
     while (this.particulas.length < objetivo) this.particulas.push(this.nueva(cl));
     while (this.particulas.length > objetivo) this.particulas.pop();
@@ -3844,11 +3938,77 @@ const PERSONAS = ['Catalina', 'Diego'];
 function quien() {
   try { return localStorage.getItem('rinconQuien') || null; } catch (e) { return null; }
 }
+/**
+ * Cambia de perfil. Cambiar de persona cambia de invernadero: se guarda el
+ * actual bajo su dueño y se carga (o se estrena) el de la otra. Nunca se
+ * hereda el progreso del otro, que era justo el error de la versión anterior.
+ */
 function fijarQuien(q) {
+  const antes = quien();
+  if (antes === q) { cerrarModal(); return; }
+  if (E && antes) guardar(true);
+
+  // Si estabas jugando sin decir quién eras, ese invernadero pasa a ser tuyo
+  // en vez de quedar huérfano bajo «invitado».
+  const adopta = !antes && E && progresoDe(E) > 25 && !tienePartida(q);
   try { localStorage.setItem('rinconQuien', q); } catch (e) { /* modo privado */ }
+  if (adopta) {
+    E.duenio = q;
+    guardar(true);
+    try { localStorage.removeItem(claveDe(null)); localStorage.removeItem(claveCopiaDe(null)); } catch (e) {}
+    log(`Este invernadero pasa a ser de <b>${q}</b>.`, 'evento');
+    cerrarModal();
+    Nube.arrancar();
+    pintarTodo();
+    return;
+  }
+
+  if (E) {
+    const estrena = !tienePartida(q);
+    E = cargar(q);
+    E.duenio = q;
+    cacheFen.clear();
+    sel = null;
+    lab.a = lab.b = null; lab.ultimo = null;
+    Nube.lista = false; Nube.remoto = null; Nube.ultimoMarcador = 0; Nube.ultimoRespaldo = 0; Nube.firma = '';
+    guardar(true);
+    log(`Ahora juega <b>${q}</b>${estrena ? ' — invernadero nuevo' : ''}.`, 'evento');
+    aviso(q === 'Catalina' ? '🌷' : '🌿', 'Hola, ' + q,
+      estrena ? 'Este es tu invernadero, empieza de cero.' : 'Cargamos tu invernadero.', 'oro');
+    pintarParcelas();
+  }
   cerrarModal();
   Nube.arrancar();
   pintarTodo();
+}
+
+/** Borra por completo el invernadero de una persona, aquí y en la nube. */
+function reiniciarPersona(persona) {
+  confirmar('Reiniciar el invernadero de ' + persona,
+    `Se borra la partida de <b>${persona}</b> en este aparato y su marcador y respaldo en la nube. ` +
+    `No se toca la del otro. Esto no tiene vuelta atrás.`, async () => {
+    try {
+      localStorage.removeItem(claveDe(persona));
+      localStorage.removeItem(claveCopiaDe(persona));
+    } catch (e) { /* nada que borrar */ }
+    try {
+      if (!Nube.lista) await Nube.leer();
+      await Nube.escribir(r => { delete r.marcador[persona]; delete r.respaldo[persona]; });
+    } catch (e) {
+      aviso('⚠️', 'La nube no respondió', 'Se borró aquí; la nube se limpia sola al volver la conexión.', 'malo');
+    }
+    if (quien() === persona) {
+      E = estadoNuevo();
+      E.duenio = persona;
+      cacheFen.clear(); sel = null;
+      Nube.ultimoMarcador = 0; Nube.ultimoRespaldo = 0; Nube.firma = '';
+      guardar(true);
+      log(`Invernadero de <b>${persona}</b> reiniciado.`, 'evento');
+      pintarParcelas();
+    }
+    aviso('🧹', 'Listo', 'El invernadero de ' + persona + ' quedó en cero.');
+    pintarTodo();
+  });
 }
 
 /** Puntuación bruta de una partida, para comparar cuál va más avanzada. */
@@ -4006,7 +4166,7 @@ function modalRestaurar(copia, aqui, alla) {
     </div>`);
   $('#btnRestaurarNube').onclick = () => {
     // El estado de este aparato se aparta antes de reemplazarlo.
-    try { localStorage.setItem(JUEGO.claveCopia, JSON.stringify(E)); } catch (e) { /* sin sitio */ }
+    try { localStorage.setItem(claveCopiaDe(quien()), JSON.stringify(E)); } catch (e) { /* sin sitio */ }
     const nuevo = revivir(s);
     if (!nuevo) { aviso('⚠️', 'No se pudo restaurar', 'El respaldo llegó dañado.', 'malo'); return; }
     E = nuevo;
@@ -4157,6 +4317,7 @@ function alPulsar(e) {
     el('data-toggle').classList.toggle('on', E.ajustes[v]);
     Audio2.aplicarVolumen();
     if (v === 'musica' && E.ajustes.musica) Audio2.musica();
+    if (v === 'ahorro') { document.body.classList.toggle('ahorro', E.ajustes.ahorro); Fondo.medir(); }
     tocar(); actualizarBotonSonido();
     return;
   }
@@ -4173,12 +4334,10 @@ function alPulsar(e) {
   if (el('data-importar')) { modalImportar(); return; }
   if (el('data-ayuda')) { modalAyuda(); return; }
   if (el('data-borrar')) {
-    confirmar('Empezar de cero', 'Se borra todo: plantas, herbario, investigación y logros. No hay vuelta atrás.', () => {
-      localStorage.removeItem(JUEGO.clave);
-      location.reload();
-    });
+    reiniciarPersona(quien() || 'invitado');
     return;
   }
+  if ((v = d('data-reiniciar')) !== null) { reiniciarPersona(v); return; }
 }
 
 function abrirPanelMovil(cual) {
@@ -4208,6 +4367,7 @@ function conectarUI() {
 
   $('#btnRegarTodo').onclick = regarTodo;
   $('#btnCosecharTodo').onclick = cosecharTodo;
+  $('#btnDespejar').onclick = despejarAMano;
   $('#btnAmpliar').onclick = ampliarInvernadero;
   $('#btnAjustes').onclick = modalAjustes;
   $('#btnMenuMovil').onclick = modalAjustes;
@@ -4309,13 +4469,22 @@ function conectarUI() {
 
 /* ---------- Bucle principal ---------- */
 let ultimoReal = 0, acumUI = 0, acumGuardado = 0, acumLogros = 0, acumAmbiente = 0, acumNube = 0;
-function bucle(marca) {
+/* El bucle no necesita 60 fps: es un juego de plantas que crecen en minutos.
+   Limitarlo baja muchísimo el trabajo de GPU y el calentamiento del teléfono. */
+function fpsObjetivo() {
+  if (!E || E.ajustes.ahorro) return 12;
+  return esMovil() ? 24 : 40;
+}
+function bucle() {
   requestAnimationFrame(bucle);
   const ahora = Date.now();
   if (!ultimoReal) ultimoReal = ahora;
   let dt = ahora - ultimoReal;
+  if (!E) { ultimoReal = ahora; return; }
+  // Fotograma saltado: se acumula el tiempo y se sale sin tocar el DOM.
+  if (dt < 1000 / fpsObjetivo()) return;
   ultimoReal = ahora;
-  if (!E) return;
+  if (document.hidden) return;   // en segundo plano no se dibuja nada
 
   // Si la pestaña estuvo dormida, se pone al día de golpe y en silencio
   // en vez de perder ese tiempo: el reloj del mundo es real, no de frames.
@@ -4326,17 +4495,17 @@ function bucle(marca) {
   }
 
   if (dt > 0) motorTick(dt);
-  Fondo.paso(Math.min(dt, 60));
+  Fondo.paso(Math.min(dt, 90));
 
   acumUI += dt;
-  if (acumUI > 220) {
+  if (acumUI > (esMovil() ? 420 : 250)) {
     acumUI = 0;
     pintarTop();
     if (vistaActual === 'invernadero') refrescarParcelas();
     if (sel && sel.tipo === 'parcela') pintarDetalle();
   }
   acumAmbiente += dt;
-  if (acumAmbiente > 1200) { acumAmbiente = 0; aplicarAmbiente(); }
+  if (acumAmbiente > 2500) { acumAmbiente = 0; aplicarAmbiente(); }
   acumLogros += dt;
   if (acumLogros > 2500) { acumLogros = 0; revisarLogros(); }
   acumGuardado += dt;
@@ -4347,7 +4516,7 @@ function bucle(marca) {
 
 /* ---------- Arranque ---------- */
 function arrancar() {
-  E = cargar();
+  E = cargar(quien());
   const fuera = Date.now() - (E.t || Date.now());
   refrescarMisiones();
   const off = simularOffline(fuera);
@@ -4359,6 +4528,7 @@ function arrancar() {
   E.stats.especies = Object.keys(E.herbario).filter(k => !k.startsWith('sec-')).length;
   E.stats.secretos = Object.keys(E.herbario).filter(k => k.startsWith('sec-')).length;
 
+  document.body.classList.toggle('ahorro', !!E.ajustes.ahorro);
   Fondo.iniciar();
   conectarUI();
   actualizarBotonSonido();
