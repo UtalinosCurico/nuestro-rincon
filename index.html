@@ -1101,6 +1101,23 @@
   .cl-revision-tit{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--tinta);}
   .cl-revision-pct{font-family:'Playfair Display',serif;font-size:2.6rem;color:#4b7d99;line-height:1.1;margin:4px 0;}
   .cl-revision-sub{font-size:.78rem;color:var(--gris);}
+  .cl-sim{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--blanco);
+    border:1.5px solid var(--crema-oscuro);border-radius:16px;padding:12px 14px;margin-bottom:12px;
+    cursor:pointer;font-family:'Jost',sans-serif;}
+  .cl-sim.on{border-color:#7fae96;background:linear-gradient(140deg,#f2faf4,var(--blanco));}
+  .cl-sim b{display:block;font-size:.9rem;color:var(--tinta);}
+  .cl-sim small{display:block;font-size:.74rem;color:var(--gris);line-height:1.45;margin-top:2px;}
+  .cl-sim-luz{font-size:1.3rem;color:var(--crema-oscuro);}
+  .cl-sim.on .cl-sim-luz{color:#7fae96;}
+  .cl-pauta{background:linear-gradient(150deg,#f3f7f4,#e8f0ea);border:1.5px solid #bcd6c4;border-radius:18px;
+    padding:15px 16px;margin-bottom:12px;}
+  .cl-pauta-tit{font-family:'Playfair Display',serif;font-size:1.05rem;color:#3f6b4d;text-align:center;}
+  .cl-pauta-nota{font-family:'Playfair Display',serif;font-size:2.4rem;color:#3f6b4d;text-align:center;line-height:1.1;}
+  .cl-pauta-sub{text-align:center;font-size:.78rem;color:#5c7a66;margin-bottom:12px;}
+  .cl-pauta-falto{margin-top:11px;background:rgba(255,255,255,.7);border-radius:12px;padding:10px 13px;}
+  .cl-pauta-falto b{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:#5c7a66;margin-bottom:5px;}
+  .cl-pauta-falto ul{margin:0;padding-left:18px;}
+  .cl-pauta-falto li{font-size:.8rem;color:#4a6353;line-height:1.55;margin-bottom:3px;}
   .cl-pista-btn{width:100%;background:var(--crema);border:1.5px dashed var(--crema-oscuro);border-radius:15px;
     padding:11px;margin-bottom:9px;cursor:pointer;font-family:'Jost',sans-serif;font-size:.88rem;color:var(--gris);}
   .cl-pista-btn small{display:block;font-size:.7rem;opacity:.85;margin-top:2px;}
@@ -7059,6 +7076,7 @@ const KIN_RANGOS = [
 /* Acciones que se pueden hacer con un paciente. `t` es el tiempo que
    consume; las imágenes además cuestan plata. */
 const CL_ACC = [
+  { id:'presentarse', g:'anam', n:'Presentarse y confirmar quién es', t:1 },
   { id:'inicio',  g:'anam', n:'¿Cómo y cuándo empezó?',        t:1 },
   { id:'trauma',  g:'anam', n:'¿Hubo golpe o caída?',          t:1 },
   { id:'noche',   g:'anam', n:'¿Le duele de noche?',           t:1 },
@@ -7068,6 +7086,7 @@ const CL_ACC = [
   { id:'alarma',  g:'anam', n:'Preguntar por síntomas de alarma', t:1 },
   { id:'creencias', g:'anam', n:'¿Qué cree que tiene y qué espera?', t:1 },
   { id:'charla',  g:'anam', n:'Conversar un poco, romper el hielo', t:1 },
+  { id:'consentimiento', g:'exam', n:'Pedir permiso antes de examinar', t:1 },
   { id:'insp',    g:'exam', n:'Inspección',                    t:1 },
   { id:'palp',    g:'exam', n:'Palpación',                     t:1 },
   { id:'activo',  g:'exam', n:'Rango de movimiento activo',    t:2 },
@@ -7079,6 +7098,97 @@ const CL_ACC = [
 ];
 
 const CL_TIEMPO_BASE = 13;   // unidades de tiempo por paciente
+
+/* ============================================================
+   PAUTA DEL DOCENTE
+   En la simulación de la U no la evalúan solo por acertar el cuadro:
+   la evalúan por cómo condujo la atención. Esta es esa pauta, y se
+   prende con el interruptor de modo simulación (no cambia nada del
+   juego normal: es una capa de evaluación encima).
+
+   `aplica` hace que la pauta se adapte al caso: no se le exige medir
+   movilidad pasiva en un paciente respiratorio.
+   ============================================================ */
+const CL_PAUTA = [
+  { id:'presenta', dom:'Trato', pts:5,  txt:'Se presentó y confirmó con quién estaba hablando',
+    ok:t => t.hechas.indexOf('presentarse') !== -1 },
+  { id:'consent',  dom:'Trato', pts:5,  txt:'Pidió permiso antes de poner las manos',
+    ok:t => t.hechas.indexOf('consentimiento') !== -1 },
+  { id:'vinculo',  dom:'Trato', pts:4,  txt:'Se tomó un momento para conocer al paciente',
+    ok:t => (t.rapport || 0) > 0 },
+
+  { id:'inicio',   dom:'Anamnesis', pts:8,  txt:'Indagó cómo y cuándo empezó',
+    ok:t => t.hechas.indexOf('inicio') !== -1 },
+  { id:'alarma',   dom:'Anamnesis', pts:12, txt:'Preguntó por banderas rojas',
+    ok:t => t.hechas.indexOf('alarma') !== -1 },
+  { id:'antec',    dom:'Anamnesis', pts:7,  txt:'Recogió antecedentes de salud',
+    ok:t => t.hechas.indexOf('antec') !== -1 },
+  { id:'amarilla', dom:'Anamnesis', pts:7,  txt:'Exploró creencias y expectativas',
+    ok:t => t.hechas.indexOf('creencias') !== -1 || !!t.amarillaVista },
+
+  { id:'insp',     dom:'Examen', pts:6, txt:'Inspeccionó antes de palpar',
+    aplica:t => clPautaTiene(t, 'insp'),
+    ok:t => t.hechas.indexOf('insp') !== -1 &&
+            (t.hechas.indexOf('palp') === -1 || t.hechas.indexOf('insp') < t.hechas.indexOf('palp')) },
+  { id:'palp',     dom:'Examen', pts:5, txt:'Palpó la zona comprometida',
+    aplica:t => clPautaTiene(t, 'palp'), ok:t => t.hechas.indexOf('palp') !== -1 },
+  { id:'rom',      dom:'Examen', pts:8, txt:'Midió movilidad activa y pasiva',
+    aplica:t => clPautaTiene(t, 'activo') || clPautaTiene(t, 'pasivo'),
+    ok:t => t.hechas.indexOf('activo') !== -1 && t.hechas.indexOf('pasivo') !== -1 },
+  { id:'fuerza',   dom:'Examen', pts:6, txt:'Evaluó fuerza',
+    aplica:t => clPautaTiene(t, 'fuerza'), ok:t => t.hechas.indexOf('fuerza') !== -1 },
+  { id:'neuro',    dom:'Examen', pts:7, txt:'Hizo el tamizaje neurológico',
+    aplica:t => clPautaTiene(t, 'neuro'), ok:t => t.hechas.indexOf('neuro') !== -1 },
+  { id:'prueba',   dom:'Examen', pts:8, txt:'Eligió una prueba especial pertinente',
+    aplica:t => !!t.caso.prueba,
+    ok:t => t.hechas.indexOf('test_' + t.caso.prueba) !== -1 },
+
+  { id:'dx',       dom:'Razonamiento', pts:15, txt:'Llegó al diagnóstico correcto',
+    ok:t => t.errores === 0 && !t.dxFallado },
+  { id:'cuaderno', dom:'Razonamiento', pts:10, txt:'Justificó bien cada hallazgo',
+    ok:t => (t.correccion ? t.correccion.pct : 0) >= 70 },
+
+  { id:'tto',      dom:'Plan', pts:12, txt:'Indicó el manejo correcto para la fase',
+    ok:t => !t.ttoFallado },
+  { id:'derivar',  dom:'Plan', pts:10, txt:'Reconoció que correspondía derivar',
+    aplica:t => !!t.caso.derivar, ok:t => !!t.derivado },
+];
+
+/* Acciones que no aportan al diferencial y por lo tanto no se anotan. */
+const CL_NO_ANOTA = ['creencias','charla','presentarse','consentimiento'];
+
+/* Un ítem de examen solo se exige si el caso lo contempla. */
+function clPautaTiene(t, k){
+  const dx = KIN_DX[t.caso.id];
+  return !!(dx && dx.c && dx.c[k]);
+}
+
+/* El interruptor va por aparato, no en el estado compartido: ella puede
+   practicar con pauta mientras el otro juega el tycoon tranquilo. */
+function clSimulacion(){
+  try{ return localStorage.getItem('rinconSimulacion') === '1'; }catch(e){ return false; }
+}
+function clFijarSimulacion(v){
+  try{ localStorage.setItem('rinconSimulacion', v ? '1' : '0'); }catch(e){}
+  jxSonido('tap');
+  clPanel();
+}
+
+function clEvaluarPauta(t){
+  const items = CL_PAUTA.filter(x => !x.aplica || x.aplica(t));
+  const doms = {};
+  let obt = 0, tot = 0;
+  const faltó = [];
+  items.forEach(x => {
+    const cumple = !!x.ok(t);
+    tot += x.pts;
+    if(cumple) obt += x.pts; else faltó.push(x);
+    if(!doms[x.dom]) doms[x.dom] = { obt:0, tot:0 };
+    doms[x.dom].tot += x.pts;
+    if(cumple) doms[x.dom].obt += x.pts;
+  });
+  return { items, doms, obt, tot, pct: tot ? Math.round(obt / tot * 100) : 100, faltó };
+}
 
 /* atajo para escribir menos: p(texto, sube, baja) */
 const p = (t, s, n) => ({ t, s: s ? s.split(' ') : [], n: n ? n.split(' ') : [] });
@@ -9893,6 +10003,15 @@ function clPanelRecepcion(cont){
     }
   }
 
+  // --- interruptor de modo simulación ---
+  const sim = clSimulacion();
+  html += '<button class="cl-sim' + (sim ? ' on' : '') + '" id="clSim">' +
+    '<div><b>🧑‍🏫 Modo simulación ' + (sim ? '· puesto' : '· apagado') + '</b>' +
+    '<small>' + (sim
+      ? 'Al cerrar cada caso aparece la pauta del docente: trato, anamnesis, examen, razonamiento y plan.'
+      : 'Préndelo para que te evalúen la atención completa, como en la estación de la U.') + '</small></div>' +
+    '<span class="cl-sim-luz">' + (sim ? '●' : '○') + '</span></button>';
+
   // --- resumen de la semana pasada ---
   const w = clSemanaEstado();
   if(w.previa && !w.vista && w.previa.atendidos){
@@ -10059,6 +10178,8 @@ function clPanelRecepcion(cont){
   cont.querySelectorAll('[data-quien]').forEach(b => b.onclick = () => clFijarQuien(b.dataset.quien));
   const bd = document.getElementById('clDiario');
   if(bd) bd.onclick = clEmpezarDiario;
+  const bsim = document.getElementById('clSim');
+  if(bsim) bsim.onclick = () => clFijarSimulacion(!clSimulacion());
   const br = document.getElementById('clCerrarResumen');
   if(br) br.onclick = () => { clSemanaEstado().vista = true; jxSonido('tap'); clGuardar(true); clPanel(); };
   const bn = document.getElementById('clNoche');
@@ -10284,7 +10405,7 @@ function clCorregirCuaderno(t){
   let aciertos = 0, relevantes = 0, falsos = 0;
   const fallos = [];
   t.pistas.forEach(p => {
-    if(!p.accId || p.accId === 'creencias' || p.accId === 'charla') return;
+    if(!p.accId || CL_NO_ANOTA.indexOf(p.accId) !== -1) return;
     const verdad = clVerdadPista(t, p.accId);
     const marcas = t.notas[p.accId] || {};
     t.dif.forEach(d => {
@@ -10335,7 +10456,7 @@ function clUsarPista(){
   // busca un hallazgo ya conseguido cuya anotación esté mal o falte
   const candidatos = [];
   t.pistas.forEach(p => {
-    if(!p.accId || p.accId === 'creencias' || p.accId === 'charla') return;
+    if(!p.accId || CL_NO_ANOTA.indexOf(p.accId) !== -1) return;
     const verdad = clVerdadPista(t, p.accId);
     const marcas = t.notas[p.accId] || {};
     t.dif.forEach(d => {
@@ -10385,7 +10506,14 @@ function clHacerAccion(accId){
   const dx = KIN_DX[caso.id];
   let pista = null, etiqueta = acc.n, accIdPista = acc.id;
 
-  if(acc.id === 'charla'){
+  if(acc.id === 'presentarse'){
+    const n = clPacNom(caso, t.ficha).split(' ')[0];
+    pista = { t:'“Sí, ' + n + ', mucho gusto. Vengo por lo que le contaba.”', s:[], n:[] };
+    jxSonido('bien');
+  }else if(acc.id === 'consentimiento'){
+    pista = { t:'“Sí, dale nomás. Avíseme si algo me va a doler.”', s:[], n:[] };
+    jxSonido('bien');
+  }else if(acc.id === 'charla'){
     // no aporta al diferencial, pero el paciente se suelta y confía
     const v = (t.ficha && t.ficha.vida) || clGenVida();
     const cuenta = [v.familia, v.hobby, v.dato][Math.min(t.rapport || 0, 2)];
@@ -10469,7 +10597,8 @@ function clHacerAccion(accId){
     });
     if(aMedias) clDecir(t, 'nota', 'Te lo cuenta a medias: hay que insistir para sacarle algo más.');
   }else{
-    const voz = CL_VOZ_EXAM[acc.id] || (acc.g === 'test' ? 'Le haces la ' + (acc.n || '').replace('Prueba de ', 'prueba de ') : acc.n);
+    const voz = acc.id === 'consentimiento' ? 'Le explicas qué le vas a hacer y pides permiso'
+      : CL_VOZ_EXAM[acc.id] || (acc.g === 'test' ? 'Le haces la ' + (acc.n || '').replace('Prueba de ', 'prueba de ') : acc.n);
     clDecir(t, 'nota', voz + ': ' + textoFinal, { accId:accIdPista });
   }
 
@@ -10552,7 +10681,7 @@ function clPanelCaso(cont){
     const nomPac = clPacNom(c, f).split(' ')[0];
     html += '<div class="cl-chat">';
     t.chat.forEach(m => {
-      const marcable = m.accId && m.accId !== 'creencias' && m.accId !== 'charla' && t.fase === 'investigar';
+      const marcable = m.accId && CL_NO_ANOTA.indexOf(m.accId) === -1 && t.fase === 'investigar';
       if(m.de === 'nota'){
         html += '<div class="cl-msg nota' + (m.accId === t.ultima ? ' nueva' : '') + '">' + m.txt;
       }else{
@@ -10636,6 +10765,27 @@ function clPanelCaso(cont){
     }else{
       html += '<div class="cl-nota izq">No se te escapó ninguna. Leíste todos los hallazgos como correspondía.</div>';
     }
+    // el docente, solo si está puesto el modo simulación
+    if(clSimulacion()){
+      const pa = clEvaluarPauta(t);
+      const nota = pa.pct >= 80 ? 'Aprobada con holgura' : pa.pct >= 60 ? 'Aprobada, con observaciones' : 'Reprobada: faltó lo básico';
+      html += '<div class="cl-pauta"><div class="cl-pauta-tit">🧑‍🏫 Pauta del docente</div>' +
+        '<div class="cl-pauta-nota">' + pa.pct + '%</div>' +
+        '<div class="cl-pauta-sub">' + nota + ' · ' + pa.obt + ' de ' + pa.tot + ' puntos</div>' +
+        '<div class="cl-temas">' + Object.keys(pa.doms).map(d => {
+          const v = pa.doms[d], pc = Math.round(v.obt / v.tot * 100);
+          return '<div class="cl-tema"><span>' + d + '</span>' +
+            '<div class="cl-tema-barra"><div class="' + (pc < 50 ? 'mal' : pc < 80 ? 'medio' : '') + '" style="width:' + pc + '%"></div></div>' +
+            '<b>' + pc + '%</b></div>';
+        }).join('') + '</div>';
+      if(pa.faltó.length){
+        html += '<div class="cl-pauta-falto"><b>Lo que el docente te habría marcado</b><ul>' +
+          pa.faltó.map(x => '<li>' + x.txt + '</li>').join('') + '</ul></div>';
+      }else{
+        html += '<div class="cl-pauta-falto"><b>No te marcó nada. Estación completa.</b></div>';
+      }
+      html += '</div>';
+    }
     html += '<button class="cl-btn-grande" id="clCerrarRev">Cerrar el caso</button>';
   }
 
@@ -10660,6 +10810,7 @@ function clPanelCaso(cont){
 
 function clDerivarPaciente(){
   const t = clTurno, c = t.caso, e = clEstado();
+  t.derivado = true;
   const urgente = t.urgente || c.urgente;
   if(c.derivar){
     // caso con banderas rojas: derivar ERA lo correcto
