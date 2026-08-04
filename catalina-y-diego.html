@@ -7067,6 +7067,7 @@ const CL_ACC = [
   { id:'antec',   g:'anam', n:'Antecedentes de salud',         t:1 },
   { id:'alarma',  g:'anam', n:'Preguntar por síntomas de alarma', t:1 },
   { id:'creencias', g:'anam', n:'¿Qué cree que tiene y qué espera?', t:1 },
+  { id:'charla',  g:'anam', n:'Conversar un poco, romper el hielo', t:1 },
   { id:'insp',    g:'exam', n:'Inspección',                    t:1 },
   { id:'palp',    g:'exam', n:'Palpación',                     t:1 },
   { id:'activo',  g:'exam', n:'Rango de movimiento activo',    t:2 },
@@ -8938,6 +8939,131 @@ function clResumenHist(h){
    se sienten dos personas distintas.
    ============================================================ */
 
+/* ============================================================
+   MOTOR DE HABLA
+   No es una IA de verdad: es un reescritor. El hallazgo clínico es
+   siempre el mismo, pero cada persona lo dice a su manera. Las reglas
+   solo tocan palabras de todos los días (mucho, trabajo, auto) y nunca
+   términos clínicos, números ni anatomía: el contenido no se toca.
+   Ojo con las reglas: van por frase ("el trabajo"), no por palabra suelta,
+   porque "trabajo" también es verbo y quedaba "me duele cuando la pega".
+   ============================================================ */
+const CL_HABLAS = [
+  { id:'neutro', nom:'Habla neutra', emo:'🙂', peso:5,
+    saludo:['Hola, buenas tardes.', 'Hola, ¿cómo está?'],
+    pre:['', '', 'Mire,'], post:['.', '.', '.'],
+    sw:[] },
+  { id:'pobla', nom:'De población', emo:'🧢', peso:4,
+    saludo:['Wena doctora.', 'Ya, buenas.', 'Hola, ¿cómo estamos?'],
+    pre:['Ya po,', 'Es que mire,', 'Oiga,', 'Sipo,'],
+    post:[' po.', ', cachai.', ', si o no.', ' na que ver.'],
+    sw:[[/\bmucho\b/gi,'caleta'], [/\bmuy\b/gi,'súper'], [/\bel trabajo\b/gi,'la pega'],
+        [/\bmi trabajo\b/gi,'mi pega'], [/\bdel trabajo\b/gi,'de la pega'], [/\bal trabajo\b/gi,'a la pega'],
+        [/\bel auto\b/gi,'el carro'], [/\bnada\b/gi,'na'], [/\bamigo\b/gi,'compadre']] },
+  { id:'huaso', nom:'De campo', emo:'🤠', peso:3,
+    saludo:['Buenas tardes, patrona.', 'Con permiso, señorita.', 'Buenas, que le vaya bien.'],
+    pre:['Fíjese que', 'Le cuento que', 'Mire usted,'],
+    post:[', pues.', ', sí señorita.', ' nomás.', ', así es la cosa.'],
+    sw:[[/\bmucho\b/gi,'harto'], [/\bel trabajo\b/gi,'la pega'], [/\bel auto\b/gi,'la camioneta'],
+        [/\brápido\b/gi,'ligerito'], [/\bpoco\b/gi,'poquito']] },
+  { id:'cuico', nom:'Del barrio alto', emo:'🎾', peso:2,
+    saludo:['Hola, ¿cómo estái?', 'Hola, qué tal.', 'Buenas, gracias por recibirme.'],
+    pre:['O sea,', 'Mira,', 'La verdad es que', 'Te cuento que'],
+    post:['.', ', ¿cachái?', ', tipo.', ', o sea.'],
+    sw:[[/\bmucho\b/gi,'bastante'], [/\bmuy\b/gi,'demasiado'], [/\bel trabajo\b/gi,'la oficina'],
+        [/\bla pega\b/gi,'el trabajo']] },
+  { id:'mayor', nom:'De adulto mayor', emo:'👵', peso:3,
+    saludo:['Hola, mijita linda.', 'Buenas tardes, doctorcita.', 'Hola, qué amable.'],
+    pre:['Le voy a contar,', 'Ay, fíjese que', 'Mire, hijita,'],
+    post:[', mijita.', ', ¿ya?', ' nomás, gracias a Dios.', ', qué le digo yo.'],
+    sw:[[/\bmucho\b/gi,'harto'], [/\bpoco\b/gi,'poquito'], [/\bcansado\b/gi,'cansadito']] },
+  { id:'joven', nom:'De cabro chico', emo:'🎧', peso:3,
+    saludo:['Hola, ¿todo bien?', 'Hola, qué tal.', 'Buenaaas.'],
+    pre:['O sea,', 'Es como que', 'La wea es que… perdón,'],
+    post:[', literal.', ' jaja.', ', o sea.', ', obvio.'],
+    sw:[[/\bmucho\b/gi,'caleta'], [/\bmuy\b/gi,'demasiado'], [/\bel trabajo\b/gi,'la pega']] },
+  { id:'nortino', nom:'Del norte', emo:'🏜️', peso:2,
+    saludo:['Buenas, oiga.', 'Hola, ¿cómo le va?'],
+    pre:['Oiga,', 'Le comento que', 'Mire,'],
+    post:[', ya.', ' oiga.', ', así nomás.'],
+    sw:[[/\bmucho\b/gi,'harto'], [/\bel trabajo\b/gi,'la faena'], [/\ben el trabajo\b/gi,'en la faena']] },
+  { id:'sureno', nom:'Del sur', emo:'🌧️', peso:2,
+    saludo:['Buenas tardes.', 'Hola, buenas.', 'Con permiso.'],
+    pre:['Le cuento que', 'Fíjese que', 'Resulta que'],
+    post:[', ¿ve?', ' nomás.', ', así es.'],
+    sw:[[/\bmucho\b/gi,'harto'], [/\bpoco\b/gi,'poquito']] },
+  { id:'migrante', nom:'De afuera', emo:'🌎', peso:2,
+    saludo:['Hola, mi amor, buenas tardes.', 'Buenas tardes, doctora, ¿cómo está?'],
+    pre:['Mira,', 'Fíjate que', 'Te cuento que'],
+    post:[', ¿verdad?', ', mi amor.', ', ¿sí me entiendes?'],
+    sw:[[/\bmucho\b/gi,'demasiado'], [/\bel trabajo\b/gi,'la chamba'], [/\bel auto\b/gi,'el carro']] },
+];
+
+/* Cada persona trae algo suyo. Sale conversando, no preguntando por el dolor,
+   y es lo que hace que el paciente deje de ser un cuadro clínico. */
+const CL_VIDA = {
+  familia:['tiene tres hijos y el más chico recién entró al colegio','vive con su mamá, que está delicada',
+    'es abuelo hace dos meses y anda con las fotos en el teléfono','se separó hace poco y todavía le cuesta',
+    'cría a su sobrina desde que la hermana se fue al norte','vive solo y no le gusta molestar a nadie',
+    'tiene una hija en la universidad, la primera de la familia','se casa en marzo y anda con eso en la cabeza'],
+  hobby:['juega a la pelota los domingos en la cancha del barrio','canta en el coro de la iglesia',
+    'tiene un huerto y le va bien con los tomates','sale a pescar cuando puede',
+    'baila cueca y este año compitió','anda en bici hasta la pega todos los días',
+    'teje y vende por internet','arregla autos viejos en el patio'],
+  dato:['es hincha de Colo-Colo y no lo esconde','trabaja desde los quince años',
+    'es el que cocina en la casa','llegó del sur hace veinte años y no volvería',
+    'está estudiando de noche para terminar cuarto medio','tiene una perra que se llama Luna',
+    'nunca en la vida había ido al kinesiólogo','le tiene miedo a las agujas, lo dice al tiro'],
+};
+function clGenVida(){
+  const al = a2 => a2[Math.floor(Math.random() * a2.length)];
+  return { familia: al(CL_VIDA.familia), hobby: al(CL_VIDA.hobby), dato: al(CL_VIDA.dato) };
+}
+
+/* Los pacientes de la ficha tienen su habla fija: es parte de quiénes son. */
+const CL_HABLA_CANON = {
+  huaso:'huaso', minero:'nortino', basquetbol:'joven', carrete:'joven', banderas:'mayor',
+  pinzamiento:'pobla', capsulitis:'cuico', manguito:'cuico', epicondilalgia:'pobla',
+  tunel:'neutro', dequervain:'neutro', lumbago:'pobla', radiculopatia:'pobla',
+  trocanterico:'neutro', lca:'joven', menisco:'pobla', patelofemoral:'cuico',
+  aquiles:'neutro', esguince:'joven', fascitis:'pobla', cervicalgia:'neutro',
+  epoc:'mayor', acv:'mayor', bronquiolitis:'neutro', neumonia:'sureno', postuci:'neutro',
+  parkinson:'mayor', facial:'pobla', artrosis:'pobla', cadera:'mayor', latigazo:'joven',
+  epimedial:'pobla', isquios:'pobla', cintilla:'cuico', canillera:'joven',
+  cauda:'pobla', tvp:'sureno', compartimental:'joven', cardiaco:'huaso',
+  fxestres:'cuico', septica:'mayor', radicervical:'pobla', cubital:'nortino',
+  estenosis:'mayor', coxartrosis:'mayor', pubalgia:'joven', rotura:'huaso',
+  escafoides:'joven', tibialpost:'pobla', morton:'cuico', vppb:'mayor',
+  esclerosis:'neutro', fxvertebral:'mayor',
+};
+
+function clHabla(id){ return CL_HABLAS.find(h => h.id === id) || CL_HABLAS[0]; }
+function clSortearHabla(){
+  const total = CL_HABLAS.reduce((a,h) => a + h.peso, 0);
+  let r = Math.random() * total;
+  for(const h of CL_HABLAS){ r -= h.peso; if(r <= 0) return h.id; }
+  return 'neutro';
+}
+
+/* Reescribe una frase en el habla de la persona. Solo cambia el registro:
+   los hallazgos, los números y los términos clínicos quedan intactos. */
+function clConHabla(hablaId, txt, i){
+  const h = clHabla(hablaId);
+  if(!h || h.id === 'neutro') return txt;
+  let t = txt;
+  h.sw.forEach(([re, a]) => { t = t.replace(re, a); });
+  // el remate va de vez en cuando, si no cansa
+  if(h.post.length && Math.random() < 0.5 && /[.!?]$/.test(t)){
+    t = t.replace(/[.]$/, h.post[Math.floor(Math.random() * h.post.length)]);
+  }
+  // y el arranque solo en la primera frase de la respuesta
+  if(i === 0 && h.pre.length && Math.random() < 0.45){
+    const pre = h.pre[Math.floor(Math.random() * h.pre.length)];
+    if(pre) t = pre + ' ' + t.charAt(0).toLowerCase() + t.slice(1);
+  }
+  return t;
+}
+
 /* Lo primero que dicen al sentarse, según cómo llegan de ánimo. */
 const CL_SALUDO = {
   adolorido:   ['Hola… disculpe, ando con dolor desde anoche.', 'Casi no dormí, la verdad.'],
@@ -8979,11 +9105,12 @@ function clHora(){
 
 /* Arma la respuesta del paciente: el hallazgo, dicho por él, con su tono. */
 function clVozPaciente(t, txt){
-  const msgs = [txt];
+  const habla = t.ficha && t.ficha.habla;
+  const msgs = [clConHabla(habla, txt, 0)];
   const r = t.ficha && t.ficha.rasgo;
   const m = CL_MULETILLA[r];
   // no en todas: si rematara siempre, cansa
-  if(m && Math.random() < 0.55) msgs.push(m[Math.floor(Math.random() * m.length)]);
+  if(m && Math.random() < 0.55) msgs.push(clConHabla(habla, m[Math.floor(Math.random() * m.length)], 1));
   return msgs;
 }
 
@@ -9050,6 +9177,8 @@ function clFichaEspera(caso){
     deriv: clSortearDerivador(),
     origen: al(CL_ORIGEN),
     espera: al(CL_ESPERA_FRASE),
+    habla: canon ? (CL_HABLA_CANON[caso.id] || 'neutro') : clSortearHabla(),
+    vida: clGenVida(),
     rasgo: al(CL_RASGOS).id,
     animo: al(CL_ANIMOS).id,
     acomp: Math.random() < probAcomp ? al(CL_ACOMP) : null,
@@ -9344,6 +9473,8 @@ function clFichaDia(fecha){
     prev: el(CL_PREVISION),
     origen: el(CL_ORIGEN),
     espera: el(CL_ESPERA_FRASE),
+    habla: CL_HABLA_CANON[caso.id] || 'neutro',
+    vida: { familia: el(CL_VIDA.familia), hobby: el(CL_VIDA.hobby), dato: el(CL_VIDA.dato) },
     rasgo: el(CL_RASGOS).id,
     animo: el(CL_ANIMOS).id,
     acomp: r() < 0.35 ? el(CL_ACOMP) : null,
@@ -10097,9 +10228,13 @@ function clIniciarCaso(i){
 function clAbrirConversacion(t){
   if(!t) return;
   const an = clAnimo(t.ficha && t.ficha.animo);
-  const saludo = (an && CL_SALUDO[an.id]) || ['Hola, buenas.'];
-  saludo.forEach(x => clDecir(t, 'pac', x));
-  clDecir(t, 'pac', t.caso.motivo + '.');
+  const habla = t.ficha && t.ficha.habla;
+  const h = clHabla(habla);
+  // primero saluda como saluda él, después cuenta a qué viene con su ánimo
+  clDecir(t, 'pac', h.saludo[Math.floor(Math.random() * h.saludo.length)]);
+  const saludo = (an && CL_SALUDO[an.id]) || [];
+  saludo.slice(1).forEach((x, i) => clDecir(t, 'pac', clConHabla(habla, x, i)));
+  clDecir(t, 'pac', clConHabla(habla, t.caso.motivo + '.', 0));
   if(t.ficha && t.ficha.acomp) clDecir(t, 'acomp', 'Yo lo acompaño, cualquier cosa pregúnteme a mí también.');
 }
 
@@ -10149,7 +10284,7 @@ function clCorregirCuaderno(t){
   let aciertos = 0, relevantes = 0, falsos = 0;
   const fallos = [];
   t.pistas.forEach(p => {
-    if(!p.accId || p.accId === 'creencias') return;
+    if(!p.accId || p.accId === 'creencias' || p.accId === 'charla') return;
     const verdad = clVerdadPista(t, p.accId);
     const marcas = t.notas[p.accId] || {};
     t.dif.forEach(d => {
@@ -10200,7 +10335,7 @@ function clUsarPista(){
   // busca un hallazgo ya conseguido cuya anotación esté mal o falte
   const candidatos = [];
   t.pistas.forEach(p => {
-    if(!p.accId || p.accId === 'creencias') return;
+    if(!p.accId || p.accId === 'creencias' || p.accId === 'charla') return;
     const verdad = clVerdadPista(t, p.accId);
     const marcas = t.notas[p.accId] || {};
     t.dif.forEach(d => {
@@ -10250,7 +10385,23 @@ function clHacerAccion(accId){
   const dx = KIN_DX[caso.id];
   let pista = null, etiqueta = acc.n, accIdPista = acc.id;
 
-  if(acc.id === 'creencias'){
+  if(acc.id === 'charla'){
+    // no aporta al diferencial, pero el paciente se suelta y confía
+    const v = (t.ficha && t.ficha.vida) || clGenVida();
+    const cuenta = [v.familia, v.hobby, v.dato][Math.min(t.rapport || 0, 2)];
+    t.rapport = (t.rapport || 0) + 1;
+    let txt = 'Le cuenta, de pasada, que ' + cuenta + '.';
+    // cuando ya hay confianza, sale solo lo que no habría dicho preguntando
+    if(t.rapport >= 2 && t.ficha && t.ficha.amarilla && !t.amarillaVista){
+      const am = CL_AMARILLAS.find(a2 => a2.id === t.ficha.amarilla);
+      if(am){
+        t.amarillaVista = true; t.amarilla = am.id;
+        txt += ' Y ya con más confianza suelta: “' + am.dice + '”';
+      }
+    }
+    pista = { t:txt, s:[], n:[] };
+    jxSonido('bien');
+  }else if(acc.id === 'creencias'){
     // acá se pesca (o no) la bandera amarilla: si no preguntas, el
     // tratamiento después rinde la mitad y no vas a saber por qué
     const am = t.ficha && t.ficha.amarilla ? CL_AMARILLAS.find(a => a.id === t.ficha.amarilla) : null;
@@ -10298,13 +10449,14 @@ function clHacerAccion(accId){
   // el minimizador y el aguantador entregan la mitad de lo que preguntas
   const pobre = clEfRasgo(t.ficha && t.ficha.rasgo, 'pistasPobres', false) && acc.g === 'anam' && acc.id !== 'acomp';
   // OJO: acá ya no se toca t.conf. El tablero sale del cuaderno del jugador.
-  const textoFinal = pista.t + (pobre && pista.s.length ? ' (te lo cuenta a medias)' : '');
+  const aMedias = pobre && pista.s.length > 0;
+  const textoFinal = pista.t + (aMedias ? ' (te lo cuenta a medias)' : '');
   t.pistas.push({
     accId: accIdPista,
     acc: etiqueta,
     txt: textoFinal,
     util: pista.s.length + pista.n.length > 0,
-    amarilla: acc.id === 'creencias' && !!t.amarilla,
+    amarilla: (acc.id === 'creencias' || acc.id === 'charla') && !!t.amarilla,
   });
   t.ultima = accIdPista;
 
@@ -10312,9 +10464,10 @@ function clHacerAccion(accId){
   if(acc.g === 'anam'){
     clDecir(t, 'kine', acc.n);
     const quien = acc.id === 'acomp' ? 'acomp' : 'pac';
-    clVozPaciente(t, textoFinal).forEach((m, i) => {
+    clVozPaciente(t, pista.t).forEach((m, i) => {
       clDecir(t, quien, m, i === 0 ? { accId:accIdPista, amarilla: acc.id === 'creencias' && !!t.amarilla } : null);
     });
+    if(aMedias) clDecir(t, 'nota', 'Te lo cuenta a medias: hay que insistir para sacarle algo más.');
   }else{
     const voz = CL_VOZ_EXAM[acc.id] || (acc.g === 'test' ? 'Le haces la ' + (acc.n || '').replace('Prueba de ', 'prueba de ') : acc.n);
     clDecir(t, 'nota', voz + ': ' + textoFinal, { accId:accIdPista });
@@ -10355,6 +10508,7 @@ function clPanelCaso(cont){
         (f.deriv ? '<span>' + clDerivador(f.deriv).emo + ' ' + clDerivador(f.deriv).nom + '</span>' : '<span>' + f.origen + '</span>') +
         '<span>' + CL_ESPECIALIDADES[c.esp].emo + ' ' + CL_ESPECIALIDADES[c.esp].nom + '</span>' +
         (f.acomp ? '<span>' + f.acomp.emo + ' viene con ' + f.acomp.nom + '</span>' : '') + '</div>' : '') +
+      (t.rapport ? '<div class="cl-ficha-ctx"><span>🤝 confianza ' + '●'.repeat(t.rapport) + '</span></div>' : '') +
       (ra ? '<div class="cl-rasgo"><span class="cl-rasgo-emo">' + ra.emo + '</span>' +
         '<div><b>' + ra.nom + '</b><small>' + ra.aviso + '</small></div></div>' : '') +
       (t.creencia ? '<div class="cl-creencia">Llega convencido de que tiene <b>' + clNombreDx(t.creencia) + '</b>. Ojo con eso.</div>' : '') +
@@ -10398,7 +10552,7 @@ function clPanelCaso(cont){
     const nomPac = clPacNom(c, f).split(' ')[0];
     html += '<div class="cl-chat">';
     t.chat.forEach(m => {
-      const marcable = m.accId && m.accId !== 'creencias' && t.fase === 'investigar';
+      const marcable = m.accId && m.accId !== 'creencias' && m.accId !== 'charla' && t.fase === 'investigar';
       if(m.de === 'nota'){
         html += '<div class="cl-msg nota' + (m.accId === t.ultima ? ' nueva' : '') + '">' + m.txt;
       }else{
@@ -10686,7 +10840,7 @@ function clCerrarCaso(){
     e.activos.push({
       id:c.id, sesion:0, progreso:0, recaidas:0, nota:'', ultimaCarga:null,
       adh: Math.max(15, Math.min(95, CL_ADH_INICIAL + clEfRasgo(t.ficha && t.ficha.rasgo, 'adherencia', 0) +
-           (clTieneHabil('empatia') ? 15 : 0))),
+           (clTieneHabil('empatia') ? 15 : 0) + (t.rapport || 0) * 8)),
       rasgo: t.ficha ? t.ficha.rasgo : null, alarma:null, faltas:0, visto:Date.now(),
       // si no preguntaste por creencias, la bandera amarilla viaja escondida
       amarilla: t.ficha ? t.ficha.amarilla : null,

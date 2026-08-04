@@ -64,6 +64,10 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 
 **Contenido clínico** — `KIN_CASOS` (53 casos, 9 de ellos `derivar:true` y 5 además `urgente:true`), `KIN_PRUEBAS` (39, con `sn`/`sp`), `KIN_MUSCULOS` (30), `KIN_RANGOS` (15), `CL_TTO_MAL` (distractores), `CL_AMARILLAS` y el motor de diferencial `KIN_DX` en `index.html` son la única fuente de verdad. Un caso nuevo necesita entrada en **seis** tablas: `KIN_CASOS`, `KIN_DX`, `CL_CORTO`, `CL_REGRESO`, `CL_TTO_MAL` y `CL_OCUPS` (más `CL_FEM` si la paciente es mujer).
 
+**Motor de habla** — `CL_HABLAS` (9 registros: población, campo, barrio alto, adulto mayor, cabro chico, norte, sur, migrante, neutro) reescribe cómo habla cada persona sin tocar el contenido. `clConHabla()` aplica saludo, arranque, remate y cambios léxicos. **Las reglas van por frase ("el trabajo"), nunca por palabra suelta**: "trabajo" también es verbo y quedaba "me duele cuando la pega". Los pacientes de la ficha tienen habla fija en `CL_HABLA_CANON`; los generados la sortean por peso.
+
+**Conversar** — la acción `charla` no aporta al diferencial: sube `t.rapport` (0-3), que se convierte en +8 de adherencia inicial por nivel. Cada persona trae una `vida` (familia, hobby, dato) que va saliendo. Con confianza ≥2 puede soltar sola la bandera amarilla. No es anotable en el cuaderno.
+
 **La consulta es un chat** — la anamnesis se muestra como conversación en `t.chat` (`clDecir()`): tus preguntas van como burbuja `kine`, las respuestas como `pac` o `acomp`, y los exámenes/pruebas como nota clínica (`nota`). `CL_SALUDO` abre según el ánimo y `CL_MULETILLA` remata según el rasgo. Las marcas del cuaderno cuelgan de la burbuja que trae el hallazgo, así que **todo mensaje con `accId` debe ser anotable**.
 
 **Mensajes entre sesiones** — `CL_MENSAJES` se sortea en `clSortearMensajes()` al entrar a la recepción, según el tiempo real desde la última sesión (`pac.visto`). El que va bien manda mensajes buenos, el que va mal manda problemas. Responder bien sube adherencia y reputación; `clCaducarMensajes()` castiga a los 20 min sin respuesta.
