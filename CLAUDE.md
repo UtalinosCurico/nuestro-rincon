@@ -68,9 +68,9 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 
 **Motor de habla** — `CL_HABLAS` (9 registros: población, campo, barrio alto, adulto mayor, cabro chico, norte, sur, migrante, neutro) reescribe cómo habla cada persona sin tocar el contenido. `clConHabla()` aplica saludo, arranque, remate y cambios léxicos. **Las reglas van por frase ("el trabajo"), nunca por palabra suelta**: "trabajo" también es verbo y quedaba "me duele cuando la pega". Los pacientes de la ficha tienen habla fija en `CL_HABLA_CANON`; los generados la sortean por peso.
 
-**Conversar** — la acción `charla` no aporta al diferencial: sube `t.rapport` (0-3), que se convierte en +8 de adherencia inicial por nivel. Cada persona trae una `vida` (familia, hobby, dato) que va saliendo. Con confianza ≥2 puede soltar sola la bandera amarilla. No es anotable en el cuaderno.
+**Conversar** — la acción `charla` no aporta al diferencial: sube `t.rapport` (0-3), que se convierte en +8 de adherencia inicial por nivel. Cada persona trae una `vida` (familia, hobby, dato) que va saliendo. Con confianza ≥2 puede soltar sola la bandera amarilla.
 
-**La consulta es un chat** — la anamnesis se muestra como conversación en `t.chat` (`clDecir()`): tus preguntas van como burbuja `kine`, las respuestas como `pac` o `acomp`, y los exámenes/pruebas como nota clínica (`nota`). `CL_SALUDO` abre según el ánimo y `CL_MULETILLA` remata según el rasgo. Las marcas del cuaderno cuelgan de la burbuja que trae el hallazgo, así que **todo mensaje con `accId` debe ser anotable**.
+**La consulta es un chat** — la anamnesis se muestra como conversación en `t.chat` (`clDecir()`): tus preguntas van como burbuja `kine`, las respuestas como `pac` o `acomp`, y los exámenes/pruebas como nota clínica (`nota`). `CL_SALUDO` abre según el ánimo y `CL_MULETILLA` remata según el rasgo.
 
 **Mensajes entre sesiones** — `CL_MENSAJES` se sortea en `clSortearMensajes()` al entrar a la recepción, según el tiempo real desde la última sesión (`pac.visto`). El que va bien manda mensajes buenos, el que va mal manda problemas. Responder bien sube adherencia y reputación; `clCaducarMensajes()` castiga a los 20 min sin respuesta.
 
@@ -90,7 +90,7 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 
 **Se juega a ciegas** — no hay tablero de hipótesis, ni porcentajes, ni marcar cada hallazgo con flechitas: Catalina probó esa versión y no se entendía. Ahora solo se ve contra qué cuadros compite el paciente y la consulta; ella razona en su cabeza y decide, como en la estación. `clLecturaHallazgos()` cierra el caso mostrando qué significaba cada hallazgo y qué se quedó sin buscar; su `pct` es **cobertura** (cuántos de los hallazgos que discriminaban alcanzó a buscar), no una nota de anotación.
 
-**Agenda del día** — `CL_AGENDA_DIA` (10) pacientes por jornada, que llegan **de a poco**: los intervalos son exponenciales (`clIntervaloLlegada()`, proceso de Poisson). Con la sala llena hay que empujar `ag.prox` hacia adelante o se acumula cola y entran todos de golpe al liberar un cupo. Las urgencias y los sucesos con `ef.llena` **no gastan cupo**. Al terminar la agenda aparece el cierre de jornada.
+**Horario de la clínica** — abre `CL_HORA_ABRE` (09:00), cierra `CL_HORA_CIERRA` (18:00) y hay `CL_AGENDA_DIA` (10) horas dadas. Cada paciente llega **a su hora** (`clLlenarSala()` compara `cita.min` con `ag.reloj`), no de golpe. El reloj corre `CL_MIN_POR_SEG` mientras está en la sala y **se detiene mientras atiende**, para no apurarla; cada consulta consume `CL_MIN_POR_CONSULTA`. A las 18:00 el día termina y hay que abrir el siguiente. La sala es de **4 personas máximo** a propósito: con más, se agobia. Urgencias y accidentes (`ef.llena`) se saltan la agenda.
 
 **Pruebas con Sn/Sp** — `clResultadoPrueba()` aplica SnNout (negativa con `sn ≥ KIN_SN_ALTA` descarta) y SpPin (positiva con `sp ≥ KIN_SP_ALTA` confirma). `KIN_PRUEBA_NEG` lista los casos cuya prueba de ficha sale **negativa**: sin eso, el Lasègue negativo del lumbago "confirmaría" un lumbago. `func:true` marca mediciones que no son pruebas diagnósticas (TM6M, Ashworth).
 
@@ -98,7 +98,7 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 
 **Sedes** — `c.sede` es el prestigio: `clAbrirSede()` resetea plata, equipo, personal, reputación y acreditaciones, pero conserva `dominados`, `hist`, `examen`, récords y misiones. Cada sede da `+CL_SEDE_PAGO` permanente vía `clMultPagoCaso()`, resta un punto de tiempo de consulta y agrega una hipótesis extra al diferencial en `clAccionesDe()`. La paleta del 3D cambia por sede.
 
-**Pistas** — `clUsarPista()` se recarga sola cada `clEsperaPista()` (5 min de reloj real, 3 con la habilidad `intuicion`; marca en `c.pistaT`). No revela el diagnóstico: corrige una anotación del cuaderno que esté mala o falte.
+**Pistas** — `clUsarPista()` se recarga sola cada `clEsperaPista()` (5 min de reloj real, 3 con la habilidad `intuicion`; marca en `c.pistaT`). No revela el diagnóstico: avisa qué falta explorar, o recuerda qué hallazgo descartaba algo.
 
 **Caso del día** — `clFichaDia(fecha)` sortea paciente **y** ficha completa con `clRngDia()`, un PRNG sembrado desde la fecha: los dos dispositivos obtienen exactamente el mismo caso sin coordinarse. Una pasada al día, sin reintentos (`t.diario` corta el reintento en `clResponderDx` y `clResponderTto`). Puntaje sobre 100 en `clPuntajeDiario()` y racha en `c.diario`. El marcador compartido vive en `c.diarioComp[persona]`; **quién juega en este aparato va en localStorage** (`rinconQuien`, vía `clQuien()`), no en el estado sincronizado.
 
