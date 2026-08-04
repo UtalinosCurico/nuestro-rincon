@@ -1101,6 +1101,14 @@
   .cl-revision-tit{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--tinta);}
   .cl-revision-pct{font-family:'Playfair Display',serif;font-size:2.6rem;color:#4b7d99;line-height:1.1;margin:4px 0;}
   .cl-revision-sub{font-size:.78rem;color:var(--gris);}
+  .cl-lee{display:block;margin-top:4px;font-size:.78rem;}
+  .cl-lee.sube{color:#3f6b4d;}
+  .cl-lee.baja{color:#a03c2e;}
+  .cl-compite{background:var(--blanco);border:1px solid var(--crema-oscuro);border-radius:15px;
+    padding:11px 13px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+  .cl-compite b{width:100%;font-size:.68rem;text-transform:uppercase;letter-spacing:.7px;color:#4b7d99;
+    font-weight:600;margin-bottom:2px;}
+  .cl-compite span{background:var(--crema);border-radius:999px;padding:4px 11px;font-size:.76rem;color:var(--tinta);}
   .cl-sim{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--blanco);
     border:1.5px solid var(--crema-oscuro);border-radius:16px;padding:12px 14px;margin-bottom:12px;
     cursor:pointer;font-family:'Jost',sans-serif;}
@@ -1108,6 +1116,11 @@
   .cl-sim b{display:block;font-size:.9rem;color:var(--tinta);}
   .cl-sim small{display:block;font-size:.74rem;color:var(--gris);line-height:1.45;margin-top:2px;}
   .cl-sim-luz{font-size:1.3rem;color:var(--crema-oscuro);}
+  .cl-jornada-fin{background:linear-gradient(150deg,#eae6f5,#ded8ef);border:1.5px solid #c3b8e0;
+    border-radius:18px;padding:15px 16px;margin-bottom:14px;text-align:center;}
+  .cl-jornada-fin-tit{font-family:'Playfair Display',serif;font-size:1.1rem;color:#5c4a80;}
+  .cl-jornada-fin p{margin:7px 0 0;font-size:.8rem;color:#6f5f8c;line-height:1.5;}
+  .cl-jornada-fin .cl-btn-grande{margin-top:12px;}
   .cl-sim.on .cl-sim-luz{color:#7fae96;}
   .cl-pauta{background:linear-gradient(150deg,#f3f7f4,#e8f0ea);border:1.5px solid #bcd6c4;border-radius:18px;
     padding:15px 16px;margin-bottom:12px;}
@@ -4529,6 +4542,7 @@ function asegurarJuegos(){
   if(k.evento && (typeof k.evento !== 'object' || !CL_EVENTOS.some(e => e.id === k.evento.id) ||
      typeof k.evento.restantes !== 'number' || k.evento.restantes <= 0)) k.evento = null;
   if(typeof k.evRoll !== 'number' || !isFinite(k.evRoll)) k.evRoll = -1;
+  if(typeof k.evUltimo !== 'number' || !isFinite(k.evUltimo)) k.evUltimo = 0;
   // urgencias, turno de noche, acreditación, misiones y examen
   if(k.urgencia && (typeof k.urgencia !== 'object' || !KIN_CASOS.some(c => c.id === k.urgencia.id))) k.urgencia = null;
   if(typeof k.urRoll !== 'number' || !isFinite(k.urRoll)) k.urRoll = -1;
@@ -4553,6 +4567,13 @@ function asegurarJuegos(){
       k.deriv[d.id] = { conf:50, enviados:0 };
     else k.deriv[d.id].conf = Math.max(0, Math.min(100, v.conf));
   });
+  if(!k.agenda || typeof k.agenda !== 'object' || typeof k.agenda.cupos !== 'number' || !isFinite(k.agenda.cupos)){
+    k.agenda = { dia:1, cupos:CL_AGENDA_DIA, prox:0, atendidosHoy:0 };
+  }else{
+    k.agenda.cupos = Math.max(0, Math.min(CL_AGENDA_DIA, k.agenda.cupos));
+    if(typeof k.agenda.dia !== 'number' || !isFinite(k.agenda.dia) || k.agenda.dia < 1) k.agenda.dia = 1;
+    if(typeof k.agenda.prox !== 'number' || !isFinite(k.agenda.prox)) k.agenda.prox = 0;
+  }
   if(k.semana && (typeof k.semana !== 'object' || typeof k.semana.n !== 'number')) k.semana = null;
   k.activos.forEach(pac => {
     if(pac.msg && (typeof pac.msg !== 'object' || !CL_MENSAJES.some(m => m.id === pac.msg.id))) pac.msg = null;
@@ -7145,7 +7166,7 @@ const CL_PAUTA = [
 
   { id:'dx',       dom:'Razonamiento', pts:15, txt:'Llegó al diagnóstico correcto',
     ok:t => t.errores === 0 && !t.dxFallado },
-  { id:'cuaderno', dom:'Razonamiento', pts:10, txt:'Justificó bien cada hallazgo',
+  { id:'cobertura', dom:'Razonamiento', pts:10, txt:'Buscó los hallazgos que discriminaban',
     ok:t => (t.correccion ? t.correccion.pct : 0) >= 70 },
 
   { id:'tto',      dom:'Plan', pts:12, txt:'Indicó el manejo correcto para la fase',
@@ -8862,12 +8883,16 @@ const CL_EVENTOS = [
     ef:{ llena:4, pago:2.0, tiempo:-1 } },
 ];
 const CL_EVENTO_DURA = 4;
+/* Frecuencia de los eventos: bajada a propósito para que la jornada normal
+   sea eso, normal, y el evento se sienta un suceso y no la rutina. */
+const CL_EVENTO_PROB = 0.10;
+const CL_EVENTO_ESPERA = 6;   // pacientes mínimos entre un evento y el siguiente
 const CL_ESPERA_MAX = 3;
 
 /* Urgencias que llegan en ambulancia: hay un reloj real y si se acaba,
    el paciente se va derivado por otro lado y la clínica pierde prestigio. */
 const CL_URGENCIA_SEG = 100;
-const CL_URGENCIA_PROB = 0.20;
+const CL_URGENCIA_PROB = 0.09;
 
 /* Costos fijos. Sin esto la plata solo sube y contratar no es una decisión.
    Ojo con el balance: mientras atiendes tú solo no hay planilla ni local que
@@ -8891,6 +8916,72 @@ const CL_ACTIVOS_MAX = 10;
 
 /* Cuánto aguanta alguien en la sala antes de irse a otra clínica. */
 const CL_PACIENCIA = 6 * 60000;
+
+/* ---------- agenda del día ----------
+   Antes la sala se llenaba de golpe hasta el tope y era una avalancha.
+   Ahora hay un cupo diario y la gente llega de a poco: los intervalos
+   entre llegadas son exponenciales (proceso de Poisson), que es como
+   llega la gente de verdad — a veces dos seguidos, a veces ninguno en
+   un buen rato. Las urgencias y los accidentes NO gastan cupo: por eso
+   son urgencias. */
+const CL_AGENDA_DIA = 10;         // pacientes agendados por jornada
+const CL_LLEGADA_MEDIA = 26000;   // ms promedio entre una llegada y la siguiente
+const CL_LLEGADA_MIN = 9000, CL_LLEGADA_MAX = 80000;
+
+function clIntervaloLlegada(){
+  const u = Math.max(1e-6, Math.random());
+  const t = -Math.log(u) * CL_LLEGADA_MEDIA;
+  return Math.max(CL_LLEGADA_MIN, Math.min(CL_LLEGADA_MAX, t));
+}
+function clAgenda(){
+  const c = clEstado();
+  if(!c.agenda || typeof c.agenda !== 'object' || typeof c.agenda.cupos !== 'number'){
+    c.agenda = { dia:1, cupos:CL_AGENDA_DIA, prox:0, atendidosHoy:0 };
+  }
+  return c.agenda;
+}
+/* Hace llegar a quienes correspondía según el tiempo transcurrido. */
+function clLlegadasPendientes(){
+  const c = clEstado(), ag = clAgenda();
+  const ahora = Date.now();
+  if(!ag.prox) ag.prox = ahora;                 // el primero del día llega al tiro
+  const tope = clEsperaMax();
+  let llegaron = 0, guardia = 0;
+  while(ag.cupos > 0 && c.sala.length < tope && ahora >= ag.prox && guardia++ < 40){
+    const caso = clSiguienteCaso(c.sala.map(x => x.id));
+    if(!caso) break;
+    c.sala.push(clFichaEspera(caso));
+    ag.cupos--;
+    ag.prox += clIntervaloLlegada();
+    llegaron++;
+  }
+  // Con la sala llena el reloj seguía corriendo y se acumulaba una cola que
+  // después entraba toda junta. Se empuja hacia adelante para que, al liberar
+  // un cupo de sala, entre uno y no cinco de una vez.
+  if(c.sala.length >= tope) ag.prox = Math.max(ag.prox, ahora + clIntervaloLlegada());
+  // y nunca se debe más de una llegada atrasada
+  if(ag.prox < ahora - CL_LLEGADA_MEDIA) ag.prox = ahora + clIntervaloLlegada();
+  return llegaron;
+}
+function clSegProxLlegada(){
+  const ag = clAgenda();
+  if(ag.cupos <= 0) return 0;
+  return Math.max(0, Math.ceil((ag.prox - Date.now()) / 1000));
+}
+function clJornadaTerminada(){
+  const c = clEstado(), ag = clAgenda();
+  return ag.cupos <= 0 && c.sala.length === 0 && !clTurno;
+}
+function clNuevaJornada(){
+  const c = clEstado(), ag = clAgenda();
+  ag.dia = (ag.dia || 1) + 1;
+  ag.cupos = CL_AGENDA_DIA;
+  ag.prox = Date.now();
+  ag.atendidosHoy = 0;
+  jxSonido('gana'); jxVibrar(20);
+  clGuardar(true);
+  clPanel();
+}
 
 /* Zonas que rotan como tema de la semana. */
 const CL_TEMAS = ['Hombro','Rodilla','Lumbar','Cervical','Tobillo','Muñeca','Cadera','Pie','Codo','Respiratorio','Neurológico','Muslo'];
@@ -8979,25 +9070,23 @@ function clSortearEvento(){
   const c = clEstado();
   if(c.evento && c.evento.restantes > 0) return;
   c.evento = null;
-  if(c.atendidos < 3) return;                 // los primeros pacientes, sin sobresaltos
+  if(c.atendidos < 5) return;                 // los primeros pacientes, sin sobresaltos
   if(c.evRoll === c.atendidos) return;        // un sorteo por paciente, no uno por repintado
+  // y tiene que haber pasado un rato desde el último
+  if(c.evUltimo && c.atendidos - c.evUltimo < CL_EVENTO_ESPERA) { c.evRoll = c.atendidos; return; }
   c.evRoll = c.atendidos;
-  if(Math.random() > 0.22) return;
+  if(Math.random() > CL_EVENTO_PROB) return;
   const abiertas = clEspecialidadesAbiertas();
   const posibles = CL_EVENTOS.filter(e => !e.ef.esp || abiertas.includes(e.ef.esp));
   if(!posibles.length) return;
   const e = posibles[Math.floor(Math.random() * posibles.length)];
   c.evento = { id:e.id, restantes:CL_EVENTO_DURA };
+  c.evUltimo = c.atendidos;
   if(e.ef.esp) c.sala = [];                   // la sala se rehace con lo que trae el evento
   // los sucesos con anécdota llenan la sala de golpe: llegan todos juntos
   if(e.ef.llena){
-    c.sala = [];
-    let v = 0;
-    while(c.sala.length < e.ef.llena && v++ < 60){
-      const caso = clSiguienteCaso(c.sala.map(x => x.id));
-      if(!caso) break;
-      c.sala.push(clFichaEspera(caso));
-    }
+    // un accidente no pide hora: llegan todos juntos y fuera del cupo
+    clLlegadaDeGolpe(e.ef.llena);
     jxVibrar(40);
   }
   avisar(e.emo + ' ' + e.nom + ' · ' + e.desc);
@@ -9295,24 +9384,30 @@ function clFichaEspera(caso){
     amarilla: Math.random() < probAmarilla ? al(CL_AMARILLAS).id : null,
   };
 }
+/* Ya no llena la sala de golpe: solo deja entrar a los que corresponde
+   según el reloj y el cupo del día. */
 function clLlenarSala(){
   const c = clEstado();
   if(!Array.isArray(c.sala)) c.sala = [];
-  c.sala = c.sala.filter(x => x && KIN_CASOS.some(k => k.id === x.id));
-  let vueltas = 0;
-  const tope = clEsperaMax();
-  while(c.sala.length < tope && vueltas++ < 60){
+  return clLlegadasPendientes();
+}
+/* Mete gente de golpe saltándose el cupo: accidentes y catástrofes. */
+function clLlegadaDeGolpe(n){
+  const c = clEstado();
+  const tope = Math.max(clEsperaMax(), n);
+  let v = 0;
+  while(c.sala.length < Math.min(tope, n) && v++ < 40){
     const caso = clSiguienteCaso(c.sala.map(x => x.id));
     if(!caso) break;
     c.sala.push(clFichaEspera(caso));
   }
 }
 function clJornada(){
-  const c = clEstado();
-  if(c.noche) return { dia: 1 + Math.floor(c.atendidos / 4), nom:'turno de noche', emo:'🌙' };
-  const dia = 1 + Math.floor(c.atendidos / 4);
-  const bloque = c.atendidos % 4;
-  return { dia, nom: bloque < 2 ? 'jornada de la mañana' : 'jornada de la tarde', emo: bloque < 2 ? '🌤️' : '🌇' };
+  const c = clEstado(), ag = clAgenda();
+  if(c.noche) return { dia: ag.dia, nom:'turno de noche', emo:'🌙' };
+  const usados = CL_AGENDA_DIA - ag.cupos;
+  const tarde = usados >= CL_AGENDA_DIA / 2;
+  return { dia: ag.dia, nom: tarde ? 'jornada de la tarde' : 'jornada de la mañana', emo: tarde ? '🌇' : '🌤️' };
 }
 
 /* ---------- derivadores ---------- */
@@ -9397,7 +9492,7 @@ function clCasosUrgentes(){
 function clSortearUrgencia(){
   const c = clEstado();
   if(c.urgencia || c.noche || clTurno) return;
-  if(c.atendidos < 5) return;
+  if(c.atendidos < 8) return;
   if(c.urRoll === c.atendidos) return;
   c.urRoll = c.atendidos;
   if(Math.random() > CL_URGENCIA_PROB) return;
@@ -9638,7 +9733,7 @@ function clEmpezarDiario(){
 
 /* Puntaje sobre 100: razonar bien pesa más que acertar. */
 function clPuntajeDiario(t){
-  const cuad = t.correccion || clCorregirCuaderno(t);
+  const cuad = t.correccion || clLecturaHallazgos(t);
   const razon = Math.round(cuad.pct * 0.4);
   const dx = t.dxFallado ? 0 : 30;
   const tto = t.ttoFallado ? 0 : 20;
@@ -9972,7 +10067,8 @@ function clPanelRecepcion(cont){
   let html = '<div class="cl-recep">' +
     '<div class="cl-jornada">' +
       '<div class="cl-jornada-dia">' + sede.emo + ' Sede ' + sede.nom + ' · día ' + j.dia +
-        '<small>' + j.nom + ' · ' + c.sala.length + ' en la sala de espera' +
+        '<small>' + j.nom + ' · ' + c.sala.length + ' en la sala · ' +
+        (clAgenda().cupos > 0 ? 'quedan ' + clAgenda().cupos + ' por llegar' : 'agenda del día completa') +
         (c.racha > 1 ? ' · 🔥 ' + c.racha + ' seguidos' : '') +
         (c.sede ? ' · pago ×' + clMultSede().toFixed(2).replace('.', ',') : '') + '</small></div>' +
       '<div class="cl-jornada-sol">' + j.emo + '</div>' +
@@ -10097,9 +10193,19 @@ function clPanelRecepcion(cont){
       (c.nocheMejor ? ' · tu récord: ' + c.nocheMejor + '/' + CL_NOCHE_LARGO : '') + '</small></button>';
   }
 
+  if(clJornadaTerminada()){
+    const ag = clAgenda();
+    html += '<div class="cl-jornada-fin"><div class="cl-jornada-fin-tit">🌙 Se acabó la agenda del día ' + ag.dia + '</div>' +
+      '<p>Atendiste a todos los que estaban citados. Mañana llegan otros diez.</p>' +
+      '<button class="cl-btn-grande" id="clNuevaJornada">Empezar el día ' + (ag.dia + 1) + '</button></div>';
+  }
+
   html += '<div class="cl-sec">Sala de espera</div>';
   if(!c.sala.length){
-    html += '<div class="cl-vacio">No queda nadie esperando. Sube la reputación para que llegue más gente.</div>';
+    const seg = clSegProxLlegada();
+    html += '<div class="cl-vacio">' + (clAgenda().cupos > 0
+      ? 'La sala está vacía. El próximo llega en <b id="clProxLlegada">' + seg + '</b> s.'
+      : 'No queda nadie por llegar hoy.') + '</div>';
   }else{
     html += '<div class="cl-espera">' + c.sala.map((f, i) => {
       const caso = KIN_CASOS.find(x => x.id === f.id);
@@ -10178,6 +10284,8 @@ function clPanelRecepcion(cont){
   cont.querySelectorAll('[data-quien]').forEach(b => b.onclick = () => clFijarQuien(b.dataset.quien));
   const bd = document.getElementById('clDiario');
   if(bd) bd.onclick = clEmpezarDiario;
+  const bnj = document.getElementById('clNuevaJornada');
+  if(bnj) bnj.onclick = clNuevaJornada;
   const bsim = document.getElementById('clSim');
   if(bsim) bsim.onclick = () => clFijarSimulacion(!clSimulacion());
   const br = document.getElementById('clCerrarResumen');
@@ -10401,28 +10509,38 @@ function clVerdadPista(t, accId){
   return { s:[], n:[] };
 }
 
-function clCorregirCuaderno(t){
-  let aciertos = 0, relevantes = 0, falsos = 0;
-  const fallos = [];
+/* Ya no se corrige una anotación: se le muestra qué significaba cada
+   hallazgo que consiguió, y cuánto del cuadro alcanzó a explorar. El
+   porcentaje es cobertura —qué tanto buscó— que es un número que sí se
+   entiende, a diferencia del de las flechitas. */
+function clLecturaHallazgos(t){
+  const filas = [];
   t.pistas.forEach(p => {
     if(!p.accId || CL_NO_ANOTA.indexOf(p.accId) !== -1) return;
-    const verdad = clVerdadPista(t, p.accId);
-    const marcas = t.notas[p.accId] || {};
-    t.dif.forEach(d => {
-      const esperado = verdad.s.includes(d) ? 1 : verdad.n.includes(d) ? -1 : 0;
-      const marcado = marcas[d] || 0;
-      if(esperado !== 0){
-        relevantes++;
-        if(marcado === esperado) aciertos++;
-        else fallos.push({ pista:p.acc, hip:d, esperado, marcado });
-      }else if(marcado !== 0){
-        falsos++;
-        fallos.push({ pista:p.acc, hip:d, esperado:0, marcado });
-      }
-    });
+    const v = clVerdadPista(t, p.accId);
+    if(!v.s.length && !v.n.length) return;
+    filas.push({ acc:p.acc, txt:p.txt, apoya:v.s.map(clCorto), descarta:v.n.map(clCorto) });
   });
-  const total = relevantes + falsos;
-  return { aciertos, relevantes, falsos, total, pct: total ? Math.round(aciertos / total * 100) : 100, fallos };
+  // La cobertura se mide directo: de lo que discriminaba en este caso,
+  // ¿cuánto alcanzó a buscar? Nada de deducirlo de la lista de arriba.
+  const dx = KIN_DX[t.caso.id];
+  const claves = dx ? Object.keys(dx.c) : [];
+  const faltaron = [];
+  let hechas = 0, total = claves.length;
+  claves.forEach(k => {
+    if(t.hechas.indexOf(k) !== -1) hechas++;
+    else { const acc = CL_ACC.find(a => a.id === k); if(acc) faltaron.push(acc.n); }
+  });
+  if(t.caso.prueba){
+    total++;
+    if(t.hechas.indexOf('test_' + t.caso.prueba) !== -1) hechas++;
+    else {
+      const pr = KIN_PRUEBAS.find(x => x.id === t.caso.prueba);
+      if(pr) faltaron.push('Prueba de ' + pr.nom);
+    }
+  }
+  const pct = total ? Math.min(100, Math.round(hechas / total * 100)) : 100;
+  return { filas, hechas, total, pct, faltaron };
 }
 
 function clNombreDx(id){
@@ -10430,6 +10548,706 @@ function clNombreDx(id){
   return c ? c.nom : id;
 }
 function clCorto(id){ return CL_CORTO[id] || clNombreDx(id); }
+
+/* ---------- pista con recarga ----------
+   Se recarga sola cada cinco minutos de reloj real. No dice el
+   diagnóstico: toma un hallazgo que ya conseguiste y te lo anota bien
+   en el cuaderno, explicando por qué. Es una corrección, no una respuesta. */
+function clEsperaPista(){ return clTieneHabil('intuicion') ? 3 * 60 * 1000 : CL_PISTA_ESPERA; }
+function clPistaLista(){
+  const c = clEstado();
+  return Date.now() - (c.pistaT || 0) >= clEsperaPista();
+}
+function clPistaSegundos(){
+  const c = clEstado();
+  return Math.max(0, Math.ceil((clEsperaPista() - (Date.now() - (c.pistaT || 0))) / 1000));
+}
+function clUsarPista(){
+  const t = clTurno, c = clEstado();
+  if(!t || t.fase !== 'investigar') return;
+  if(!clPistaLista()){
+    const sg = clPistaSegundos();
+    avisar('💡 La pista se recarga en ' + Math.floor(sg/60) + ':' + String(sg % 60).padStart(2,'0'));
+    jxSonido('mal');
+    return;
+  }
+  const dx = KIN_DX[t.caso.id];
+  // primero, lo que discrimina y todavía no ha buscado
+  const pendientes = dx ? Object.keys(dx.c).filter(k => t.hechas.indexOf(k) === -1) : [];
+  if(pendientes.length){
+    const k = pendientes[Math.floor(Math.random() * pendientes.length)];
+    const acc = CL_ACC.find(a => a.id === k);
+    c.pistaT = Date.now();
+    t.pistasUsadas = (t.pistasUsadas || 0) + 1;
+    jxSonido('bien'); jxVibrar(15);
+    avisar('💡 Todavía no has visto algo que acá cambia el diferencial: ' + (acc ? '“' + acc.n + '”' : k) + '.');
+    clGuardar(true); clPanel();
+    return;
+  }
+  // si ya exploró todo, se le recuerda qué hallazgo pesaba más
+  const fuertes = [];
+  t.pistas.forEach(pi => {
+    if(!pi.accId || CL_NO_ANOTA.indexOf(pi.accId) !== -1) return;
+    const v = clVerdadPista(t, pi.accId);
+    if(v.n.length) fuertes.push({ acc:pi.acc, txt:'descartaba ' + v.n.map(clCorto).join(' y ') });
+  });
+  c.pistaT = Date.now();
+  t.pistasUsadas = (t.pistasUsadas || 0) + 1;
+  jxSonido('bien');
+  if(fuertes.length){
+    const f = fuertes[Math.floor(Math.random() * fuertes.length)];
+    avisar('💡 Fíjate en “' + f.acc + '”: ese hallazgo ' + f.txt + '.');
+  }else{
+    avisar('💡 Ya exploraste lo que había. Con eso alcanza para decidir.');
+  }
+  clGuardar(true); clPanel();
+}
+
+/* ---------- sedes ---------- */
+function clSede(){ const c = clEstado(); return CL_SEDES[Math.min(c.sede || 0, CL_SEDES.length - 1)]; }
+function clMultSede(){ return 1 + CL_SEDE_PAGO * (clEstado().sede || 0); }
+function clSedeSiguiente(){ const c = clEstado(); return CL_SEDES[(c.sede || 0) + 1] || null; }
+function clSedeCosto(){ return Math.round(CL_SEDE_COSTO * Math.pow(2.2, clEstado().sede || 0)); }
+function clSedeRep(){ return CL_SEDE_REP + 25 * (clEstado().sede || 0); }
+function clPuedeAbrirSede(){
+  const c = clEstado();
+  return !!clSedeSiguiente() && c.reputacion >= clSedeRep() && c.dinero >= clSedeCosto() && !clTurno && !c.noche;
+}
+
+/* Se parte de cero en el negocio, pero el conocimiento se conserva. */
+function clAbrirSede(){
+  const c = clEstado();
+  if(!clPuedeAbrirSede()) return;
+  const nueva = clSedeSiguiente();
+  const anterior = clSede();
+  c.fundadas.push(anterior.nom);
+  c.sede++;
+  // el negocio vuelve a empezar
+  c.dinero = 0; c.reputacion = 0; c.equipos = []; c.personal = [];
+  c.salas = 1; c.sala = []; c.activos = []; c.evento = null; c.evRoll = -1;
+  c.urgencia = null; c.urRoll = -1; c.noche = null; c.racha = 0; c.rojo = 0;
+  c.acred = ['trauma'];
+  c.t = Date.now();
+  // lo aprendido se queda: dominados, hist, examen, récords y misiones
+  jxSonido('gana'); jxVibrar(40);
+  const r = jxRecompensar(40, 150, { desde:document.getElementById('jxScreenClinica') });
+  clGuardar(true);
+  c3Destruir();
+  jxCelebrar({
+    titulo:'Abriste la sede de ' + nueva.nom + ' ' + nueva.emo,
+    sub:'Dejaste andando ' + anterior.nom + ' y partes de nuevo acá: sin plata, sin equipo y sin reputación. ' +
+        'Te llevas el álbum, los pacientes que ya conoces y tus récords. ' +
+        'Desde ahora todo paga ' + Math.round(clMultSede() * 100) + '% y los casos vienen más difíciles.',
+    monedas:40, xp:150, subioNivel:r.subioNivel, nivel:r.nivel,
+    textoNext:'Empezar en ' + nueva.nom,
+    onNext:()=>{ clVista='recepcion'; clSesionAbierta=null; clMostrar(); },
+  });
+}
+
+/* Efectos de la segunda tanda de equipamiento. */
+function clTiempoEquipo(){
+  let n = 0;
+  CL_EQUIPOS.forEach(e => { if(e.ef.tiempo && clTieneEquipo(e.id)) n += e.ef.tiempo; });
+  return n;
+}
+function clEsperaMax(){
+  const c = clEstado();
+  let n = CL_ESPERA_MAX;
+  CL_EQUIPOS.forEach(e => { if(e.ef.espera && clTieneEquipo(e.id)) n += e.ef.espera; });
+  return Math.min(12, n + Math.floor(c.reputacion / 45));   // la fama trae gente
+}
+function clImgGratis(){
+  return clTieneHabil('imagen') || CL_EQUIPOS.some(e => e.ef.img && clTieneEquipo(e.id));
+}
+
+/* Lo que paga un paciente atendido a mano: el equipamiento, el evento del día
+   y el bono permanente de las sedes que llevas abiertas.
+   La renta pasiva del equipo NO se toca, para que un evento no dispare el idle. */
+function clMultPagoCaso(){ return clMultPago() * clEfEvento('pago', 1) * clMultSede(); }
+function clCostoKine(){
+  const c = clEstado();
+  return Math.ceil(2200 * Math.pow(2.6, c.personal.length));
+}
+/* Cada kinesiólogo atiende pacientes de rutina por su cuenta. */
+function clIngresoPorSegundo(){
+  const c = clEstado();
+  let s = 0;
+  c.personal.forEach(p => { s += p.renta; });
+  return s * clMultPago();
+}
+/* Lo que sale todos los segundos: arriendo del local más sueldos.
+   Sin nadie contratado la clínica no tiene costos: eres tú en tu box. */
+function clGastoPorSegundo(){
+  const c = clEstado();
+  if(!c.personal.length) return 0;
+  let g = CL_ARRIENDO_BASE + CL_ARRIENDO_SALA * clSalas();
+  c.personal.forEach(p => { g += p.renta * CL_SUELDO_PROP; });
+  if(clTieneHabil('gestion')) g *= 0.75;
+  return g;
+}
+function clNetoPorSegundo(){ return clIngresoPorSegundo() - clGastoPorSegundo(); }
+
+function clAsentar(){
+  const c = clEstado();
+  const ahora = Date.now();
+  if(!c.t || c.t > ahora) c.t = ahora;
+  let ms = ahora - c.t;
+  if(ms <= 0){ c.t = ahora; return 0; }
+  let tasa = 1;
+  if(ms > 60000){ ms = Math.min(ms, CL_TOPE_OFFLINE); tasa = CL_TASA_OFFLINE; }
+  const seg = ms / 1000;
+  // los ingresos rinden menos con la página cerrada; el arriendo se paga igual
+  const ganado = clIngresoPorSegundo() * seg * tasa - clGastoPorSegundo() * seg;
+  c.dinero += ganado;
+  c.t = ahora;
+  // estar en rojo mucho rato cuesta prestigio: no se puede sostener una clínica así
+  if(c.dinero < 0){
+    c.rojo += seg;
+    while(c.rojo >= 60 && c.reputacion > 0){ c.rojo -= 60; c.reputacion = Math.max(0, c.reputacion - 1); }
+  }else if(c.rojo){ c.rojo = 0; }
+  return ganado;
+}
+
+function clGuardar(inmediato){
+  const ahora = Date.now();
+  if(inmediato){ clUltimoLocal = ahora; clUltimoCheck = ahora; guardar(); return; }
+  if(ahora - clUltimoLocal > 5000){
+    clUltimoLocal = ahora;
+    try{ localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(datos)); }catch(e){}
+  }
+  if(ahora - clUltimoCheck > 120000){ clUltimoCheck = ahora; guardar(); }
+}
+
+function clPlata(n){
+  const signo = n < 0 ? '−' : '';
+  const a = Math.abs(n);
+  if(a < 1000) return signo + '$' + Math.floor(a);
+  if(a < 1e6) return signo + '$' + (a/1000).toFixed(a < 10000 ? 1 : 0) + 'K';
+  return signo + '$' + (a/1e6).toFixed(2) + 'M';
+}
+
+/* ---------- selección de casos ----------
+   Prioriza los que se han visto menos, para que funcione como repaso
+   y no salga siempre el mismo. */
+function clCasosDisponibles(){
+  const abiertas = clEspecialidadesAbiertas();
+  let pool = KIN_CASOS.filter(c => abiertas.includes(c.esp));
+  const forz = clEfEvento('esp', null);        // un evento puede llenar la sala de una especialidad
+  if(forz && pool.some(c => c.esp === forz)) pool = pool.filter(c => c.esp === forz);
+  return pool;
+}
+function clSiguienteCaso(excluir){
+  const c = clEstado();
+  const fuera = excluir || [];
+  let pool = clCasosDisponibles().filter(x => !fuera.includes(x.id));
+  if(!pool.length) return null;
+  // de vez en cuando vuelve alguien que ya pasó por la clínica, con su historia
+  const conocidos = pool.filter(x => c.hist[x.id] && c.hist[x.id].altas > 0);
+  if(conocidos.length && Math.random() < 0.28) pool = conocidos;
+  const minimo = Math.min(...pool.map(x => c.vistos[x.id] || 0));
+  const menosVistos = pool.filter(x => (c.vistos[x.id] || 0) === minimo);
+  return menosVistos[Math.floor(Math.random() * menosVistos.length)];
+}
+
+function clMezclar(a){
+  const r = a.slice();
+  for(let i = r.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; }
+  return r;
+}
+
+/* ---------- pantalla ---------- */
+function clMostrar(){
+  const ganado = clAsentar();
+  const c = clEstado();
+  clMostrado = c.dinero;
+  const el = document.getElementById('jxScreenClinica');
+  el.innerHTML =
+    '<div class="cl-top">' +
+      '<canvas id="clLienzo" class="cl-lienzo"></canvas>' +
+      '<div class="cl-cargando" id="cl3dCargando">Cargando la clínica…</div>' +
+      '<div class="cl-zona" id="cl3dZona"></div>' +
+      '<div class="cl-sel" id="cl3dSel"></div>' +
+      '<div class="cl-hud">' +
+        '<div class="cl-plata"><span id="clDinero">$0</span></div>' +
+        '<div class="cl-sub"><span id="clRenta">0</span>/s · ⭐ <span id="clRep">0</span> reputación</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="cl-tabs">' +
+      '<button class="cl-tab activa" data-cv="recepcion">🩺 Atender</button>' +
+      '<button class="cl-tab" data-cv="gestion">🏥 Clínica</button>' +
+      '<button class="cl-tab" data-cv="repaso">📚 Repaso</button>' +
+    '</div>' +
+    '<div class="cl-panel" id="clPanel"></div>';
+  clCanvas = document.getElementById('clLienzo');
+  const aviso3d = document.getElementById('cl3dCargando');
+  c3Iniciar(clCanvas).then(() => { if(aviso3d) aviso3d.remove(); })
+    .catch(err => {
+      console.warn('No se pudo cargar el 3D', err);
+      if(aviso3d) aviso3d.textContent = 'No se pudo cargar la vista 3D';
+    });
+  el.querySelectorAll('.cl-tab').forEach(b => b.onclick = () => {
+    el.querySelectorAll('.cl-tab').forEach(x => x.classList.remove('activa'));
+    b.classList.add('activa');
+    clVista = b.dataset.cv;
+    jxSonido('tap');
+    clPanel();
+  });
+  clPanel();
+  clBucle();
+  if(ganado > 1) avisar('🏥 Mientras no estabas tu equipo atendió y juntó ' + clPlata(ganado));
+  else if(ganado < -1) avisar('🏥 Mientras no estabas se pagó ' + clPlata(-ganado) + ' de arriendo y sueldos');
+}
+
+function clAjustar(){
+  if(!clCanvas) return;
+  const r = clCanvas.getBoundingClientRect();
+  const d = Math.min(window.devicePixelRatio || 1, 2);
+  clCanvas.width = Math.max(1, Math.round(r.width * d));
+  clCanvas.height = Math.max(1, Math.round(r.height * d));
+  clCtx.setTransform(d, 0, 0, d, 0, 0);
+}
+
+function clPanel(){
+  const cont = document.getElementById('clPanel');
+  if(!cont) return;
+  // las solapas de arriba se mantienen en sintonía con clVista
+  document.querySelectorAll('#jxScreenClinica .cl-tab[data-cv]').forEach(b =>
+    b.classList.toggle('activa', b.dataset.cv === clVista));
+  if(clVista === 'recepcion'){
+    if(clTurno) clPanelCaso(cont);
+    else if(clSesionAbierta !== null) clPanelSesion(cont, clSesionAbierta);
+    else clPanelRecepcion(cont);
+  }
+  else if(clVista === 'gestion') clPanelGestion(cont);
+  else clPanelRepaso(cont);
+}
+
+/* ---------- recepción ---------- */
+function clEdad(caso){ return caso.edadTxt || (caso.edad + ' años'); }
+
+function clPanelRecepcion(cont){
+  const c = clEstado();
+  // red de seguridad: si el turno quedó a medio cerrar (por salir de la app
+  // justo al terminar), se liquida acá en vez de bloquear los siguientes.
+  if(c.noche && c.noche.quedan <= 0 && !clTurno){ clCerrarNoche(); return; }
+  clVencerUrgencia();
+  clRevisarPaciencia();
+  clCaducarMensajes();
+  clSortearMensajes();
+  clRevisarAbandonos();
+  clSortearEvento();
+  clSortearUrgencia();
+  clLlenarSala();
+  const ev = clEvento();
+  const j = clJornada();
+  const abiertas = clEspecialidadesAbiertas();
+  const prox = Object.keys(CL_ESPECIALIDADES).find(k => !abiertas.includes(k));
+  const precision = c.atendidos ? Math.round(c.aciertos / (c.aciertos + c.fallos) * 100) : 0;
+
+  const sede = clSede();
+  let html = '<div class="cl-recep">' +
+    '<div class="cl-jornada">' +
+      '<div class="cl-jornada-dia">' + sede.emo + ' Sede ' + sede.nom + ' · día ' + j.dia +
+        '<small>' + j.nom + ' · ' + c.sala.length + ' en la sala · ' +
+        (clAgenda().cupos > 0 ? 'quedan ' + clAgenda().cupos + ' por llegar' : 'agenda del día completa') +
+        (c.racha > 1 ? ' · 🔥 ' + c.racha + ' seguidos' : '') +
+        (c.sede ? ' · pago ×' + clMultSede().toFixed(2).replace('.', ',') : '') + '</small></div>' +
+      '<div class="cl-jornada-sol">' + j.emo + '</div>' +
+    '</div>' +
+    '<div class="cl-tema-sem">📌 Semana de <b>' + clTemaSemana() + '</b> · esos casos pagan 45% más</div>' +
+    '<div style="display:none">' +
+      '<div class="cl-jornada-sol">' + j.emo + '</div>' +
+    '</div>';
+
+  if(c.dinero < 0){
+    html += '<div class="cl-rojo">🔴 La clínica está en rojo: ' + clPlata(c.dinero) +
+      '. El arriendo y los sueldos corren igual, y cada minuto así te cuesta reputación.</div>';
+  }
+
+  // urgencia con reloj: manda sobre todo lo demás
+  if(c.urgencia){
+    const uc = KIN_CASOS.find(x => x.id === c.urgencia.id);
+    if(uc){
+      html += '<button class="cl-urgencia" data-urgencia="1">' +
+        '<div class="cl-urgencia-top"><span>🚨 Urgencia</span>' +
+          '<span class="cl-urgencia-reloj" id="clUrReloj">' + clSegUrgencia() + 's</span></div>' +
+        '<div class="cl-urgencia-cuerpo">' +
+          '<div class="cl-pac-emo urg">' + (uc.ava || '🧍') + '</div>' +
+          '<div class="cl-pac-info"><div class="cl-pac-nom">' + clPacNom(uc, c.urgencia) + ', ' + clPacEdad(uc, c.urgencia) + '</div>' +
+          '<div class="cl-pac-mot">“' + uc.motivo + '”</div>' +
+          '<div class="cl-pac-meta">Llegó en ambulancia · atiéndelo antes de que se lo lleven</div></div>' +
+        '</div></button>';
+    }
+  }
+
+  // --- interruptor de modo simulación ---
+  const sim = clSimulacion();
+  html += '<button class="cl-sim' + (sim ? ' on' : '') + '" id="clSim">' +
+    '<div><b>🧑‍🏫 Modo simulación ' + (sim ? '· puesto' : '· apagado') + '</b>' +
+    '<small>' + (sim
+      ? 'Al cerrar cada caso aparece la pauta del docente: trato, anamnesis, examen, razonamiento y plan.'
+      : 'Préndelo para que te evalúen la atención completa, como en la estación de la U.') + '</small></div>' +
+    '<span class="cl-sim-luz">' + (sim ? '●' : '○') + '</span></button>';
+
+  // --- resumen de la semana pasada ---
+  const w = clSemanaEstado();
+  if(w.previa && !w.vista && w.previa.atendidos){
+    const pv = w.previa;
+    const prec = pv.atendidos ? Math.round(pv.aciertos / pv.atendidos * 100) : 0;
+    const ex = c.examen.tema, temas = Object.keys(ex).filter(k => ex[k].n);
+    const flojo = temas.sort((a2,b2) => (ex[a2].ok/ex[a2].n) - (ex[b2].ok/ex[b2].n))[0];
+    html += '<div class="cl-resumen"><div class="cl-resumen-tit">📅 Cómo les fue la semana pasada</div>' +
+      '<div class="cl-stats">' +
+        '<div><b>' + pv.atendidos + '</b><span>atendidos</span></div>' +
+        '<div><b>' + prec + '%</b><span>perfectos</span></div>' +
+        '<div><b>' + pv.altas + '</b><span>altas</span></div>' +
+      '</div>' +
+      (pv.derivados ? '<p>Derivaste bien ' + pv.derivados + ' caso' + (pv.derivados === 1 ? '' : 's') + ' de bandera roja.</p>' : '') +
+      (flojo ? '<p>Donde más fallas en el examen es <b>' + flojo + '</b>: ahí conviene apuntar esta semana.</p>' : '') +
+      '<button class="cl-btn-grande" id="clCerrarResumen">Empezar la semana</button></div>';
+  }
+
+  // --- mensajes sin responder ---
+  const pend = clMensajesPendientes();
+  if(pend){
+    html += '<div class="cl-msg-aviso"><b>💬 ' + pend + ' mensaje' + (pend === 1 ? '' : 's') + ' sin responder</b>' +
+      '<small>Te escribieron entre sesiones. Si no contestas, se desmotivan.</small></div>';
+  }
+
+  // --- caso del día ---
+  const hoy = jxHoyClave();
+  const yo = clQuien();
+  const hecho = clDiarioHecho();
+  if(!yo){
+    html += '<div class="cl-diario"><div class="cl-diario-tit">🗓️ Caso del día</div>' +
+      '<p>Un paciente al día, el mismo para los dos. ¿Quién está jugando en este teléfono?</p>' +
+      '<div class="cl-quien"><button data-quien="Catalina">Catalina</button><button data-quien="Diego">Diego</button></div></div>';
+  }else if(!hecho){
+    html += '<button class="cl-diario listo" id="clDiario">' +
+      '<div class="cl-diario-tit">🗓️ Caso del día</div>' +
+      '<p>Un paciente, una sola pasada, sin reintentos. El mismo para los dos.</p>' +
+      (c.diario.racha ? '<div class="cl-diario-racha">🔥 llevas ' + c.diario.racha +
+        (c.diario.racha === 1 ? ' día' : ' días') + ' seguidos</div>' : '') +
+      '</button>';
+  }else{
+    const otros = Object.keys(c.diarioComp).filter(q => c.diarioComp[q].fecha === hoy);
+    html += '<div class="cl-diario hecho"><div class="cl-diario-tit">🗓️ Caso del día · listo</div>' +
+      '<div class="cl-marcador">' + otros.map(q => {
+        const d = c.diarioComp[q];
+        return '<div class="cl-marcador-fila' + (q === yo ? ' yo' : '') + '">' +
+          '<span>' + q + (q === yo ? ' (tú)' : '') + '</span>' +
+          '<b>' + d.puntaje + '</b><small>🔥 ' + d.racha + '</small></div>';
+      }).join('') + '</div>' +
+      (otros.length < 2 ? '<p>Falta que juegue el otro. Vuelve más rato a ver cómo le fue.</p>'
+                        : '<p>Mañana hay uno nuevo.</p>') +
+      '<div class="cl-diario-racha">Tu mejor racha: ' + c.diario.mejorRacha + ' · ' + c.diario.jugados + ' casos del día jugados</div>' +
+      '</div>';
+  }
+
+  if(ev){
+    html += '<div class="cl-evento"><div class="cl-evento-emo">' + ev.emo + '</div><div>' +
+      '<div class="cl-evento-nom">' + ev.nom + '</div>' +
+      '<div class="cl-evento-desc">' + ev.desc + '</div>' +
+      (ev.relato ? '<div class="cl-evento-relato">' + ev.relato + '</div>' : '') +
+      '<div class="cl-evento-quedan">Quedan ' + ev.restantes + ' paciente' + (ev.restantes === 1 ? '' : 's') + '</div>' +
+    '</div></div>';
+  }
+
+  // misiones del día
+  const ms = clMisiones();
+  html += '<div class="cl-sec">Misiones del día</div><div class="cl-misiones">';
+  ms.forEach(m => {
+    const d = clMisionDef(m.id);
+    if(!d) return;
+    const lista = m.n >= d.meta;
+    html += '<div class="cl-mision' + (m.cobrada ? ' cobrada' : lista ? ' lista' : '') + '"' +
+      (lista && !m.cobrada ? ' data-mision="' + m.id + '"' : '') + '>' +
+      '<div class="cl-mision-info"><b>' + d.nom + '</b><small>' + d.desc + '</small>' +
+      '<div class="cl-barra-mini"><div style="width:' + Math.round(m.n / d.meta * 100) + '%"></div></div></div>' +
+      '<div class="cl-mision-premio">' + (m.cobrada ? '✓' : lista ? 'Cobrar' : m.n + '/' + d.meta) + '</div></div>';
+  });
+  html += '</div>';
+
+  if(c.reputacion >= CL_NOCHE_REP){
+    html += '<button class="cl-noche-btn" id="clNoche">🌙 Tomar turno de noche' +
+      '<small>' + CL_NOCHE_LARGO + ' pacientes seguidos, sin elegir y con menos tiempo. Paga ' + CL_NOCHE_PAGO + '×' +
+      (c.nocheMejor ? ' · tu récord: ' + c.nocheMejor + '/' + CL_NOCHE_LARGO : '') + '</small></button>';
+  }
+
+  if(clJornadaTerminada()){
+    const ag = clAgenda();
+    html += '<div class="cl-jornada-fin"><div class="cl-jornada-fin-tit">🌙 Se acabó la agenda del día ' + ag.dia + '</div>' +
+      '<p>Atendiste a todos los que estaban citados. Mañana llegan otros diez.</p>' +
+      '<button class="cl-btn-grande" id="clNuevaJornada">Empezar el día ' + (ag.dia + 1) + '</button></div>';
+  }
+
+  html += '<div class="cl-sec">Sala de espera</div>';
+  if(!c.sala.length){
+    const seg = clSegProxLlegada();
+    html += '<div class="cl-vacio">' + (clAgenda().cupos > 0
+      ? 'La sala está vacía. El próximo llega en <b id="clProxLlegada">' + seg + '</b> s.'
+      : 'No queda nadie por llegar hoy.') + '</div>';
+  }else{
+    html += '<div class="cl-espera">' + c.sala.map((f, i) => {
+      const caso = KIN_CASOS.find(x => x.id === f.id);
+      if(!caso) return '';
+      const h = clHist(caso.id);
+      const canon = clEsCanon(f);
+      const vuelve = canon && !!(h && h.veces);
+      const esp = CL_ESPECIALIDADES[caso.esp];
+      const ra = clRasgo(f.rasgo), an = clAnimo(f.animo);
+      return '<button class="cl-pac' + (vuelve ? ' vuelve' : '') + '" data-atender="' + i + '">' +
+        '<div class="cl-pac-emo"' + (vuelve ? ' style="background:#f6ead4"' : '') + '>' + (caso.ava || '🧍') + '</div>' +
+        '<div class="cl-pac-info">' +
+          '<div class="cl-pac-nom">' + clPacNom(caso, f) + ', ' + clPacEdad(caso, f) +
+            (an ? '<span class="cl-badge sobrio">' + an.emo + ' ' + an.nom + '</span>' : '') +
+            (ra ? '<span class="cl-badge sobrio">' + ra.emo + ' ' + ra.nom + '</span>' : '') +
+            (clEsTema(caso) ? '<span class="cl-badge azul">📌 tema</span>' : '') +
+            (vuelve ? '<span class="cl-badge oro">vuelve</span>' : '') +
+            (canon && c.dominados.includes(caso.id) ? '<span class="cl-badge verde">dominado</span>' : '') +
+          '</div>' +
+          '<div class="cl-pac-mot">“' + caso.motivo + '”</div>' +
+          '<div class="cl-pac-meta">' + (clEsperaMin(f) >= 3 ? '<b class="cl-espera-alerta">⏱ ' + clEsperaMin(f) + ' min esperando</b> · ' : '') +
+            esp.emo + ' ' + clPacOcup(caso, f) +
+            (f.gen ? ' · ' + f.gen.comuna : '') + ' · ' + f.prev +
+            (f.deriv ? ' · ' + clDerivador(f.deriv).emo + ' ' + clDerivador(f.deriv).nom : '') +
+            ' · ' + f.espera +
+            (f.acomp ? ' · ' + f.acomp.emo + ' con ' + f.acomp.nom : '') + '</div>' +
+        '</div></button>';
+    }).join('') + '</div>';
+  }
+
+  html += '<div class="cl-chips">' +
+      abiertas.map(k => '<span class="cl-chip" style="background:' + CL_ESPECIALIDADES[k].color + '">' +
+        CL_ESPECIALIDADES[k].emo + ' ' + CL_ESPECIALIDADES[k].nom + '</span>').join('') +
+      (prox ? '<span class="cl-chip off">🔒 ' + CL_ESPECIALIDADES[prox].nom + ' · ⭐' + CL_ESPECIALIDADES[prox].rep + '</span>' : '') +
+    '</div>' +
+    '<div class="cl-stats">' +
+      '<div><b>' + c.atendidos + '</b><span>pacientes</span></div>' +
+      '<div><b>' + precision + '%</b><span>de acierto</span></div>' +
+      '<div><b>' + (c.altas || 0) + '</b><span>altas dadas</span></div>' +
+    '</div>';
+
+  if(c.activos.length){
+    const lleno = c.activos.length >= CL_ACTIVOS_MAX;
+    html += '<div class="cl-sec">En tratamiento (' + c.activos.length + ' de ' + CL_ACTIVOS_MAX + ')</div>' +
+      (lleno ? '<div class="cl-rojo">📋 Agenda llena. Los pacientes nuevos van a quedar con otro kinesiólogo ' +
+               'hasta que le des el alta a alguien.</div>' : '') +
+      '<div class="cl-lista">' +
+      c.activos.map((p, i) => {
+        const cs = KIN_CASOS.find(x => x.id === p.id);
+        if(!cs) return '';
+        const f = clFaseDe(p.progreso);
+        const adh = Math.round(p.adh);
+        return '<button class="cl-item puede' + (p.alarma ? ' alerta' : '') + '" data-sesion="' + i + '">' +
+          '<div class="cl-item-emo" style="background:#e8f0f4">' + (p.alarma ? '⚠️' : (cs.ava || '🧍')) + '</div>' +
+          '<div class="cl-item-info"><div class="cl-item-nom">' + clPacNom(cs, p) +
+            (p.compl ? ' <span class="cl-badge roja">🚨 se torció</span>' : p.msg ? ' <span class="cl-badge azul">💬 te escribió</span>' : p.alarma ? ' <span class="cl-badge roja">algo cambió</span>' : adh < 35 ? ' <span class="cl-badge roja">va a abandonar</span>' : '') + '</div>' +
+          '<div class="cl-item-desc">' + cs.nom + ' · fase ' + f.nom + ' · adherencia ' + adh + '%</div>' +
+          '<div class="cl-barra-mini"><div style="width:' + p.progreso + '%"></div></div></div>' +
+          '<div class="cl-item-costo">' + Math.round(p.progreso) + '%</div></button>';
+      }).join('') + '</div>';
+  }
+
+  if(c.personal.length){
+    html += '<div class="cl-sec">Tu equipo</div><div class="cl-lista">' + c.personal.map(p =>
+      '<div class="cl-item listo"><div class="cl-item-emo" style="background:' + CL_ESPECIALIDADES[p.esp].color + '33">' + p.emo + '</div>' +
+      '<div class="cl-item-info"><div class="cl-item-nom">' + p.nom + '</div>' +
+      '<div class="cl-item-desc">' + CL_ESPECIALIDADES[p.esp].nom + ' · ' + clPlata(p.renta * clMultPago()) + '/s</div></div></div>'
+    ).join('') + '</div>';
+  }
+
+  cont.innerHTML = html + '</div>';
+  cont.querySelectorAll('[data-atender]').forEach(b => b.onclick = () => clIniciarCaso(parseInt(b.dataset.atender, 10)));
+  cont.querySelectorAll('[data-sesion]').forEach(b => b.onclick = () => { clSesionAbierta = parseInt(b.dataset.sesion, 10); jxSonido('tap'); clPanel(); });
+  cont.querySelectorAll('[data-urgencia]').forEach(b => b.onclick = () => clIniciarCaso('urgencia'));
+  cont.querySelectorAll('[data-mision]').forEach(b => b.onclick = () => clCobrarMision(b.dataset.mision));
+  cont.querySelectorAll('[data-quien]').forEach(b => b.onclick = () => clFijarQuien(b.dataset.quien));
+  const bd = document.getElementById('clDiario');
+  if(bd) bd.onclick = clEmpezarDiario;
+  const bnj = document.getElementById('clNuevaJornada');
+  if(bnj) bnj.onclick = clNuevaJornada;
+  const bsim = document.getElementById('clSim');
+  if(bsim) bsim.onclick = () => clFijarSimulacion(!clSimulacion());
+  const br = document.getElementById('clCerrarResumen');
+  if(br) br.onclick = () => { clSemanaEstado().vista = true; jxSonido('tap'); clGuardar(true); clPanel(); };
+  const bn = document.getElementById('clNoche');
+  if(bn) bn.onclick = clEmpezarNoche;
+}
+
+/* ---------- el caso, paso a paso ---------- */
+/* ---------- el caso: investigar, deducir, tratar ----------
+   No hay alternativas que adivinar. Se juntan pistas con tiempo
+   limitado y el tablero muestra cómo se mueven las hipótesis. */
+
+/* ---------- resultado de una prueba ortopédica ----------
+   Ya no es "la correcta confirma y las demás no dicen nada". Cada prueba
+   informa según sus propiedades: una NEGATIVA en un test muy sensible
+   descarta (SnNout) y una POSITIVA en uno muy específico confirma (SpPin).
+   Lo demás orienta y poco más, que es justo lo que hay que aprender. */
+function clResultadoPrueba(pruebaId, caso, dif){
+  const pr = KIN_PRUEBAS.find(x => x.id === pruebaId);
+  if(!pr) return { t:'Esa prueba no está disponible.', s:[], n:[] };
+
+  if(pr.func){
+    return { t:(caso.prueba === pruebaId && caso.hallazgo ? caso.hallazgo + ' ' : '') +
+                'Es una medición funcional, no una prueba diagnóstica: te dice cómo está, no qué tiene.',
+             s:[], n:[] };
+  }
+
+  // hipótesis del diferencial para las que ESTA prueba saldría positiva
+  const apunta = dif.filter(d => {
+    const k = KIN_CASOS.find(x => x.id === d);
+    return k && k.prueba === pruebaId && KIN_PRUEBA_NEG.indexOf(d) === -1;
+  });
+  const esSuya = caso.prueba === pruebaId;
+  const positiva = esSuya && KIN_PRUEBA_NEG.indexOf(caso.id) === -1;
+  const hall = esSuya && caso.hallazgo ? caso.hallazgo + ' ' : '';
+  const sn = pr.sn || 0, sp = pr.sp || 0;
+  const fmt = v => v.toFixed(2).replace('.', ',');
+
+  if(positiva){
+    if(sp >= KIN_SP_ALTA){
+      return { t:hall + 'Especificidad ' + fmt(sp) + ': con una positiva acá puedes CONFIRMAR (SpPin).',
+               s:[caso.id], n:dif.filter(d => d !== caso.id) };
+    }
+    return { t:hall + 'Pero ojo: especificidad ' + fmt(sp) +
+               ', da hartos falsos positivos. Orienta, no confirma por sí sola.',
+             s:[caso.id], n:[] };
+  }
+
+  const cabeza = hall || 'Negativa. ';
+  if(!apunta.length){
+    return { t:cabeza + 'Esa prueba evalúa ' + pr.sug + ', que no está en juego en este diferencial: no aporta.',
+             s:[], n:[] };
+  }
+  if(sn >= KIN_SN_ALTA){
+    return { t:cabeza + 'Sensibilidad ' + fmt(sn) + ': una negativa acá DESCARTA (SnNout) ' +
+               apunta.map(clCorto).join(' y ') + '.',
+             s:[], n:apunta };
+  }
+  return { t:cabeza + 'Pero con sensibilidad ' + fmt(sn) +
+             ' se le escapan muchos casos: una negativa NO permite descartar.',
+           s:[], n:[] };
+}
+
+function clAccionesDe(caso){
+  const dx = KIN_DX[caso.id];
+  // las habilidades abaratan acciones: buena oreja preguntar, ojo clínico probar
+  const lista = CL_ACC.map(a => {
+    const b = Object.assign({}, a);
+    if(a.g === 'anam' && clTieneHabil('oreja')) b.t = Math.max(1, a.t - 1);
+    if(a.g === 'img' && clImgGratis()) b.plata = 0;
+    return b;
+  });
+  // pruebas ortopédicas de la zona (más un par de otras zonas, para que
+  // elegir la prueba correcta signifique algo)
+  const zona = (caso.zona || '').toLowerCase();
+  const propias = KIN_PRUEBAS.filter(p => zona.startsWith(p.zona.slice(0,4)) || p.id === caso.prueba);
+  const otras = KIN_PRUEBAS.filter(p => !propias.includes(p)).slice(0, 3);
+  // desde la segunda sede el diferencial trae hipótesis de más: hay que
+  // descartar cuadros que ni siquiera venían servidos en la lista
+  let dif = dx ? dx.dif.slice() : [caso.id];
+  const extra = Math.min(clEstado().sede || 0, 3);
+  if(extra){
+    const candidatos = clMezclar(KIN_CASOS.filter(x =>
+      x.zona === caso.zona && dif.indexOf(x.id) === -1));
+    dif = dif.concat(candidatos.slice(0, extra).map(x => x.id));
+  }
+  const costoTest = clTieneHabil('ojo') ? 1 : 2;
+  [...propias, ...otras].forEach(p => lista.push({
+    id:'test_'+p.id, g:'test', n:'Prueba de '+p.nom, t:costoTest, prueba:p.id,
+    // las propiedades van a la vista: elegir la prueba se decide con esto
+    meta: p.func ? 'medición funcional'
+                 : 'Sn ' + p.sn.toFixed(2).replace('.', ',') + ' · Sp ' + p.sp.toFixed(2).replace('.', ','),
+  }));
+  return { lista, dif };
+}
+
+function clTiempoTotal(rasgoId){
+  const c = clEstado();
+  let t = CL_TIEMPO_BASE + (clTieneEquipo('eco') ? 2 : 0) + clTiempoEquipo() + clEfEvento('tiempo', 0);
+  if(c.noche) t += CL_NOCHE_TIEMPO;
+  t += clEfRasgo(rasgoId, 'tiempo', 0);
+  t -= (c.sede || 0);              // cada sede aprieta un poco más la consulta
+  if(clTieneHabil('memoria')) t += 2;
+  return Math.max(6, t);
+}
+
+/* `i` es la posición en la sala de espera; 'urgencia' atiende la ambulancia.
+   Sin argumento se atiende al primero de la fila. */
+function clIniciarCaso(i){
+  const c = clEstado();
+  let ficha = null;
+
+  if(i === 'urgencia'){
+    if(!c.urgencia || clVencerUrgencia()){ clPanel(); return; }
+    ficha = c.urgencia; c.urgencia = null;
+  }else if(c.noche){
+    ficha = clFichaEspera(clCasoDeNoche());
+    ficha.origen = 'llegó al turno de noche';
+  }else{
+    clLlenarSala();
+    const pos = (typeof i === 'number' && c.sala[i]) ? i : 0;
+    ficha = c.sala.splice(pos, 1)[0];
+  }
+  if(!ficha){ avisar('No hay nadie esperando todavía'); clPanel(); return; }
+  const caso = KIN_CASOS.find(x => x.id === ficha.id);
+  if(!caso){ clPanel(); return; }
+
+  let { lista, dif } = clAccionesDe(caso);
+  if(clEfEvento('sinImg', false)) lista = lista.filter(a => a.g !== 'img');
+  if(ficha.acomp) lista.push({ id:'acomp', g:'anam', n:'Preguntarle a ' + ficha.acomp.nom, t:1 });
+
+  const conf = {}; dif.forEach(d => conf[d] = 0);
+  // "llega leído": parte convencido de un diagnóstico que no es el suyo.
+  // Ya no infla el tablero (ahora el tablero es tuyo): te lo dice a la cara
+  // para ver si te dejas llevar.
+  let creencia = null;
+  if(clEfRasgo(ficha.rasgo, 'pistaFalsa', false)){
+    const otras = dif.filter(d => d !== caso.id);
+    if(otras.length) creencia = otras[Math.floor(Math.random() * otras.length)];
+  }
+  const h = clHist(caso.id);
+  const tot = clTiempoTotal(ficha.rasgo);
+  clTurno = {
+    caso, ficha, acciones:lista, dif, conf, creencia,
+    hechas:[], pistas:[], imagenes:0,
+    notas:{},                  // el cuaderno: lo que el jugador anota de cada hallazgo
+    chat:[],                   // la consulta como conversación
+    tiempo: tot, tiempoMax: tot,
+    fase:'investigar', errores:0, grupo:'anam',
+    hist: h ? Object.assign({}, h) : null,
+    noche: !!c.noche,
+    urgente: i === 'urgencia',
+    // mirada psicosocial: la bandera amarilla se ve sin tener que preguntar
+    amarillaVista: clTieneHabil('psico'),
+    amarilla: clTieneHabil('psico') ? ficha.amarilla : null,
+    // historia, deudas y notas son del paciente de la ficha, no de un generado
+    fallo: clEsCanon(ficha) ? (c.fallidos[caso.id] || null) : null,
+    nota: clEsCanon(ficha) ? clNotaDeOtro(caso.id) : null,
+  };
+  if(!clEsCanon(ficha)) clTurno.hist = null;
+  clAbrirConversacion(clTurno);
+  jxSonido('tap');
+  clVista = 'recepcion'; clSesionAbierta = null;
+  clPanel();
+}
+
+/* El paciente saluda y cuenta a qué viene, antes de que preguntes nada. */
+function clAbrirConversacion(t){
+  if(!t) return;
+  const an = clAnimo(t.ficha && t.ficha.animo);
+  const habla = t.ficha && t.ficha.habla;
+  const h = clHabla(habla);
+  // primero saluda como saluda él, después cuenta a qué viene con su ánimo
+  clDecir(t, 'pac', h.saludo[Math.floor(Math.random() * h.saludo.length)]);
+  const saludo = (an && CL_SALUDO[an.id]) || [];
+  saludo.slice(1).forEach((x, i) => clDecir(t, 'pac', clConHabla(habla, x, i)));
+  clDecir(t, 'pac', clConHabla(habla, t.caso.motivo + '.', 0));
+  if(t.ficha && t.ficha.acomp) clDecir(t, 'acomp', 'Yo lo acompaño, cualquier cosa pregúnteme a mí también.');
+}
+
 
 /* ---------- pista con recarga ----------
    Se recarga sola cada cinco minutos de reloj real. No dice el
@@ -10612,7 +11430,6 @@ function clHacerAccion(accId){
 
 function clPanelCaso(cont){
   const t = clTurno, c = t.caso;
-  const conf = clConfianzas();
   const pctTiempo = t.tiempo / (t.tiempoMax || clTiempoTotal()) * 100;
   const f = t.ficha || {};
   const ev = clEvento();
@@ -10659,29 +11476,19 @@ function clPanelCaso(cont){
       (ev ? '<div class="cl-ficha-ctx"><span>' + ev.emo + ' ' + ev.nom + '</span></div>' : '') +
     '</div>';
 
-  // tablero: refleja el cuaderno del jugador, no la verdad
-  const anotado = Object.keys(t.notas).some(k => Object.keys(t.notas[k]).some(d => t.notas[k][d]));
-  html += '<div class="cl-tablero"><div class="cl-tablero-tit">Tu cuaderno' +
-    (anotado ? '' : ' · todavía sin anotar nada') + '</div>';
-  t.dif.slice().sort((a,b) => conf[b] - conf[a]).forEach(d => {
-    const pc = conf[d];
-    html += '<div class="cl-hip"><div class="cl-hip-nom">' + clNombreDx(d) + '</div>' +
-      '<div class="cl-hip-barra"><div style="width:' + pc.toFixed(0) + '%"></div></div>' +
-      '<div class="cl-hip-pct">' + pc.toFixed(0) + '%</div></div>';
-  });
-  html += '</div>';
+  // Sin tablero ni porcentajes: se razona a ciegas, como en la estación.
+  // Lo único que se recuerda es contra qué cuadros compite este paciente.
+  if(t.fase === 'investigar'){
+    html += '<div class="cl-compite"><b>Tienes que decidir entre</b>' +
+      t.dif.map(d => '<span>' + clCorto(d) + '</span>').join('') + '</div>';
+  }
 
   // la consulta, como conversación
   if(t.chat && t.chat.length){
     html += '<div class="cl-sec">La consulta</div>';
-    if(t.fase === 'investigar'){
-      html += '<div class="cl-nota izq">Bajo cada cosa que averigües, anota qué significa: toca una hipótesis para ' +
-        'ciclar entre <b>–</b> no aporta, <b>↑</b> la apoya y <b>↓</b> la descarta. Al cerrar el caso te corrijo la anotación.</div>';
-    }
     const nomPac = clPacNom(c, f).split(' ')[0];
     html += '<div class="cl-chat">';
     t.chat.forEach(m => {
-      const marcable = m.accId && CL_NO_ANOTA.indexOf(m.accId) === -1 && t.fase === 'investigar';
       if(m.de === 'nota'){
         html += '<div class="cl-msg nota' + (m.accId === t.ultima ? ' nueva' : '') + '">' + m.txt;
       }else{
@@ -10690,16 +11497,6 @@ function clPanelCaso(cont){
           (m.accId === t.ultima ? ' nueva' : '') + '">' +
           '<span class="cl-msg-de">' + quien + '</span>' + m.txt +
           '<span class="cl-msg-hora">' + m.hora + '</span>';
-      }
-      if(marcable){
-        html += '<div class="cl-marcas">';
-        t.dif.forEach(d => {
-          const mk = (t.notas[m.accId] || {})[d] || 0;
-          html += '<button class="cl-marca' + (mk === 1 ? ' sube' : mk === -1 ? ' baja' : '') +
-            '" data-marca="' + m.accId + '|' + d + '">' +
-            '<i>' + (mk === 1 ? '↑' : mk === -1 ? '↓' : '–') + '</i>' + clCorto(d) + '</button>';
-        });
-        html += '</div>';
       }
       html += '</div>';
     });
@@ -10732,9 +11529,8 @@ function clPanelCaso(cont){
 
   if(t.fase === 'diagnostico'){
     html += '<div class="cl-preg">¿Cuál es tu diagnóstico?</div><div class="cl-opciones">';
-    t.dif.slice().sort((a,b) => conf[b] - conf[a]).forEach(d =>
-      html += '<button class="cl-opc" data-dx="' + d + '"><b>' + clNombreDx(d) + '</b>' +
-              '<small>tu confianza: ' + conf[d].toFixed(0) + '%</small></button>');
+    clMezclar(t.dif.slice()).forEach(d =>
+      html += '<button class="cl-opc" data-dx="' + d + '"><b>' + clNombreDx(d) + '</b></button>');
     html += '</div>';
   }
 
@@ -10744,26 +11540,26 @@ function clPanelCaso(cont){
       '</div>';
   }
 
-  // corrección del cuaderno: la pantalla donde de verdad se aprende
+  // repaso del caso: qué decía cada hallazgo y qué se quedó sin buscar
   if(t.fase === 'revision'){
     const r = t.correccion;
-    const nota = r.pct >= 85 ? 'Razonamiento impecable' : r.pct >= 65 ? 'Bien encaminado' : 'Hay que afinar la lectura';
+    const nota = r.pct >= 85 ? 'Evaluación completa' : r.pct >= 60 ? 'Te faltó explorar algo' : 'Decidiste con muy poco';
     html += '<div class="cl-revision"><div class="cl-revision-tit">' + nota + '</div>' +
       '<div class="cl-revision-pct">' + r.pct + '%</div>' +
-      '<div class="cl-revision-sub">' + r.aciertos + ' de ' + r.total + ' anotaciones correctas' +
-      (r.falsos ? ' · ' + r.falsos + ' marcadas de más' : '') + '</div></div>';
-    if(r.fallos.length){
-      html += '<div class="cl-sec">Lo que leíste distinto</div><div class="cl-pistas">';
-      r.fallos.slice(0, 8).forEach(f => {
-        const dice = f.esperado === 1 ? 'APOYA' : f.esperado === -1 ? 'DESCARTA' : 'no aporta a';
-        const pusiste = f.marcado === 1 ? '↑ apoya' : f.marcado === -1 ? '↓ descarta' : '– no aporta';
-        html += '<div class="cl-pista-item vacia"><b>' + f.pista + '</b>' +
-          'Anotaste “' + pusiste + '” para <b style="display:inline">' + clCorto(f.hip) + '</b>, ' +
-          'pero ese hallazgo <b style="display:inline">' + dice + '</b> esa hipótesis.</div>';
+      '<div class="cl-revision-sub">Encontraste ' + r.hechas + ' de los ' + r.total + ' hallazgos que discriminaban</div></div>';
+    if(r.filas.length){
+      html += '<div class="cl-sec">Qué decía cada cosa</div><div class="cl-pistas">';
+      r.filas.forEach(f2 => {
+        html += '<div class="cl-pista-item"><b>' + f2.acc + '</b>' +
+          (f2.apoya.length ? '<span class="cl-lee sube">↑ apoyaba ' + f2.apoya.join(', ') + '</span>' : '') +
+          (f2.descarta.length ? '<span class="cl-lee baja">↓ descartaba ' + f2.descarta.join(', ') + '</span>' : '') +
+          '</div>';
       });
       html += '</div>';
-    }else{
-      html += '<div class="cl-nota izq">No se te escapó ninguna. Leíste todos los hallazgos como correspondía.</div>';
+    }
+    if(r.faltaron.length){
+      html += '<div class="cl-sec">Lo que no alcanzaste a buscar</div>' +
+        '<div class="cl-nota izq">' + r.faltaron.join(' · ') + '</div>';
     }
     // el docente, solo si está puesto el modo simulación
     if(clSimulacion()){
@@ -10891,7 +11687,7 @@ function clResponderTto(i){
       t.errores++; t.ttoFallado = true;
       jxSonido('mal'); jxVibrar(30);
       avisar('❌ Lo correcto era: ' + t.caso.tto);
-      t.correccion = clCorregirCuaderno(t);
+      t.correccion = clLecturaHallazgos(t);
       t.fase = 'revision';
       clPanel();
       return;
@@ -10910,7 +11706,7 @@ function clResponderTto(i){
   }
   jxSonido('gana');
   // antes de cerrar, se corrige el cuaderno
-  t.correccion = clCorregirCuaderno(t);
+  t.correccion = clLecturaHallazgos(t);
   t.fase = 'revision';
   clPanel();
 }
@@ -10928,7 +11724,7 @@ function clCerrarCaso(){
   const der = t.ficha && t.ficha.deriv ? clDerivador(t.ficha.deriv) : null;
   const pagoDer = der ? der.pago : 1;
   // el cuaderno pesa: acertar de suerte paga la mitad que razonar bien
-  const cuad = t.correccion || clCorregirCuaderno(t);
+  const cuad = t.correccion || clLecturaHallazgos(t);
   const razon = 0.6 + (cuad.pct / 100) * 0.6;    // entre 0,6x y 1,2x
   const dinero = Math.round(base * clMultPagoCaso() * (perfecto ? 1.5 : 1) * eficiencia * confianza * gracia * noche * razon * tema * pagoDer);
   let rep = perfecto ? 2 + clRepExtra() : 1;
@@ -11934,6 +12730,14 @@ function clBucle(){
       const seg = clSegUrgencia();
       if(reloj) reloj.textContent = seg + 's';
       if(seg <= 0 && clVencerUrgencia() && clVista === 'recepcion' && !clTurno) clPanel();
+    }
+    // llegadas: la gente entra sola mientras miras la clínica
+    if(clVista === 'recepcion' && !clTurno && clSesionAbierta === null){
+      if(clLlegadasPendientes()) clPanel();
+      else {
+        const pl = document.getElementById('clProxLlegada');
+        if(pl) pl.textContent = clSegProxLlegada();
+      }
     }
     // reloj del examen
     if(clEx && !clEx.terminado){
