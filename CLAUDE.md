@@ -72,6 +72,14 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 - **El almacén es el cuello de botella del idle**: cada cosecha devuelve más semillas de las que gasta. `despejarAlmacen()` (parte de `aut5`) vende lo más barato cuando se llena; sin eso la automatización se paraba en seco. Ojo: con genotipos únicos casi todos los montones tienen **una sola** unidad, así que no se puede filtrar por `n > 1`.
 - Simulación fuera de línea y de pestaña dormida en `simularOffline()`; el bucle usa reloj real, no fotogramas.
 
+**Invernadero · legado (prestigio)** — cuando ya no queda nada que comprar, `pedirTrasplante()` reinicia la partida a cambio de **esporas** (`E.esporas`), que compran `MEJORAS_PERM` y **no se pierden nunca**. Se conservan herbario, cultivares secretos, logros, estadísticas y ajustes; vuelven a cero monedas, nivel, parcelas, investigación, equipo, decoración y almacén. `aplicarLegado()` reparte la ventaja de salida. Es la respuesta a que la partida se agotaba en un par de horas.
+
+**Invernadero · cachés al cambiar de partida** — `limpiarCachesDePartida()` es obligatorio en cada cambio de perfil, trasplante o restauración. `bonosCache` guardaba los multiplicadores del perfil anterior, así que **la automatización y las mejoras de uno se le aplicaban al otro**; los acumuladores de `auto` hacían lo mismo con el riego y las ventas.
+
+**Invernadero · el bucle y las pestañas ocultas** — el orden importa: si `document.hidden`, hay que salir **sin tocar `ultimoReal`**. Descontar el tiempo ahí tiraba a la basura todo lo ocurrido en segundo plano; dejándolo acumular, la rama `dt > 4000` lo recupera con `simularOffline()`.
+
+**Invernadero · resiembra** — sembrar a mano fija `p.fijada` y la resiembra automática repite **esa** variedad, no la que más sobre en el almacén. Sin eso, `aut4` secuestraba la parcela y no se podía cambiar de cultivo. Hay interruptor (`ajustes.autoResiembra`) y botón «Sembrar otra variedad aquí».
+
 **Invernadero · un guardado por persona** — la clave de localStorage es `invernaderoRincon_v1__<Persona>` (más `_copia`), **nunca una sola por aparato**: con la clave única, cambiar de perfil heredaba la partida del otro y encima la subía a su nombre. `fijarQuien()` guarda la partida actual bajo su dueño y carga (o estrena) la de la otra persona. `cargar()` migra el guardado antiguo sin dueño a la primera persona que entre, y solo si esa persona aún no tiene invernadero. `reiniciarPersona()` borra a una sola, aquí y en la nube.
 
 **Invernadero · almacén** — **cosechar no se bloquea nunca**: la flor siempre se recoge y solo las semillas sobrantes se pierden. Antes, con el almacén lleno no se podía cosechar y la partida quedaba muerta. `E.ajustes.autoDespejar` viene **encendido** y vende lo más barato al pasar del 90%; el auto-despeje no puede depender de `aut5`, que cuesta medio millón.

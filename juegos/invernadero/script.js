@@ -28,7 +28,7 @@ const JUEGO = {
   offlineMax: 14 * 60 * 60 * 1000,
   parcelasIniciales: 6,
   parcelasMax: 48,
-  almacenInicial: 60,
+  almacenInicial: 90,
   registroMax: 140,
 };
 
@@ -870,15 +870,15 @@ const INVESTIGACION = [
     desc:'+110% al precio; lo épico o mejor paga el doble.' },
   // --- Infraestructura
   { id:'inf1', rama:'inf', nombre:'Estantería', emo:'🗄️', oro:700, ci:4, req:[],
-    desc:'+30 de capacidad de almacén.' },
+    desc:'+60 de capacidad de almacén.' },
   { id:'inf2', rama:'inf', nombre:'Bodega fría', emo:'🧊', oro:4500, ci:20, req:['inf1'],
-    desc:'+70 de capacidad y las semillas no se echan a perder.' },
+    desc:'+140 de capacidad y las semillas no se echan a perder.' },
   { id:'inf3', rama:'inf', nombre:'Cristales dobles', emo:'🪟', oro:18000, ci:60, req:['inf2'],
     desc:'El clima malo afecta la mitad.' },
   { id:'inf4', rama:'inf', nombre:'Control de clima', emo:'🌡️', oro:95000, ci:170, req:['inf3'],
     desc:'Puedes elegir el clima de mañana una vez al día.' },
   { id:'inf5', rama:'inf', nombre:'Domo geodésico', emo:'🔆', oro:420000, ci:480, req:['inf4'],
-    desc:'+200 de almacén y la estación deja de penalizar el crecimiento.' },
+    desc:'+400 de almacén y la estación deja de penalizar el crecimiento.' },
   // --- Arcano
   { id:'rar1', rama:'rar', nombre:'Polen dorado', emo:'✨', oro:3000, ci:16, req:[],
     desc:'Las cosechas raras a veces dejan polen dorado.' },
@@ -1112,7 +1112,49 @@ const MISIONES_FIJAS = (() => {
   return out;
 })();
 
-/* ---------- 5.9 Mercado ---------- */
+/* ---------- 5.9 Legado: el juego después del juego ----------
+   Cuando ya no queda nada que comprar, se puede trasplantar el invernadero:
+   se empieza de nuevo pero con esporas (✿), una moneda que NO se pierde nunca
+   y compra mejoras permanentes. El herbario, los logros y los cultivares
+   secretos tampoco se tocan: lo coleccionado es para siempre.            */
+const MEJORAS_PERM = [
+  { id:'vigor',     nombre:'Vigor ancestral',   emo:'🌱', max:8, costo:n => 3 + n * 3,
+    desc:n => `+${n * 12}% de velocidad de crecimiento` },
+  { id:'fama',      nombre:'Fama heredada',     emo:'🪙', max:8, costo:n => 4 + n * 4,
+    desc:n => `+${n * 15}% al precio de venta` },
+  { id:'bodega',    nombre:'Bodega ancestral',  emo:'📦', max:6, costo:n => 3 + n * 3,
+    desc:n => `+${n * 80} de capacidad de almacén` },
+  { id:'tierras',   nombre:'Tierras heredadas', emo:'🏡', max:6, costo:n => 6 + n * 6,
+    desc:n => `empiezas con ${n * 2} parcelas abiertas de más` },
+  { id:'semillero', nombre:'Semillero familiar',emo:'🌾', max:5, costo:n => 5 + n * 5,
+    desc:n => `empiezas con ${n * 3} semillas de pradera` },
+  { id:'memoria',   nombre:'Memoria genética',  emo:'🧬', max:6, costo:n => 4 + n * 5,
+    desc:n => `+${n * 20}% de probabilidad de mutación` },
+  { id:'sabiduria', nombre:'Sabiduría',         emo:'🔬', max:6, costo:n => 5 + n * 5,
+    desc:n => `+${n * 25}% de ciencia y empiezas con ${n * 25} 🔬` },
+  { id:'alcancia',  nombre:'Alcancía',          emo:'💰', max:6, costo:n => 4 + n * 4,
+    desc:n => `empiezas con ${num(2000 * Math.pow(6, n))} monedas` },
+  { id:'rocio',     nombre:'Rocío eterno',      emo:'💧', max:5, costo:n => 6 + n * 6,
+    desc:n => `el agua baja un ${n * 14}% más lento` },
+  { id:'linaje',    nombre:'Linaje luminoso',   emo:'✨', max:4, costo:n => 12 + n * 12,
+    desc:n => `+${n * 4}% de que un hijo herede luminiscencia` },
+];
+const permPorId = id => MEJORAS_PERM.find(m => m.id === id);
+const nivelPerm = id => (E.perm || {})[id] || 0;
+
+/** Esporas que daría trasplantar ahora mismo. */
+function esporasDeCosecha() {
+  if (!E) return 0;
+  const ganado = Math.max(0, (E.stats.oroGanado || 0) - (E.oroBase || 0));
+  const porOro = Math.pow(ganado / 200000, 0.55);
+  const porHerbario = Object.keys(E.herbario).length * 0.08;
+  const porSecretos = (E.stats.secretos || 0) * 1.5;
+  return Math.floor(porOro + porHerbario + porSecretos);
+}
+const TRASPLANTE_NIVEL = 15;
+const puedeTrasplantar = () => E.nivel >= TRASPLANTE_NIVEL && esporasDeCosecha() >= 1;
+
+/* ---------- 5.10 Mercado ---------- */
 const FAMILIAS_COLOR = [
   { id:'blanco',  nombre:'Blancos',   emo:'🤍', claves:['alb', '000'] },
   { id:'amarillo',nombre:'Amarillos', emo:'💛', claves:['001', '002'] },
@@ -1139,6 +1181,9 @@ function estadoNuevo() {
     creado: Date.now(),
     t: Date.now(),
     oro: 250, polen: 0, ciencia: 0, xp: 0, nivel: 1,
+    // Legado: sobrevive a los trasplantes. En guardados antiguos entran
+    // con estos valores por defecto sin tocar nada de lo que ya había.
+    esporas: 0, perm: {}, trasplantes: 0, oroBase: 0,
     mundo: { ms: 8 * JUEGO.diaMs / 24, dia: 1, estacion: 0, clima: 'soleado', climaElegido: null },
     parcelas: [],
     semillas: [],
@@ -1241,6 +1286,22 @@ function revivir(bruto) {
   }
 }
 const tocar = () => { sucio = true; bonosCache = null; };
+
+/**
+ * Vacía todo lo que se guarda en memoria entre partidas. Es imprescindible al
+ * cambiar de perfil: `bonosCache` guardaba los multiplicadores del anterior,
+ * así que la automatización y las mejoras de uno se le aplicaban al otro
+ * hasta el siguiente `tocar()`. Los acumuladores de `auto` hacían lo mismo
+ * con el riego y las ventas automáticas.
+ */
+function limpiarCachesDePartida() {
+  bonosCache = null;
+  cacheFen.clear();
+  Object.keys(auto).forEach(k => auto[k] = 0);
+  cacheParcela.length = 0;
+  ultimoAvisoAlmacen = 0;
+  sucio = true;
+}
 
 function exportarPartida() {
   guardar(true);
@@ -1368,7 +1429,7 @@ const tieneDeco = id => E.deco.includes(id);
 function bonos() {
   if (bonosCache) return bonosCache;
   const b = {
-    crec: 1, agua: 1, precio: 1, mut: 1, plaga: 1, rareza: 0, brillo: 0,
+    crec: 1, agua: 1, precio: 1, mut: 1, plaga: 1, rareza: 0, brillo: 0, ciencia: 1,
     almacen: 0, animo: 0, semillasExtra: 0, precioNectar: 1, climaSuave: 0,
   };
   // Investigación
@@ -1382,9 +1443,9 @@ function bonos() {
   if (tieneInv('gen4')) b.mut *= 2;
   if (tieneInv('rar2')) b.mut *= 1.35;
   if (tieneInv('rar3')) b.rareza += 0.05;
-  if (tieneInv('inf1')) b.almacen += 30;
-  if (tieneInv('inf2')) b.almacen += 70;
-  if (tieneInv('inf5')) b.almacen += 200;
+  if (tieneInv('inf1')) b.almacen += 60;
+  if (tieneInv('inf2')) b.almacen += 140;
+  if (tieneInv('inf5')) b.almacen += 400;
   if (tieneInv('inf3')) b.climaSuave += 0.5;
   // Decoración
   E.deco.forEach(id => {
@@ -1400,6 +1461,14 @@ function bonos() {
     else if (d.bono === 'nectar') b.precioNectar += d.val;
     else if (d.bono === 'clima') b.climaSuave += d.val;
   });
+  // Legado (mejoras permanentes compradas con esporas)
+  b.crec += nivelPerm('vigor') * 0.12;
+  b.precio += nivelPerm('fama') * 0.15;
+  b.almacen += nivelPerm('bodega') * 80;
+  b.mut += nivelPerm('memoria') * 0.20;
+  b.brillo += nivelPerm('linaje') * 0.04;
+  b.agua *= Math.max(0.2, 1 - nivelPerm('rocio') * 0.14);
+  b.ciencia = 1 + nivelPerm('sabiduria') * 0.25;
   // Empleados
   E.empleados.forEach(emp => {
     const ef = eficaciaEmp(emp);
@@ -1738,6 +1807,9 @@ function plantar(idx, cod, silencio) {
   if (!p || !p.abierta || p.planta) return false;
   if (!quitarSemilla(cod)) return false;
   p.planta = { cod, prog: 0, salud: 100, plantada: Date.now(), mimos: 0 };
+  // Sembrar a mano fija la variedad de esa parcela: la resiembra automática
+  // repetirá lo que tú elegiste, no lo que le sobre al almacén.
+  if (!silencio) p.fijada = cod;
   p.plaga = 0;
   p.agua = Math.max(p.agua, 55);
   sumar('plantadas');
@@ -1753,13 +1825,22 @@ function plantar(idx, cod, silencio) {
 }
 
 /**
- * Elige qué resembrar en una parcela recién cosechada: primero el mismo
- * genotipo, si no otra semilla de la misma especie, y si no la más repetida.
+ * Elige qué resembrar en una parcela recién cosechada. Manda lo que TÚ
+ * sembraste ahí (`p.fijada`); si no queda, el mismo genotipo, luego la misma
+ * especie y por último la semilla más repetida.
  * Sin esto, el invernadero se vaciaba solo: las hijas casi nunca comparten
  * genotipo exacto con la madre.
  */
-function semillaParaResiembra(cod) {
-  if (E.semillas.some(s => s.cod === cod)) return cod;
+function semillaParaResiembra(cod, parcela) {
+  const hay = c => c && E.semillas.some(s => s.cod === c);
+  if (parcela && hay(parcela.fijada)) return parcela.fijada;
+  if (hay(cod)) return cod;
+  if (parcela && parcela.fijada) {
+    // La variedad elegida se acabó: al menos se sigue con su misma especie.
+    const espFija = fen(parcela.fijada).especie;
+    const pariente = E.semillas.find(s => fen(s.cod).especie === espFija);
+    if (pariente) return pariente.cod;
+  }
   const esp = fen(cod).especie;
   const misma = E.semillas.find(s => fen(s.cod).especie === esp);
   if (misma) return misma.cod;
@@ -1849,9 +1930,9 @@ function cosechar(idx, silencio) {
     chispasEn(idx, f.hex);
     log(`Cosechaste <b>${f.nombre}</b> (${rarezaPorId(f.rareza).nombre}).`, 'cosecha');
   }
-  // Resiembra automática
-  if (tieneInv('aut4')) {
-    const siguiente = semillaParaResiembra(pl.cod);
+  // Resiembra automática (se puede apagar; hay quien prefiere elegir a mano)
+  if (tieneInv('aut4') && E.ajustes.autoResiembra !== false) {
+    const siguiente = semillaParaResiembra(pl.cod, p);
     if (siguiente) plantar(idx, siguiente, true);
   }
   tocar();
@@ -2145,6 +2226,146 @@ function comprarDeco(id) {
   tocar(); pintarTodo();
 }
 
+/* ---------- Legado y trasplante ---------- */
+/** Reparte lo que dan las mejoras permanentes al empezar una partida nueva. */
+function aplicarLegado(e) {
+  const nv = id => (e.perm || {})[id] || 0;
+  if (nv('alcancia')) e.oro += 2000 * Math.pow(6, nv('alcancia'));
+  if (nv('sabiduria')) e.ciencia += nv('sabiduria') * 25;
+  const extra = nv('tierras') * 2;
+  for (let i = 0; i < extra && JUEGO.parcelasIniciales + i < JUEGO.parcelasMax; i++) {
+    e.parcelas[JUEGO.parcelasIniciales + i].abierta = true;
+  }
+  const semillas = nv('semillero') * 3;
+  for (let i = 0; i < semillas; i++) darSemilla(genSilvestre(0.34), 'legado', e);
+  return e;
+}
+
+function comprarPerm(id) {
+  const m = permPorId(id);
+  if (!m) return;
+  const nivel = nivelPerm(id);
+  if (nivel >= m.max) { aviso('✿', 'Ya está al máximo', m.nombre + ' no sube más.'); return; }
+  const costo = m.costo(nivel + 1);
+  if ((E.esporas || 0) < costo) {
+    aviso('✿', 'Faltan esporas', `${m.nombre} cuesta ${costo} ✿.`, 'malo'); sonido('no'); return;
+  }
+  E.esporas -= costo;
+  E.perm = E.perm || {};
+  E.perm[id] = nivel + 1;
+  tocar();
+  sonido('investigar');
+  log(`Legado mejorado: <b>${m.nombre}</b> nivel ${nivel + 1}.`, 'evento');
+  aviso(m.emo, m.nombre + ' ' + (nivel + 1), m.desc(nivel + 1), 'oro');
+  confetiChico();
+  pintarTodo();
+}
+
+function pedirTrasplante() {
+  const gana = esporasDeCosecha();
+  if (!puedeTrasplantar()) {
+    modal(`<h3 class="modal-tit">🌰 Trasplantar</h3>
+      <p class="modal-sub">Todavía no. Hace falta <b>nivel ${TRASPLANTE_NIVEL}</b> (vas por el ${E.nivel})
+      y al menos 1 espora que ganar (ahora darían ${gana}).</p>
+      <div class="modal-pie"><button class="btn btn-suave" data-cerrar>Entendido</button></div>`);
+    return;
+  }
+  modal(`<h3 class="modal-tit">🌰 Trasplantar el invernadero</h3>
+    <p class="modal-sub">Empiezas de nuevo, pero con <b>${gana} esporas ✿</b> para comprar mejoras
+    que ya no se pierden nunca. Es la forma de seguir creciendo cuando ya no queda nada que comprar.</p>
+    <div class="rejilla c2">
+      <div class="tarjeta" style="border-left:4px solid var(--exito)">
+        <div class="tarjeta-tit">✅ Se conserva</div>
+        <div class="tarjeta-sub">Todo el herbario (${Object.keys(E.herbario).length} especies)<br>
+        Los cultivares secretos<br>Los logros (${Object.keys(E.logros).length})<br>
+        Las esporas y las mejoras de legado<br>El marcador y las estadísticas</div>
+      </div>
+      <div class="tarjeta" style="border-left:4px solid var(--alerta)">
+        <div class="tarjeta-tit">🔄 Vuelve a empezar</div>
+        <div class="tarjeta-sub">Monedas, nivel y experiencia<br>Parcelas, investigación y decoración<br>
+        El equipo contratado<br>Semillas y flores del almacén</div>
+      </div>
+    </div>
+    <p class="tarjeta-sub" style="margin-top:12px">Sería tu trasplante número <b>${(E.trasplantes || 0) + 1}</b>.
+    Antes de reiniciar se guarda un respaldo, por si acaso.</p>
+    <div class="modal-pie">
+      <button class="btn btn-suave" data-cerrar>Ahora no</button>
+      <button class="btn btn-verde" id="btnTrasplantar">🌰 Trasplantar por ${gana} ✿</button>
+    </div>`, true);
+  $('#btnTrasplantar').onclick = () => hacerTrasplante(gana);
+}
+
+function hacerTrasplante(gana) {
+  // Red de seguridad: la partida anterior queda en la copia local antes de
+  // tocar nada, y el respaldo de la nube se refresca en cuanto pueda.
+  try { localStorage.setItem(claveCopiaDe(quien()), JSON.stringify(E)); } catch (e) { /* sin sitio */ }
+  const nuevo = estadoNuevo();
+  nuevo.herbario   = E.herbario;
+  nuevo.logros     = E.logros;
+  nuevo.stats      = E.stats;
+  nuevo.ajustes    = E.ajustes;
+  nuevo.mercado    = E.mercado;
+  nuevo.registro   = E.registro;
+  nuevo.duenio     = E.duenio;
+  nuevo.creado     = E.creado;
+  nuevo.esporas    = (E.esporas || 0) + gana;
+  nuevo.perm       = E.perm || {};
+  nuevo.trasplantes = (E.trasplantes || 0) + 1;
+  nuevo.oroBase    = E.stats.oroGanado || 0;
+  nuevo.stats.trasplantes = nuevo.trasplantes;
+  aplicarLegado(nuevo);
+  E = nuevo;
+  limpiarCachesDePartida();
+  sel = null;
+  lab.a = lab.b = null; lab.ultimo = null;
+  guardar(true);
+  cerrarModal();
+  log(`<b>Trasplante ${nuevo.trasplantes}</b>: el invernadero vuelve a empezar con ${gana} ✿ más.`, 'evento');
+  aviso('🌰', 'Trasplante hecho', `+${gana} esporas. El herbario y los logros siguen contigo.`, 'logro');
+  sonido('secreto');
+  confeti();
+  pintarParcelas(); pintarTodo();
+  Nube.sincronizar(true);
+}
+
+function vistaLegado() {
+  const gana = esporasDeCosecha();
+  const listo = puedeTrasplantar();
+  return cabecera('Legado', `${E.esporas || 0} esporas ✿ · ${E.trasplantes || 0} trasplantes`,
+    `<button class="btn ${listo ? 'btn-verde' : 'btn-suave'}" data-trasplantar>🌰 Trasplantar</button>`) + `
+  <div class="tarjeta">
+    <div class="tarjeta-tit">🌰 ¿Qué es esto?</div>
+    <div class="tarjeta-sub">Cuando ya te sobra el dinero y no queda nada que comprar, <b>trasplantas</b>:
+    el invernadero vuelve a empezar, pero te llevas <b>esporas ✿</b> para comprar mejoras permanentes.
+    Cada vuelta es más rápida que la anterior, y el herbario nunca se borra.
+    <br><br>Ahora mismo el trasplante daría <b>${gana} ✿</b>${listo ? '' : ` (hace falta nivel ${TRASPLANTE_NIVEL}; vas por el ${E.nivel})`}.</div>
+    <div class="barra oro" style="margin-top:10px"><i style="width:${lim(E.nivel / TRASPLANTE_NIVEL * 100, 0, 100)}%"></i></div>
+  </div>
+  <div class="tarjeta">
+    <div class="tarjeta-tit">✿ Mejoras permanentes</div>
+    <div class="tarjeta-sub">No se pierden nunca, ni al trasplantar. Tienes <b>${E.esporas || 0} ✿</b>.</div>
+    <div class="lista-simple" style="margin-top:11px">
+      ${MEJORAS_PERM.map(m => {
+        const nv = nivelPerm(m.id);
+        const tope = nv >= m.max;
+        const costo = tope ? 0 : m.costo(nv + 1);
+        const puede = !tope && (E.esporas || 0) >= costo;
+        return `<div class="item-lista ${tope ? 'hecho' : ''}">
+          <span class="item-emo">${m.emo}</span>
+          <span class="item-txt">
+            <span class="item-nom">${m.nombre} <span class="pastilla">${nv}/${m.max}</span></span>
+            <span class="item-desc">${nv ? 'Ahora: ' + m.desc(nv) + '<br>' : ''}${tope ? '<b>Al máximo</b>' : 'Siguiente: ' + m.desc(nv + 1)}</span>
+            <div class="barra" style="margin-top:5px"><i style="width:${nv / m.max * 100}%"></i></div>
+          </span>
+          <span class="item-der">
+            ${tope ? '<span class="pastilla bien">✓</span>'
+              : `<button class="btn ${puede ? 'btn-oro' : 'btn-suave'} btn-mini" data-perm="${m.id}">${costo} ✿</button>`}
+          </span></div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
 /* ---------- Equipo ---------- */
 function costoContrato(rol) {
   const n = E.empleados.filter(e => e.rol === rol).length;
@@ -2264,7 +2485,7 @@ function motorTick(dt) {
   }
   const cientificos = E.empleados.filter(e => e.rol === 'cientifico');
   if (cientificos.length) {
-    E.ciencia += seg * 0.021 * cientificos.reduce((s, e) => s + eficaciaEmp(e), 0);
+    E.ciencia += seg * 0.021 * b.ciencia * cientificos.reduce((s, e) => s + eficaciaEmp(e), 0);
   }
   const colecc = E.empleados.filter(e => e.rol === 'coleccionista');
   if (colecc.length) {
@@ -2309,9 +2530,11 @@ function motorTick(dt) {
   // entonces el almacén se llenaba y el juego se trababa.
   if (E.ajustes.autoDespejar) {
     auto.despeje += dt;
-    if (auto.despeje > 8000) {
+    if (auto.despeje > 5000) {
       auto.despeje = 0;
-      if (ocupado() > capacidad() * 0.9) despejarAlmacen(0.7);
+      // Umbral y objetivo holgados: si solo baja al 70% vuelve a llenarse en
+      // segundos y hay que estar vendiendo a mano todo el rato.
+      if (ocupado() > capacidad() * 0.85) despejarAlmacen(0.55);
     }
   }
 
@@ -2471,6 +2694,11 @@ function pintarTop() {
   ponerNum('#valOro', Math.floor(E.oro));
   ponerNum('#valGema', Math.floor(E.polen));
   ponerNum('#valCiencia', Math.floor(E.ciencia));
+  const chipEsp = $('#statEspora');
+  if (chipEsp) {
+    chipEsp.style.display = (E.esporas || E.trasplantes) ? '' : 'none';
+    ponerNum('#valEspora', E.esporas || 0);
+  }
   $('#valNivel').textContent = E.nivel;
   const nec = xpNecesaria(E.nivel);
   $('#barraXP').style.width = lim(E.xp / nec * 100, 0, 100) + '%';
@@ -2808,10 +3036,13 @@ function detalleParcela(idx) {
     </div>
     ${bloqueFenotipo(f)}
     ${bloqueADN(pl.cod)}
+    ${p.fijada ? `<p class="tarjeta-sub" style="margin-top:8px;text-align:center">
+      🔒 Esta parcela repite <b>${fen(p.fijada).nombre}</b> al resembrar.</p>` : ''}
     <div class="det-botones dos">
       <button class="btn btn-suave" data-regar="${idx}" ${p.agua > 98 ? 'disabled' : ''}>💧 Regar</button>
       <button class="btn ${pl.prog >= 1 ? 'btn-oro' : 'btn-suave'}" data-cosechar="${idx}" ${pl.prog < 1 ? 'disabled' : ''}>🧺 Cosechar</button>
       ${p.plaga ? `<button class="btn btn-rojo" style="grid-column:1/-1" data-curar="${idx}">🧹 Quitar plaga</button>` : ''}
+      <button class="btn btn-lila" style="grid-column:1/-1" data-cambiar="${idx}">🔄 Sembrar otra variedad aquí</button>
       <button class="btn btn-suave btn-mini" style="grid-column:1/-1" data-arrancar="${idx}">🗑️ Arrancar</button>
     </div>`;
 }
@@ -2995,6 +3226,7 @@ function pintarVista() {
     case 'enciclopedia': $('#vistaEnciclopedia').innerHTML = vistaHerbario(); break;
     case 'logros': $('#vistaLogros').innerHTML = vistaLogros(); break;
     case 'vitrina': $('#vistaVitrina').innerHTML = vistaVitrina(); break;
+    case 'legado': $('#vistaLegado').innerHTML = vistaLegado(); break;
   }
 }
 const cabecera = (tit, sub, extra) => `<div class="inv-cabecera vidrio">
@@ -3594,6 +3826,9 @@ function modalAjustes() {
       <input type="range" min="0" max="100" value="${a.volSfx * 100}" data-vol="sfx"></div>
     <div class="ajuste-fila"><div class="ajuste-txt"><b>Partículas</b><small>Confeti, chispas y gotas</small></div>
       <div class="interruptor ${a.particulas ? 'on' : ''}" data-toggle="particulas"></div></div>
+    <div class="ajuste-fila"><div class="ajuste-txt"><b>Resiembra automática</b>
+      <small>Repite en cada parcela la variedad que tú sembraste ahí. Apágala si prefieres elegir cada vez.</small></div>
+      <div class="interruptor ${a.autoResiembra !== false ? 'on' : ''}" data-toggle="autoResiembra"></div></div>
     <div class="ajuste-fila"><div class="ajuste-txt"><b>Auto-despejar el almacén</b>
       <small>Cuando se llena, vende solo lo más barato y guarda los ${DESPEJE_RESERVA} montones de semillas más valiosos.</small></div>
       <div class="interruptor ${a.autoDespejar ? 'on' : ''}" data-toggle="autoDespejar"></div></div>
@@ -3967,7 +4202,7 @@ function fijarQuien(q) {
     const estrena = !tienePartida(q);
     E = cargar(q);
     E.duenio = q;
-    cacheFen.clear();
+    limpiarCachesDePartida();
     sel = null;
     lab.a = lab.b = null; lab.ultimo = null;
     Nube.lista = false; Nube.remoto = null; Nube.ultimoMarcador = 0; Nube.ultimoRespaldo = 0; Nube.firma = '';
@@ -4000,7 +4235,7 @@ function reiniciarPersona(persona) {
     if (quien() === persona) {
       E = estadoNuevo();
       E.duenio = persona;
-      cacheFen.clear(); sel = null;
+      limpiarCachesDePartida(); sel = null;
       Nube.ultimoMarcador = 0; Nube.ultimoRespaldo = 0; Nube.firma = '';
       guardar(true);
       log(`Invernadero de <b>${persona}</b> reiniciado.`, 'evento');
@@ -4041,6 +4276,8 @@ function resumenPropio() {
     logros: Object.keys(E.logros).length,
     dia: E.mundo.dia,
     parcelas: parcelasAbiertas(),
+    esporas: E.esporas || 0,
+    trasplantes: E.trasplantes || 0,
     mejor: mejorEspecie(E),
     puntos: progresoDe(E),
     t: Date.now(),
@@ -4173,7 +4410,7 @@ function modalRestaurar(copia, aqui, alla) {
     E.registro = E.registro || [];
     guardar(true);
     cerrarModal();
-    cacheFen.clear();
+    limpiarCachesDePartida();
     log('Restauraste tu invernadero desde la nube.', 'evento');
     aviso('☁️', 'Invernadero restaurado', 'Todo volvió a como estaba.', 'oro');
     pintarParcelas(); pintarTodo();
@@ -4242,8 +4479,19 @@ function alPulsar(e) {
   if ((v = d('data-arrancar')) !== null) {
     const i = +v;
     confirmar('Arrancar la planta', 'Se pierde sin dar flor ni semillas.', () => {
-      E.parcelas[i].planta = null; E.parcelas[i].plaga = 0; tocar(); pintarTodo();
+      E.parcelas[i].planta = null; E.parcelas[i].plaga = 0; E.parcelas[i].fijada = null;
+      tocar(); pintarTodo();
     });
+    return;
+  }
+  // Cambiar lo que crece en una parcela: si está madura se cosecha antes, y
+  // se suelta la variedad fijada para que la resiembra no vuelva a ponerla.
+  if ((v = d('data-cambiar')) !== null) {
+    const i = +v, p = E.parcelas[i];
+    const cambiar = () => { p.fijada = null; p.planta = null; p.plaga = 0; tocar(); modalElegirSemilla(i); };
+    if (p.planta && p.planta.prog >= 1) { cosechar(i, true); p.fijada = null; pintarTodo(); modalElegirSemilla(i); }
+    else if (p.planta) confirmar('Cambiar la variedad', 'La planta que hay ahora se pierde, todavía no está en flor.', cambiar);
+    else { p.fijada = null; modalElegirSemilla(i); }
     return;
   }
   if ((v = d('data-elegir-sem')) !== null) {
@@ -4321,6 +4569,10 @@ function alPulsar(e) {
     tocar(); actualizarBotonSonido();
     return;
   }
+  // --- Legado
+  if ((v = d('data-perm')) !== null) { comprarPerm(v); return; }
+  if (el('data-trasplantar')) { pedirTrasplante(); return; }
+
   // --- Nube y marcador
   if ((v = d('data-quien')) !== null) { fijarQuien(v); return; }
   if (el('data-elegir-quien')) { modalQuien(); return; }
@@ -4481,10 +4733,13 @@ function bucle() {
   if (!ultimoReal) ultimoReal = ahora;
   let dt = ahora - ultimoReal;
   if (!E) { ultimoReal = ahora; return; }
+  // Ojo con el orden: si la pestaña está oculta hay que salir SIN mover
+  // `ultimoReal`, para que el tiempo se acumule y se recupere al volver.
+  // Descontarlo aquí era tirar a la basura todo lo ocurrido en segundo plano.
+  if (document.hidden) return;
   // Fotograma saltado: se acumula el tiempo y se sale sin tocar el DOM.
   if (dt < 1000 / fpsObjetivo()) return;
   ultimoReal = ahora;
-  if (document.hidden) return;   // en segundo plano no se dibuja nada
 
   // Si la pestaña estuvo dormida, se pone al día de golpe y en silencio
   // en vez de perder ese tiempo: el reloj del mundo es real, no de frames.

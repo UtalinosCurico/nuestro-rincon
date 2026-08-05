@@ -223,6 +223,9 @@ body.noche .marca-txt{color:var(--salvia);}
 body.noche .stat-oro .stat-val{color:var(--oro);}
 .stat-gema .stat-val{color:#b07fd0;}
 .stat-ciencia .stat-val{color:#5f93bd;}
+.stat-espora .stat-val{color:#6f9d63;}
+.stat-espora .stat-ico{color:#6f9d63;font-weight:700;}
+.item-lista.hecho{border-color:var(--exito);background:linear-gradient(120deg,rgba(127,174,122,.14),var(--blanco-calido));}
 
 .stat-nivel{gap:9px;}
 .nivel-globo{
