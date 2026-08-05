@@ -1330,7 +1330,29 @@ const CRISIS = [
     ] },
 ];
 
-/* ---------- 5.13 Mercado ---------- */
+/* ---------- 5.13 Proyectos de pareja ----------
+   Metas semanales que suman lo que hacen los DOS. No compiten: si entre
+   ambos llegan, cobran los dos.                                          */
+const PROYECTOS = [
+  { id:'cosechas', emo:'🧺', nombre:'Cosecha en pareja', stat:'cosechas', base:600,
+    txt:n => `Entre los dos, ${num(n)} cosechas` },
+  { id:'cruces', emo:'🧬', nombre:'Laboratorio compartido', stat:'cruces', base:200,
+    txt:n => `Entre los dos, ${num(n)} cruces` },
+  { id:'especies', emo:'📖', nombre:'Expedición botánica', stat:'especies', base:35,
+    txt:n => `Entre los dos, descubrir ${num(n)} especies` },
+  { id:'oro', emo:'🪙', nombre:'Alcancía común', stat:'oroGanado', base:3000000,
+    txt:n => `Entre los dos, ganar ${num(n)} monedas` },
+  { id:'ventas', emo:'💐', nombre:'Puesto compartido', stat:'ventas', base:400,
+    txt:n => `Entre los dos, vender ${num(n)} flores` },
+];
+function proyectoDeSemana(clave) {
+  const sem = clave || semanaClave();
+  const r = semilla('proyecto' + sem);
+  const p = PROYECTOS[Math.floor(r() * PROYECTOS.length)];
+  return { ...p, semana: sem, meta: Math.round(p.base * (0.8 + r() * 0.6)) };
+}
+
+/* ---------- 5.14 Mercado ---------- */
 const FAMILIAS_COLOR = [
   { id:'blanco',  nombre:'Blancos',   emo:'🤍', claves:['alb', '000'] },
   { id:'amarillo',nombre:'Amarillos', emo:'💛', claves:['001', '002'] },
@@ -3244,7 +3266,8 @@ function marcarAvisosNav() {
   $$('#navVistas .nav-btn').forEach(b => {
     const v = b.dataset.vista;
     const debe = (v === 'misiones' && hayMision) || (v === 'investigacion' && hayInv) ||
-      (v === 'mercado' && !!E.cliente) || (v === 'invernadero' && !!E.crisis);
+      (v === 'mercado' && !!E.cliente) || (v === 'invernadero' && !!E.crisis) ||
+      (v === 'juntos' && correoParaMi().length > 0);
     let p = $('.punto', b);
     if (debe && !p) { p = document.createElement('i'); p.className = 'punto'; b.appendChild(p); }
     else if (!debe && p) p.remove();
@@ -3555,7 +3578,10 @@ function detalleSemilla(cod) {
         <button class="btn btn-oro btn-mini" data-vender-sem="${cod}">🪙 Vender 1</button>
         <button class="btn btn-oro btn-mini" data-vender-sem-todo="${cod}">🪙 Vender ${st.n}</button>
       </div>
-      <button class="btn btn-suave btn-mini" data-tirar="${cod}">🗑️ Tirar una</button>
+      <div class="det-botones dos" style="margin:0">
+        <button class="btn btn-lila btn-mini" data-regalar="${cod}">💌 Regalar</button>
+        <button class="btn btn-suave btn-mini" data-tirar="${cod}">🗑️ Tirar una</button>
+      </div>
     </div>
     <p class="tarjeta-sub" style="margin-top:10px;text-align:center">O toca una parcela vacía para plantarla ahí.</p>`;
 }
@@ -3588,6 +3614,7 @@ function detalleFlor(cod) {
       <button class="btn btn-lila" style="grid-column:1/-1" data-lab="${cod}">🧬 Llevar al laboratorio</button>
       <button class="btn btn-suave btn-mini" data-injertar="${cod}">🧬 Injertar · ${COSTO_INJERTO} ✿</button>
       <button class="btn btn-suave btn-mini" data-concurso="${cod}">🏆 Al concurso</button>
+      <button class="btn btn-lila btn-mini" style="grid-column:1/-1" data-vitral="${cod}">🪟 Dejar en el vitral</button>
     </div>`;
 }
 function detalleEspecie(id) {
@@ -3712,6 +3739,7 @@ function pintarVista() {
     case 'logros': $('#vistaLogros').innerHTML = vistaLogros(); break;
     case 'vitrina': $('#vistaVitrina').innerHTML = vistaVitrina(); break;
     case 'legado': $('#vistaLegado').innerHTML = vistaLegado(); break;
+    case 'juntos': $('#vistaJuntos').innerHTML = vistaJuntos(); break;
   }
 }
 const cabecera = (tit, sub, extra) => `<div class="inv-cabecera vidrio">
@@ -4337,6 +4365,116 @@ function vistaVitrina() {
   </div>`;
 }
 
+/* ---------- JUNTOS: todo lo cooperativo ---------- */
+function vistaJuntos() {
+  const yo = quien();
+  const otra = laOtra();
+  const est = ESTADO_NUBE[Nube.estado] || ESTADO_NUBE.apagada;
+  if (!yo) {
+    return cabecera('Juntos', 'Regalos, polen compartido y metas de pareja') + `
+      <div class="tarjeta" style="border-left:4px solid var(--oro)">
+        <div class="tarjeta-tit">👤 ¿Quién eres?</div>
+        <div class="tarjeta-sub">Para compartir cosas hace falta saber quién juega en este aparato.</div>
+        <div class="rejilla c2" style="margin-top:10px">
+          ${PERSONAS.map(p => `<div class="mini-tarjeta" data-quien="${p}">
+            <span class="mt-emo">${p === 'Catalina' ? '🌷' : '🌿'}</span>
+            <span class="mt-nom">${p}</span></div>`).join('')}
+        </div></div>`;
+  }
+  const buzon = correoParaMi();
+  const vitral = florDelVitral();
+  const pr = proyectoDeSemana();
+  const t = proyectoTotales(pr);
+  const listo = t.total >= pr.meta;
+  const yaCobre = E.proyCobrado === pr.semana + '|' + pr.id;
+  const comun = herbarioComun();
+  const nComun = Object.keys(comun).length;
+  const mios = Object.keys(E.herbario).length;
+
+  return cabecera('Juntos', `Con ${otra} · ${est.emo} ${est.txt}`,
+    `<button class="btn btn-suave" data-sync>🔄 Actualizar</button>`) + `
+
+  <div class="tarjeta" style="border-left:4px solid var(--lavanda)">
+    <div class="tarjeta-tit">💌 Buzón${buzon.length ? ` · ${buzon.length} sin abrir` : ''}</div>
+    <div class="tarjeta-sub">Lo que ${otra} te haya mandado te espera aquí.</div>
+    ${buzon.length ? `<div class="lista-simple" style="margin-top:10px">
+      ${buzon.map(c => {
+        const f = c.tipo === 'semilla' ? fen(c.cod) : null;
+        return `<div class="item-lista">
+          <span class="${f ? 'item-lienzo' : 'item-emo'}">${f ? svgSemilla(f) : (c.tipo === 'oro' ? '🪙' : '✿')}</span>
+          <span class="item-txt">
+            <span class="item-nom">${f ? f.nombre : (c.tipo === 'oro' ? monedas(c.n) + ' monedas' : c.n + ' esporas')}</span>
+            <span class="item-desc">De ${c.de}${c.nota ? ' · «' + c.nota + '»' : ''}</span></span>
+          <span class="item-der"><button class="btn btn-oro btn-mini" data-recoger="${c.id}">Recoger</button></span>
+        </div>`;
+      }).join('')}</div>` : `<p class="tarjeta-sub" style="margin-top:8px">Nada por ahora.</p>`}
+    <div class="det-botones dos" style="margin-top:11px">
+      <button class="btn btn-suave btn-mini" data-enviar="oro">🪙 Mandarle monedas</button>
+      <button class="btn btn-suave btn-mini" data-enviar="espora">✿ Mandarle esporas</button>
+    </div>
+    <p class="tarjeta-sub" style="margin-top:7px">Para mandarle una semilla, elígela en la bolsa y usa «Regalar».</p>
+  </div>
+
+  <div class="tarjeta" style="border-left:4px solid var(--salvia)">
+    <div class="tarjeta-tit">🪟 Vitral · polinización a distancia</div>
+    <div class="tarjeta-sub">Deja una flor tuya y ${otra} podrá cruzar con su polen sin que tú pierdas nada.
+    Cruzar con la suya cuesta <b>${COSTO_POLEN_VITRAL} ✿</b> y gasta una flor tuya.</div>
+    <div class="rejilla c2" style="margin-top:11px">
+      <div class="tarjeta" style="padding:11px">
+        <div class="tarjeta-tit" style="font-size:.9rem">Lo que dejaste tú</div>
+        ${(() => {
+          const mio = ((Nube.remoto && Nube.remoto.vitral) || {})[yo];
+          return mio ? `<div class="tarjeta-sub">${mio.emo} <b>${mio.nombre}</b><br>
+            <span class="pastilla">${rarezaPorId(mio.rareza).nombre}</span></div>`
+            : '<div class="tarjeta-sub">Nada todavía. Elige una flor en la bolsa y usa «Al vitral».</div>';
+        })()}
+      </div>
+      <div class="tarjeta" style="padding:11px">
+        <div class="tarjeta-tit" style="font-size:.9rem">Lo que dejó ${otra}</div>
+        ${vitral ? `<div class="tarjeta-sub">${vitral.emo} <b>${vitral.nombre}</b><br>
+          <span class="pastilla">${rarezaPorId(vitral.rareza).nombre}</span></div>`
+          : `<div class="tarjeta-sub">${otra} no ha dejado nada aún.</div>`}
+      </div>
+    </div>
+    ${vitral && E.flores.length ? `<div class="rejilla c4" style="margin-top:11px">
+      ${ordenarStacks(E.flores.slice(), 'rareza').slice(0, 8).map(s => {
+        const f = fen(s.cod);
+        return `<div class="mini-tarjeta rar-${f.rareza}" data-polinizar="${s.cod}">
+          <span class="mini-lienzo">${svgPlanta(f, 1, { sombra: false })}</span>
+          <span class="mt-nom">${f.nombre.split(' ').slice(0, 2).join(' ')}</span>
+          <span class="mt-sub">Cruzar con la suya</span></div>`;
+      }).join('')}</div>` : ''}
+  </div>
+
+  <div class="tarjeta" style="border-left:4px solid ${listo ? 'var(--oro)' : 'var(--info)'}">
+    <div class="tarjeta-tit">${pr.emo} Proyecto de la semana · ${pr.nombre}</div>
+    <div class="tarjeta-sub">${pr.txt(pr.meta)}. Suma lo que hacéis los dos.</div>
+    <div class="barra ${listo ? 'oro' : ''}" style="margin-top:10px"><i style="width:${lim(t.total / pr.meta * 100, 0, 100)}%"></i></div>
+    <div class="mision-prem" style="margin-top:8px">
+      <span class="pastilla">${num(t.total)}/${num(pr.meta)}</span>
+      <span class="pastilla">Tú: ${num(t.mio)}</span>
+      <span class="pastilla">${otra}: ${num(t.otros)}</span>
+    </div>
+    <div class="det-botones" style="margin-top:10px">
+      <button class="btn ${listo && !yaCobre ? 'btn-oro' : 'btn-suave'}" data-cobrar-proyecto
+        ${listo && !yaCobre ? '' : 'disabled'}>${yaCobre ? '✓ Premio cobrado' : listo ? '🤝 Cobrar el premio' : 'Aún falta'}</button>
+    </div>
+  </div>
+
+  <div class="tarjeta">
+    <div class="tarjeta-tit">📖 Nuestro herbario</div>
+    <div class="tarjeta-sub">Las especies que habéis descubierto entre los dos, juntas.</div>
+    <div class="barra oro" style="margin-top:10px"><i style="width:${nComun / ESPECIES_TOTAL * 100}%"></i></div>
+    <div class="mision-prem" style="margin-top:8px">
+      <span class="pastilla oro">${nComun}/${ESPECIES_TOTAL} entre los dos</span>
+      <span class="pastilla">Tú aportas ${mios}</span>
+      <span class="pastilla">${(nComun / ESPECIES_TOTAL * 100).toFixed(1)}%</span>
+    </div>
+    ${nComun > mios ? `<p class="tarjeta-sub" style="margin-top:8px">
+      ${otra} ha encontrado <b>${nComun - mios}</b> que tú aún no tienes. Pídele semillas 😉</p>` : ''}
+  </div>`;
+}
+
 /* ---------- Modales auxiliares ---------- */
 function modalElegirSemilla(idxParcela) {
   if (!E.semillas.length) {
@@ -4870,6 +5008,10 @@ const Nube = {
       ? d.invernadero : {};
     if (!inv.marcador || typeof inv.marcador !== 'object') inv.marcador = {};
     if (!inv.respaldo || typeof inv.respaldo !== 'object') inv.respaldo = {};
+    if (!Array.isArray(inv.correo)) inv.correo = [];
+    if (!inv.vitral || typeof inv.vitral !== 'object') inv.vitral = {};
+    if (!inv.proyecto || typeof inv.proyecto !== 'object') inv.proyecto = {};
+    if (!inv.herbarioComun || typeof inv.herbarioComun !== 'object') inv.herbarioComun = {};
     this.remoto = inv;
     this.lista = true;
     return inv;
@@ -4918,6 +5060,9 @@ const Nube = {
       this.ultimoMarcador = ahora;
       if (subirRespaldo) { this.ultimoRespaldo = ahora; this.firma = firma; }
       this.estado = 'ok';
+      // El aporte al proyecto y el herbario común viajan con cada sincronización.
+      await publicarProyecto(proyectoDeSemana());
+      await volcarHerbarioComun();
     } catch (e) {
       this.estado = 'error';
     } finally {
@@ -4942,6 +5087,256 @@ const Nube = {
     pintarVista();
   },
 };
+
+/* ============================================================
+   12.b COLABORACIÓN
+   Todo asíncrono: no hace falta que estéis jugando a la vez. Cada persona
+   escribe solo lo suyo y `Nube.escribir()` relee antes de postear, así que
+   dos aparatos no se pisan.
+   ============================================================ */
+const CORREO_MAX = 40;
+const COSTO_POLEN_VITRAL = 1;   // esporas por polinizar con la flor del otro
+
+const laOtra = () => PERSONAS.find(p => p !== quien()) || PERSONAS[0];
+
+/** Envía una semilla, monedas o esporas a la otra persona, con recado. */
+async function enviarCorreo(tipo, carga, nota) {
+  const yo = quien();
+  if (!yo) { modalQuien(); return false; }
+  if (!Nube.lista) { aviso('☁️', 'Sin conexión', 'Hace falta internet para enviar.', 'malo'); return false; }
+  try {
+    await Nube.escribir(r => {
+      r.correo = Array.isArray(r.correo) ? r.correo : [];
+      r.correo.push({
+        id: nuevoId('c'), de: yo, para: laOtra(), tipo,
+        cod: carga.cod || null, n: carga.n || 0, nombre: carga.nombre || '',
+        nota: (nota || '').slice(0, 140), t: Date.now(),
+      });
+      // Se poda lo ya recogido para que la rama no crezca sin fin.
+      if (r.correo.length > CORREO_MAX) {
+        r.correo = r.correo.filter(c => !c.recogido).slice(-CORREO_MAX);
+      }
+    });
+    return true;
+  } catch (e) {
+    aviso('☁️', 'No se pudo enviar', 'Vuelve a intentarlo en un rato.', 'malo');
+    return false;
+  }
+}
+/** Paquetes que te esperan (aún sin recoger). */
+function correoParaMi() {
+  const yo = quien();
+  const arr = (Nube.remoto && Nube.remoto.correo) || [];
+  return arr.filter(c => c && c.para === yo && !c.recogido);
+}
+async function recogerCorreo(id) {
+  const paquete = correoParaMi().find(c => c.id === id);
+  if (!paquete) return;
+  if (paquete.tipo === 'semilla' && !hayEspacio()) {
+    aviso('📦', 'Almacén lleno', 'Despeja antes de recoger la semilla.', 'malo'); return;
+  }
+  try {
+    await Nube.escribir(r => {
+      const p = (r.correo || []).find(c => c && c.id === id);
+      if (p) p.recogido = true;
+    });
+  } catch (e) {
+    aviso('☁️', 'Sin conexión', 'No se pudo recoger ahora mismo.', 'malo'); return;
+  }
+  if (paquete.tipo === 'semilla') { darSemilla(genDec(paquete.cod), 'regalo de ' + paquete.de); }
+  else if (paquete.tipo === 'oro') darOro(paquete.n);
+  else if (paquete.tipo === 'espora') { E.esporas = (E.esporas || 0) + paquete.n; tocar(); }
+  sumar('regalosRecibidos');
+  sonido('logro'); confetiChico();
+  log(`Recogiste un regalo de <b>${paquete.de}</b>${paquete.nota ? ': «' + paquete.nota + '»' : ''}.`, 'evento');
+  aviso('💌', 'Regalo de ' + paquete.de, paquete.nota || paquete.nombre || '', 'logro');
+  pintarTodo();
+}
+
+/** Deja una flor en el vitral para que la otra persona pueda polinizar con ella. */
+async function publicarEnVitral(clave) {
+  const yo = quien();
+  if (!yo) { modalQuien(); return; }
+  const st = E.flores.find(s => s.cod === clave);
+  if (!st) return;
+  const f = fen(clave);
+  try {
+    await Nube.escribir(r => {
+      r.vitral = r.vitral || {};
+      r.vitral[yo] = { cod: clave, nombre: f.nombre, emo: f.emo, rareza: f.rareza, t: Date.now() };
+    });
+  } catch (e) { aviso('☁️', 'Sin conexión', 'No se pudo publicar.', 'malo'); return; }
+  // No se gasta la flor: es una muestra de polen, se queda contigo.
+  sumar('vitral');
+  log(`Dejaste <b>${f.nombre}</b> en el vitral para ${laOtra()}.`, 'evento');
+  aviso('🪟', 'Publicada en el vitral', laOtra() + ' ya puede cruzar con su polen.', 'oro');
+  sonido('mision');
+  Nube.sincronizar(true);
+  pintarTodo();
+}
+const florDelVitral = () => {
+  const v = (Nube.remoto && Nube.remoto.vitral) || {};
+  return v[laOtra()] || null;
+};
+/**
+ * Cruza una flor tuya con la que la otra persona dejó en el vitral. Su flor
+ * no se gasta (es polen), la tuya sí. Cuesta una espora.
+ */
+function polinizarConVitral(claveMia) {
+  const otra = florDelVitral();
+  if (!otra) { aviso('🪟', 'Vitral vacío', laOtra() + ' todavía no ha dejado ninguna flor.'); return; }
+  const st = E.flores.find(s => s.cod === claveMia);
+  if (!st) return;
+  if ((E.esporas || 0) < COSTO_POLEN_VITRAL) {
+    aviso('✿', 'Faltan esporas', 'Polinizar a distancia cuesta ' + COSTO_POLEN_VITRAL + ' ✿.', 'malo'); return;
+  }
+  if (!hayEspacio(2)) { aviso('📦', 'Almacén lleno', 'Despeja antes de polinizar.', 'malo'); return; }
+  E.esporas -= COSTO_POLEN_VITRAL;
+  quitarFlor(claveMia);
+  const gA = genDec(codDe(claveMia)), gB = genDec(codDe(otra.cod));
+  const mut = probMutacion();
+  const hijos = [];
+  const n = 2 + (tieneInv('gen5') ? 1 : 0);
+  for (let i = 0; i < n && hayEspacio(); i++) {
+    const r = meiosis(gA, gB, mut);
+    darSemilla(r.gen, 'vitral de ' + laOtra());
+    if (r.mutados.length) sumar('mutaciones');
+    hijos.push({ gen: r.gen, cod: genCod(r.gen), fen: fenotipo(r.gen, 'patio'), mutados: r.mutados });
+  }
+  sumar('cruces'); sumar('polinizaciones');
+  darXP(30);
+  log(`Polinizaste con el <b>${otra.nombre}</b> de ${laOtra()} → ${hijos.length} semillas.`, 'genetica');
+  aviso('🪟', 'Polinización a distancia', `Cruzaste con la flor de ${laOtra()}.`, 'oro');
+  sonido('cruce'); chispasEn(null);
+  lab.ultimo = { hijos, nuevos: hijos.filter(h => !E.herbario[h.fen.especie]) };
+  tocar(); pintarTodo();
+}
+
+/* ---------- Herbario común ---------- */
+async function publicarEnHerbarioComun(especieId) {
+  const yo = quien();
+  if (!yo || !Nube.lista) return;
+  try {
+    await Nube.escribir(r => {
+      r.herbarioComun = r.herbarioComun || {};
+      if (!r.herbarioComun[especieId]) r.herbarioComun[especieId] = { quien: yo, t: Date.now() };
+    });
+  } catch (e) { /* se reintenta en la próxima sincronización */ }
+}
+/** Sube al herbario común lo que aún no esté allí. */
+async function volcarHerbarioComun() {
+  const yo = quien();
+  if (!yo || !Nube.lista) return;
+  const comun = (Nube.remoto && Nube.remoto.herbarioComun) || {};
+  const faltan = Object.keys(E.herbario).filter(id => !comun[id]);
+  if (!faltan.length) return;
+  try {
+    await Nube.escribir(r => {
+      r.herbarioComun = r.herbarioComun || {};
+      faltan.forEach(id => { if (!r.herbarioComun[id]) r.herbarioComun[id] = { quien: yo, t: Date.now() }; });
+    });
+  } catch (e) { /* se reintenta en la próxima sincronización */ }
+}
+const herbarioComun = () => (Nube.remoto && Nube.remoto.herbarioComun) || {};
+
+/* ---------- Proyecto de pareja ---------- */
+/** Lo que has aportado tú esta semana al proyecto en curso. */
+function aporteMio(pr) {
+  if (!E.proyBase || E.proyBase.semana !== pr.semana || E.proyBase.id !== pr.id) {
+    E.proyBase = { semana: pr.semana, id: pr.id, valor: E.stats[pr.stat] || 0 };
+    tocar();
+  }
+  return Math.max(0, (E.stats[pr.stat] || 0) - E.proyBase.valor);
+}
+function proyectoTotales(pr) {
+  const nube = (Nube.remoto && Nube.remoto.proyecto) || {};
+  const aportes = (nube.semana === pr.semana && nube.aporte) ? nube.aporte : {};
+  const yo = quien();
+  const mio = aporteMio(pr);
+  let total = mio;
+  PERSONAS.forEach(p => { if (p !== yo) total += (aportes[p] || 0); });
+  return { mio, otros: total - mio, total, aportes };
+}
+async function publicarProyecto(pr) {
+  const yo = quien();
+  if (!yo || !Nube.lista) return;
+  const mio = aporteMio(pr);
+  try {
+    await Nube.escribir(r => {
+      r.proyecto = r.proyecto || {};
+      if (r.proyecto.semana !== pr.semana || r.proyecto.id !== pr.id) {
+        r.proyecto = { semana: pr.semana, id: pr.id, aporte: {}, cobrado: {} };
+      }
+      r.proyecto.aporte = r.proyecto.aporte || {};
+      r.proyecto.aporte[yo] = mio;
+    });
+  } catch (e) { /* se reintenta */ }
+}
+function cobrarProyecto() {
+  const pr = proyectoDeSemana();
+  const t = proyectoTotales(pr);
+  const yaCobre = E.proyCobrado === pr.semana + '|' + pr.id;
+  if (t.total < pr.meta) { aviso('🤝', 'Todavía no', 'Entre los dos faltan ' + num(pr.meta - t.total) + '.'); return; }
+  if (yaCobre) { aviso('🤝', 'Ya lo cobraste', 'El premio de esta semana ya es tuyo.'); return; }
+  E.proyCobrado = pr.semana + '|' + pr.id;
+  const oro = Math.round(20000 * Math.pow(1.2, Math.min(E.nivel, 30)));
+  const esp = 3;
+  darOro(oro); darXP(400);
+  E.esporas = (E.esporas || 0) + esp;
+  sumar('proyectos');
+  log(`Proyecto de pareja cumplido: <b>${pr.nombre}</b> (+${esp} ✿).`, 'evento');
+  aviso('🤝', '¡Lo lograsteis!', `${pr.nombre} · +${monedas(oro)} 🪙 y +${esp} ✿`, 'logro');
+  sonido('logro'); confeti();
+  tocar(); pintarTodo();
+}
+
+function modalEnviar(tipo, clave) {
+  const yo = quien();
+  if (!yo) { modalQuien(); return; }
+  let titulo, cuerpo, obtener;
+  if (tipo === 'semilla') {
+    const st = E.semillas.find(s => s.cod === clave);
+    if (!st) return;
+    const f = fen(clave);
+    titulo = 'Enviar una semilla a ' + laOtra();
+    cuerpo = `<div class="item-lista"><span class="item-lienzo">${svgSemilla(f)}</span>
+      <span class="item-txt"><span class="item-nom">${f.nombre}</span>
+      <span class="item-desc">${rarezaPorId(f.rareza).nombre} · te quedan ${st.n}</span></span></div>`;
+    obtener = () => ({ cod: clave, nombre: f.nombre });
+  } else {
+    const max = tipo === 'oro' ? Math.floor(E.oro) : (E.esporas || 0);
+    titulo = tipo === 'oro' ? 'Enviar monedas a ' + laOtra() : 'Enviar esporas a ' + laOtra();
+    cuerpo = `<p class="tarjeta-sub">Tienes ${tipo === 'oro' ? monedas(max) + ' 🪙' : max + ' ✿'}.</p>
+      <input type="number" id="cuantoEnviar" min="1" max="${max}" value="${Math.max(1, Math.floor(max / 4))}"
+        style="width:100%;padding:9px 13px;border-radius:14px;border:1px solid rgba(140,125,105,.24);background:var(--vidrio-2);margin-top:8px">`;
+    obtener = () => ({ n: lim(parseInt($('#cuantoEnviar').value, 10) || 0, 1, max) });
+  }
+  modal(`<h3 class="modal-tit">💌 ${titulo}</h3>
+    <p class="modal-sub">Le llegará a su invernadero la próxima vez que entre.</p>
+    ${cuerpo}
+    <textarea id="notaEnviar" maxlength="140" placeholder="Un recado (opcional)…"
+      style="width:100%;height:72px;margin-top:10px;border-radius:14px;padding:10px;border:1px solid rgba(140,125,105,.24);background:var(--vidrio-2)"></textarea>
+    <div class="modal-pie"><button class="btn btn-suave" data-cerrar>Cancelar</button>
+      <button class="btn btn-verde" id="btnEnviar">💌 Enviar</button></div>`);
+  $('#btnEnviar').onclick = async () => {
+    const carga = obtener();
+    if (tipo === 'oro' && carga.n > E.oro) return;
+    if (tipo === 'espora' && carga.n > (E.esporas || 0)) return;
+    const nota = ($('#notaEnviar').value || '').trim();
+    $('#btnEnviar').disabled = true;
+    const ok = await enviarCorreo(tipo, carga, nota);
+    if (!ok) { $('#btnEnviar').disabled = false; return; }
+    if (tipo === 'semilla') quitarSemilla(clave);
+    else if (tipo === 'oro') { E.oro -= carga.n; tocar(); }
+    else { E.esporas -= carga.n; tocar(); }
+    sumar('regalosEnviados');
+    cerrarModal();
+    sonido('mision');
+    log(`Le enviaste ${tipo === 'semilla' ? 'una semilla' : carga.n + (tipo === 'oro' ? ' 🪙' : ' ✿')} a <b>${laOtra()}</b>.`, 'evento');
+    aviso('💌', 'Enviado', 'Le llegará a ' + laOtra() + ' cuando entre.', 'oro');
+    pintarTodo();
+  };
+}
 
 function modalRestaurar(copia, aqui, alla) {
   const s = copia.save;
@@ -5148,6 +5543,14 @@ function alPulsar(e) {
     return;
   }
   if ((v = d('data-concurso')) !== null) { presentarAlConcurso(v); return; }
+
+  // --- Colaboración
+  if ((v = d('data-recoger')) !== null) { recogerCorreo(v); return; }
+  if ((v = d('data-enviar')) !== null) { modalEnviar(v, null); return; }
+  if ((v = d('data-regalar')) !== null) { modalEnviar('semilla', v); return; }
+  if ((v = d('data-vitral')) !== null) { publicarEnVitral(v); return; }
+  if ((v = d('data-polinizar')) !== null) { polinizarConVitral(v); return; }
+  if (el('data-cobrar-proyecto')) { cobrarProyecto(); return; }
 
   // --- Legado
   if ((v = d('data-perm')) !== null) { comprarPerm(v); return; }

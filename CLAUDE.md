@@ -72,6 +72,13 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 - **El almacén es el cuello de botella del idle**: cada cosecha devuelve más semillas de las que gasta. `despejarAlmacen()` (parte de `aut5`) vende lo más barato cuando se llena; sin eso la automatización se paraba en seco. Ojo: con genotipos únicos casi todos los montones tienen **una sola** unidad, así que no se puede filtrar por `n > 1`.
 - Simulación fuera de línea y de pestaña dormida en `simularOffline()`; el bucle usa reloj real, no fotogramas.
 
+**Invernadero · colaboración (vista «Juntos»)** — todo asíncrono, porque no juegan a la vez. Cuatro ramas nuevas bajo `datos.invernadero`, cada persona escribiendo solo lo suyo y siempre con el relee-antes-de-postear de `Nube.escribir()`:
+
+- `correo` — regalos con recado (semilla, monedas o esporas). El envío descuenta **en local solo si la subida salió bien**; recoger marca `recogido` en la nube antes de dar nada. La lista se poda a `CORREO_MAX` descartando lo ya recogido.
+- `vitral` — cada persona publica una flor. Polinizar con la del otro **no le gasta su flor** (es polen): gasta la tuya y 1 ✿.
+- `proyecto` — meta semanal que **suma lo de los dos**; `aporteMio()` guarda una línea base en `E.proyBase` para contar solo lo hecho desde que arrancó la semana, y `E.proyCobrado` impide cobrar dos veces.
+- `herbarioComun` — unión de los descubrimientos de ambos; `volcarHerbarioComun()` sube lo que falte en cada sincronización.
+
 **Invernadero · biomas** — `BIOMAS` (patio, desierto, trópico, alpino) son sectores: `E.parcelas[i].bioma`. Cada uno tiene clima propio (agua, crecimiento, plagas) y **despierta un locus dormido** — `Q`/`R`/`W`, que existen en todas las plantas pero solo se expresan en su bioma. Por eso `fenotipo(g, bioma)` lleva dos argumentos y el herbario pasó de 356 a **1.371** entradas.
 
 - Las **flores** recuerdan dónde crecieron: la clave de inventario es `"<genotipo>@<bioma>"` (`claveItem`/`codDe`/`biomaDe`). Sin `@` es el patio, así que **los montones guardados antes siguen leyéndose igual**. Las semillas no llevan bioma: son solo genes.
