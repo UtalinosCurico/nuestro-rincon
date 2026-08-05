@@ -72,6 +72,14 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 - **El almacén es el cuello de botella del idle**: cada cosecha devuelve más semillas de las que gasta. `despejarAlmacen()` (parte de `aut5`) vende lo más barato cuando se llena; sin eso la automatización se paraba en seco. Ojo: con genotipos únicos casi todos los montones tienen **una sola** unidad, así que no se puede filtrar por `n > 1`.
 - Simulación fuera de línea y de pestaña dormida en `simularOffline()`; el bucle usa reloj real, no fotogramas.
 
+**Invernadero · biomas** — `BIOMAS` (patio, desierto, trópico, alpino) son sectores: `E.parcelas[i].bioma`. Cada uno tiene clima propio (agua, crecimiento, plagas) y **despierta un locus dormido** — `Q`/`R`/`W`, que existen en todas las plantas pero solo se expresan en su bioma. Por eso `fenotipo(g, bioma)` lleva dos argumentos y el herbario pasó de 356 a **1.371** entradas.
+
+- Las **flores** recuerdan dónde crecieron: la clave de inventario es `"<genotipo>@<bioma>"` (`claveItem`/`codDe`/`biomaDe`). Sin `@` es el patio, así que **los montones guardados antes siguen leyéndose igual**. Las semillas no llevan bioma: son solo genes.
+- Usar `fenEn(cod, parcela)` para cualquier planta viva; `fen(clave)` solo para lo que está en el almacén.
+- `genDec()` rellena los loci que falten, así que un genotipo antiguo de 12 loci carga sin cambiar de especie.
+
+**Invernadero · encargos, injertos, concurso y crisis** — `ENCARGOS` (pedidos de varios días que pagan esporas; avanzan **al vender**, tanto en `vender()` como en `venderTodoDe()`), `injertar()` (fija un locus en homocigoto por 3 ✿; solo con un alelo que la flor ya lleve), `CONCURSOS` (tema por semana ISO, igual para los dos, se compara por el marcador de la nube) y `CRISIS` (decisiones con consecuencias reales: cada opción toca plagas, agua, salud o plantas). Las metas de encargo escalan por `base` de dificultad, no por nivel a secas: pedir 40 flores legendarias no es un encargo, es un muro.
+
 **Invernadero · legado (prestigio)** — cuando ya no queda nada que comprar, `pedirTrasplante()` reinicia la partida a cambio de **esporas** (`E.esporas`), que compran `MEJORAS_PERM` y **no se pierden nunca**. Se conservan herbario, cultivares secretos, logros, estadísticas y ajustes; vuelven a cero monedas, nivel, parcelas, investigación, equipo, decoración y almacén. `aplicarLegado()` reparte la ventaja de salida. Es la respuesta a que la partida se agotaba en un par de horas.
 
 **Invernadero · cachés al cambiar de partida** — `limpiarCachesDePartida()` es obligatorio en cada cambio de perfil, trasplante o restauración. `bonosCache` guardaba los multiplicadores del perfil anterior, así que **la automatización y las mejoras de uno se le aplicaban al otro**; los acumuladores de `auto` hacían lo mismo con el riego y las ventas.

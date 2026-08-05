@@ -200,7 +200,56 @@ const LOCI = [
     desc:'Recesivo escondido: solo <b>xx</b> brilla en la oscuridad. Los portadores no se notan.' },
   { id:'N', nombre:'Néctar', tipo:'dominante', alelos:['N','n'], dom:'N',
     desc:'<b>N</b> produce néctar: la flor vale más y atrae clientes especiales.' },
+  /* Los tres últimos loci son "dormidos": están en todas las plantas desde
+     siempre, pero solo se expresan si la flor crece en su bioma. Por eso los
+     guardados antiguos no cambian de fenotipo al actualizar. */
+  { id:'Q', nombre:'Suculencia', tipo:'dominante', alelos:['Q','q'], dom:'Q', bioma:'desierto',
+    desc:'Solo se nota en el <b>desierto</b>: hojas carnosas que guardan agua.' },
+  { id:'R', nombre:'Aroma', tipo:'dominante', alelos:['R','r'], dom:'R', bioma:'tropical',
+    desc:'Solo se nota en el <b>trópico</b>: la flor perfuma y se paga mucho mejor.' },
+  { id:'W', nombre:'Escarcha', tipo:'dominante', alelos:['W','w'], dom:'W', bioma:'alpino',
+    desc:'Solo se nota en el <b>alpino</b>: pétalos cubiertos de escarcha que no se derrite.' },
 ];
+
+/* ---- Biomas: sectores del invernadero con su propio clima y su locus ---- */
+const BIOMAS = {
+  patio: { id:'patio', nombre:'Patio', emo:'🪴', locus:null, rasgo:null, precio:0, nivel:1,
+    crec:1, agua:1, plaga:1, mut:1, rareza:0,
+    desc:'El invernadero de toda la vida. Equilibrado y sin sorpresas.' },
+  desierto: { id:'desierto', nombre:'Desierto', emo:'🏜️', locus:'Q', rasgo:'suculenta', precio:120000, nivel:8,
+    crec:0.85, agua:0.30, plaga:0.5, mut:1.10, rareza:0,
+    desc:'Casi no hay que regar y apenas hay plagas, pero todo crece más lento.' },
+  tropical: { id:'tropical', nombre:'Trópico', emo:'🌴', locus:'R', rasgo:'perfumada', precio:450000, nivel:12,
+    crec:1.40, agua:2.10, plaga:2.20, mut:1.15, rareza:0,
+    desc:'Crece rapidísimo, bebe muchísimo y se llena de bichos.' },
+  alpino: { id:'alpino', nombre:'Alpino', emo:'🏔️', locus:'W', rasgo:'escarchada', precio:1400000, nivel:16,
+    crec:0.65, agua:0.55, plaga:0.25, mut:1.70, rareza:0.05,
+    desc:'Frío y lento, pero es donde más muta la genética.' },
+};
+const ORDEN_BIOMAS = ['patio', 'desierto', 'tropical', 'alpino'];
+const biomaDeParcela = p => (p && p.bioma && BIOMAS[p.bioma]) ? p.bioma : 'patio';
+
+/* Rasgos que solo aparecen cultivando en el bioma correcto. */
+const RASGOS_BIOMA = {
+  suculenta:  { nombre:'Suculenta',  suf:'suc', adj:'suculenta',  emo:'🌵', puntos:4, precio:1.45 },
+  perfumada:  { nombre:'Perfumada',  suf:'per', adj:'perfumada',  emo:'💮', puntos:5, precio:1.75 },
+  escarchada: { nombre:'Escarchada', suf:'esc', adj:'escarchada', emo:'❄️', puntos:6, precio:2.10 },
+};
+const SUFIJOS_RASGO = {};
+Object.keys(RASGOS_BIOMA).forEach(k => SUFIJOS_RASGO[RASGOS_BIOMA[k].suf] = k);
+
+/* ---- Claves de inventario ----
+   Una flor recuerda dónde creció, porque de eso depende su rasgo. Las semillas
+   no: son solo genes. Formato: "<genotipo>@<bioma>", y sin "@" es el patio,
+   así que todos los montones guardados antes siguen leyéndose igual. */
+function claveItem(cod, bioma) {
+  return (bioma && bioma !== 'patio') ? cod + '@' + bioma : cod;
+}
+const codDe = clave => String(clave).split('@')[0];
+function biomaDe(clave) {
+  const b = String(clave).split('@')[1];
+  return (b && BIOMAS[b]) ? b : 'patio';
+}
 const LOCUS = {};
 LOCI.forEach(l => LOCUS[l.id] = l);
 const ORDEN_F = ['F1', 'F2', 'F3', 'f'];
@@ -440,14 +489,42 @@ const SECRETOS = [
   { id:'diego',    nombre:'Faro de Diego',      rareza:'divino',     emo:'🕯️',
     pista:'Índigo intenso, alta, en campana, luminiscente y estable.',
     cond:(f)=> f.color === '200' && f.sat === 2 && f.talla === 2 && f.forma === 'F3' && f.brillo && f.estable },
+  { id:'cactus',   nombre:'Corazón del Desierto', rareza:'legendario', emo:'🌵',
+    pista:'Suculenta y ámbar intensa: criada en el desierto.',
+    cond:(f)=> f.rasgo === 'suculenta' && f.color === '002' && f.sat === 2 },
+  { id:'orquidea', nombre:'Orquídea Fantasma',  rareza:'mitico',     emo:'💮',
+    pista:'Perfumada, albina y con néctar, en el trópico.',
+    cond:(f)=> f.rasgo === 'perfumada' && f.color === 'alb' && f.nectar },
+  { id:'edelweiss',nombre:'Estrella de Escarcha',rareza:'mitico',    emo:'❄️',
+    pista:'Escarchada, blanco nube y en estrella, criada en el alpino.',
+    cond:(f)=> f.rasgo === 'escarchada' && f.color === '000' && f.forma === 'F1' },
+  { id:'oasis',    nombre:'Flor del Oasis',     rareza:'mitico',     emo:'🏜️',
+    pista:'Suculenta turquesa que además brilla.',
+    cond:(f)=> f.rasgo === 'suculenta' && f.color === '201' && f.brillo },
+  { id:'selva',    nombre:'Corona de la Selva', rareza:'divino',     emo:'🌴',
+    pista:'Perfumada esmeralda intensa, alta y en copa.',
+    cond:(f)=> f.rasgo === 'perfumada' && f.color === '202' && f.sat === 2 && f.talla === 2 && f.forma === 'F2' },
+  { id:'ventisca', nombre:'Alma de Ventisca',   rareza:'divino',     emo:'🌨️',
+    pista:'Escarchada índigo intensa, luminiscente y abanicada.',
+    cond:(f)=> f.rasgo === 'escarchada' && f.color === '200' && f.sat === 2 && f.brillo && f.hoja === 'abanicada' },
+  { id:'trinidad', nombre:'Trinidad Botánica',  rareza:'divino',     emo:'🔱',
+    pista:'Los tres genes dormidos en homocigoto dominante (QQ, RR y WW) a la vez, y criada en un bioma.',
+    // Homocigoto en los tres a propósito: con heterocigotos salía a cada rato
+    // y una flor divina no puede ser lo más común del invernadero.
+    cond:(f,g)=> !!f.rasgo && g.Q[0] === 'Q' && g.Q[1] === 'Q'
+                 && g.R[0] === 'R' && g.R[1] === 'R' && g.W[0] === 'W' && g.W[1] === 'W' },
   { id:'eterna',   nombre:'Flor Eterna',        rareza:'divino',     emo:'♾️',
     pista:'Magenta real intensa, estrella, abanicada, alta, con néctar y brillo.',
     cond:(f)=> f.color === '220' && f.sat === 2 && f.forma === 'F1' && f.hoja === 'abanicada'
                && f.talla === 2 && f.nectar && f.brillo },
 ];
 
-/** Traduce un genotipo a todo lo observable. Es la única fuente de verdad visual. */
-function fenotipo(g) {
+/**
+ * Traduce un genotipo a todo lo observable. Es la única fuente de verdad
+ * visual. `bioma` decide si se expresa el rasgo dormido correspondiente:
+ * la misma semilla da una flor distinta en el desierto que en el trópico.
+ */
+function fenotipo(g, bioma) {
   const dosis = (id, al) => g[id].filter(x => x === al).length;
   const a = dosis('A', 'A'), b = dosis('B', 'B'), c = dosis('C', 'C');
   const albina = !g.P.includes('P');
@@ -463,16 +540,21 @@ function fenotipo(g) {
     brillo: !g.X.includes('X'),
     nectar: g.N.includes('N'),
   };
+  // Rasgo de bioma: solo se expresa donde corresponde y si lleva el dominante.
+  f.bioma = (bioma && BIOMAS[bioma]) ? bioma : 'patio';
+  const bio = BIOMAS[f.bioma];
+  f.rasgo = (bio.locus && g[bio.locus] && g[bio.locus].includes(bio.locus)) ? bio.rasgo : null;
   f.hex = hexDe(f);
   f.hexHoja = hexHojaDe(f);
   f.puntos = puntosRareza(f, g);
   const sec = SECRETOS.find(s => s.cond(f, g));
   f.secreto = sec ? sec.id : null;
   f.rareza = sec ? sec.rareza : rarezaDePuntos(f.puntos);
-  f.especie = sec ? 'sec-' + sec.id : `${f.forma}-${f.color}-${f.hoja}`;
+  const suf = f.rasgo ? '-' + RASGOS_BIOMA[f.rasgo].suf : '';
+  f.especie = sec ? 'sec-' + sec.id : `${f.forma}-${f.color}-${f.hoja}${suf}`;
   f.nombre = sec ? sec.nombre : nombreEspecie(f);
   f.cientifico = sec ? 'Cultivar «' + sec.nombre + '»' : cientificoDe(f);
-  f.emo = sec ? sec.emo : FORMAS[f.forma].emo;
+  f.emo = sec ? sec.emo : (f.rasgo ? RASGOS_BIOMA[f.rasgo].emo : FORMAS[f.forma].emo);
   return f;
 }
 
@@ -503,6 +585,7 @@ function puntosRareza(f, g) {
   if (f.brillo) p += 6;
   if (f.nectar) p += 1;
   if (!f.estable) p += 1;
+  if (f.rasgo) p += RASGOS_BIOMA[f.rasgo].puntos;
   return p;
 }
 function rarezaDePuntos(p) {
@@ -511,21 +594,28 @@ function rarezaDePuntos(p) {
   return r.id;
 }
 function nombreEspecie(f) {
-  return FORMAS[f.forma].genero + ' ' + COLORES[f.color].ep + ' ' + HOJAS[f.hoja].adj;
+  const base = FORMAS[f.forma].genero + ' ' + COLORES[f.color].ep + ' ' + HOJAS[f.hoja].adj;
+  return f.rasgo ? base + ' ' + RASGOS_BIOMA[f.rasgo].adj : base;
 }
 function cientificoDe(f) {
   const ep = COLORES[f.color].ep.replace(/[áéíóú]/g, m => 'aeiou'['áéíóú'.indexOf(m)]);
   return FORMAS[f.forma].genero.toLowerCase().replace(/^./, c => c.toUpperCase()) + ' ' +
-         ep.toLowerCase() + ' var. ' + HOJAS[f.hoja].adj.toLowerCase();
+         ep.toLowerCase() + ' var. ' + HOJAS[f.hoja].adj.toLowerCase() +
+         (f.rasgo ? ' f. ' + RASGOS_BIOMA[f.rasgo].adj.toLowerCase() : '');
 }
 
 /** Lista completa de especies posibles (para el herbario). */
 function todasLasEspecies() {
   const out = [];
+  // Sin rasgo (patio) y una variante por cada rasgo de bioma.
+  const rasgos = [null].concat(Object.keys(RASGOS_BIOMA));
   Object.keys(FORMAS).forEach(fo => {
     CLAVES_COLOR.forEach(col => {
       Object.keys(HOJAS).forEach(ho => {
-        out.push({ id:`${fo}-${col}-${ho}`, forma:fo, color:col, hoja:ho, secreto:false });
+        rasgos.forEach(ra => {
+          const suf = ra ? '-' + RASGOS_BIOMA[ra].suf : '';
+          out.push({ id:`${fo}-${col}-${ho}${suf}`, forma:fo, color:col, hoja:ho, rasgo:ra, secreto:false });
+        });
       });
     });
   });
@@ -541,16 +631,17 @@ function fenotipoDeEspecie(id) {
     const s = SECRETOS.find(x => 'sec-' + x.id === id);
     return { secreto:s.id, nombre:s.nombre, rareza:s.rareza, emo:s.emo, forma:'F1',
              color:'222', hoja:'abanicada', sat:2, talla:1, brillo:true, nectar:true,
-             estable:true, vigor:true, dosisA:2, dosisB:2, dosisC:2, albina:false,
+             estable:true, vigor:true, dosisA:2, dosisB:2, dosisC:2, albina:false, rasgo:null,
              hex:'#6b5f7a', hexHoja:'#7fa274', cientifico:'Cultivar «' + s.nombre + '»', puntos:22 };
   }
-  let [forma, color, hoja] = String(id).split('-');
+  let [forma, color, hoja, suf] = String(id).split('-');
   // Un guardado viejo o un respaldo dañado puede traer ids que ya no existen:
   // mejor devolver una ficha neutra que reventar el herbario entero.
   if (!FORMAS[forma]) forma = 'f';
   if (!COLORES[color]) color = '000';
   if (!HOJAS[hoja]) hoja = 'cordada';
-  const f = { forma, color, hoja, sat:1, talla:1, brillo:false, nectar:false, estable:true,
+  const rasgo = SUFIJOS_RASGO[suf] || null;
+  const f = { forma, color, hoja, rasgo, sat:1, talla:1, brillo:false, nectar:false, estable:true,
               vigor:true, albina: color === 'alb',
               dosisA: color === 'alb' ? 0 : +color[0],
               dosisB: color === 'alb' ? 0 : +color[1],
@@ -573,6 +664,7 @@ function precioBase(f) {
   p *= 1 + f.talla * 0.09;
   if (f.nectar) p *= 1.22;
   if (f.brillo) p *= 1.9;
+  if (f.rasgo) p *= RASGOS_BIOMA[f.rasgo].precio;
   if (f.secreto) p *= 2.4;
   return Math.round(p);
 }
@@ -1154,7 +1246,91 @@ function esporasDeCosecha() {
 const TRASPLANTE_NIVEL = 15;
 const puedeTrasplantar = () => E.nivel >= TRASPLANTE_NIVEL && esporasDeCosecha() >= 1;
 
-/* ---------- 5.10 Mercado ---------- */
+/* ---------- 5.10 Encargos largos ----------
+   Metas de varios días que dan esporas: cuando el dinero ya sobra, siguen
+   dando algo concreto que perseguir.                                      */
+const ENCARGOS = [
+  { id:'color', emo:'🎨', dias:3, base:7,
+    arma:() => { const c = elige(CLAVES_COLOR.filter(x => x !== 'alb')); return {
+      dato:c, txt:'flores de color ' + COLORES[c].nombre, cumple:f => f.color === c }; } },
+  { id:'rareza', emo:'💎', dias:4, base:3,
+    arma:() => { const r = elige(['raro', 'epico', 'legendario']); const orden = RAREZAS.map(x => x.id); return {
+      dato:r, txt:'flores de rareza ' + rarezaPorId(r).nombre.toLowerCase() + ' o mejor',
+      cumple:f => orden.indexOf(f.rareza) >= orden.indexOf(r) }; } },
+  { id:'forma', emo:'🏵️', dias:3, base:8,
+    arma:() => { const fo = elige(Object.keys(FORMAS)); return {
+      dato:fo, txt:'flores de corola ' + FORMAS[fo].nombre.toLowerCase(), cumple:f => f.forma === fo }; } },
+  { id:'nectar', emo:'🍯', dias:3, base:6,
+    arma:() => ({ dato:1, txt:'flores con néctar', cumple:f => !!f.nectar }) },
+  { id:'brillo', emo:'✨', dias:5, base:2,
+    arma:() => ({ dato:1, txt:'flores luminiscentes', cumple:f => !!f.brillo }) },
+  { id:'hoja', emo:'🍃', dias:3, base:8,
+    arma:() => { const h = elige(Object.keys(HOJAS)); return {
+      dato:h, txt:'flores de hoja ' + HOJAS[h].adj, cumple:f => f.hoja === h }; } },
+  { id:'bioma', emo:'🌵', dias:5, base:3, requiereBioma:true,
+    arma:() => { const r = elige(Object.keys(RASGOS_BIOMA)); return {
+      dato:r, txt:'flores ' + RASGOS_BIOMA[r].adj + 's', cumple:f => f.rasgo === r }; } },
+];
+
+/* ---------- 5.11 Concurso semanal ----------
+   Un tema por semana, igual para los dos porque sale de la semana ISO.    */
+const CONCURSOS = [
+  { id:'azul',    nombre:'La más azul',       emo:'💙', mide:f => f.dosisA * 10 + f.puntos },
+  { id:'roja',    nombre:'La más roja',       emo:'❤️', mide:f => f.dosisB * 10 + f.puntos },
+  { id:'amarilla',nombre:'La más dorada',     emo:'💛', mide:f => f.dosisC * 10 + f.puntos },
+  { id:'rara',    nombre:'La más rara',       emo:'💎', mide:f => f.puntos * 3 },
+  { id:'alta',    nombre:'La más alta',       emo:'🌳', mide:f => f.talla * 14 + f.puntos },
+  { id:'brillo',  nombre:'La más luminosa',   emo:'✨', mide:f => (f.brillo ? 40 : 0) + f.puntos },
+  { id:'nectar',  nombre:'La más melosa',     emo:'🍯', mide:f => (f.nectar ? 25 : 0) + f.puntos },
+  { id:'pastel',  nombre:'La más pastel',     emo:'🕊️', mide:f => (f.sat === 0 ? 30 : 0) + f.puntos },
+  { id:'estrella',nombre:'La mejor estrella', emo:'✴️', mide:f => (f.forma === 'F1' ? 30 : 0) + f.puntos },
+  { id:'exotica', nombre:'La más exótica',    emo:'🌵', mide:f => (f.rasgo ? 45 : 0) + f.puntos },
+];
+function concursoDeSemana(clave) {
+  const r = semilla('concurso' + (clave || semanaClave()));
+  return CONCURSOS[Math.floor(r() * CONCURSOS.length)];
+}
+
+/* ---------- 5.12 Decisiones: crisis con consecuencias ---------- */
+const CRISIS = [
+  { id:'hongo', emo:'🦠', titulo:'Hongo en el invernadero',
+    txt:'Una mancha blanca avanza por las hojas. Si no haces nada, se llevará varias plantas.',
+    ops:[
+      { txt:'Fumigar', costo:0.18, efecto:'cura', desc:'Cuesta monedas pero lo corta en seco.' },
+      { txt:'Podar a mano', efecto:'salud', desc:'Gratis, pero las plantas pierden salud.' },
+      { txt:'No hacer nada', efecto:'plaga', desc:'A ver si pasa sola. Puede salir caro.' },
+    ] },
+  { id:'sequia', emo:'🥵', titulo:'Se cortó el agua',
+    txt:'El pozo se secó. Sin riego, lo que está creciendo lo va a pasar mal.',
+    ops:[
+      { txt:'Comprar agua', costo:0.12, efecto:'riego', desc:'Riega todo al máximo ahora mismo.' },
+      { txt:'Racionar', efecto:'lento', desc:'Gratis, pero todo crece más lento un rato.' },
+      { txt:'Aguantar', efecto:'seco', desc:'El agua baja de golpe en todas las parcelas.' },
+    ] },
+  { id:'plagaBichos', emo:'🐛', titulo:'Orugas en las flores',
+    txt:'Han aparecido orugas justo en lo que está a punto de florecer.',
+    ops:[
+      { txt:'Pagar al fumigador', costo:0.15, efecto:'cura', desc:'Se van todas de una vez.' },
+      { txt:'Soltar mariquitas', efecto:'mariquitas', desc:'Tarda, pero deja el invernadero limpio un buen rato.' },
+      { txt:'Quitarlas a mano', efecto:'salud', desc:'Gratis y algo funciona, pero maltrata las plantas.' },
+    ] },
+  { id:'granizo', emo:'🧊', titulo:'Aviso de granizo',
+    txt:'Dicen que esta noche cae granizo. Puedes cubrir el invernadero o arriesgarte.',
+    ops:[
+      { txt:'Cubrir con mallas', costo:0.2, efecto:'nada', desc:'No pasa nada, pero se paga.' },
+      { txt:'Cubrir solo lo raro', costo:0.06, efecto:'mixto', desc:'Salvas lo valioso; lo común se lleva el golpe.' },
+      { txt:'Arriesgarse', efecto:'granizo', desc:'Si cae, se pierden plantas.' },
+    ] },
+  { id:'inspector', emo:'📋', titulo:'Inspección sanitaria',
+    txt:'Un inspector quiere ver el invernadero. Si lo encuentra sucio, multa.',
+    ops:[
+      { txt:'Limpiar a fondo', costo:0.1, efecto:'cura', desc:'Todo impecable, sin multa.' },
+      { txt:'Enseñar solo lo bonito', efecto:'suerte', desc:'Puede colar… o no.' },
+      { txt:'Invitarle a un café', costo:0.03, efecto:'reputacion', desc:'Se va contento y trae clientes.' },
+    ] },
+];
+
+/* ---------- 5.13 Mercado ---------- */
 const FAMILIAS_COLOR = [
   { id:'blanco',  nombre:'Blancos',   emo:'🤍', claves:['alb', '000'] },
   { id:'amarillo',nombre:'Amarillos', emo:'💛', claves:['001', '002'] },
@@ -1184,6 +1360,10 @@ function estadoNuevo() {
     // Legado: sobrevive a los trasplantes. En guardados antiguos entran
     // con estos valores por defecto sin tocar nada de lo que ya había.
     esporas: 0, perm: {}, trasplantes: 0, oroBase: 0,
+    biomas: [],        // sectores desbloqueados además del patio
+    encargo: null,     // pedido largo en curso
+    concurso: null,    // lo presentado esta semana
+    crisis: null,      // decisión pendiente
     mundo: { ms: 8 * JUEGO.diaMs / 24, dia: 1, estacion: 0, clima: 'soleado', climaElegido: null },
     parcelas: [],
     semillas: [],
@@ -1203,7 +1383,7 @@ function estadoNuevo() {
                tema: 'auto', ahorro: false, autoDespejar: true },
   };
   for (let i = 0; i < JUEGO.parcelasMax; i++) {
-    e.parcelas.push({ i, abierta: i < JUEGO.parcelasIniciales, planta: null, agua: 100, plaga: 0 });
+    e.parcelas.push({ i, abierta: i < JUEGO.parcelasIniciales, planta: null, agua: 100, plaga: 0, bioma: 'patio' });
   }
   FAMILIAS_COLOR.forEach(f => { e.mercado.demanda[f.id] = 1; e.mercado.hist[f.id] = [1, 1, 1, 1, 1, 1, 1, 1]; });
   // Regalo de bienvenida: tres semillas silvestres para empezar.
@@ -1341,8 +1521,8 @@ function quitarSemilla(cod, n) {
   tocar();
   return true;
 }
-function darFlor(gen) {
-  const cod = genCod(gen);
+function darFlor(gen, bioma) {
+  const cod = claveItem(genCod(gen), bioma);
   const p = E.flores.find(s => s.cod === cod);
   if (p) p.n++;
   else E.flores.push({ cod, n: 1, fecha: Date.now() });
@@ -1499,6 +1679,9 @@ function bonos() {
     if (f.brillo) b.brillo += f.brillo;
     if (f.nectar) b.precioNectar *= f.nectar;
   }
+  // Secuelas de una crisis reciente
+  if (E.lento && Date.now() < E.lento.hasta) b.crec *= 0.6;
+  if (E.mariquitas && Date.now() < E.mariquitas.hasta) b.plaga = 0;
   // Noche: sin luz artificial el crecimiento baja
   if (esNoche() && !tieneDeco('lampara')) b.crec *= 0.72;
   bonosCache = b;
@@ -1542,6 +1725,9 @@ function nuevoDia() {
   moverMercado();
   animoDiario();
   refrescarMisiones();
+  revisarEncargo();
+  // Una crisis cada tantos días: obliga a decidir, no solo a mirar.
+  if (!E.crisis && E.mundo.dia > 3 && suerte(0.22)) lanzarCrisis();
   if (suerte(0.42)) sortearEvento();
   if (E.evento) { E.evento.quedan--; if (E.evento.quedan <= 0) terminarEvento(); }
   if (!E.cliente && suerte(tieneInv('com2') ? 0.55 : 0.32)) llegaCliente();
@@ -1755,17 +1941,19 @@ const formasDescubiertas = e => {
    el bucle de simulación los consulta muchas veces por segundo. */
 const cacheFen = new Map();
 const CACHE_FEN_MAX = 4000;
-function fen(cod) {
-  let f = cacheFen.get(cod);
+function fen(clave) {
+  let f = cacheFen.get(clave);
   if (!f) {
     // Cada genotipo distinto deja una entrada. En partidas muy largas son
     // decenas de miles, así que el caché se vacía al llegar al tope.
     if (cacheFen.size > CACHE_FEN_MAX) cacheFen.clear();
-    f = fenotipo(genDec(cod));
-    cacheFen.set(cod, f);
+    f = fenotipo(genDec(codDe(clave)), biomaDe(clave));
+    cacheFen.set(clave, f);
   }
   return f;
 }
+/** Fenotipo de una planta según la tierra donde está: el bioma lo pone la parcela. */
+const fenEn = (cod, parcela) => fen(claveItem(codDe(cod), biomaDeParcela(parcela)));
 /** Duración total del crecimiento de una flor, en ms. */
 const duracionCrec = f => 55000 * (1 + f.puntos * 0.095);
 
@@ -1800,6 +1988,65 @@ function ampliarInvernadero() {
   log(`Abriste una parcela nueva por <b>${monedas(c)}</b> 🪙 (${parcelasAbiertas()} en total).`);
   sonido('compra');
   tocar(); pintarTodo();
+}
+
+/* ---------- Biomas ---------- */
+const biomaAbierto = id => id === 'patio' || (E.biomas || []).includes(id);
+
+function comprarBioma(id) {
+  const b = BIOMAS[id];
+  if (!b || biomaAbierto(id)) return;
+  if (E.nivel < b.nivel) { aviso('🔒', 'Aún no', 'Necesitas nivel ' + b.nivel + '.', 'malo'); sonido('no'); return; }
+  if (E.oro < b.precio) { aviso('🪙', 'Faltan monedas', 'Cuesta ' + monedas(b.precio) + ' 🪙.', 'malo'); sonido('no'); return; }
+  E.oro -= b.precio;
+  E.biomas = (E.biomas || []).concat(id);
+  darXP(300);
+  sonido('investigar');
+  log(`Abriste el sector <b>${b.nombre}</b> ${b.emo}. Ahora se expresa el locus <b>${b.locus}</b>.`, 'evento');
+  aviso(b.emo, 'Sector ' + b.nombre, 'Las flores que cultives ahí pueden salir ' + RASGOS_BIOMA[b.rasgo].adj + 's.', 'logro');
+  confeti();
+  tocar(); pintarTodo();
+}
+
+/** Cambia el clima de una parcela. La planta que hubiera se pierde. */
+function cambiarBiomaParcela(idx, id) {
+  const p = E.parcelas[idx];
+  if (!p || !p.abierta || !biomaAbierto(id)) return;
+  if (biomaDeParcela(p) === id) { cerrarModal(); return; }
+  const aplicar = () => {
+    p.bioma = id;
+    p.planta = null; p.plaga = 0; p.fijada = null;
+    p.agua = 100;
+    tocar(); cerrarModal(); pintarTodo();
+    log(`La parcela ${idx + 1} pasa a ser <b>${BIOMAS[id].nombre}</b> ${BIOMAS[id].emo}.`);
+  };
+  if (p.planta) confirmar('Cambiar el clima de la parcela',
+    'Lo que hay plantado ahí se pierde. ¿Seguir?', aplicar);
+  else aplicar();
+}
+
+function modalBiomas(idx) {
+  const p = E.parcelas[idx];
+  const actual = biomaDeParcela(p);
+  modal(`<h3 class="modal-tit">Clima de la parcela ${idx + 1}</h3>
+    <p class="modal-sub">Cada sector tiene su clima y despierta un locus dormido:
+    la misma semilla da una flor distinta según dónde la siembres.</p>
+    <div class="rejilla c2">
+      ${ORDEN_BIOMAS.map(id => {
+        const b = BIOMAS[id];
+        const abierto = biomaAbierto(id);
+        const esta = actual === id;
+        return `<div class="mini-tarjeta ${esta ? 'hecho' : ''} ${abierto ? '' : 'bloq'}"
+          data-bioma-parcela="${id}" data-idx="${idx}" style="text-align:left">
+          <span class="mt-emo">${b.emo}</span>
+          <span class="mt-nom">${b.nombre}${esta ? ' · aquí' : ''}</span>
+          <span class="mt-sub">${b.desc}</span>
+          ${b.locus ? `<span class="pastilla" style="margin-top:6px">locus ${b.locus} → ${RASGOS_BIOMA[b.rasgo].adj}</span>` : ''}
+          <span class="mt-sub" style="margin-top:5px">${abierto ? '' :
+            (E.nivel < b.nivel ? '🔒 Nivel ' + b.nivel : monedas(b.precio) + ' 🪙 — tócalo para abrirlo')}</span>
+        </div>`;
+      }).join('')}
+    </div>`, true);
 }
 
 function plantar(idx, cod, silencio) {
@@ -1895,11 +2142,11 @@ function cosechar(idx, silencio) {
   const p = E.parcelas[idx];
   if (!p || !p.planta || p.planta.prog < 1) return false;
   const pl = p.planta;
-  const f = fen(pl.cod);
+  const f = fenEn(pl.cod, p);
   const b = bonos();
   // Cosechar NUNCA se bloquea: la flor siempre se recoge. Antes, con el
   // almacén lleno no se podía cosechar nada y el juego se trababa entero.
-  darFlor(genDec(pl.cod));
+  darFlor(genDec(pl.cod), biomaDeParcela(p));
   // Semillas: autofecundación, así que los recesivos se reparten de verdad.
   // Solo entran las que caben; si sobran, se avisa en vez de trabar la partida.
   let nSem = 1 + b.semillasExtra + (suerte(0.28) ? 1 : 0) + (pl.salud > 85 ? 1 : 0);
@@ -1983,7 +2230,7 @@ function cruzar(codA, codB, forzar) {
   if (codA === codB && stA.n < 2) { aviso('🌸', 'Falta una flor', 'Necesitas dos flores para autofecundar.', 'malo'); return null; }
   quitarFlor(codA); quitarFlor(codB);
 
-  const gA = genDec(codA), gB = genDec(codB);
+  const gA = genDec(codDe(codA)), gB = genDec(codDe(codB));
   const b = bonos();
   let n = 2 + (tieneInv('gen5') ? 1 : 0) + (suerte(0.28) ? 1 : 0);
   const mut = probMutacion();
@@ -2065,6 +2312,7 @@ function vender(cod, n) {
   const h = E.herbario[f.especie];
   if (h) { h.vendidas += n; h.mejor = Math.max(h.mejor || 0, Math.round(total / n)); }
   sumar('ventas', n);
+  avanzarEncargo(f, n);
   darXP(Math.round(2 + f.puntos * 0.4) * n);
   sonido('moneda');
   flotar('+' + monedas(total) + ' 🪙', '#b08c3c');
@@ -2157,6 +2405,7 @@ function venderTodoDe(rarezas) {
     const p = precioVenta(f, cant);
     total += p; n += cant;
     quitarFlor(st.cod, cant);
+    avanzarEncargo(f, cant);   // la venta en bloque también cuenta para el encargo
     const h = E.herbario[f.especie]; if (h) h.vendidas += cant;
     const fam = familiaDeColor(f.color);
     E.mercado.demanda[fam] = lim(E.mercado.demanda[fam] - 0.018 * cant, 0.3, 3);
@@ -2224,6 +2473,230 @@ function comprarDeco(id) {
   sonido('compra');
   log(`Colocaste <b>${d.nombre}</b> ${d.emo} en el invernadero.`);
   tocar(); pintarTodo();
+}
+
+/* ---------- Encargos largos ---------- */
+function nuevoEncargo() {
+  const hayBioma = (E.biomas || []).length > 0;
+  const pool = ENCARGOS.filter(x => !x.requiereBioma || hayBioma);
+  const plantilla = elige(pool);
+  const d = plantilla.arma();
+  // Escala suave y por dificultad: pedir 40 flores legendarias no es un
+  // encargo, es un muro.
+  const base = plantilla.base || 5;
+  const cant = Math.max(2, Math.round(base * (0.8 + Math.random() * 0.5) * (1 + E.nivel * 0.06)));
+  E.encargo = {
+    id: plantilla.id, emo: plantilla.emo, dato: d.dato, txt: d.txt,
+    meta: cant, hechas: 0, vence: E.mundo.dia + plantilla.dias,
+    oro: Math.round(4000 * Math.pow(1.22, Math.min(E.nivel, 30))),
+    esporas: 1 + Math.floor(E.nivel / 12),
+    xp: Math.round(180 * Math.pow(1.1, Math.min(E.nivel, 30))),
+  };
+  log(`Encargo nuevo: <b>${cant}</b> ${d.txt}.`, 'evento');
+  aviso(plantilla.emo, 'Encargo nuevo', `${cant} ${d.txt}, antes del día ${E.encargo.vence}.`, 'evento');
+  tocar();
+}
+const cumpleEncargo = f => {
+  const e = E.encargo; if (!e) return false;
+  const p = ENCARGOS.find(x => x.id === e.id); if (!p) return false;
+  // Se rearma la condición desde el dato guardado, para no serializar funciones.
+  switch (e.id) {
+    case 'color':  return f.color === e.dato;
+    case 'forma':  return f.forma === e.dato;
+    case 'hoja':   return f.hoja === e.dato;
+    case 'nectar': return !!f.nectar;
+    case 'brillo': return !!f.brillo;
+    case 'bioma':  return f.rasgo === e.dato;
+    case 'rareza': { const o = RAREZAS.map(x => x.id); return o.indexOf(f.rareza) >= o.indexOf(e.dato); }
+  }
+  return false;
+};
+/** Cada flor vendida que encaje suma al encargo. */
+function avanzarEncargo(f, n) {
+  const e = E.encargo;
+  if (!e || e.cobrado || !cumpleEncargo(f)) return;
+  e.hechas += n || 1;
+  if (e.hechas >= e.meta && !e.cobrado) {
+    e.cobrado = true;
+    darOro(e.oro); darXP(e.xp);
+    E.esporas = (E.esporas || 0) + e.esporas;
+    sumar('encargos');
+    log(`Encargo completado: <b>${e.meta} ${e.txt}</b> (+${e.esporas} ✿).`, 'evento');
+    aviso('📜', 'Encargo entregado', `+${monedas(e.oro)} 🪙 y +${e.esporas} ✿`, 'logro');
+    sonido('logro'); confeti();
+  }
+  tocar();
+}
+function revisarEncargo() {
+  if (!E.encargo) { if (E.nivel >= 4) nuevoEncargo(); return; }
+  if (E.encargo.cobrado || E.mundo.dia > E.encargo.vence) {
+    if (!E.encargo.cobrado) log(`El encargo de ${E.encargo.txt} venció.`, 'malo');
+    E.encargo = null;
+    if (E.nivel >= 4) nuevoEncargo();
+  }
+}
+
+/* ---------- Injertos ---------- */
+const COSTO_INJERTO = 3;
+/**
+ * Fuerza un locus a homocigoto usando un alelo que ya esté en la flor.
+ * Cuesta esporas: es el atajo caro para cerrar una línea genética.
+ */
+function injertar(clave, locusId, alelo) {
+  const st = E.flores.find(s => s.cod === clave);
+  const l = LOCUS[locusId];
+  if (!st || !l) return;
+  if ((E.esporas || 0) < COSTO_INJERTO) {
+    aviso('✿', 'Faltan esporas', 'El injerto cuesta ' + COSTO_INJERTO + ' ✿.', 'malo'); sonido('no'); return;
+  }
+  const g = genDec(codDe(clave));
+  if (!g[locusId].includes(alelo)) {
+    aviso('🧬', 'Ese alelo no está', 'Solo puedes fijar un alelo que la flor ya lleve.', 'malo'); return;
+  }
+  if (!hayEspacio()) { aviso('📦', 'Almacén lleno', 'Despeja antes de injertar.', 'malo'); return; }
+  E.esporas -= COSTO_INJERTO;
+  quitarFlor(clave);
+  g[locusId] = ordenarPar(l, [alelo, alelo]);
+  darSemilla(g, 'injerto');
+  sumar('injertos');
+  const f = fenotipo(g, biomaDe(clave));
+  log(`Injerto: fijaste <b>${alelo}${alelo}</b> en ${l.nombre} → ${f.nombre}.`, 'genetica');
+  aviso('🧬', 'Injerto hecho', `${l.nombre} queda ${alelo}${alelo} en la semilla nueva.`, 'oro');
+  sonido('cruce'); chispasEn(null);
+  tocar(); cerrarModal(); pintarTodo();
+}
+function modalInjerto(clave) {
+  const g = genDec(codDe(clave));
+  const f = fen(clave);
+  modal(`<h3 class="modal-tit">🧬 Injerto</h3>
+    <p class="modal-sub">Fija un locus de <b>${f.nombre}</b> en homocigoto. Se gasta la flor y
+    <b>${COSTO_INJERTO} ✿</b>, y sale una semilla con ese par asegurado.
+    Tienes ${E.esporas || 0} ✿.</p>
+    <div class="lista-simple">
+      ${LOCI.map(l => {
+        const par = g[l.id];
+        const unicos = par[0] === par[1] ? [par[0]] : par;
+        return `<div class="item-lista">
+          <span class="item-txt"><span class="item-nom">${l.nombre} <span class="pastilla">${par.join('')}</span></span>
+          <span class="item-desc">${l.desc}</span></span>
+          <span class="item-der" style="flex-direction:row;gap:5px">
+            ${unicos.map(a => `<button class="btn ${par[0] === par[1] ? 'btn-suave' : 'btn-lila'} btn-mini"
+              data-injerto="${clave}" data-locus="${l.id}" data-alelo="${a}"
+              ${par[0] === par[1] ? 'disabled' : ''}>${a}${a}</button>`).join('')}
+          </span></div>`;
+      }).join('')}
+    </div>`, true);
+}
+
+/* ---------- Concurso semanal ---------- */
+function presentarAlConcurso(clave) {
+  const q = quien();
+  if (!q) { modalQuien(); return; }
+  const st = E.flores.find(s => s.cod === clave);
+  if (!st) return;
+  const f = fen(clave);
+  const c = concursoDeSemana();
+  const puntaje = Math.round(c.mide(f));
+  const sem = semanaClave();
+  const previo = E.concurso && E.concurso.semana === sem ? E.concurso : null;
+  if (previo && previo.puntaje >= puntaje) {
+    aviso('🏆', 'Ya tienes algo mejor', `Tu ${previo.nombre} puntúa ${previo.puntaje}.`);
+    return;
+  }
+  quitarFlor(clave);
+  E.concurso = { semana: sem, tema: c.id, puntaje, nombre: f.nombre, emo: f.emo, rareza: f.rareza, cod: clave };
+  sumar('concursos');
+  log(`Presentaste <b>${f.nombre}</b> al concurso «${c.nombre}»: ${puntaje} puntos.`, 'evento');
+  aviso(c.emo, 'Presentada al concurso', `${f.nombre} · ${puntaje} puntos`, 'oro');
+  sonido('mision');
+  tocar();
+  Nube.sincronizar(true);
+  pintarTodo();
+}
+
+/* ---------- Crisis con decisión ---------- */
+function lanzarCrisis() {
+  if (E.crisis) return;
+  const c = elige(CRISIS);
+  E.crisis = { id: c.id, t: Date.now() };
+  tocar();
+  modalCrisis();
+}
+function modalCrisis() {
+  const c = CRISIS.find(x => x.id === (E.crisis || {}).id);
+  if (!c) return;
+  modal(`<h3 class="modal-tit">${c.emo} ${c.titulo}</h3>
+    <p class="modal-sub">${c.txt}</p>
+    <div class="lista-simple">
+      ${c.ops.map((o, i) => {
+        const cuesta = o.costo ? Math.round(E.oro * o.costo) : 0;
+        return `<div class="item-lista" style="cursor:pointer" data-crisis="${i}">
+          <span class="item-emo">${['①', '②', '③'][i]}</span>
+          <span class="item-txt"><span class="item-nom">${o.txt}${cuesta ? ' · ' + monedas(cuesta) + ' 🪙' : ' · gratis'}</span>
+          <span class="item-desc">${o.desc}</span></span></div>`;
+      }).join('')}
+    </div>`);
+}
+function resolverCrisis(i) {
+  const c = CRISIS.find(x => x.id === (E.crisis || {}).id);
+  if (!c) { cerrarModal(); return; }
+  const o = c.ops[i];
+  const cuesta = o.costo ? Math.round(E.oro * o.costo) : 0;
+  if (cuesta > E.oro) { aviso('🪙', 'No te alcanza', 'Elige otra salida.', 'malo'); return; }
+  E.oro -= cuesta;
+  let txt = '';
+  switch (o.efecto) {
+    case 'cura':
+      E.parcelas.forEach(p => { p.plaga = 0; });
+      txt = 'El invernadero quedó limpio.'; break;
+    case 'salud':
+      E.parcelas.forEach(p => { p.plaga = 0; if (p.planta) p.planta.salud = lim(p.planta.salud - 28, 5, 100); });
+      txt = 'Las plagas se fueron, pero las plantas quedaron tocadas.'; break;
+    case 'plaga':
+      E.parcelas.forEach(p => { if (p.planta && suerte(0.45)) p.plaga = 1; });
+      txt = 'El hongo se extendió por varias parcelas.'; break;
+    case 'riego':
+      E.parcelas.forEach(p => { p.agua = 100; });
+      txt = 'Todo regado hasta arriba.'; break;
+    case 'lento':
+      E.lento = { hasta: Date.now() + 300000 };
+      txt = 'Racionando: todo crecerá más lento cinco minutos.'; break;
+    case 'seco':
+      E.parcelas.forEach(p => { p.agua = lim(p.agua - 55, 0, 100); });
+      txt = 'Las parcelas se quedaron secas.'; break;
+    case 'mariquitas':
+      E.parcelas.forEach(p => { p.plaga = 0; });
+      E.mariquitas = { hasta: Date.now() + 900000 };
+      txt = 'Las mariquitas patrullan: quince minutos sin plagas.'; break;
+    case 'nada':
+      txt = 'Noche tranquila, ni un pétalo roto.'; break;
+    case 'mixto': {
+      let perdidas = 0;
+      E.parcelas.forEach(p => {
+        if (p.planta && ['comun', 'poco'].includes(fenEn(p.planta.cod, p).rareza) && suerte(0.5)) { p.planta = null; perdidas++; }
+      });
+      txt = perdidas ? `Se perdieron ${perdidas} plantas comunes, pero lo bueno se salvó.` : 'No se perdió nada.';
+      break;
+    }
+    case 'granizo': {
+      let perdidas = 0;
+      E.parcelas.forEach(p => { if (p.planta && suerte(0.4)) { p.planta = null; perdidas++; } });
+      txt = perdidas ? `El granizo se llevó ${perdidas} plantas.` : 'Al final no cayó nada.';
+      break;
+    }
+    case 'suerte':
+      if (suerte(0.5)) { const multa = Math.round(E.oro * 0.15); E.oro -= multa; txt = `Te multaron con ${monedas(multa)} 🪙.`; }
+      else txt = 'Coló: el inspector no vio nada raro.';
+      break;
+    case 'reputacion':
+      if (!E.cliente) llegaCliente();
+      txt = 'El inspector se fue encantado y te mandó un cliente.'; break;
+  }
+  E.crisis = null;
+  sumar('crisis');
+  log(`<b>${c.titulo}</b>: ${o.txt}. ${txt}`, 'evento');
+  aviso(c.emo, o.txt, txt, 'evento');
+  tocar(); cerrarModal(); pintarTodo();
 }
 
 /* ---------- Legado y trasplante ---------- */
@@ -2438,16 +2911,19 @@ function motorTick(dt) {
   const seg = dt / 1000;
   E.parcelas.forEach(p => {
     if (!p.abierta) return;
+    // Cada bioma tiene su propio clima: el desierto casi no bebe, el trópico
+    // devora agua y se llena de bichos, y el alpino va lento pero muta.
+    const bio = BIOMAS[biomaDeParcela(p)];
     // Agua
-    let gasto = 0.42 * b.agua * seg;
+    let gasto = 0.42 * b.agua * bio.agua * seg;
     if (tieneInv('aut1')) gasto -= (tieneInv('aut2') ? 1.5 : 0.5) * seg;
     p.agua = lim(p.agua - gasto, 0, 100);
     const pl = p.planta;
     if (!pl) return;
-    const f = fen(pl.cod);
+    const f = fenEn(pl.cod, p);
     // Plaga
     if (!p.plaga && pl.prog > 0.18) {
-      const riesgo = 0.0022 * b.plaga * seg * (f.estable ? 1 : 2.1);
+      const riesgo = 0.0022 * b.plaga * bio.plaga * seg * (f.estable ? 1 : 2.1);
       if (Math.random() < riesgo) {
         p.plaga = 1;
         log(`Apareció una plaga en <b>${f.nombre}</b>.`, 'malo');
@@ -2460,7 +2936,7 @@ function motorTick(dt) {
     pl.salud = lim(pl.salud, 0, 100);
     // Crecimiento
     if (pl.prog < 1) {
-      let v = b.crec * (f.vigor ? 1.35 : 1);
+      let v = b.crec * bio.crec * (f.vigor ? 1.35 : 1);
       if (p.agua <= 1) v *= 0.12;
       else if (p.agua < 22) v *= 0.55;
       if (p.plaga) v *= 0.5;
@@ -2731,6 +3207,8 @@ function pintarTop() {
     bd.innerHTML = apreta ? `📦 Despejar · ${ocu}/${cap}` : '📦 Despejar';
   }
   $('#subInvernadero').textContent = subtituloInvernadero();
+  const bc = $('#btnCrisis');
+  if (bc) bc.style.display = E.crisis ? '' : 'none';
   $('#btnAmpliar').innerHTML = parcelasAbiertas() >= JUEGO.parcelasMax
     ? '🏡 Completo' : `＋ Ampliar · ${monedas(costoParcela())} 🪙`;
   $('#btnAmpliar').disabled = parcelasAbiertas() >= JUEGO.parcelasMax;
@@ -2765,7 +3243,8 @@ function marcarAvisosNav() {
   const hayInv = INVESTIGACION.some(n => !tieneInv(n.id) && n.req.every(r => tieneInv(r)) && E.oro >= n.oro && E.ciencia >= n.ci);
   $$('#navVistas .nav-btn').forEach(b => {
     const v = b.dataset.vista;
-    const debe = (v === 'misiones' && hayMision) || (v === 'investigacion' && hayInv) || (v === 'mercado' && !!E.cliente);
+    const debe = (v === 'misiones' && hayMision) || (v === 'investigacion' && hayInv) ||
+      (v === 'mercado' && !!E.cliente) || (v === 'invernadero' && !!E.crisis);
     let p = $('.punto', b);
     if (debe && !p) { p = document.createElement('i'); p.className = 'punto'; b.appendChild(p); }
     else if (!debe && p) p.remove();
@@ -2879,7 +3358,9 @@ function pintarParcelas() {
   pintarDeco();
 }
 function htmlParcela(p) {
-  return `<div class="parcela" data-parcela="${p.i}">
+  const bio = BIOMAS[biomaDeParcela(p)];
+  return `<div class="parcela bio-${bio.id}" data-parcela="${p.i}">
+    ${bio.id !== 'patio' ? `<span class="marca-bioma" title="${bio.nombre}">${bio.emo}</span>` : ''}
     <div class="tierra-humeda"></div>
     <div class="capa-planta"></div>
     <div class="etiqueta"></div>
@@ -2903,7 +3384,7 @@ function refrescarParcelas(forzar) {
       const capa = $('.capa-planta', el);
       const eti = $('.etiqueta', el);
       if (pl) {
-        const f = fen(cod);
+        const f = fenEn(cod, p);
         capa.innerHTML = (f.brillo && etapa === 4 ? '<div class="brillo-planta"></div>' : '') +
           svgPlanta(f, pl.prog, { id: 'p' + p.i });
         eti.innerHTML = `<span class="eti-rareza" style="background:${rarezaPorId(f.rareza).color}">${rarezaPorId(f.rareza).nombre}</span>`;
@@ -3008,11 +3489,12 @@ function detalleParcela(idx) {
       <div class="det-botones">
         <button class="btn btn-verde" data-sembrar="${idx}">🌱 Plantar aquí</button>
         <button class="btn btn-suave" data-regar="${idx}">💧 Regar</button>
+        <button class="btn btn-suave btn-mini" data-bioma="${idx}">${BIOMAS[biomaDeParcela(p)].emo} Clima: ${BIOMAS[biomaDeParcela(p)].nombre}</button>
       </div>
       <p class="tarjeta-sub" style="margin-top:12px">${semillas ? 'Elige una semilla del almacén.' : 'No tienes semillas: compra en el mercado.'}</p>`;
   }
   const pl = p.planta;
-  const f = fen(pl.cod);
+  const f = fenEn(pl.cod, p);
   const et = ETAPAS[etapaDe(pl.prog)];
   const dur = duracionCrec(f);
   const b = bonos();
@@ -3043,6 +3525,7 @@ function detalleParcela(idx) {
       <button class="btn ${pl.prog >= 1 ? 'btn-oro' : 'btn-suave'}" data-cosechar="${idx}" ${pl.prog < 1 ? 'disabled' : ''}>🧺 Cosechar</button>
       ${p.plaga ? `<button class="btn btn-rojo" style="grid-column:1/-1" data-curar="${idx}">🧹 Quitar plaga</button>` : ''}
       <button class="btn btn-lila" style="grid-column:1/-1" data-cambiar="${idx}">🔄 Sembrar otra variedad aquí</button>
+      <button class="btn btn-suave btn-mini" style="grid-column:1/-1" data-bioma="${idx}">${BIOMAS[biomaDeParcela(p)].emo} Clima: ${BIOMAS[biomaDeParcela(p)].nombre}</button>
       <button class="btn btn-suave btn-mini" style="grid-column:1/-1" data-arrancar="${idx}">🗑️ Arrancar</button>
     </div>`;
 }
@@ -3103,6 +3586,8 @@ function detalleFlor(cod) {
       <button class="btn btn-oro" data-vender="${cod}">🪙 Vender 1</button>
       <button class="btn btn-oro" data-vender-todo="${cod}">🪙 Vender ${st.n}</button>
       <button class="btn btn-lila" style="grid-column:1/-1" data-lab="${cod}">🧬 Llevar al laboratorio</button>
+      <button class="btn btn-suave btn-mini" data-injertar="${cod}">🧬 Injertar · ${COSTO_INJERTO} ✿</button>
+      <button class="btn btn-suave btn-mini" data-concurso="${cod}">🏆 Al concurso</button>
     </div>`;
 }
 function detalleEspecie(id) {
@@ -3146,7 +3631,7 @@ function bloqueADN(cod) {
     return `<div class="det-seccion"><h4>ADN</h4>
       <div class="adn-cerrado">🔬 Investiga el <b>Microscopio</b> para leer el genotipo.</div></div>`;
   }
-  const g = genDec(cod);
+  const g = genDec(codDe(cod));
   const f = fen(cod);
   const marcadores = tieneInv('gen3');
   const filas = LOCI.map(l => {
@@ -3248,7 +3733,7 @@ function ranuraLab(lado) {
 }
 function vistaLab() {
   const puedeP = tieneInv('gen2');
-  const pred = (lab.a && lab.b && puedeP) ? predecir(genDec(lab.a), genDec(lab.b)) : null;
+  const pred = (lab.a && lab.b && puedeP) ? predecir(genDec(codDe(lab.a)), genDec(codDe(lab.b))) : null;
   const listo = lab.a && lab.b;
   return cabecera('Laboratorio de cruce', 'Dos flores cortadas dan semillas con genes de las dos') + `
   <div class="tarjeta">
@@ -3556,10 +4041,81 @@ function vistaMisiones() {
   refrescarMisiones();
   const perm = misionesPermanentesActivas();
   return cabecera('Misiones', 'Diarias, semanales y una cadena de hitos que no se acaba') +
+    bloqueEncargo() +
     seccionMisiones('☀️ Diarias', E.misiones.diarias, 'Se renuevan cada día.') +
     seccionMisiones('📆 Semanales', E.misiones.semanales, 'Se renuevan cada lunes.') +
     seccionMisiones('🏔️ Cadena permanente', perm, `Quedan ${MISIONES_FIJAS.length - Object.keys(E.misiones.perm).length} hitos.`);
 }
+/** Tarjeta del encargo largo en curso. */
+function bloqueEncargo() {
+  const e = E.encargo;
+  if (!e) return `<div class="tarjeta"><div class="tarjeta-tit">📜 Encargos</div>
+    <div class="tarjeta-sub">Llegan a partir del nivel 4. Son pedidos de varios días que pagan <b>esporas</b>.</div></div>`;
+  const pr = lim(e.hechas / e.meta, 0, 1);
+  const quedan = e.vence - E.mundo.dia;
+  return `<div class="tarjeta" style="border-left:4px solid var(--lavanda)">
+    <div class="tarjeta-tit">${e.emo} Encargo · ${e.meta} ${e.txt}</div>
+    <div class="tarjeta-sub">Se cuentan al <b>venderlas</b>. Quedan ${quedan > 0 ? quedan + ' día(s)' : 'horas'}.</div>
+    <div class="barra ${e.cobrado ? 'oro' : ''}" style="margin-top:9px"><i style="width:${pr * 100}%"></i></div>
+    <div class="mision-prem" style="margin-top:8px">
+      <span class="pastilla">${e.hechas}/${e.meta}</span>
+      <span class="pastilla oro">+${monedas(e.oro)} 🪙</span>
+      <span class="pastilla">+${e.esporas} ✿</span>
+      <span class="pastilla">+${e.xp} XP</span>
+      ${e.cobrado ? '<span class="pastilla bien">✓ entregado</span>' : ''}
+    </div></div>`;
+}
+
+/** Panel del concurso semanal dentro de la Vitrina. */
+function bloqueConcurso(marcador, yo) {
+  const c = concursoDeSemana();
+  const sem = semanaClave();
+  const mio = (E.concurso && E.concurso.semana === sem) ? E.concurso : null;
+  const otros = PERSONAS.filter(p => p !== yo);
+  const rival = otros.length ? otros[0] : null;
+  const suyo = rival && marcador[rival] && marcador[rival].concurso && marcador[rival].concurso.semana === sem
+    ? marcador[rival].concurso : null;
+  const mejor = mejorCandidata(c);
+  let veredicto = 'Aún no ha presentado nadie.';
+  if (mio && suyo) veredicto = mio.puntaje === suyo.puntaje ? 'Vais empatados.'
+    : (mio.puntaje > suyo.puntaje ? '<b>Vas ganando tú.</b>' : `<b>${rival} va ganando.</b>`);
+  else if (mio) veredicto = `Presentada. ${rival || 'La otra persona'} todavía no.`;
+  else if (suyo) veredicto = `<b>${rival}</b> ya presentó. Te toca.`;
+  return `<div class="tarjeta" style="border-left:4px solid var(--oro)">
+    <div class="tarjeta-tit">${c.emo} Concurso de la semana · ${c.nombre}</div>
+    <div class="tarjeta-sub">Presenta una flor cortada; se queda el jurado. Gana la de más puntos.
+    <br>${veredicto}</div>
+    <div class="rejilla c2" style="margin-top:10px">
+      <div class="tarjeta" style="padding:11px">
+        <div class="tarjeta-tit" style="font-size:.9rem">${yo || 'Tú'}</div>
+        <div class="tarjeta-sub">${mio ? `${mio.emo} <b>${mio.nombre}</b><br><span class="pastilla oro">${mio.puntaje} puntos</span>`
+          : 'Nada presentado todavía.'}</div>
+      </div>
+      <div class="tarjeta" style="padding:11px">
+        <div class="tarjeta-tit" style="font-size:.9rem">${rival || 'La otra persona'}</div>
+        <div class="tarjeta-sub">${suyo ? `${suyo.emo} <b>${suyo.nombre}</b><br><span class="pastilla">${suyo.puntaje} puntos</span>`
+          : 'Nada presentado todavía.'}</div>
+      </div>
+    </div>
+    ${mejor ? `<div class="item-lista" style="margin-top:10px">
+      <span class="item-lienzo">${svgPlanta(mejor.f, 1, { sombra: false })}</span>
+      <span class="item-txt"><span class="item-nom">Tu mejor candidata: ${mejor.f.nombre}</span>
+      <span class="item-desc">Puntuaría <b>${mejor.puntaje}</b> en este tema.</span></span>
+      <span class="item-der"><button class="btn btn-oro btn-mini" data-concurso="${mejor.clave}">🏆 Presentar</button></span>
+    </div>` : '<p class="tarjeta-sub" style="margin-top:9px">No tienes flores cortadas para presentar.</p>'}
+  </div>`;
+}
+/** La flor cortada que más puntuaría en el tema de esta semana. */
+function mejorCandidata(c) {
+  let mejor = null;
+  E.flores.forEach(st => {
+    const f = fen(st.cod);
+    const p = Math.round(c.mide(f));
+    if (!mejor || p > mejor.puntaje) mejor = { clave: st.cod, f, puntaje: p };
+  });
+  return mejor;
+}
+
 function seccionMisiones(tit, arr, sub) {
   return `<div class="tarjeta">
     <div class="tarjeta-tit">${tit}</div>
@@ -3611,13 +4167,14 @@ function vistaDeco() {
 }
 
 /* ---------- HERBARIO ---------- */
-let filtroHerb = { texto: '', rareza: '', forma: '', estado: '' };
+let filtroHerb = { texto: '', rareza: '', forma: '', estado: '', rasgo: '' };
 function vistaHerbario() {
   const desc = Object.keys(E.herbario).length;
   const pct = desc / ESPECIES_TOTAL * 100;
   let lista = ESPECIES.slice();
   if (filtroHerb.rareza) lista = lista.filter(e => fenotipoDeEspecie(e.id).rareza === filtroHerb.rareza);
   if (filtroHerb.forma) lista = lista.filter(e => e.forma === filtroHerb.forma);
+  if (filtroHerb.rasgo) lista = lista.filter(e => (filtroHerb.rasgo === 'ninguno' ? !e.rasgo : e.rasgo === filtroHerb.rasgo));
   if (filtroHerb.estado === 'si') lista = lista.filter(e => E.herbario[e.id]);
   if (filtroHerb.estado === 'no') lista = lista.filter(e => !E.herbario[e.id]);
   if (filtroHerb.texto) {
@@ -3638,6 +4195,9 @@ function vistaHerbario() {
         ${RAREZAS.map(r => `<option value="${r.id}" ${filtroHerb.rareza === r.id ? 'selected' : ''}>${r.nombre}</option>`).join('')}</select>
       <select id="herbForma"><option value="">Toda corola</option>
         ${Object.keys(FORMAS).map(k => `<option value="${k}" ${filtroHerb.forma === k ? 'selected' : ''}>${FORMAS[k].nombre}</option>`).join('')}</select>
+      <select id="herbRasgo"><option value="">Todo rasgo</option>
+        <option value="ninguno" ${filtroHerb.rasgo === 'ninguno' ? 'selected' : ''}>Sin rasgo</option>
+        ${Object.keys(RASGOS_BIOMA).map(k => `<option value="${k}" ${filtroHerb.rasgo === k ? 'selected' : ''}>${RASGOS_BIOMA[k].nombre}</option>`).join('')}</select>
       <select id="herbEstado"><option value="">Todas</option>
         <option value="si" ${filtroHerb.estado === 'si' ? 'selected' : ''}>Descubiertas</option>
         <option value="no" ${filtroHerb.estado === 'no' ? 'selected' : ''}>Pendientes</option></select>
@@ -3751,6 +4311,7 @@ function vistaVitrina() {
         <span class="mt-emo">${p === 'Catalina' ? '🌷' : '🌿'}</span>
         <span class="mt-nom">${p}</span></div>`).join('')}
     </div></div>` : ''}
+  ${bloqueConcurso(marcador, yo)}
   <div class="tarjeta">
     <div class="tarjeta-tit">🏆 Marcador</div>
     ${ganador ? `<div class="tarjeta-sub">Por ahora va ganando <b>${ganador}</b>.</div>`
@@ -4278,6 +4839,7 @@ function resumenPropio() {
     parcelas: parcelasAbiertas(),
     esporas: E.esporas || 0,
     trasplantes: E.trasplantes || 0,
+    concurso: (E.concurso && E.concurso.semana === semanaClave()) ? E.concurso : null,
     mejor: mejorEspecie(E),
     puntos: progresoDe(E),
     t: Date.now(),
@@ -4486,6 +5048,13 @@ function alPulsar(e) {
   }
   // Cambiar lo que crece en una parcela: si está madura se cosecha antes, y
   // se suelta la variedad fijada para que la resiembra no vuelva a ponerla.
+  if ((v = d('data-bioma')) !== null) { modalBiomas(+v); return; }
+  if ((v = d('data-bioma-parcela')) !== null) {
+    const idx = +el('data-bioma-parcela').getAttribute('data-idx');
+    if (!biomaAbierto(v)) comprarBioma(v);
+    else cambiarBiomaParcela(idx, v);
+    return;
+  }
   if ((v = d('data-cambiar')) !== null) {
     const i = +v, p = E.parcelas[i];
     const cambiar = () => { p.fijada = null; p.planta = null; p.plaga = 0; tocar(); modalElegirSemilla(i); };
@@ -4569,6 +5138,17 @@ function alPulsar(e) {
     tocar(); actualizarBotonSonido();
     return;
   }
+  // --- Encargos, injertos, concurso y crisis
+  if ((v = d('data-crisis')) !== null) { resolverCrisis(+v); return; }
+  if (el('data-ver-crisis')) { modalCrisis(); return; }
+  if ((v = d('data-injertar')) !== null) { modalInjerto(v); return; }
+  if ((v = d('data-injerto')) !== null) {
+    const b = el('data-injerto');
+    injertar(v, b.getAttribute('data-locus'), b.getAttribute('data-alelo'));
+    return;
+  }
+  if ((v = d('data-concurso')) !== null) { presentarAlConcurso(v); return; }
+
   // --- Legado
   if ((v = d('data-perm')) !== null) { comprarPerm(v); return; }
   if (el('data-trasplantar')) { pedirTrasplante(); return; }
@@ -4649,12 +5229,13 @@ function conectarUI() {
   // Cambios en controles que no son botones
   document.addEventListener('change', ev => {
     const t = ev.target;
-    if (t.id === 'herbTexto' || t.id === 'herbRareza' || t.id === 'herbForma' || t.id === 'herbEstado') {
+    if (t.id === 'herbTexto' || t.id === 'herbRareza' || t.id === 'herbForma' || t.id === 'herbEstado' || t.id === 'herbRasgo') {
       filtroHerb = {
         texto: ($('#herbTexto') || {}).value || '',
         rareza: ($('#herbRareza') || {}).value || '',
         forma: ($('#herbForma') || {}).value || '',
         estado: ($('#herbEstado') || {}).value || '',
+        rasgo: ($('#herbRasgo') || {}).value || '',
       };
       pintarVista();
       const c = $('#herbTexto'); if (c) { c.focus(); c.selectionStart = c.value.length; }

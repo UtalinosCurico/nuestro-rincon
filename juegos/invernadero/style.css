@@ -440,6 +440,14 @@ body.noche .inv-titulo h2{color:var(--salvia);}
 .parcela.plantando{animation:plantar .5s cubic-bezier(.34,1.56,.64,1);}
 @keyframes plantar{0%{transform:scale(1)}40%{transform:scale(.9)}70%{transform:scale(1.05)}100%{transform:scale(1)}}
 
+/* Sectores: cada bioma tiñe su tierra para reconocerlo de un vistazo. */
+.parcela.bio-desierto{background:linear-gradient(180deg,#f0dcae 0%,#e0c184 62%,#c9a35f 100%);}
+.parcela.bio-tropical{background:linear-gradient(180deg,#c6b68d 0%,#9d8f63 60%,#7a6f4a 100%);}
+.parcela.bio-alpino{background:linear-gradient(180deg,#e2e9ed 0%,#c2ccd2 60%,#a3aeb6 100%);}
+.marca-bioma{
+  position:absolute;bottom:5px;left:6px;font-size:.78rem;z-index:2;pointer-events:none;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.3));opacity:.92;
+}
 .tierra-humeda{
   position:absolute;left:0;right:0;bottom:0;height:34%;pointer-events:none;
   background:linear-gradient(180deg,rgba(96,68,40,0),rgba(96,68,40,.42));
