@@ -28,6 +28,12 @@
       "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
+      "name": "La casita de Michi",
+      "short_name": "Michi",
+      "url": "/juegos/michi/",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
       "name": "Observatorio",
       "short_name": "Observatorio",
       "url": "/juegos/observatorio/",

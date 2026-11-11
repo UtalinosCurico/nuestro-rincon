@@ -890,7 +890,7 @@
   .jx-card-desc{font-size:.8rem;opacity:.92;font-weight:300;margin-top:3px;}
   .jx-card-stat{font-size:.74rem;background:rgba(255,255,255,.25);border-radius:999px;padding:3px 10px;align-self:flex-start;margin-top:10px;}
   .jx-card .sheen{position:absolute;inset:0;background:radial-gradient(120% 80% at 85% 0%,rgba(255,255,255,.35),transparent 55%);pointer-events:none;}
-  .jx-card.closet{background:linear-gradient(150deg,#d8b673,#b9985a);}
+  .jx-card.michi{background:linear-gradient(150deg,#f6b7cf,#e07fa6);}
   .jx-card.observatorio{background:radial-gradient(120% 140% at 85% 0%,#3b4a8a 0%,#1b2147 55%,#0e1129 100%);}
   .jx-card.grande{min-height:132px;align-items:flex-end;}
   .jx-card-etiqueta{display:inline-block;font-size:.66rem;letter-spacing:1.4px;text-transform:uppercase;
@@ -1350,7 +1350,6 @@
     <div class="jx-screens" id="jxScreens">
       <section class="jx-screen activa" id="jxScreenHub"></section>
       <section class="jx-screen" id="jxScreenClinica"></section>
-      <section class="jx-screen" id="jxScreenCloset"></section>
     </div>
   </div>
   <canvas id="jxConfeti" aria-hidden="true"></canvas>
@@ -1748,7 +1747,7 @@ let ultimoEstadoNube = 'idle';
    sube la suya releyendo antes de postear; la portada no las baja ni las
    sube NUNCA: pesan más que todo lo demás junto, y subir una copia vieja
    borraría lo que el juego guardó después. */
-const CLAVES_DE_JUEGOS = ['invernadero', 'observatorio'];
+const CLAVES_DE_JUEGOS = ['invernadero', 'observatorio', 'michi'];
 
 /* Cómo está cada rama en Neon, en JSON canónico. Sirve para subir solo lo que
    cambió: una nota nueva ya no sube las fotos, y si cada uno edita una
@@ -4319,6 +4318,9 @@ const JX_COSMETICOS = [
   { id:'accesorio:collar',  slot:'accesorio', donde:'cuello', nombre:'Collar',    emoji:'💐',  precio:40 },
   { id:'accesorio:corazon', slot:'accesorio', donde:'cuello', nombre:'Corazón',   emoji:'💖',  precio:55 },
   { id:'accesorio:medalla', slot:'accesorio', donde:'cuello', nombre:'Medalla',   emoji:'🏅',  precio:50 },
+  // ── Solo de la casita de Michi (aquí solo se dibujan) ──
+  { id:'sombrero:pamela',    slot:'sombrero',  donde:'arriba', nombre:'Pamela',    emoji:'👒',  precio:55 },
+  { id:'accesorio:cascabel', slot:'accesorio', donde:'cuello', nombre:'Cascabel',  emoji:'🔔',  precio:40 },
   // ── Escenarios (fondo decorado con SVG) ──
   { id:'fondo:pradera',   slot:'fondo', nombre:'Pradera',     emoji:'🌿', precio:0 },
   { id:'fondo:corazones', slot:'fondo', nombre:'Jardín de amor', emoji:'💕', precio:55 },
@@ -4391,6 +4393,21 @@ const JX_ROPA_SVG = {
     <path d="M88 150 l12 16 -17 7z" fill="#1a1a20"/><path d="M112 150 l-12 16 17 7z" fill="#1a1a20"/>
     <path d="M91 166 q9 -6 18 0 q-9 7 -18 0z" fill="#7a1f2b"/>
     <g fill="#2b2b33"><circle cx="100" cy="184" r="1.9"/><circle cx="100" cy="194" r="1.9"/></g></g>` },
+
+  // estas dos se compran en la casita de Michi (juegos/michi/michi.js)
+  'ropa:corazones': { cuerpo:`<g>
+    <rect x="38" y="150" width="124" height="46" fill="#c9a7e8"/>
+    <rect x="38" y="150" width="124" height="12" fill="#b38ad9"/>
+    <g fill="#fff" opacity=".9">
+      <path d="M76 176c-1.6-2.6-6-1.6-6 1.6 0 3 6 6.6 6 6.6s6-3.6 6-6.6c0-3.2-4.4-4.2-6-1.6z"/>
+      <path d="M124 182c-1.6-2.6-6-1.6-6 1.6 0 3 6 6.6 6 6.6s6-3.6 6-6.6c0-3.2-4.4-4.2-6-1.6z"/>
+      <path d="M100 170c-1.3-2.1-4.8-1.3-4.8 1.3 0 2.4 4.8 5.3 4.8 5.3s4.8-2.9 4.8-5.3c0-2.6-3.5-3.4-4.8-1.3z"/></g>
+    <path d="M80 150 q20 14 40 0" stroke="#9b72c6" stroke-width="3" fill="none"/></g>` },
+  'ropa:futbol': { cuerpo:`<g>
+    <rect x="38" y="150" width="124" height="46" fill="#d6363b"/>
+    <rect x="38" y="150" width="124" height="10" fill="#fff"/>
+    <path d="M90 150 l10 10 10 -10" fill="#1f3c88"/>
+    <text x="100" y="188" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="20" fill="#fff">10</text></g>` },
 };
 function jxRopaSVG(id){ return JX_ROPA_SVG[id] || {}; }
 
@@ -4488,13 +4505,27 @@ function jxGatoSVG(ropaId){
     <path d="M40 102 h26 M40 112 h24 M134 102 h26 M136 112 h24" stroke="#d8c08f" stroke-width="2" stroke-linecap="round"/>
   </svg>`;
 }
+/* Pelajes de la casita de Michi (juegos/michi/datos.js): cuerpo, cabeza, rayas, oreja, ojo. */
+const JX_PELAJES = {
+  naranja: ['#f2b16b','#f6c58a','#e08f45','#f6c9c4','#3d3a33'], gris:    ['#b8bcc6','#cdd0d8','#9aa0ad','#efcdd5','#2f3340'],
+  blanco:  ['#f4f1ea','#ffffff','#e2ddd2','#f3cbd5','#3a5a8a'], negro:   ['#4b4747','#5b5656','#373333','#c98e9b','#e3c45a'],
+  rosa:    ['#f3bfd0','#f8d4e0','#e7a3bb','#fde6ee','#5a3a4a'], celeste: ['#b5d8f0','#cfe6f6','#94c2e3','#f6d6e2','#2c4a6a'],
+  lila:    ['#cdb9ec','#ddd0f3','#b59fdf','#f6d9e9','#3f2f63'], dorado:  ['#e9c46a','#f2d68d','#d4a94a','#f7d9c4','#5a3d16'],
+};
+function jxPintarPelaje(svg, pelaje){
+  const p = JX_PELAJES[pelaje]; if(!p) return svg;
+  const base = ['#efdcb4','#f3e6c8','#e7d2a6','#ecd3d8','#3d3a33'];
+  return base.reduce((s, c, i) => s.split(c).join(p[i]), svg);
+}
 function jxPetHTML(){
   asegurarJuegos();
-  const m = datos.juegos.mascota;
+  // si ya tiene casita, se dibuja como está vestido allá
+  const r = michiResumenLocal();
+  const eq = r ? { ropa: r.ropa, sombrero: r.sombrero, accesorio: r.accesorio } : datos.juegos.mascota.equipado;
   let acc = '';
-  if(m.equipado.sombrero){ const c = jxCosmetico(m.equipado.sombrero); if(c) acc += '<span class="jx-acc ' + c.donde + '">' + c.emoji + '</span>'; }
-  if(m.equipado.accesorio){ const c = jxCosmetico(m.equipado.accesorio); if(c) acc += '<span class="jx-acc ' + c.donde + '">' + c.emoji + '</span>'; }
-  return jxGatoSVG(m.equipado.ropa) + acc;
+  if(eq.sombrero){ const c = jxCosmetico(eq.sombrero); if(c) acc += '<span class="jx-acc ' + c.donde + '">' + c.emoji + '</span>'; }
+  if(eq.accesorio){ const c = jxCosmetico(eq.accesorio); if(c) acc += '<span class="jx-acc ' + c.donde + '">' + c.emoji + '</span>'; }
+  return jxPintarPelaje(jxGatoSVG(eq.ropa), r && r.pelaje) + acc;
 }
 function jxFondoCss(fondoId){
   asegurarJuegos();
@@ -4597,9 +4628,38 @@ function jxVolarMonedas(desdeEl, cantidad){
   }
   setTimeout(() => { destino.classList.remove('bump'); void destino.offsetWidth; destino.classList.add('bump'); }, 380);
 }
+/* ===== Michi vive en su casita (juego aparte, en /juegos/michi/) =====
+   Cada persona tiene su propio Michi en el localStorage de su aparato. El
+   hub lee el resumen que deja el juego (`michiResumen__<persona>`) y las
+   monedas que ganan los otros juegos le llegan por `rinconMichiPendiente`,
+   que cobra la casita al abrirse. */
+function michiResumenLocal(){
+  try{
+    const q = localStorage.getItem('rinconQuien') || 'invitado';
+    return JSON.parse(localStorage.getItem('michiResumen__' + q) || 'null');
+  }catch(e){ return null; }
+}
+function michiPendiente(){
+  try{ return JSON.parse(localStorage.getItem('rinconMichiPendiente') || 'null') || { monedas:0, xp:0 }; }
+  catch(e){ return { monedas:0, xp:0 }; }
+}
+function michiRegalar(monedas, xp, de){
+  if(!(monedas > 0 || xp > 0)) return;
+  try{
+    const p = michiPendiente();
+    p.monedas = (p.monedas || 0) + (monedas || 0);
+    p.xp = (p.xp || 0) + (xp || 0);
+    p.de = (p.de && p.de !== de) ? 'Los juegos' : de;
+    localStorage.setItem('rinconMichiPendiente', JSON.stringify(p));
+  }catch(e){}
+}
+function jxMonedasMichi(){
+  const r = michiResumenLocal();
+  if(!r){ asegurarJuegos(); return datos.juegos.monedas; }
+  return (r.monedas || 0) + Math.round(michiPendiente().monedas || 0);
+}
 function jxActualizarCoins(){
-  asegurarJuegos();
-  const n = datos.juegos.monedas;
+  const n = jxMonedasMichi();
   const a = document.getElementById('jxCoinsN'); if(a) a.textContent = n;
   const b = document.getElementById('jxLaunchMonedas'); if(b) b.textContent = n;
 }
@@ -4609,6 +4669,8 @@ function jxRecompensar(monedas, xp, opc){
   const nivelAntes = jxNivel();
   datos.juegos.monedas += monedas;
   datos.juegos.mascota.xp += xp;
+  // lo que se gana aquí (la Clínica) le llega a Michi en su casita
+  michiRegalar(monedas, Math.round(xp / 5), opc.de || 'La Clínica');
   jxActualizarCoins();
   if(opc.desde) jxVolarMonedas(opc.desde, monedas);
   guardar();
@@ -4621,7 +4683,6 @@ function jxRecompensar(monedas, xp, opc){
 const JX_PANTALLAS = {
   hub:    { el:'jxScreenHub',    titulo:'Rincón de juegos', render:() => jxRenderHub() },
   clinica: { el:'jxScreenClinica', titulo:'Clínica Kinésica', render:() => jxMostrarClinica() },
-  closet: { el:'jxScreenCloset', titulo:'Clóset de Michi', render:() => jxRenderCloset() },
 };
 let jxPantalla = 'hub';
 function jxIr(p){
@@ -4691,31 +4752,17 @@ function obsResumenLocal(){
     return '🌌 ' + (r.descubrimientos || 0) + ' · ⭐ ' + (r.rep != null ? Number(r.rep).toFixed(1) : '–');
   }catch(e){ return 'nuevo'; }
 }
-function jxCobrarPendientes(){
-  let p = null;
-  try{ p = JSON.parse(localStorage.getItem('rinconMichiPendiente') || 'null'); }catch(e){ p = null; }
-  if(!p || !(p.monedas > 0 || p.xp > 0)) return;
-  try{ localStorage.removeItem('rinconMichiPendiente'); }catch(e){}
-  const monedas = Math.max(0, Math.min(5000, Math.round(p.monedas || 0)));
-  const xp = Math.max(0, Math.min(5000, Math.round(p.xp || 0)));
-  const r = jxRecompensar(monedas, xp, { desde: document.getElementById('jxCoins') });
-  avisar('🔭 El Observatorio le mandó ' + monedas + ' monedas' + (xp ? ' y ' + xp + ' XP' : '') + ' a ' + datos.juegos.mascota.nombre +
-    (r.subioNivel ? ' · ¡subió a nivel ' + r.nivel + '!' : ''));
-}
-
 /* ===== Lanzador + repintado ===== */
+function jxNombreMichi(){ const r = michiResumenLocal(); asegurarJuegos(); return (r && r.nombre) || datos.juegos.mascota.nombre; }
+function jxNivelMichi(){ const r = michiResumenLocal(); return (r && r.nivel) || jxNivel(); }
 function pintarJuegos(){
   asegurarJuegos();
   const esc = document.getElementById('jxLaunchEscena');
   if(esc){ esc.style.background = jxFondoCss(); esc.innerHTML = jxPetHTML(); }
-  const m = datos.juegos.mascota;
-  const nom = document.getElementById('jxLaunchNombre'); if(nom) nom.textContent = m.nombre;
-  const niv = document.getElementById('jxLaunchNivel'); if(niv) niv.textContent = jxNivel();
+  const nom = document.getElementById('jxLaunchNombre'); if(nom) nom.textContent = jxNombreMichi();
+  const niv = document.getElementById('jxLaunchNivel'); if(niv) niv.textContent = jxNivelMichi();
   jxActualizarCoins();
-  if(document.getElementById('jxApp')?.classList.contains('abierta')){
-    if(jxPantalla === 'hub') jxRenderHub();
-    else if(jxPantalla === 'closet') jxRenderCloset();
-  }
+  if(document.getElementById('jxApp')?.classList.contains('abierta') && jxPantalla === 'hub') jxRenderHub();
 }
 
 /* ============================================================
@@ -4725,33 +4772,39 @@ function jxHoyClave(){
   const h = new Date();
   return h.getFullYear() + '-' + String(h.getMonth()+1).padStart(2,'0') + '-' + String(h.getDate()).padStart(2,'0');
 }
-function jxDiarioDisponible(){ asegurarJuegos(); return datos.juegos.diario.ultimo !== jxHoyClave(); }
+function jxEstadoMichi(r){
+  if(!r) return { emo:'🐣', txt:'Te está esperando en su casita' };
+  const horas = (Date.now() - (r.t || 0)) / 3600000;
+  if(r.enfermo) return { emo:'🤒', txt:'Está enfermito: necesita su jarabe' };
+  if(r.durmiendo) return { emo:'💤', txt:'Está durmiendo' };
+  if(horas > 10 || r.animo < 30) return { emo:'🥺', txt:'Te extraña: tiene hambre y ganas de jugar' };
+  if(horas > 5 || r.animo < 55) return { emo:'🙂', txt:'Está bien, pero quiere verte' };
+  return { emo:'😊', txt:'Está feliz' };
+}
 function jxRenderHub(){
   asegurarJuegos();
-  if(cargaInicialLista) jxCobrarPendientes();
-  const j = datos.juegos, m = j.mascota, nivel = jxNivel();
-  const xpPct = (m.xp % JX_NIVEL_XP) / JX_NIVEL_XP * 100;
-  const disp = jxDiarioDisponible();
+  const j = datos.juegos, r = michiResumenLocal();
+  const nombre = jxNombreMichi(), nivel = jxNivelMichi(), est = jxEstadoMichi(r);
   const obs = obsResumenLocal();
   const el = document.getElementById('jxScreenHub');
   el.innerHTML =
     '<div class="jx-pet-stage" style="background:' + jxFondoCss() + '">' +
-      '<button class="jx-pet-edit" id="jxEditNom">✎ Renombrar</button>' +
       '<div class="jx-pet-holder" id="jxPetHolder">' + jxPetHTML() + '</div>' +
-      '<div class="jx-pet-nombre">' + jxEsc(m.nombre) + '</div>' +
+      '<div class="jx-pet-nombre">' + jxEsc(nombre) + '</div>' +
       '<div class="jx-pet-titulo">Nivel ' + nivel + ' · ' + JX_TITULOS[Math.min(nivel-1, JX_TITULOS.length-1)] + '</div>' +
-      '<div class="jx-xp"><div style="width:' + xpPct + '%"></div></div>' +
-      '<div class="jx-xp-tag">' + (m.xp % JX_NIVEL_XP) + ' / ' + JX_NIVEL_XP + ' XP</div>' +
     '</div>' +
-    '<div class="jx-daily' + (disp ? ' listo' : '') + '" id="jxDaily">' +
-      '<div class="jx-daily-emo">' + (disp ? '🎁' : '✅') + '</div>' +
-      '<div class="jx-daily-txt"><b>' + (disp ? 'Regalo diario' : 'Vuelve mañana') + '</b>' +
-        '<small>' + (disp ? 'Toca para reclamar tus monedas' : 'Racha de ' + j.diario.racha + ' día(s) 🔥') + '</small></div>' +
-      (disp ? '<span class="jx-card-stat" style="background:var(--dorado);color:#fff">Reclamar</span>' : '') +
+    '<div class="jx-daily listo" id="jxDaily">' +
+      '<div class="jx-daily-emo">' + est.emo + '</div>' +
+      '<div class="jx-daily-txt"><b>' + jxEsc(nombre) + '</b><small>' + est.txt + '</small></div>' +
+      '<span class="jx-card-stat" style="background:var(--dorado);color:#fff">Ir a verlo</span>' +
     '</div>' +
     '<div class="jx-sec-tit">Elige un juego</div>' +
     '<div class="jx-cards">' +
-      '<button class="jx-card observatorio full grande" data-url="juegos/observatorio/"><div class="sheen"></div>' +
+      '<button class="jx-card michi full grande" data-url="juegos/michi/"><div class="sheen"></div><div class="jx-card-emo">🐱</div>' +
+        '<div style="flex:1"><div class="jx-card-etiqueta">Nuevo · mascota</div><div class="jx-card-nom">La casita de ' + jxEsc(nombre) + '</div>' +
+        '<div class="jx-card-desc">Dale de comer, báñalo, hazlo dormir, vístelo y juega 8 minijuegos para ganar monedas</div></div>' +
+        '<span class="jx-card-stat">' + (r ? 'Nv ' + nivel + ' · 🪙 ' + jxMonedasMichi() : 'nuevo') + '</span></button>' +
+      '<button class="jx-card observatorio full" data-url="juegos/observatorio/"><div class="sheen"></div>' +
         '<div class="jx-card-estrellas" aria-hidden="true"></div><div class="jx-card-emo">🔭</div>' +
         '<div style="flex:1"><div class="jx-card-etiqueta">Nuevo · tycoon</div><div class="jx-card-nom">Observatorio</div>' +
         '<div class="jx-card-desc">Arma un negocio de astroturismo en el norte de Chile: telescopios, turistas, ciencia y estrellas que pueden bautizar</div></div>' +
@@ -4764,19 +4817,17 @@ function jxRenderHub(){
         '<div style="flex:1"><div class="jx-card-nom">Invernadero</div>' +
         '<div class="jx-card-desc">Cruza flores, descubre genética de verdad y completa el herbario</div></div>' +
         '<span class="jx-card-stat">📖 ' + invHerbarioTxt() + '</span></button>' +
-      '<button class="jx-card closet full" data-ir="closet"><div class="sheen"></div><div class="jx-card-emo">👗</div>' +
-        '<div style="flex:1"><div class="jx-card-nom">Clóset de ' + jxEsc(m.nombre) + '</div>' +
-        '<div class="jx-card-desc">Viste y decora a tu gatito con lo que ganas en los juegos</div></div></button>' +
     '</div>' +
     '<div class="jx-mini-stats">' +
-      '<div class="jx-mini"><div class="n">' + nivel + '</div><div class="l">Nivel</div></div>' +
-      '<div class="jx-mini"><div class="n">' + j.comprados.filter(x => x !== 'fondo:pradera').length + '</div><div class="l">Ítems</div></div>' +
+      '<div class="jx-mini"><div class="n">' + nivel + '</div><div class="l">Nivel de ' + jxEsc(nombre) + '</div></div>' +
+      '<div class="jx-mini"><div class="n">' + ((r && r.prendas) || 0) + '</div><div class="l">Prendas</div></div>' +
       '<div class="jx-mini"><div class="n">' + ((j.clinica && j.clinica.altas) || 0) + '</div><div class="l">Altas</div></div>' +
     '</div>' +
-    '<button class="jx-reset" id="jxReset">Reiniciar progreso</button>';
+    '<button class="jx-reset" id="jxReset">Reiniciar la Clínica</button>';
 
-  document.getElementById('jxEditNom').onclick = (e) => { e.stopPropagation(); jxRenombrar(); };
-  document.getElementById('jxPetHolder').onclick = () => { jxSonido('tap'); jxIr('closet'); };
+  const irCasita = () => { jxSonido('tap'); guardar(); location.href = 'juegos/michi/'; };
+  document.getElementById('jxPetHolder').onclick = irCasita;
+  document.getElementById('jxDaily').onclick = irCasita;
   el.querySelectorAll('[data-ir]').forEach(b => b.onclick = () => { jxSonido('tap'); jxIr(b.dataset.ir); });
   el.querySelectorAll('[data-url]').forEach(b => b.onclick = () => {
     jxSonido('tap');
@@ -4784,86 +4835,16 @@ function jxRenderHub(){
     location.href = b.dataset.url;
   });
   document.getElementById('jxReset').onclick = jxReiniciarProgreso;
-  const daily = document.getElementById('jxDaily');
-  daily.onclick = disp ? jxReclamarDiario : null;
-}
-function jxReclamarDiario(){
-  asegurarJuegos();
-  if(!jxDiarioDisponible()) return;
-  const j = datos.juegos;
-  const ayer = new Date(); ayer.setDate(ayer.getDate()-1);
-  const ayerClave = ayer.getFullYear() + '-' + String(ayer.getMonth()+1).padStart(2,'0') + '-' + String(ayer.getDate()).padStart(2,'0');
-  j.diario.racha = (j.diario.ultimo === ayerClave) ? (j.diario.racha + 1) : 1;
-  j.diario.ultimo = jxHoyClave();
-  const premio = 15 + Math.min(35, (j.diario.racha - 1) * 5);
-  jxRecompensar(premio, 10, { desde: document.getElementById('jxDaily') });
-  jxSonido('compra'); jxVibrar(30); jxConfeti(70);
-  avisar('🎁 Regalo diario: +' + premio + ' monedas · racha ' + j.diario.racha + ' 🔥');
-  jxRenderHub();
-}
-async function jxRenombrar(){
-  asegurarJuegos();
-  const r = await pedirFormulario('Nombre del gatito', [
-    { nombre:'n', etiqueta:'¿Cómo se llama?', valor:datos.juegos.mascota.nombre, requerido:true, maxlength:16 },
-  ], { textoOk:'Guardar' });
-  if(r){ datos.juegos.mascota.nombre = r.n; guardar(); pintarJuegos(); if(jxPantalla === 'hub') jxRenderHub(); }
 }
 async function jxReiniciarProgreso(){
-  const ok = await confirmar('¿Reiniciar todo el progreso de los juegos?', {
-    detalle: 'Michi vuelve al nivel 1, sin monedas ni ropa, y se borran los puntajes. NO afecta fotos, notas ni nada de la página.',
+  const ok = await confirmar('¿Reiniciar la Clínica?', {
+    detalle: 'La Clínica vuelve a empezar de cero. Michi no se toca: tiene su propio reinicio dentro de su casita. NO afecta fotos, notas ni nada de la página.',
     textoOk: 'Reiniciar', peligro: true,
   });
   if(!ok) return;
   datos.juegos = jxDefaultJuegos();
   guardar(); pintarJuegos(); jxRenderHub();
-  jxSonido('compra'); avisar('Progreso reiniciado 🐾');
-}
-
-/* ============================================================
-   CLÓSET
-   ============================================================ */
-function jxRenderCloset(){
-  asegurarJuegos();
-  const j = datos.juegos, m = j.mascota;
-  const el = document.getElementById('jxScreenCloset');
-  const cat = (slot, titulo) => {
-    let items = '';
-    if(slot !== 'fondo') items += '<div class="jx-it' + (!m.equipado[slot] ? ' equipado' : '') + '" data-quitar="' + slot + '"><div class="em">🚫</div><div class="nm">Ninguno</div></div>';
-    JX_COSMETICOS.filter(c => c.slot === slot).forEach(c => {
-      const tiene = c.precio === 0 || j.comprados.includes(c.id);
-      const eq = m.equipado[slot] === c.id;
-      items += '<div class="jx-it' + (eq ? ' equipado' : '') + '" data-id="' + c.id + '">' +
-        (tiene ? '' : '<span class="lock">🔒</span>') +
-        '<div class="em">' + c.emoji + '</div><div class="nm">' + c.nombre + '</div>' +
-        '<div class="pr' + (tiene ? ' tiene' : '') + '">' + (tiene ? (eq ? 'Puesto' : 'Tengo') : c.precio + ' 🪙') + '</div></div>';
-    });
-    return '<div class="jx-sec-tit">' + titulo + '</div><div class="jx-closet-grid">' + items + '</div>';
-  };
-  el.innerHTML =
-    '<div class="jx-pet-stage" style="background:' + jxFondoCss() + ';margin-bottom:14px">' +
-      '<span class="jx-closet-saldo">🪙 ' + j.monedas + '</span>' +
-      '<div class="jx-pet-holder">' + jxPetHTML() + '</div>' +
-      '<div class="jx-pet-nombre">' + jxEsc(m.nombre) + '</div></div>' +
-    '<p class="jx-tip">Toca una prenda para ponérsela. Gana monedas jugando y desbloquea más estilos para ' + m.nombre + ' 💛</p>' +
-    cat('ropa', '👗 Ropa') + cat('sombrero', '🎩 Sombreros') + cat('accesorio', '🕶️ Accesorios') + cat('fondo', '🌅 Escenarios');
-  el.querySelectorAll('[data-quitar]').forEach(it => it.onclick = () => { m.equipado[it.dataset.quitar] = null; jxSonido('tap'); guardar(); jxRenderCloset(); pintarJuegos(); });
-  el.querySelectorAll('[data-id]').forEach(it => it.onclick = () => jxTocarItem(jxCosmetico(it.dataset.id)));
-}
-async function jxTocarItem(c){
-  asegurarJuegos();
-  const j = datos.juegos, m = j.mascota;
-  const tiene = c.precio === 0 || j.comprados.includes(c.id);
-  if(tiene){
-    m.equipado[c.slot] = (m.equipado[c.slot] === c.id) ? (c.slot === 'fondo' ? c.id : null) : c.id;
-    jxSonido('tap'); jxVibrar(12); guardar(); jxRenderCloset(); pintarJuegos();
-    return;
-  }
-  if(j.monedas < c.precio){ jxSonido('mal'); avisar('Te faltan ' + (c.precio - j.monedas) + ' monedas 🪙'); return; }
-  const ok = await confirmar('¿Comprar ' + c.nombre + '?', { detalle:'Cuesta ' + c.precio + ' monedas', textoOk:'Comprar' });
-  if(!ok) return;
-  j.monedas -= c.precio; j.comprados.push(c.id); m.equipado[c.slot] = c.id;
-  jxSonido('compra'); jxVibrar(25); jxActualizarCoins(); guardar(); jxRenderCloset(); pintarJuegos();
-  avisar('¡' + c.nombre + ' desbloqueado! ✨');
+  jxSonido('compra'); avisar('Clínica reiniciada 🩺');
 }
 
 /* ===== Celebración ===== */

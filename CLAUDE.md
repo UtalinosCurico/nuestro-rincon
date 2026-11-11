@@ -27,6 +27,7 @@ node -e "const fs=require('fs'); const html=fs.readFileSync('index.html','utf8')
 
 # Validate the separate game files
 node -e "new Function(require('fs').readFileSync('juegos/clinica/clinica.js','utf8'))"
+for f in datos michi estado sonido minijuegos ui; do node -e "new Function(require('fs').readFileSync('juegos/michi/$f.js','utf8'))"; done
 for f in astro datos motor arte escena ui; do node -e "new Function(require('fs').readFileSync('juegos/observatorio/$f.js','utf8'))"; done
 
 # Verify deployed API responds
@@ -48,7 +49,7 @@ Single-page app with no build step. The romantic page lives in `index.html` as i
 1. On load: read `localStorage` first (fast), then `GET /api/estado?sin=invernadero,observatorio` (Neon, sin las ramas de los juegos).
 2. On save: write `localStorage` immediately + schedule `POST /api/estado` with 700 ms debounce. **Solo suben las ramas que cambiaron** (`instantaneaPorClave` guarda cada rama en JSON canónico, con claves ordenadas porque JSONB las reordena). Una nota nueva sube ~1 KB en vez de todo el estado, y si cada uno edita una sección distinta a la vez, no se pisan.
 3. Auto-sync: cada 60 s y al volver a la pestaña pregunta `GET /api/estado?solo=fecha`; solo si cambió la fecha baja el estado. Al recibir cambios se repintan solo las secciones tocadas (`repintarClaves`): repintar todo recargaba los reproductores de música.
-4. `CLAVES_DE_JUEGOS` (`invernadero`, `observatorio`): la portada **nunca** las baja ni las sube. Cada juego escribe su rama con relee-antes-de-postear.
+4. `CLAVES_DE_JUEGOS` (`invernadero`, `observatorio`, `michi`): la portada **nunca** las baja ni las sube. Cada juego escribe su rama con relee-antes-de-postear.
 
 Key constants in `index.html`:
 ```js
@@ -73,7 +74,14 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 
 **Nuestro año** — `abrirAnio()` arma historias a pantalla completa con sus propios datos (días, fotos, historia, canciones, notas, preguntas respondidas por los dos, metas, Michi, lo que viene). El 28 de diciembre se convierte en el aniversario, con confeti.
 
-**Rincón de juegos** (consola `jx*`, pantalla completa). Juegos actuales: **Observatorio** (tycoon, página aparte), **Clínica Kinésica** (`cl*`, cargada bajo demanda), **Invernadero** (página aparte) y el clóset de Michi. Economía compartida: monedas + mascota + clóset. En nov-2026 se quitaron Sudoku, Zip, 2048, Snake y Nuestro Jardín (antes se habían quitado Detective, Tres en raya y Memorice); sus puntajes se podan del estado (`JX_JUEGOS_RETIRADOS`). Los juegos aparte le regalan monedas a Michi dejando `rinconMichiPendiente` en localStorage; la portada las cobra al abrir el hub (`jxCobrarPendientes()`), así nunca escriben `datos.juegos`.
+**Rincón de juegos** (consola `jx*`, pantalla completa). Juegos actuales: **La casita de Michi** (mascota virtual, página aparte), **Observatorio** (tycoon, página aparte), **Clínica Kinésica** (`cl*`, cargada bajo demanda) e **Invernadero** (página aparte). En nov-2026 se quitaron Sudoku, Zip, 2048, Snake y Nuestro Jardín (antes se habían quitado Detective, Tres en raya y Memorice); sus puntajes se podan del estado (`JX_JUEGOS_RETIRADOS`). El clóset del hub se fue: Michi ahora vive en su casita. Las monedas que ganan los otros juegos le llegan por `rinconMichiPendiente` (localStorage): el Observatorio con `regalarAMichi()` y la Clínica con `jxRecompensar()`, que además de `datos.juegos` (legado) llama a `michiRegalar()`. **Las cobra la casita al abrirse, nunca la portada.** El hub dibuja a Michi y sus monedas desde el resumen `michiResumen__<persona>` (`jxPetHTML()`, `jxMonedasMichi()`, `JX_PELAJES`).
+
+**La casita de Michi** — mascota virtual en `juegos/michi/` (`datos.js`, `michi.js`, `estado.js`, `sonido.js`, `minijuegos.js`, `ui.js`, sin build). Michi es el mismo gatito del hub (SVG propio de la app, viewBox 200×210) con caras, pelajes y suciedad; los ids de ropa son los del hub para que la portada lo dibuje igual. Cada persona tiene su propio Michi en localStorage (`michiRincon_v1__<Persona>`, más `_copia`); a Neon sube `datos.michi` con `marcador` (récords, para picarse) y `respaldo`, siempre con relee-antes-de-postear.
+- **Tiempo real**: cuatro necesidades (comida, limpieza, energía, ánimo) bajan por hora aunque la app esté cerrada (`avanzarTiempo()` en pasos de 5 min). Durmiendo, la energía sube 34/h y despierta solo al llenarse. Una necesidad en cero por 2 h lo enferma; lo cura el jarabe. Nunca se muere.
+- **Piezas**: cocina (arrastrar o tocar comida), baño (jabón que hace espuma + ducha que enjuaga: el baño cuenta como completo con espuma ≥ 55% de 30 burbujas), pieza (luz), sala de juegos y vestidor. Tienda de comida, botiquín y decoración (papel y piso por pieza).
+- **Enganche**: regalo diario con racha de 7 días, ruleta diaria, 3 misiones diarias sorteadas con semilla del día + cofre, 24 logros, niveles (`40 + 25·(n−1)` XP por nivel) que desbloquean comida, ropa, pelajes y minijuegos, regalitos que aparecen solos y récords contra la otra persona.
+- **Minijuegos** (8, lienzo a pantalla completa, nombres y dibujos propios): Lluvia de comida, Burbujas, Memoria, Hasta las nubes, Toca el color, Caída libre, Penales y Michi dice. Pagan `puntos × pago` con tope por partida y gastan energía: con energía < 8, enfermo o durmiendo no se puede jugar.
+- La primera vez trae del hub (solo leyendo `nuestroRinconCyD_v2`) el nombre, la ropa y las monedas de Michi (`importarDelRincon()`).
 
 **Clínica · carga aparte** — todo su código está en `juegos/clinica/clinica.js` + `clinica.css` y se baja con `jxCargarClinica()` al abrir la consola (en un momento libre) o al tocarla. Comparte el ámbito global con la portada (`datos`, `guardar()`, `avisar()`, `jxSonido()`…). La portada solo llama a `clAsegurar()`, `clMostrar()`, `clAsentar()`, `clGuardar()`, `c3Destruir()` y `c3Ajustar()` si ya existen (`typeof`). La normalización de `datos.juegos.clinica` vive en `clAsegurar(j)`.
 
