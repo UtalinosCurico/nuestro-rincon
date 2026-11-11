@@ -4,7 +4,8 @@
   "private": true,
   "description": "Pagina romantica de Catalina y Diego con sincronizacion en Neon.",
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "vercel dev",
+    "local": "node scripts/servidor-local.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
