@@ -2,7 +2,7 @@
 // la caché vieja de golpe. Aunque se olvide, los archivos de los juegos se
 // sirven "de caché y se actualizan por detrás", así que la siguiente carga
 // ya trae lo nuevo.
-const CACHE_NAME = "nuestro-rincon-v32";
+const CACHE_NAME = "nuestro-rincon-v33";
 const APP_SHELL = [
   "/",
   "/manifest.webmanifest",
