@@ -3252,9 +3252,32 @@ async function cambiarEstado(quien){
    PREGUNTA DEL DÍA
    Aleatoria, compartida en Neon y sin repetir hasta agotar el banco.
    ============================================================ */
+/* El día se cuenta en hora de Chile, no con el reloj del aparato. Al publicar,
+   Vercel abre la portada con un navegador en UTC para sacarle una foto, y de
+   noche allá ya es mañana: cambiaba la pregunta del día y la guardaba en Neon
+   (pasó el 10-nov-2026). Un teléfono de viaje haría lo mismo. */
+const FECHA_CHILE = (() => {
+  try{
+    return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Santiago', year: 'numeric', month: '2-digit', day: '2-digit' });
+  }catch(e){ return null; }
+})();
 function fechaHoyClave(){
   const h = new Date();
+  if(FECHA_CHILE){
+    try{
+      const p = {};
+      for(const parte of FECHA_CHILE.formatToParts(h)) p[parte.type] = parte.value;
+      if(p.year && p.month && p.day) return p.year + '-' + p.month + '-' + p.day;
+    }catch(e){}
+  }
   return h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0') + '-' + String(h.getDate()).padStart(2, '0');
+}
+
+/* Pregunta que ya quedó guardada para ese día, si sigue en el banco. */
+function preguntaAsignadaA(fecha){
+  const r = datos.preguntaDia && datos.preguntaDia.respuestas && datos.preguntaDia.respuestas[fecha];
+  const texto = r && typeof r === 'object' && typeof r.pregunta === 'string' ? r.pregunta : null;
+  return texto && PREGUNTAS_DIA.includes(texto) ? texto : null;
 }
 
 function indiceAleatorio(max){
@@ -3306,6 +3329,11 @@ function asegurarRespuestaPreguntaActual(){
   if(typeof registro.Diego !== 'string') registro.Diego = '';
   if(typeof registro.actualizadoCatalina !== 'string') registro.actualizadoCatalina = '';
   if(typeof registro.actualizadoDiego !== 'string') registro.actualizadoDiego = '';
+  // Mientras nadie responda, el registro lleva la pregunta que se ve hoy (pudo
+  // quedar otra si un aparato con la fecha corrida la sorteó antes).
+  if(registro.pregunta !== datos.preguntaDia.texto && !registro.Catalina && !registro.Diego){
+    registro.pregunta = datos.preguntaDia.texto;
+  }
   return registro;
 }
 
@@ -3332,14 +3360,20 @@ function pintarRespuestasPreguntaDia(){
 
 function elegirPreguntaNueva(){
   normalizarPreguntaDia();
+  const hoy = fechaHoyClave();
   const usadas = new Set(datos.preguntaDia.usadas);
-  const disponibles = PREGUNTAS_DIA.filter(q => !usadas.has(q));
-  if(!disponibles.length) return null;
-  const texto = disponibles[indiceAleatorio(disponibles.length)];
+  // Un día que ya tiene pregunta la conserva: si un aparato con otra fecha la
+  // movió, al volver a hoy se recupera la misma en vez de gastar otra del banco.
+  let texto = preguntaAsignadaA(hoy);
+  if(!texto){
+    const disponibles = PREGUNTAS_DIA.filter(q => !usadas.has(q));
+    if(!disponibles.length) return null;
+    texto = disponibles[indiceAleatorio(disponibles.length)];
+  }
   usadas.add(texto);
   const respuestas = datos.preguntaDia.respuestas;
   datos.preguntaDia = {
-    fecha: fechaHoyClave(),
+    fecha: hoy,
     texto,
     usadas: [...usadas],
     respuestas,
@@ -3363,9 +3397,12 @@ function pintarPreguntaDia(opciones = {}){
       texto = elegirPreguntaNueva();
       cambio = !!texto;
     }else{
-      const usadas = new Set(datos.preguntaDia.usadas);
-      const disponibles = PREGUNTAS_DIA.filter(q => !usadas.has(q));
-      texto = disponibles.length ? disponibles[indiceAleatorio(disponibles.length)] : null;
+      texto = preguntaAsignadaA(hoy);
+      if(!texto){
+        const usadas = new Set(datos.preguntaDia.usadas);
+        const disponibles = PREGUNTAS_DIA.filter(q => !usadas.has(q));
+        texto = disponibles.length ? disponibles[indiceAleatorio(disponibles.length)] : null;
+      }
     }
   }
 

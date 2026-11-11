@@ -205,10 +205,12 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 - Al usar `String.replace()` para insertar código, pasar una **función** de reemplazo: `$'`, `$&` y `` $` `` son patrones especiales y corrompen el texto insertado.
 - `pintarPreguntaDia()` must only change the question when the date changes; it should not save to Neon during the initial paint to avoid overwriting data on load.
 - The daily question bank (`PREGUNTAS_DIA`) excludes already-used entries stored in `datos.preguntaDia.usadas`; never use `Date.now() % length` to pick questions.
+- `fechaHoyClave()` cuenta el día en **hora de Chile** (`America/Santiago`), nunca con el reloj del aparato, y un día que ya tiene pregunta la conserva (`preguntaAsignadaA`). Al publicar, Vercel abre la portada en un navegador en UTC para la foto del despliegue; de noche, cuando allá ya es mañana, cambiaba la pregunta del día y la guardaba en Neon (pasó el 10-nov-2026).
 - Photos stored as base64 in Neon JSONB grow fast — prefer Vercel Blob for new image uploads.
 
 ## Known risks
 
 - Last-write-wins sync: simultaneous edits from two devices can overwrite each other.
 - PIN is symbolic (not real security).
+- Cada despliegue de producción abre la portada en un navegador de Vercel sin localStorage (la foto del despliegue): todo lo que la portada guarde al cargar llega a Neon de verdad.
 - Large base64 photo payloads will bloat the Neon JSONB column.
