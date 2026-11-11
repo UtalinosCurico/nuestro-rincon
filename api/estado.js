@@ -128,6 +128,17 @@ async function crearBackupSiCorresponde(sql, dataActual) {
   `;
 }
 
+let tablasListas = false;
+
+function listaDeClaves(texto) {
+  if (!texto) return [];
+  return String(texto)
+    .split(",")
+    .map((x) => x.trim())
+    .filter((x) => /^[A-Za-z0-9_]{1,40}$/.test(x))
+    .slice(0, 20);
+}
+
 module.exports = async function handler(req, res) {
   if (!process.env.DATABASE_URL) {
     return json(res, 500, { error: "Falta configurar DATABASE_URL en Vercel." });
@@ -135,18 +146,54 @@ module.exports = async function handler(req, res) {
 
   try {
     const sql = neon(process.env.DATABASE_URL);
-    await prepararTabla(sql);
+    // Una instancia tibia de Vercel atiende muchas peticiones: las tablas se
+    // revisan una vez por instancia, no en cada consulta.
+    if (!tablasListas) {
+      await prepararTabla(sql);
+      tablasListas = true;
+    }
 
     if (req.method === "GET") {
+      const consulta = new URL(req.url || "/", "http://localhost").searchParams;
+
+      // ?solo=fecha → solo la marca de tiempo. Es lo que se consulta cada
+      // minuto desde el teléfono: unos bytes en vez del estado entero.
+      if (consulta.get("solo") === "fecha") {
+        const filas = await sql`
+          SELECT updated_at
+          FROM rincon_estado
+          WHERE id = ${ESTADO_ID}
+          LIMIT 1
+        `;
+        res.setHeader("Cache-Control", "no-store");
+        return json(res, 200, { updatedAt: filas[0]?.updated_at || null });
+      }
+
       const filas = await sql`
         SELECT data, updated_at
         FROM rincon_estado
         WHERE id = ${ESTADO_ID}
         LIMIT 1
       `;
+      let data = filas[0]?.data || {};
 
+      // ?claves=a,b → solo esas ramas (los juegos piden solo la suya).
+      // ?sin=a,b    → todo menos esas ramas (la portada no necesita los
+      //               respaldos de los juegos, que pesan más que todo lo demás).
+      const claves = listaDeClaves(consulta.get("claves"));
+      const sin = listaDeClaves(consulta.get("sin"));
+      if (claves.length) {
+        const parcial = {};
+        for (const clave of claves) if (clave in data) parcial[clave] = data[clave];
+        data = parcial;
+      } else if (sin.length) {
+        data = { ...data };
+        for (const clave of sin) delete data[clave];
+      }
+
+      res.setHeader("Cache-Control", "no-store");
       return json(res, 200, {
-        data: filas[0]?.data || {},
+        data,
         updatedAt: filas[0]?.updated_at || null,
       });
     }

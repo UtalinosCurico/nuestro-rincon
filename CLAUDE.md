@@ -12,7 +12,11 @@ Romantic personal page for Catalina and Diego. Deployed at `https://nuestro-rinc
 # Install dependencies
 npm install
 
-# Run locally (requires Vercel CLI)
+# Run locally WITHOUT touching Neon (API simulada en memoria, mismo merge por rama)
+npm run local                                   # http://localhost:5178
+node scripts/servidor-local.js copia.json      # arranca con un estado guardado (respuesta de GET /api/estado)
+
+# Run locally with Vercel CLI (ojo: si DATABASE_URL apunta a producción, escribe en Neon de verdad)
 npm run dev         # vercel dev
 
 # Validate API file syntax
@@ -20,6 +24,10 @@ node -c api/estado.js
 
 # Validate embedded HTML script parses
 node -e "const fs=require('fs'); const html=fs.readFileSync('index.html','utf8'); const script=html.match(/<script>([\s\S]*)<\/script>/)[1]; new Function(script); console.log('OK');"
+
+# Validate the separate game files
+node -e "new Function(require('fs').readFileSync('juegos/clinica/clinica.js','utf8'))"
+for f in astro datos motor arte escena ui; do node -e "new Function(require('fs').readFileSync('juegos/observatorio/$f.js','utf8'))"; done
 
 # Verify deployed API responds
 curl https://nuestro-rincon-neon.vercel.app/api/estado
@@ -32,14 +40,15 @@ Deployment is automatic: push to `main` → Vercel redeploys.
 
 ## Architecture
 
-Single-page app with no build step. All app logic lives in `index.html` as inline JS/CSS. `catalina-y-diego.html` is kept as an identical copy of `index.html` (historical alternate URL).
+Single-page app with no build step. The romantic page lives in `index.html` as inline JS/CSS (~4.500 líneas). Los juegos grandes viven aparte: la Clínica en `juegos/clinica/` (se carga bajo demanda desde la portada), el Invernadero en `juegos/invernadero/` y el Observatorio en `juegos/observatorio/` (páginas propias). `catalina-y-diego.html` is kept as an identical copy of `index.html` (historical alternate URL).
 
 **State object** — a global `datos` in the HTML holds all page content (frase, fotos, canciones, cartas, razones, metas, estados, preguntaDia, notas, etc.).
 
 **Persistence flow:**
-1. On load: read `localStorage` first (fast), then `GET /api/estado` (Neon).
-2. On save: write `localStorage` immediately + schedule `POST /api/estado` with 700 ms debounce.
-3. Auto-sync: polls Neon every 60 s and on tab focus.
+1. On load: read `localStorage` first (fast), then `GET /api/estado?sin=invernadero,observatorio` (Neon, sin las ramas de los juegos).
+2. On save: write `localStorage` immediately + schedule `POST /api/estado` with 700 ms debounce. **Solo suben las ramas que cambiaron** (`instantaneaPorClave` guarda cada rama en JSON canónico, con claves ordenadas porque JSONB las reordena). Una nota nueva sube ~1 KB en vez de todo el estado, y si cada uno edita una sección distinta a la vez, no se pisan.
+3. Auto-sync: cada 60 s y al volver a la pestaña pregunta `GET /api/estado?solo=fecha`; solo si cambió la fecha baja el estado. Al recibir cambios se repintan solo las secciones tocadas (`repintarClaves`): repintar todo recargaba los reproductores de música.
+4. `CLAVES_DE_JUEGOS` (`invernadero`, `observatorio`): la portada **nunca** las baja ni las sube. Cada juego escribe su rama con relee-antes-de-postear.
 
 Key constants in `index.html`:
 ```js
@@ -50,7 +59,7 @@ const API_ESTADO = '/api/estado';
 Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRemoto()`, `cargarRemoto()`, `repintarTodo()`.
 
 **API endpoints (Vercel serverless, `api/` folder):**
-- `GET/POST /api/estado` — reads/writes the main `datos` object in Neon table `rincon_estado` (row `id = catalina-diego`). POST auto-creates a backup before overwriting.
+- `GET/POST /api/estado` — reads/writes the main `datos` object in Neon table `rincon_estado` (row `id = catalina-diego`). POST mezcla por clave de primer nivel y crea respaldo automático antes de sobrescribir. GET acepta `?claves=a,b` (solo esas ramas, lo usan los juegos), `?sin=a,b` (todo menos esas, lo usa la portada) y `?solo=fecha` (solo `updatedAt`, para el sondeo barato).
 - `GET/POST /api/backups` — lists and creates/restores backups from `rincon_backups`.
 - `POST /api/upload` — optional image upload to Vercel Blob (gracefully skipped if `BLOB_READ_WRITE_TOKEN` is absent).
 
@@ -58,11 +67,26 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 - `DATABASE_URL` — Neon connection string (required).
 - `BLOB_READ_WRITE_TOKEN` — Vercel Blob token (optional).
 
-**PWA:** `manifest.webmanifest` + `sw.js` make it installable. The service worker caches the app shell only (no API calls, no audio).
+**PWA:** `manifest.webmanifest` + `sw.js` make it installable. Íconos PNG en `assets/icons/` (`icon-180.png` es el `apple-touch-icon`: iPhone no acepta SVG en la pantalla de inicio). El service worker: navegación con red primero; archivos con «caché y se actualiza por detrás» (stale-while-revalidate), así la siguiente carga trae lo nuevo aunque se olvide subir la versión. En `localhost` no se registra (y se desregistra): con caché primero, los cambios locales quedaban escondidos.
 
-**Rincón de juegos** (consola `jx*`, pantalla completa). Juegos actuales: Sudoku (`sd*`), Zip (`zip*`), 2048 (`dm*`), Snake (`sn*`), Nuestro Jardín (`jar*`, incremental) y Clínica Kinésica (`cl*`, con motor de diagnóstico y tratamiento por sesiones). Economía compartida: monedas + mascota + clóset. Se eliminaron Detective, Tres en raya y Memorice.
+**Portada en el teléfono** — barra inferior (`#dock`: Inicio, Recuerdos, Juegos, Música, Más) que se esconde al bajar; «Más» abre una hoja con modo oscuro, edición, nube, «Nuestro año» y un índice de todas las secciones (`prepararIndice()` les pone `id` desde el título). Los reproductores de Spotify/Apple son una fachada que crea el `iframe` recién al tocar (antes se cargaban los 11 al abrir). Las fotos usan `loading="lazy"`. Abrir `/#juegos` sin PIN salta la bienvenida y abre la consola: así vuelven los juegos.
 
-**Invernadero** — el único juego que **no** vive en `index.html`. Es una página aparte en `juegos/invernadero/` (`index.html` + `style.css` + `script.js`, sin build ni dependencias) con su propio estado en localStorage (`invernaderoRincon_v1`); **no toca Neon ni el objeto `datos`**. La portada solo aporta la tarjeta del hub (`data-url="juegos/invernadero/"`) y lee el recuento del herbario con `invHerbarioTxt()`. Se separó a propósito: `index.html` ya pasa de 12.000 líneas.
+**Nuestro año** — `abrirAnio()` arma historias a pantalla completa con sus propios datos (días, fotos, historia, canciones, notas, preguntas respondidas por los dos, metas, Michi, lo que viene). El 28 de diciembre se convierte en el aniversario, con confeti.
+
+**Rincón de juegos** (consola `jx*`, pantalla completa). Juegos actuales: **Observatorio** (tycoon, página aparte), **Clínica Kinésica** (`cl*`, cargada bajo demanda), **Invernadero** (página aparte) y el clóset de Michi. Economía compartida: monedas + mascota + clóset. En nov-2026 se quitaron Sudoku, Zip, 2048, Snake y Nuestro Jardín (antes se habían quitado Detective, Tres en raya y Memorice); sus puntajes se podan del estado (`JX_JUEGOS_RETIRADOS`). Los juegos aparte le regalan monedas a Michi dejando `rinconMichiPendiente` en localStorage; la portada las cobra al abrir el hub (`jxCobrarPendientes()`), así nunca escriben `datos.juegos`.
+
+**Clínica · carga aparte** — todo su código está en `juegos/clinica/clinica.js` + `clinica.css` y se baja con `jxCargarClinica()` al abrir la consola (en un momento libre) o al tocarla. Comparte el ámbito global con la portada (`datos`, `guardar()`, `avisar()`, `jxSonido()`…). La portada solo llama a `clAsegurar()`, `clMostrar()`, `clAsentar()`, `clGuardar()`, `c3Destruir()` y `c3Ajustar()` si ya existen (`typeof`). La normalización de `datos.juegos.clinica` vive en `clAsegurar(j)`.
+
+**Clínica · economía 2.0** — la renta de cada kinesiólogo era `4 × 2,35ⁿ` y la caja llegó a decenas de miles de millones. Ahora `clRentaKine(i) = 3 + 2,2·i`, contratar cuesta `2500 × 1,85ⁿ` y caben dos por box (`clTopeKine()`). `clReforma(k)` corre una vez (`k.reforma = 2`): recalcula rentas, recorta al tope, deja la caja en el doble del costo de la próxima sede y rescata a los pacientes en 0%. Volver después de 3+ días ya no hunde a todos: hicieron ejercicios en casa (`clRevisarAbandonos`), y los mensajes de hace horas se archivan sin castigo. En recepción, la sala de espera va arriba; misiones, turno de noche y modo simulación bajan a «Más para hoy».
+
+**Observatorio** — tycoon de astroturismo en el norte de Chile, en `juegos/observatorio/` (`astro.js`, `datos.js`, `motor.js`, `arte.js`, `escena.js`, `ui.js`, sin build). Cada persona tiene su propio observatorio en localStorage (`observatorioRincon_v1__<Persona>`, más `_copia`); a Neon sube la rama `datos.observatorio` con `marcador`, `respaldo` (compacto) y `cielo` (las dedicatorias, compartidas).
+- **El cielo es el de verdad**: `astro.js` calcula Sol, Luna (con su fase) y ~100 estrellas brillantes del catálogo real para el sitio, la fecha real y la hora del juego. Lluvias de estrellas y temporadas usan fechas reales de Chile (`LLUVIAS`, `TEMPORADAS`, incluido el 28 de diciembre).
+- **Reloj**: una hora de noche dura `segPorHoraNoche` (24 s) y una de día 11 s; a las 19:00 se decide el clima, a las 20:00 se cuenta la gente, a las 06:00 `cerrarNoche()` cobra sueldos, actualiza la nota, escribe reseñas y arma el informe. Las obras corren en tiempo real (también con la página cerrada). Fuera de la página el reloj no avanza: `calcularAusencia()` paga un resumen al 30% con tope de 6 h.
+- **Economía**: demanda turística (`demandaSitio`) × capacidad (telescopios en modo público + miradores, limitada por guías); venta de tiempo de telescopio en modo ciencia; descubrimientos con umbral que sube por clase (`umbralDe`) y tope de uno por telescopio por noche. Publicar ciencia paga una tarifa **fija** por dato: si dependiera de los ingresos, la plata crecería al cuadrado (pasó en las pruebas).
+- **Descubrimientos**: el arte y los datos salen de la semilla (`arteSVG`, `fichaDe`, `posicionDe`), así se ven igual en los dos teléfonos sin guardar imágenes. Bautizar con `para` lo sube a `cielo` y al otro le aparece como regalo (`revisarRegalos`).
+- **Balance**: se probó con un bot en Node (cargar `astro.js`, `datos.js` y `motor.js` en un `vm` con `Date.now` simulado). Jugando seguido, el capítulo 1 sale en ~11 min y el Telescopio Gigante a las ~28 h. Después viene el legado (`nuevaGeneracion`).
+
+**Invernadero** — página aparte en `juegos/invernadero/` (`index.html` + `style.css` + `script.js`, sin build ni dependencias) con su propio estado en localStorage (`invernaderoRincon_v1`); a Neon solo sube su rama `datos.invernadero` (pide solo esa rama con `?claves=invernadero`). La portada solo aporta la tarjeta del hub (`data-url="juegos/invernadero/"`) y lee el recuento del herbario con `invHerbarioTxt()`. Su botón de inicio vuelve a `/#juegos`.
 
 - **Genética real**: 12 loci diploides en `LOCI` (dosis, dominancia completa, dominancia incompleta, codominancia y una serie alélica de cuatro alelos). `meiosis()` reparte un alelo al azar por locus, así que salvo mutación **todo alelo del hijo viene de un padre**. `fenotipo()` es la única fuente de verdad visual y de precio.
 - **Colores por dosis**: los pigmentos azul (`A`), rojo (`B`) y amarillo (`C`) suman 0-2 dosis y `COLORES` traduce las 27 combinaciones + albina. Azul+amarillo=verde, rojo+amarillo=naranja, azul+rojo=violeta. Es lo que hace deducible la genética.
@@ -109,7 +133,7 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 - Salvavidas local: `guardar()` aparta el guardado anterior en `invernaderoRincon_v1_copia` antes de pisarlo, y `cargar()` lo usa si el principal falta o está corrupto.
 - `fenotipoDeEspecie()` tolera ids desconocidos (guardados viejos o respaldos dañados) devolviendo una ficha neutra en vez de reventar el herbario.
 
-**Contenido clínico** — `KIN_CASOS` (53 casos, 9 de ellos `derivar:true` y 5 además `urgente:true`), `KIN_PRUEBAS` (39, con `sn`/`sp`), `KIN_MUSCULOS` (30), `KIN_RANGOS` (15), `CL_TTO_MAL` (distractores), `CL_AMARILLAS` y el motor de diferencial `KIN_DX` en `index.html` son la única fuente de verdad. Un caso nuevo necesita entrada en **seis** tablas: `KIN_CASOS`, `KIN_DX`, `CL_CORTO`, `CL_REGRESO`, `CL_TTO_MAL` y `CL_OCUPS` (más `CL_FEM` si la paciente es mujer).
+**Contenido clínico** — `KIN_CASOS` (53 casos, 9 de ellos `derivar:true` y 5 además `urgente:true`), `KIN_PRUEBAS` (39, con `sn`/`sp`), `KIN_MUSCULOS` (30), `KIN_RANGOS` (15), `CL_TTO_MAL` (distractores), `CL_AMARILLAS` y el motor de diferencial `KIN_DX` en `juegos/clinica/clinica.js` son la única fuente de verdad. Un caso nuevo necesita entrada en **seis** tablas: `KIN_CASOS`, `KIN_DX`, `CL_CORTO`, `CL_REGRESO`, `CL_TTO_MAL` y `CL_OCUPS` (más `CL_FEM` si la paciente es mujer).
 
 **Pauta del docente** — el objetivo real del juego es que Catalina ensaye su **simulación clínica**: entra a una sala, un docente la observa y la evalúan por cómo conduce la atención, no solo por acertar. `CL_PAUTA` (17 ítems en cinco dominios: Trato, Anamnesis, Examen, Razonamiento, Plan) evalúa eso al cerrar el caso. Se prende con `clSimulacion()`, que vive en **localStorage** (`rinconSimulacion`), no en el estado compartido: ella practica con pauta mientras el otro juega el tycoon. Cada ítem tiene `aplica(t)` para que la pauta se adapte al caso — a un EPOC no se le exige movilidad pasiva. Los ítems se leen de `t.hechas`, así que **una acción nueva que la pauta evalúe tiene que quedar registrada ahí**.
 
@@ -163,14 +187,16 @@ Key functions: `guardar()`, `cargar()`, `programarGuardadoRemoto()`, `guardarRem
 
 **Eventos y urgencias** — `CL_EVENTOS` duran `CL_EVENTO_DURA` pacientes y se leen con `clEfEvento()`. El multiplicador de evento va en `clMultPagoCaso()` y **no** en `clMultPago()`, para que un evento no dispare la renta pasiva. `c.urgencia` es una ambulancia con reloj real (`CL_URGENCIA_SEG`); si expira cuesta 5 de reputación. El turno de noche (`c.noche`) encadena `CL_NOCHE_LARGO` pacientes sin elegir, paga `CL_NOCHE_PAGO`× y no deja pacientes en tratamiento.
 
-**Economía** — hay costos fijos: `clGastoPorSegundo()` = arriendo + sueldos. Devuelve **0 mientras no haya personal contratado**; si no, un jugador nuevo entra en rojo desde el segundo cero. Caja negativa sostenida resta reputación. Una especialidad exige reputación **y** acreditación (`c.acred`, examen de 8 preguntas al 75%), y como la reputación baja, una especialidad también se cierra.
+**Economía** — hay costos fijos: `clGastoPorSegundo()` = arriendo + sueldos. Devuelve **0 mientras no haya personal contratado**; si no, un jugador nuevo entra en rojo desde el segundo cero. Caja negativa sostenida resta reputación. Ver «Clínica · economía 2.0» arriba: nada de curvas exponenciales en la renta. Una especialidad exige reputación **y** acreditación (`c.acred`, examen de 8 preguntas al 75%), y como la reputación baja, una especialidad también se cierra.
 
 **Repaso** — cuatro solapas: Músculos, Rangos, Examen (20 preguntas contrarreloj generadas por `clBancoPreguntas()` desde el mismo contenido clínico) y Álbum (fichas de `c.dominados`). Las misiones diarias viven en `CL_MISIONES` y se avanzan con `clAvanzarMision(tipo, info)`.
 
 ## Rules for editing
 
 - If `index.html` is modified, always sync the same change to `catalina-y-diego.html`.
-- Sube `CACHE_NAME` en `sw.js` cada vez que cambie `index.html` **o cualquier archivo de `juegos/invernadero/`**, o los teléfonos siguen sirviendo la versión vieja desde la caché. El service worker sirve esos archivos cache-first.
+- Sube `CACHE_NAME` en `sw.js` cada vez que cambie `index.html` **o cualquier archivo de `juegos/`** (clínica, invernadero, observatorio). Un archivo nuevo de un juego también va en `APP_SHELL`.
+- La portada no debe usar nada de la clínica sin `typeof`: `clinica.js` puede no estar cargado todavía.
+- Probar con `npm run local` (no toca Neon). Con `vercel dev` y la `DATABASE_URL` de producción se escribe el estado real.
 - El service worker solo guarda la portada bajo la clave `"/"`. Cualquier otra navegación se cachea con su propia URL: si no, entrar a `/juegos/invernadero/` dejaba el HTML del juego como página principal sin conexión.
 - Keep `localStorage` as fallback — never remove it.
 - Never connect to Neon directly from the browser; all DB access goes through `/api/`.

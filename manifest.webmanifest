@@ -1,35 +1,43 @@
 {
-  "name": "Catalina & Diego - Nuestro Rincon",
-  "short_name": "Nuestro Rincon",
-  "description": "Rincon romantico privado de Catalina y Diego.",
+  "id": "/",
+  "name": "Catalina & Diego - Nuestro Rincón",
+  "short_name": "Nuestro Rincón",
+  "description": "Rincón romántico privado de Catalina y Diego.",
   "lang": "es-CL",
+  "dir": "ltr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait",
   "background_color": "#faf7f1",
   "theme_color": "#5f6655",
   "categories": ["lifestyle", "photo", "personalization"],
   "icons": [
-    {
-      "src": "/assets/icons/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/icon-maskable.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
-    }
+    { "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ],
   "shortcuts": [
     {
-      "name": "Abrir Nuestro Rincon",
-      "short_name": "Abrir",
-      "url": "/",
-      "icons": [{ "src": "/assets/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+      "name": "Rincón de juegos",
+      "short_name": "Juegos",
+      "url": "/#juegos",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Observatorio",
+      "short_name": "Observatorio",
+      "url": "/juegos/observatorio/",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Invernadero",
+      "short_name": "Invernadero",
+      "url": "/juegos/invernadero/",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }

@@ -1,11 +1,12 @@
 /* Genera REVISION-KINESIOLOGIA.md a partir del contenido clínico que vive
-   dentro de index.html. El documento es para que Catalina revise: no se
-   edita a mano, se regenera con `node scripts/generar-revision.js` cada vez
-   que cambian KIN_CASOS, KIN_PRUEBAS, KIN_MUSCULOS, KIN_RANGOS o KIN_DX. */
+   en juegos/clinica/clinica.js (antes estaba dentro de index.html). El
+   documento es para que Catalina revise: no se edita a mano, se regenera con
+   `node scripts/generar-revision.js` cada vez que cambian KIN_CASOS,
+   KIN_PRUEBAS, KIN_MUSCULOS, KIN_RANGOS o KIN_DX. */
 const fs = require('fs');
 const path = require('path');
 const RAIZ = path.join(__dirname, '..');
-const RUTA = path.join(RAIZ, 'index.html');
+const RUTA = path.join(RAIZ, 'juegos', 'clinica', 'clinica.js');
 const txt = fs.readFileSync(RUTA, 'utf8');
 const lineas = txt.split('\n');
 /* Se extrae todo el bloque de datos clínicos: desde KIN_PRUEBAS hasta justo
@@ -13,7 +14,7 @@ const lineas = txt.split('\n');
    amarillas y alarmas, que también se documentan. */
 const ini = lineas.findIndex(l => l.startsWith('const KIN_PRUEBAS = ['));
 const tope = lineas.findIndex((l, i) => i > ini && l.includes('CLÍNICA EN 3D'));
-if(ini < 0 || tope < 0) throw new Error('no encontré el bloque de contenido clínico en index.html');
+if(ini < 0 || tope < 0) throw new Error('no encontré el bloque de contenido clínico en juegos/clinica/clinica.js');
 const bloque = lineas.slice(ini, tope - 1).join('\n');
 const D = new Function(bloque + '\nreturn { KIN_PRUEBAS, KIN_CASOS, CL_REGRESO, CL_TTO_MAL, KIN_MUSCULOS, KIN_RANGOS, CL_ACC, KIN_DX, CL_AMARILLAS };')();
 const { KIN_PRUEBAS, KIN_CASOS, CL_REGRESO, CL_TTO_MAL, KIN_MUSCULOS, KIN_RANGOS, CL_ACC, KIN_DX, CL_AMARILLAS } = D;

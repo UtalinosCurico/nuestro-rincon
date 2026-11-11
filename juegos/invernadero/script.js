@@ -5000,7 +5000,9 @@ const Nube = {
   enVuelo: false,
 
   async leer() {
-    const r = await fetch(JUEGO.api, { cache: 'no-store' });
+    // Solo la rama del invernadero: bajar el estado entero (fotos, notas y el
+    // respaldo del otro) en cada sincronización gastaba datos del teléfono.
+    const r = await fetch(JUEGO.api + '?claves=invernadero', { cache: 'no-store' });
     if (!r.ok) throw new Error('respuesta ' + r.status);
     const j = await r.json();
     const d = (j && j.data) || {};
@@ -5616,7 +5618,8 @@ function conectarUI() {
   };
   $('#btnInicio').onclick = () => {
     guardar(true);
-    location.href = '../../index.html';
+    // vuelve directo al Rincón de juegos, sin pasar por la bienvenida
+    location.href = '/#juegos';
   };
 
   $('#regToggle').onclick = () => { document.body.classList.toggle('log-cerrado'); };
