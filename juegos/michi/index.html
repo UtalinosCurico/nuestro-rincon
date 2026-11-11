@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#f7e9d7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="La casita de Michi: dale de comer, báñalo, hazlo dormir, vístelo y juega minijuegos.">
+<title>Michi · Nuestro Rincón</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐱%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/assets/icons/icon-180.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+  <header class="barra">
+    <button class="boton-redondo" id="btnVolver" aria-label="Volver a Nuestro Rincón">‹</button>
+    <button class="perfil" id="btnPerfil" aria-label="Perfil de Michi">
+      <span class="anillo" id="anilloNivel"><b id="nivelN">1</b></span>
+      <span class="perfil-txt"><b id="nombreMichi">Michi</b><small id="nivelTxt">Nivel 1</small></span>
+    </button>
+    <div class="barra-der">
+      <button class="boton-redondo" id="btnDiario" aria-label="Regalos y misiones">🎁<i class="globo-aviso" id="avisoDiario" hidden></i></button>
+      <button class="boton-redondo" id="btnLogros" aria-label="Logros y récords">🏆<i class="globo-aviso" id="avisoLogros" hidden></i></button>
+      <button class="monedas" id="btnMonedas" aria-label="Tienda"><span>🪙</span><b id="monedasN">0</b></button>
+    </div>
+  </header>
+
+  <div class="necesidades" id="necesidades"></div>
+
+  <main class="escena" id="escena" data-pieza="cocina">
+    <div class="pared" id="pared"></div>
+    <div class="piso" id="piso"></div>
+    <div class="muebles" id="muebles"></div>
+    <div class="michi-zona" id="michiZona">
+      <div class="dialogo" id="dialogo" hidden></div>
+      <div class="michi" id="michi"></div>
+      <div class="espuma" id="espuma"></div>
+    </div>
+    <div class="capa-noche" id="capaNoche"></div>
+    <div class="efectos" id="efectos"></div>
+    <div class="herramienta-cursor" id="cursorHerramienta" hidden></div>
+  </main>
+
+  <nav class="piezas" aria-label="Piezas de la casita">
+    <button class="flecha" id="piezaAnt" aria-label="Pieza anterior">‹</button>
+    <div class="pieza-nombre"><span id="piezaEmoji">🍳</span> <b id="piezaNombre">Cocina</b><div class="puntos-pieza" id="puntosPieza"></div></div>
+    <button class="flecha" id="piezaSig" aria-label="Pieza siguiente">›</button>
+  </nav>
+
+  <section class="bandeja" id="bandeja"></section>
+</div>
+
+<!-- hojas y avisos -->
+<div class="hoja-fondo" id="hojaFondo" hidden>
+  <div class="hoja" id="hoja" role="dialog" aria-modal="true"></div>
+</div>
+<div class="avisos" id="avisos" aria-live="polite"></div>
+<div class="confeti" id="confeti" aria-hidden="true"></div>
+
+<!-- minijuegos a pantalla completa -->
+<div class="mini" id="mini" hidden>
+  <canvas id="miniCanvas"></canvas>
+  <div class="mini-hud">
+    <button class="boton-redondo claro" id="miniSalir" aria-label="Salir del minijuego">✕</button>
+    <div class="mini-puntos"><small id="miniEtiqueta">Puntos</small><b id="miniPuntos">0</b></div>
+    <div class="mini-extra" id="miniExtra"></div>
+  </div>
+  <div class="mini-tarjeta" id="miniTarjeta"></div>
+</div>
+
+<script src="datos.js"></script>
+<script src="michi.js"></script>
+<script src="estado.js"></script>
+<script src="sonido.js"></script>
+<script src="minijuegos.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
