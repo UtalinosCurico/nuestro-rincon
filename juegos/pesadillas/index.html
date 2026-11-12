@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#1a1630">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Pesadillas de Michi: Michi sueña que la casa es un laberinto. Cinco pisos, objetos que se combinan y un jefe en cada piso.">
+<title>Pesadillas de Michi · Nuestro Rincón</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌙%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/assets/icons/icon-180.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="lienzo" aria-label="El sueño de Michi"></canvas>
+
+<!-- HUD -->
+<div id="hud" hidden>
+  <div class="hud-izq">
+    <div class="corazones" id="corazones" aria-label="Corazones"></div>
+    <div class="cuentas">
+      <span><i>🪙</i><b id="nMonedas">0</b></span>
+      <span><i>🔑</i><b id="nLlaves">0</b></span>
+      <span><i>🧨</i><b id="nPetardos">0</b></span>
+    </div>
+  </div>
+  <div class="hud-der">
+    <canvas id="minimapa" aria-label="Mapa del piso"></canvas>
+    <button class="redondo" id="btnPausa" aria-label="Pausa"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><rect x="4" y="3" width="4" height="14" rx="1.5" fill="#fff"/><rect x="12" y="3" width="4" height="14" rx="1.5" fill="#fff"/></svg></button>
+  </div>
+</div>
+<div id="acciones" hidden>
+  <button class="accion activo" id="btnActivo" aria-label="Usar objeto">
+    <svg viewBox="0 0 64 64" class="anillo-carga" aria-hidden="true"><circle cx="32" cy="32" r="28" class="fondo-carga"/><circle cx="32" cy="32" r="28" class="carga" id="arcoCarga"/></svg>
+    <span class="emo" id="emoActivo"></span>
+  </button>
+  <button class="accion petardo" id="btnPetardo" aria-label="Poner un petardo">🧨</button>
+</div>
+<div id="banner" class="banner" hidden></div>
+<div id="avisos" class="avisos" aria-live="polite"></div>
+
+<!-- menú -->
+<div id="menu" class="pantalla"></div>
+<!-- pausa y fin -->
+<div id="pausa" class="pantalla velo" hidden></div>
+<div id="fin" class="pantalla velo" hidden></div>
+<!-- hojas -->
+<div class="hoja-fondo" id="hojaFondo" hidden><div class="hoja" id="hoja" role="dialog" aria-modal="true"></div></div>
+
+<script src="datos.js"></script>
+<script src="../michi/michi.js"></script>
+<script src="motor.js"></script>
+<script src="arte.js"></script>
+<script src="sonido.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>

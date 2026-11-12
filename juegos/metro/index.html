@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#f4efe4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1c2130" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="Metro de Curicó: el metro que Curicó no tiene. Une las estaciones con líneas antes de que se repleten.">
+<title>Metro de Curicó · Nuestro Rincón</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🚇%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/assets/icons/icon-180.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="lienzo" aria-label="El plano del metro"></canvas>
+
+<header id="arriba" hidden>
+  <button class="reloj" id="btnReloj" aria-label="Día y semana">
+    <svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" class="reloj-fondo"/><circle cx="18" cy="18" r="15" class="reloj-semana" id="arcoSemana"/></svg>
+    <span class="reloj-txt"><b id="txtDia">lun</b><small id="txtSemana">sem 1</small></span>
+  </button>
+  <div class="gente"><span class="gente-emo">🧍</span><b id="txtGente">0</b></div>
+  <div class="velocidad" role="group" aria-label="Velocidad">
+    <button data-vel="0" aria-label="Pausa"><svg viewBox="0 0 20 20" width="14" height="14"><rect x="4" y="3" width="4" height="14" rx="1.5"/><rect x="12" y="3" width="4" height="14" rx="1.5"/></svg></button>
+    <button data-vel="1" aria-label="Normal"><svg viewBox="0 0 20 20" width="14" height="14"><path d="M5 3 L16 10 L5 17 Z"/></svg></button>
+    <button data-vel="2" aria-label="Rápido"><svg viewBox="0 0 20 20" width="16" height="14"><path d="M2 3 L10 10 L2 17 Z M10 3 L18 10 L10 17 Z"/></svg></button>
+  </div>
+  <button class="redondo" id="btnMenu" aria-label="Menú">☰</button>
+</header>
+
+<footer id="abajo" hidden>
+  <div class="lineas" id="chipsLineas"></div>
+  <div class="inventario" id="inventario"></div>
+</footer>
+
+<div id="pista" class="pista" hidden></div>
+<div id="avisos" class="avisos" aria-live="polite"></div>
+
+<div id="menu" class="pantalla"></div>
+<div id="velo" class="pantalla velo" hidden></div>
+<div class="hoja-fondo" id="hojaFondo" hidden><div class="hoja" id="hoja" role="dialog" aria-modal="true"></div></div>
+
+<script src="datos.js"></script>
+<script src="motor.js"></script>
+<script src="arte.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
