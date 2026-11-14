@@ -895,6 +895,7 @@
   .jx-card.pesadillas{background:radial-gradient(120% 140% at 15% 0%,#7a5fc4 0%,#3a2f6e 50%,#1a1630 100%);}
   .jx-card.metro{background:linear-gradient(150deg,#3a7bd5,#24508f);}
   .jx-card.expediente{background:linear-gradient(150deg,#3b4f6b,#1f2a38);}
+  .jx-card.casino{background:radial-gradient(circle at 80% 20%,#2f6b4f,#15281f 70%);}
   .jx-card.metro .jx-card-plano{position:absolute;right:-6px;bottom:-6px;width:46%;max-width:170px;opacity:.38;pointer-events:none;}
   .jx-card.grande{min-height:132px;align-items:flex-end;}
   .jx-card-etiqueta{display:inline-block;font-size:.66rem;letter-spacing:1.4px;text-transform:uppercase;
@@ -4768,6 +4769,13 @@ function metroResumenLocal(){
     return '🧍 récord ' + Number(r.record || 0).toLocaleString('es-CL');
   }catch(e){ return 'nuevo'; }
 }
+function casinoResumenLocal(){
+  try{
+    const q = localStorage.getItem('rinconQuien') || 'invitado';
+    const r = JSON.parse(localStorage.getItem('casinoResumen__' + q) || 'null');
+    return r ? '🪙 ' + Number(r.fichas || 0).toLocaleString('es-CL') : 'nuevo';
+  }catch(e){ return 'nuevo'; }
+}
 function expResumenLocal(){
   try{
     const q = localStorage.getItem('rinconQuien') || 'invitado';
@@ -4845,6 +4853,10 @@ function jxRenderHub(){
         '<div style="flex:1"><div class="jx-card-etiqueta">Nuevo · detectives</div><div class="jx-card-nom">Expediente Curicó</div>' +
         '<div class="jx-card-desc">Registra los lugares, examina las pistas, interroga a los sospechosos y arresta al culpable</div></div>' +
         '<span class="jx-card-stat">' + expResumenLocal() + '</span></button>' +
+      '<button class="jx-card casino full" data-url="juegos/casino/"><div class="sheen"></div><div class="jx-card-emo">🎰</div>' +
+        '<div style="flex:1"><div class="jx-card-etiqueta">Nuevo · azar</div><div class="jx-card-nom">Casino del Rincón</div>' +
+        '<div class="jx-card-desc">Ruleta, rueda de la fortuna, cajas, cohete y doble o nada. Fichas de juego: se puede perder todo</div></div>' +
+        '<span class="jx-card-stat">' + casinoResumenLocal() + '</span></button>' +
       '<button class="jx-card metro full" data-url="juegos/metro/">' +
         '<svg class="jx-card-plano" viewBox="0 0 120 80" aria-hidden="true"><g fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 66 H52 L76 42 H112" stroke="#ffd27a"/><path d="M40 8 V34 L64 58 V76" stroke="#ff8a80"/></g><g fill="#fff"><circle cx="10" cy="66" r="5"/><circle cx="112" cy="42" r="5"/><circle cx="40" cy="8" r="5"/><circle cx="64" cy="58" r="6"/></g></svg>' +
         '<div class="sheen"></div><div class="jx-card-emo">🚇</div>' +
