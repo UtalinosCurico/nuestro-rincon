@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#15281f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Casino del Rincón: ruleta, rueda de la fortuna, cajas, cohete y doble o nada con fichas de juego.">
+<title>Casino del Rincón · Nuestro Rincón</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎰%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/assets/icons/icon-180.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="cab">
+  <button class="redondo" id="btnVolver" aria-label="Volver a Nuestro Rincón">‹</button>
+  <div class="titulo"><b>Casino del Rincón</b><small id="txtQuien">fichas de juego</small></div>
+  <div class="fichas" id="fichas">🪙 0</div>
+</header>
+<main id="mesa"></main>
+<nav class="tabs" id="tabs"></nav>
+<div class="velo" id="velo" hidden><div class="tarjeta" id="tarjeta"></div></div>
+<div class="avisos" id="avisos"></div>
+<script src="juego.js"></script>
+</body>
+</html>
