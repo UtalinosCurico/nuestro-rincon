@@ -5,7 +5,7 @@
    ============================================================ */
 const Arte = {
   W: 0, H: 0, dpr: 1, area: { x: 0, y: 0, w: 1, h: 1 }, escala: 1, escalaObj: 1,
-  oscuro: false, efectos: [], arrastre: null, resaltar: null,
+  oscuro: false, efectos: [], arrastre: null, resaltar: null, goma: null,
   colores() {
     return this.oscuro
       ? { papel: '#1c2130', calle: 'rgba(255,255,255,.05)', agua: '#2f5d82', aguaBorde: '#3f78a6', cerro: '#33513a', cerroLinea: 'rgba(160,210,150,.18)', plaza: '#2c4a32', texto: 'rgba(225,230,240,.55)', tinta: '#e9ecf3', estacion: '#22283a', vina: 'rgba(150,120,190,.35)', tren: 'rgba(220,220,230,.35)', fuera: 'rgba(0,0,0,.35)' }
@@ -113,14 +113,18 @@ const Arte = {
     return { uso, clave };
   },
   lineas(ctx, c, e) {
-    const ancho = 7 / e, { uso, clave } = this.desplazamientos();
+    const ancho = 7 / e, { uso, clave } = this.desplazamientos(), gm = this.goma;
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     for (const l of J.lineas) {
       const est = l.est.map(id => EST.get(id));
       const pares = []; for (let i = 0; i + 1 < est.length; i++) pares.push([est[i], est[i + 1]]);
       if (l.loop && est.length > 2) pares.push([est[est.length - 1], est[0]]);
+      /* con la goma, la línea elegida late y las demás se apagan */
+      const elegida = !!gm && gm.id === l.id;
+      ctx.globalAlpha = gm && !elegida ? .26 : 1;
       ctx.strokeStyle = LINEAS[l.c].color; ctx.lineWidth = ancho;
-      for (const [a, b] of pares) {
+      for (let n = 0; n < pares.length; n++) {
+        const [a, b] = pares[n];
         const lista = uso.get(clave(a.id, b.id)) || [l.id];
         const k = lista.indexOf(l.id) - (lista.length - 1) / 2;
         const p = tramo(a, b);
@@ -132,7 +136,17 @@ const Arte = {
           const x = p[i][0] - dy / d * off, y = p[i][1] + dx / d * off;
           i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
         }
+        if (elegida) {
+          ctx.save();
+          ctx.strokeStyle = this.oscuro ? '#ffffff' : '#2d2a32'; ctx.globalAlpha = .2 + .12 * Math.sin(performance.now() / 170);
+          ctx.lineWidth = ancho * 2.6; ctx.stroke();
+          ctx.restore();
+        }
         ctx.stroke();
+        if (elegida && gm.tramo && gm.i === n) {
+          /* el tramo que se borraría solo: punteado */
+          ctx.save(); ctx.strokeStyle = this.oscuro ? '#1c2130' : '#ffffff'; ctx.lineWidth = ancho * .5; ctx.setLineDash([ancho * .9, ancho * .9]); ctx.stroke(); ctx.restore();
+        }
         const cost = costoTramo(a, b);
         if (cost.puentes) this.puentes(ctx, p, e);
       }

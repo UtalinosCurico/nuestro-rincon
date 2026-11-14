@@ -361,8 +361,9 @@ const Escena = {
       if (!sl) { this.dibujarCerco(p, osc, false); continue; }
       this.dibujarEdificio(e, sl, p, t, noche, osc, ns);
     }
-    // turistas
-    if (noche && ns && ns.visitantes > 0 && (hora >= 20 || hora < 1.5)) this.dibujarTuristas(st, pos, ns, t);
+    // la vida del sitio: van, gente, bichos y los números que saltan
+    if (typeof Vida !== 'undefined') { Vida.ahorro = this.ahorro; Vida.paso(ctx, e, { w, h, hz, t, dt, st, pos, ns, noche, osc, hora, sitio, clima }); }
+    else if (noche && ns && ns.visitantes > 0 && (hora >= 20 || hora < 1.5)) this.dibujarTuristas(st, pos, ns, t);
     // viñeta suave
     if (!this.ahorro) {
       const vg = ctx.createRadialGradient(w / 2, h * 0.55, h * 0.3, w / 2, h * 0.55, h * 0.95);
@@ -568,7 +569,7 @@ const Escena = {
         const k = 0.62;
         if (etapa >= 1) { ctx.fillStyle = sombra; ctx.fillRect(x - s * 0.7, y - s * 0.06, s * 1.4, s * 0.06); }
         if (etapa >= 2) { ctx.fillStyle = metal; ctx.fillRect(x - s * k, y - s * 0.55, s * k * 2, s * 0.5); ctx.beginPath(); ctx.arc(x, y - s * 0.55, s * k, Math.PI, 0); ctx.fill(); }
-        if (etapa >= 2 && etapa < 5) this.dibujarGrua(x + s * 0.7, y, s * 1.1, osc);
+        if (etapa >= 2 && etapa < 5) this.dibujarGrua(x + s * 0.7, y, s * 1.1, osc, t);
         if (etapa >= 5) {
           const abierta = noche && (!ns || ns.clima !== 'nublado');
           ctx.fillStyle = abierta ? 'rgba(10,12,28,0.95)' : sombra;
@@ -667,17 +668,24 @@ const Escena = {
     const a = s * 0.32, b = s * 0.36;
     ctx.strokeRect(x - a, y - b, a * 2, b);
     ctx.beginPath(); ctx.moveTo(x - a, y); ctx.lineTo(x + a, y - b); ctx.moveTo(x + a, y); ctx.lineTo(x - a, y - b); ctx.stroke();
-    this.dibujarGrua(x + a + 4, y, s * 0.8, osc);
+    this.dibujarGrua(x + a + 4, y, s * 0.8, osc, t);
     const prog = 1 - (sl.obra.fin - Date.now()) / (sl.obra.total || 1);
     this.dibujarBarra(x, y + 6, s * 0.7, prog);
-    void t;
+    // chispas de soldadura
+    if (!this.ahorro && Math.floor(t * 4) % 3 === 0) {
+      ctx.fillStyle = 'rgba(255,226,140,0.95)';
+      for (let i = 0; i < 3; i++) ctx.fillRect(x - a * 0.5 + ((t * 53 + i * 17) % (a * 1.2)), y - b * 0.35 - ((t * 31 + i * 11) % 6), 1.4, 1.4);
+    }
   },
-  dibujarGrua(x, y, s, osc) {
+  dibujarGrua(x, y, s, osc, t) {
     const ctx = this.ctx;
     ctx.strokeStyle = this.rgb(this.mezclar([230, 170, 40], [140, 110, 50], osc));
     ctx.lineWidth = 1.4;
     ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - s * 0.7); ctx.lineTo(x - s * 0.5, y - s * 0.7); ctx.moveTo(x, y - s * 0.7); ctx.lineTo(x + s * 0.15, y - s * 0.7); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(x - s * 0.4, y - s * 0.7); ctx.lineTo(x - s * 0.4, y - s * 0.45); ctx.stroke();
+    // el gancho sube y baja con su carga
+    const baja = 0.25 + 0.14 * Math.sin((t || 0) * 1.1 + x);
+    ctx.beginPath(); ctx.moveTo(x - s * 0.4, y - s * 0.7); ctx.lineTo(x - s * 0.4, y - s * 0.7 + s * baja); ctx.stroke();
+    ctx.fillStyle = ctx.strokeStyle; ctx.fillRect(x - s * 0.4 - 2.5, y - s * 0.7 + s * baja, 5, 3.5);
   },
   dibujarBarra(x, y, ancho, prog) {
     const ctx = this.ctx;

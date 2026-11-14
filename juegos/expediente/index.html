@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#1f2a38">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Expediente Curicó: registra los lugares, examina las pistas, interroga a los sospechosos y arresta al culpable.">
+<title>Expediente Curicó · Nuestro Rincón</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔍%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/assets/icons/icon-180.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main id="pMenu" class="pant"></main>
+<main id="pCaso" class="pant" hidden></main>
+
+<section id="pBuscar" class="pant buscar" hidden>
+  <header class="b-arriba">
+    <button class="b-btn" id="bSalir" aria-label="Salir del registro">✕</button>
+    <div class="b-reloj"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" class="b-reloj-fondo"/><circle cx="18" cy="18" r="15" class="b-reloj-arco" id="bArco"/></svg><b id="bTiempo">80</b></div>
+    <div class="b-puntos"><b id="bPuntos">0</b><small id="bCombo"></small></div>
+    <div class="b-cuenta"><b id="bCuenta">0</b><small>/ 12</small></div>
+  </header>
+  <div class="b-marco" id="bMarco"><div class="b-escena" id="bEscena"></div></div>
+  <footer class="b-abajo">
+    <div class="b-lista" id="bLista"></div>
+    <button class="b-pista" id="bPista" aria-label="Pista de Michi"><span class="b-michi" id="bMichi"></span><i id="bPistaCarga"></i></button>
+  </footer>
+</section>
+
+<div class="velo" id="velo" hidden><div class="tarjeta" id="tarjeta" role="dialog" aria-modal="true"></div></div>
+<div class="avisos" id="avisos" aria-live="polite"></div>
+
+<script src="datos.js"></script>
+<script src="../michi/michi.js"></script>
+<script src="arte.js"></script>
+<script src="motor.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
