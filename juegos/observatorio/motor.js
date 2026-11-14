@@ -80,7 +80,7 @@ function estadoNuevo(duenio) {
     stats: {
       visitantes: 0, ingresos: 0, gastos: 0, cienciaTot: 0, noches: 0, descubrimientos: 0,
       bautizados: 0, dedicados: 0, visitasNubladas: 0, nochesLluvia: 0, encargos: 0, sismos: 0, mejorRareza: -1,
-      publicaciones: 0,
+      publicaciones: 0, deseos: 0, fotos: 0,
     },
     descClase: {},
     records: { mejorNoche: 0, mejorNota: 0, nocheSitio: {} },
@@ -92,6 +92,7 @@ function estadoNuevo(duenio) {
     ajustes: { sonido: true, ahorro: false },
     aniversario: {},
     fondo: null,
+    vida: null,
   };
   for (const s of SITIOS) e.sitios[s.id] = sitioNuevo(s);
   e.sitios.elqui.abierto = true;
@@ -507,6 +508,47 @@ function revisarObras(e) {
     });
   }
   revisarCapitulo(e);
+}
+
+/* Con el tiempo acelerado, las obras también corren más rápido: se les
+   adelanta la hora de término (siguen siendo relojes de tiempo real). */
+function adelantarObras(e, ms) {
+  if (!(ms > 0)) return;
+  for (const s of SITIOS) for (const sl of e.sitios[s.id].slots) if (sl && sl.obra) sl.obra.fin -= ms;
+}
+
+/* ============================================================
+   COSAS DE LA ESCENA — premios chicos por estar mirando
+   ============================================================ */
+const DESEOS_POR_NOCHE = 2;
+/* La madrugada pertenece a la noche que empezó el día anterior. */
+function nocheDeJuego(e) { return e.reloj.hora < 12 ? e.reloj.dia - 1 : e.reloj.dia; }
+function vidaDeHoy(e) {
+  const n = nocheDeJuego(e);
+  if (!e.vida || e.vida.noche !== n || !e.vida.fotos) e.vida = { noche: n, deseos: 0, fotos: {} };
+  return e.vida;
+}
+/* Un pedacito de lo que deja una noche normal, redondeado a mil. */
+function premioChico(e, parte, minimo) { return Math.round(Math.max(minimo, (e.prom.neto > 0 ? e.prom.neto : 0) * parte) / 1000) * 1000; }
+function puedeDeseo(e) { return vidaDeHoy(e).deseos < DESEOS_POR_NOCHE; }
+function pedirDeseo(e) {
+  const v = vidaDeHoy(e);
+  if (v.deseos >= DESEOS_POR_NOCHE) return { ok: false };
+  v.deseos++;
+  const monto = premioChico(e, 0.04, 20000);
+  e.dinero += monto; e.stats.ingresos += monto;
+  e.stats.deseos = (e.stats.deseos || 0) + 1;
+  return { ok: true, monto };
+}
+/* La primera foto de cada animal en la noche; solo la del zorro deja propina. */
+function fotoDe(e, tipo) {
+  const v = vidaDeHoy(e);
+  if (v.fotos[tipo]) return { ok: true, monto: 0, repetida: true };
+  v.fotos[tipo] = 1;
+  const monto = tipo === 'zorro' ? premioChico(e, 0.02, 10000) : 0;
+  if (monto) { e.dinero += monto; e.stats.ingresos += monto; }
+  e.stats.fotos = (e.stats.fotos || 0) + 1;
+  return { ok: true, monto };
 }
 
 /* ============================================================
@@ -1375,5 +1417,6 @@ if (typeof module !== 'undefined') {
     puedeNuevaGeneracion, comprarLegado, publicar, valorPublicacion, puntosLegado, costoConstruir, costoMejora, costoTerreno, costoReparar, gastoDiario,
     mantencionSitio, sueldosSitio, cupoPersonal, totalPersonal, motivoNoConstruir, pronosticoSitio, fmtPlata, fmtNum, fmtHora,
     fmtDuracion, msPorDiaDeJuego, segPorHora, esHoraDeNoche, revisarObras, acelerar, costoAcelerar, lunaDeHoy, fechaHoy,
-    temporadasActivas, lluviaActiva, efecto, demandaSitio, tiempoObra, contarTodos, crearDescubrimiento };
+    temporadasActivas, lluviaActiva, efecto, demandaSitio, tiempoObra, contarTodos, crearDescubrimiento,
+    adelantarObras, puedeDeseo, pedirDeseo, fotoDe, nocheDeJuego };
 }

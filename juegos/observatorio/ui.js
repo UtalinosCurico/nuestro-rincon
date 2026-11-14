@@ -269,8 +269,11 @@ function pintarHud() {
   const txt = fmtPlata(E.dinero);
   if (plata.textContent !== txt) {
     plata.textContent = txt;
-    if (E.dinero > UI.ultimaPlata + 1) { plata.classList.remove('sube'); void plata.offsetWidth; plata.classList.add('sube'); }
-    UI.ultimaPlata = E.dinero;
+    if (E.dinero > UI.ultimaPlata + 1) {
+      plata.classList.remove('sube'); void plata.offsetWidth; plata.classList.add('sube');
+      if (UI.plataLista) Vida.plata(E.dinero - UI.ultimaPlata);
+    }
+    UI.ultimaPlata = E.dinero; UI.plataLista = true;
   }
   $('#valCiencia').textContent = fmtNum(Math.floor(E.ciencia));
   const s = SITIO[E.sitioActual];
@@ -278,7 +281,7 @@ function pintarHud() {
   $('#subSitio').textContent = s.lugar;
   const h = E.reloj.hora;
   const noche = esHoraDeNoche(Math.floor(h));
-  $('#chipReloj').innerHTML = `${noche ? '🌙' : (h >= 19 || h < 7 ? '🌇' : '☀️')} <b>${fmtHora(h)}</b> · Noche ${E.reloj.dia}`;
+  $('#chipReloj').innerHTML = `${noche ? '🌙' : (h >= 19 || h < 7 ? '🌇' : '☀️')} <b>${fmtHora(h)}</b> · Noche ${E.reloj.dia}${UI.vel > 1 ? ' · ⏩' : ''}`;
   const ns = E.noche && E.noche.sitios[E.sitioActual];
   const luna = lunaDeHoy();
   const fase = nombreFase({ fase: faseLunar(Date.now()).fase });
@@ -1016,7 +1019,7 @@ const ACCIONES = {
     UI.confirmaGen = false;
     const r = nuevaGeneracion(E);
     if (!r.ok) return resultado(r);
-    E = r.estado; firmaSlots = '';
+    E = r.estado; firmaSlots = ''; partidaCambiada();
     guardar(true); confeti(200); sonido('capitulo');
     avisar('♾️', 'Nueva generación', '+' + r.puntos + ' ✦ de polvo de estrellas', 'oro');
     marcarSucio(); pintarPanel(true); pintarSlots();
@@ -1035,7 +1038,7 @@ const ACCIONES = {
     if (!c) return;
     E = normalizar(JSON.parse(JSON.stringify(c.save)));
     E.t = Date.now();
-    firmaSlots = '';
+    firmaSlots = ''; partidaCambiada();
     guardar(true); cerrarModal(); marcarSucio(); pintarPanel(true); pintarSlots();
     avisar('☁️', 'Observatorio restaurado', '', 'oro');
   },
@@ -1043,7 +1046,7 @@ const ACCIONES = {
     if (UI.confirmaReinicio !== true) { UI.confirmaReinicio = true; el.textContent = '¿Seguro? Se borra todo tu observatorio. Toca de nuevo'; return; }
     UI.confirmaReinicio = false;
     E = estadoNuevo(quien());
-    firmaSlots = '';
+    firmaSlots = ''; partidaCambiada();
     guardar(true); marcarSucio(); pintarPanel(true); pintarSlots();
     avisar('🧹', 'Observatorio nuevo', 'De vuelta en Elqui');
   },
@@ -1083,6 +1086,7 @@ function fijarQuien(p) {
   } else {
     E = leerLocal(p) || estadoNuevo(p);
     E.duenio = p;
+    partidaCambiada();
   }
   Nube.lista = false; Nube.remoto = null; Nube.ultimoMarcador = 0; Nube.ultimoRespaldo = 0; Nube.firma = '';
   guardar(true); firmaSlots = '';
@@ -1116,6 +1120,70 @@ Motor.avisar.evento = (def, sitio) => { avisar(def.emo, def.texto, sitio ? SITIO
 Motor.avisar.encargo = () => marcarSucio();
 
 /* ============================================================
+   VELOCIDAD DEL TIEMPO Y COSAS QUE SE TOCAN EN LA ESCENA
+   ============================================================ */
+const VELOCIDADES = [1, 2, 4];
+let deseoT = 0;
+/* Al cambiar de partida (otra persona, restaurar, reiniciar, nueva generación):
+   la escena parte de cero, la velocidad es la de esa partida y la diferencia
+   de plata entre las dos partidas no salta como si fuera un ingreso. */
+function partidaCambiada() {
+  UI.plataLista = false;
+  Vida.reiniciar();
+  clearTimeout(deseoT); $('#chipDeseo').classList.add('oculto');
+  fijarVelocidad(E.ajustes.vel || 1, true);
+}
+function fijarVelocidad(v, callado) {
+  UI.vel = VELOCIDADES.includes(v) ? v : 1;
+  if (E) E.ajustes.vel = UI.vel;
+  Vida.vel = UI.vel;
+  const b = $('#btnVel');
+  b.textContent = '×' + UI.vel;
+  b.classList.toggle('activo', UI.vel > 1);
+  b.setAttribute('aria-label', 'Velocidad del tiempo: ' + (UI.vel === 1 ? 'normal' : 'por ' + UI.vel));
+  if (!callado) { sonido('tap'); avisar(UI.vel === 1 ? '▶️' : '⏩', UI.vel === 1 ? 'Tiempo normal' : 'Tiempo ×' + UI.vel, UI.vel === 1 ? '' : 'Las noches, los días y las obras pasan ' + UI.vel + ' veces más rápido.'); }
+  pintarHud();
+}
+/* Estrella fugaz: el chip dura unos segundos; si no se toca, se pierde. */
+function mostrarDeseo() {
+  const c = $('#chipDeseo');
+  c.classList.remove('oculto');
+  clearTimeout(deseoT);
+  deseoT = setTimeout(() => c.classList.add('oculto'), 9000);
+  sonido('regalo'); vibrar(15);
+}
+function cobrarDeseo() {
+  clearTimeout(deseoT); $('#chipDeseo').classList.add('oculto');
+  const r = pedirDeseo(E);
+  if (!r.ok) return;
+  sonido('descubre'); vibrar(25);
+  avisar('🌠', 'Deseo pedido', 'Los turistas aplaudieron la fugaz: +' + fmtPlata(r.monto), 'oro');
+  marcarSucio(); guardar(true);
+}
+const DATOS_BICHO = {
+  zorro: ['🦊', 'Un zorro culpeo', 'Vive en todo el norte y se acerca a los campamentos por si cae algo.'],
+  guanaco: ['🦙', 'Guanacos', 'Parientes silvestres de la llama: pueden pasar mucho tiempo sin tomar agua.'],
+  caballo: ['🐎', 'Caballos de la isla', 'En Rapa Nui hay miles de caballos que andan sueltos.'],
+  condor: ['🦅', 'Un cóndor', 'Con las alas abiertas mide más de tres metros y casi no aletea: planea.'],
+  ave: ['🐦', 'Un manutara', 'El ave del Hombre Pájaro: cada primavera vuelve a anidar a los islotes.'],
+  globo: ['🎈', 'Un globo aerostático', 'Desde arriba se ve todo el valle, con las parras en fila.'],
+  satelite: ['🛰️', 'Un satélite', 'Se ve porque allá arriba todavía le da el Sol, aunque acá ya sea de noche.'],
+  lechuza: ['🦉', 'Un tucúquere', 'El búho más grande de Chile. Caza de noche y vuela sin hacer ruido.'],
+  ovni: ['🛸', '¿Un ovni?', 'Era Venus. Siempre es Venus.'],
+};
+function tocarEscena(ev) {
+  if (!E || ev.target.closest('button')) return;
+  const r = $('#lienzo').getBoundingClientRect();
+  const b = Vida.tocar(ev.clientX - r.left, ev.clientY - r.top);
+  const info = b && DATOS_BICHO[b.tipo];
+  if (!info) return;
+  const f = b.primera ? fotoDe(E, b.tipo) : { monto: 0 };
+  sonido(f.monto ? 'compra' : 'tap');
+  avisar(info[0], info[1] + (f.monto ? ' · foto del tour: +' + fmtPlata(f.monto) : ''), info[2], f.monto ? 'oro' : '');
+  if (f.monto) { marcarSucio(); guardar(true); }
+}
+
+/* ============================================================
    BUCLE PRINCIPAL
    ============================================================ */
 let ultimoFrame = performance.now();
@@ -1125,7 +1193,9 @@ function bucle(ahora) {
   if (document.hidden || !E) { ultimoFrame = ahora; return; }
   const dt = Math.min(1000, ahora - ultimoFrame);
   ultimoFrame = ahora;
-  avanzar(E, dt);
+  const vel = UI.vel || 1;
+  avanzar(E, dt * vel);
+  if (vel > 1) adelantarObras(E, dt * (vel - 1));
   Escena.dibujar(E);
   if (ahora - (UI.ultimoHud || 0) > 180) { UI.ultimoHud = ahora; pintarHud(); }
   if (ahora - ultimoSeg > 1000) {
@@ -1182,7 +1252,18 @@ function arrancar() {
     $('#btnFiguras').classList.toggle('activo', Escena.figuras);
     $('#btnFiguras').setAttribute('aria-pressed', Escena.figuras);
   };
-  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') { if ($('#modal').classList.contains('on')) ACCIONES.cerrarModal(); else cerrarHoja(); } });
+  $('#btnVel').onclick = () => fijarVelocidad(VELOCIDADES[(VELOCIDADES.indexOf(UI.vel || 1) + 1) % VELOCIDADES.length]);
+  $('#chipDeseo').onclick = cobrarDeseo;
+  $('#escena').addEventListener('click', tocarEscena);
+  Vida.puedeDeseo = () => !!E && puedeDeseo(E);
+  Vida.alDeseo = mostrarDeseo;
+  fijarVelocidad(E.ajustes.vel || 1, true);
+  document.addEventListener('keydown', ev => {
+    if (ev.key === 'Escape') { if ($('#modal').classList.contains('on')) ACCIONES.cerrarModal(); else cerrarHoja(); return; }
+    /* 1, 2 y 3 cambian la velocidad, salvo que se esté escribiendo (bautizar una estrella) */
+    const enTexto = /^(INPUT|TEXTAREA|SELECT)$/.test((ev.target && ev.target.tagName) || '');
+    if (!enTexto && !ev.metaKey && !ev.ctrlKey && !ev.altKey && ['1', '2', '3'].includes(ev.key)) fijarVelocidad(VELOCIDADES[+ev.key - 1]);
+  });
   document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => cambiarTab(b.dataset.tab)));
 
   // ausencia: lo que pasó con la página cerrada

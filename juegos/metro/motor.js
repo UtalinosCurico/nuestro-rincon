@@ -321,6 +321,15 @@ function recortarLinea(l, extremo) {
   Ev.sonido('quitar');
   return { ok: true };
 }
+/* Abre una vuelta quitando el tramo i (el que va de la parada i a la siguiente):
+   la línea queda con sus dos puntas justo ahí. Lo usa la goma. */
+function abrirVueltaEn(l, i) {
+  if (!l.loop) return { ok: false };
+  const n = l.est.length, k = ((i % n) + n) % n;
+  cambiarRuta(l, () => { l.est = l.est.slice(k + 1).concat(l.est.slice(0, k + 1)); l.loop = false; });
+  Ev.sonido('quitar');
+  return { ok: true };
+}
 /* Mete la estación s entre la parada i y la siguiente (i es el índice del tramo). */
 function insertarEnLinea(l, i, s) {
   if (l.est.includes(s.id)) return { ok: false };

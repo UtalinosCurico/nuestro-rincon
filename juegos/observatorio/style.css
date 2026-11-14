@@ -132,6 +132,8 @@ button.chip-e { cursor: pointer; }
   background: rgba(7,11,29,.6); display: grid; place-items: center; font-size: .95rem;
 }
 .btn-escena.activo { border-color: var(--oro); color: var(--oro); }
+.btn-escena.vel { font-size: .82rem; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.chip-e.deseo { background: rgba(255,207,122,.3); border-color: rgba(255,207,122,.8); color: #fff3d6; font-weight: 600; font-size: .82rem; padding: 6px 12px; animation: latir 1s infinite; }
 
 .franja {
   display: flex; gap: 8px; padding: 10px 12px; overflow-x: auto; scrollbar-width: none;

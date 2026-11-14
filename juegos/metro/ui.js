@@ -175,6 +175,7 @@ function disponer() {
   Arte.disponer(W, H, { x: 6, y: top + 4, w: W - 12, h: Math.max(100, bot - top - 8) }, dpr);
   $('#avisos').style.top = (top + 8) + 'px';
   $('#pista').style.bottom = (H - bot + 10) + 'px';
+  $('#barraGoma').style.bottom = (H - bot + 10) + 'px';
 }
 
 /* ---------- tocar el mapa ---------- */
@@ -223,12 +224,77 @@ function vistaArrastre() {
   else if (a.tipo === 'insertar') { const l = a.linea; desde = EST.get(l.est[a.i]); color = LINEAS[l.c].color; }
   Arte.arrastre = { desde, x: a.x, y: a.y, color, mal: !!a.mal };
 }
+/* ---------- la goma ----------
+   Se enciende con su botón, se toca una línea y la barra pregunta qué
+   borrar: la línea entera o, si se tocó una punta (o es una vuelta),
+   solo ese tramo. Después de borrar se apaga sola: si quedara encendida,
+   el siguiente intento de trazar una línea elegiría otra para borrar. */
+function lineasEn(sx, sy) {
+  const [wx, wy] = Arte.aMundo(sx, sy), lim = 16 / Arte.escala, vistas = [];
+  for (const l of J.lineas) {
+    const n = l.est.length, cuantos = l.loop ? n : n - 1;
+    let md = lim, mi = -1;
+    for (let i = 0; i < cuantos; i++) {
+      const p = tramo(EST.get(l.est[i]), EST.get(l.est[(i + 1) % n]));
+      for (let k = 0; k + 1 < p.length; k++) { const d = distSeg(wx, wy, p[k], p[k + 1]); if (d < md) { md = d; mi = i; } }
+    }
+    if (mi >= 0) vistas.push({ l, i: mi, d: md });
+  }
+  return vistas.sort((a, b) => a.d - b.d);
+}
+const PISTA_GOMA = 'Goma: toca la línea que quieres borrar';
+function soltarGoma() { UI.goma = null; Arte.goma = null; $('#barraGoma').hidden = true; }
+function alternarGoma(on) {
+  const puede = !!J && UI.pantalla === 'juego' && !J.fin && !J.eleccion;
+  const activa = puede && (on == null ? UI.modoToque !== 'goma' : !!on);
+  const estaba = UI.modoToque === 'goma';
+  soltarGoma();
+  if (activa) {
+    UI.modoToque = 'goma'; UI.arrastre = null; vistaArrastre();
+    pista(J.lineas.length ? PISTA_GOMA : 'Todavía no hay líneas que borrar');
+  } else if (estaba) { UI.modoToque = null; ocultarPista(); }
+  const b = $('#btnGoma'), si = UI.modoToque === 'goma';
+  b.classList.toggle('on', si); b.setAttribute('aria-pressed', si ? 'true' : 'false');
+  UI.hudSucio = true;
+}
+function tocarConGoma(x, y) {
+  const cerca = lineasEn(x, y);
+  if (!cerca.length) { if (UI.goma) { soltarGoma(); pista(PISTA_GOMA); } else alternarGoma(false); return; }
+  /* si pasan varias líneas por el mismo tramo, tocar de nuevo elige la siguiente */
+  let k = 0;
+  if (UI.goma) { const ya = cerca.findIndex(c => c.l === UI.goma.l); if (ya >= 0 && cerca.length > 1) k = (ya + 1) % cerca.length; }
+  const l = cerca[k].l, i = cerca[k].i, n = l.est.length;
+  const tramoSolo = l.loop || (n > 2 && (i === 0 || i === n - 2));
+  UI.goma = { l, i, tramo: tramoSolo };
+  Arte.goma = { id: l.id, i, tramo: tramoSolo };
+  Sonido.play('tap');
+  barraGoma();
+}
+function barraGoma() {
+  const g = UI.goma; if (!g) return;
+  const l = g.l, col = LINEAS[l.c];
+  ocultarPista();
+  const el = $('#barraGoma');
+  el.innerHTML = `<span class="bg-nombre"><i style="background:${col.color}"></i><b>Línea ${col.n}</b></span>
+    ${g.tramo ? '<button class="bg-tramo" id="gTramo">Solo el tramo punteado</button>' : ''}
+    <button class="bg-todo" id="gTodo">Borrar toda la línea</button>
+    <button class="bg-no" id="gNo" aria-label="No borrar nada">✕</button>`;
+  el.hidden = false;
+  $('#gTodo').onclick = () => { borrarLinea(l); aviso('🧽', 'Línea ' + col.n + ' borrada: sus trenes quedaron libres'); alternarGoma(false); };
+  const t = $('#gTramo');
+  if (t) t.onclick = () => {
+    if (l.loop) abrirVueltaEn(l, g.i); else recortarLinea(l, g.i === 0 ? 'ini' : 'fin');
+    aviso('🧽', 'Tramo borrado'); alternarGoma(false);
+  };
+  $('#gNo').onclick = () => alternarGoma(false);
+}
 function conectarControles() {
   const c = UI.canvas;
   c.addEventListener('pointerdown', e => {
     if (UI.pantalla !== 'juego' || !J || J.fin || J.eleccion) return;
     Sonido.listo();
     const x = e.clientX, y = e.clientY;
+    if (UI.modoToque === 'goma') { tocarConGoma(x, y); return; }
     if (UI.modoToque === 'intercambiador') {
       const s = estacionEn(x, y, 28);
       if (s && ponerIntercambiador(s)) aviso('⭕', s.nombre + ' ahora es intercambiador');
@@ -284,12 +350,14 @@ function conectarControles() {
   document.querySelectorAll('.velocidad [data-vel]').forEach(b => b.onclick = () => { UI.vel = +b.dataset.vel; Sonido.play('tap'); UI.hudSucio = true; });
   $('#btnMenu').onclick = () => pausa();
   $('#btnReloj').onclick = () => { UI.vel = UI.vel ? 0 : 1; UI.hudSucio = true; };
+  $('#btnGoma').onclick = () => { Sonido.listo(); Sonido.play('tap'); alternarGoma(); };
   addEventListener('keydown', e => {
     if (UI.pantalla !== 'juego') return;
     if (e.code === 'Space') { UI.vel = UI.vel ? 0 : 1; UI.hudSucio = true; e.preventDefault(); }
     else if (e.code === 'Digit1') { UI.vel = 1; UI.hudSucio = true; }
     else if (e.code === 'Digit2') { UI.vel = 2; UI.hudSucio = true; }
-    else if (e.code === 'Escape') pausa();
+    else if (e.code === 'KeyG') alternarGoma();
+    else if (e.code === 'Escape') { if (UI.modoToque === 'goma') alternarGoma(false); else pausa(); }
   });
 }
 
@@ -308,6 +376,7 @@ function bucle(ts) {
     UI.guardadoT += dt;
     if (UI.guardadoT > 15) { UI.guardadoT = 0; guardarPartida(); }
   }
+  if (UI.goma && !J.lineas.includes(UI.goma.l)) alternarGoma(false);
   Arte.dibujar(UI.ctx, dt);
   if (UI.hudSucio || ++UI.cuadro % 12 === 0) pintarHud();
 }
@@ -366,6 +435,7 @@ function tocarInventario(k) {
   else if (k === 'tuneles') aviso('⛰️', 'Los túneles se usan solos al pasar por el cerro');
   else if (k === 'intercambiadores') {
     if (d.intercambiadores <= 0) { aviso('⭕', 'No te quedan intercambiadores'); return; }
+    if (UI.modoToque === 'goma') alternarGoma(false);
     UI.modoToque = UI.modoToque === 'intercambiador' ? null : 'intercambiador';
     if (UI.modoToque) pista('Toca la estación que quieres agrandar'); else ocultarPista();
     UI.hudSucio = true;
@@ -410,7 +480,7 @@ function empezar(modo, practica) {
 }
 function seguir() { const g = leerPartida(); if (!g) { mostrarMenu(); return; } cargarJuego(g); irAJuego(); }
 function irAJuego() {
-  UI.pantalla = 'juego'; UI.vel = 1; UI.acum = 0; UI.modoToque = null; UI.arrastre = null; Arte.resaltar = null; Arte.efectos = [];
+  UI.pantalla = 'juego'; UI.vel = 1; UI.acum = 0; UI.modoToque = null; UI.arrastre = null; Arte.resaltar = null; Arte.efectos = []; alternarGoma(false);
   $('#menu').hidden = true; $('#velo').hidden = true; cerrarHoja();
   $('#arriba').hidden = false; $('#abajo').hidden = false;
   UI.hudSucio = true; pintarHud();
@@ -420,6 +490,7 @@ function irAJuego() {
 }
 function pausa() {
   if (UI.pantalla !== 'juego' || !J || J.fin) return;
+  if (UI.modoToque === 'goma') alternarGoma(false);
   /* la elección de la semana ya detiene el juego: la pausa no la tapa */
   if (J.eleccion) { guardarPartida(); if ($('#velo').hidden) mostrarSemana(J.eleccion); return; }
   const velAntes = UI.vel; UI.vel = 0; UI.hudSucio = true;
@@ -442,6 +513,7 @@ function pausa() {
   $('#pTerminar').onclick = () => hojaConfirmar('¿Terminar la partida?', 'Se guarda tu puntaje tal como va.', 'Terminar', () => { v.hidden = true; J.fin = { id: null, nombre: null, dias: J.dia, pasajeros: J.pasajeros, t: J.t, voluntario: true }; finPartida(J.fin); });
 }
 function mostrarSemana(op) {
+  if (UI.modoToque === 'goma' || UI.goma) { UI.modoToque = null; soltarGoma(); ocultarPista(); $('#btnGoma').classList.remove('on'); $('#btnGoma').setAttribute('aria-pressed', 'false'); }
   const v = $('#velo'), sem = J.semanas;
   v.innerHTML = `<div class="tarjeta"><div style="font-family:var(--emoji);font-size:40px">🎁</div><h2>Fin de la semana ${sem}</h2>
     <p class="sub">La Muni aprobó un tren nuevo 🚆 y te deja elegir una mejora:</p>
@@ -450,6 +522,7 @@ function mostrarSemana(op) {
   v.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { elegirMejora(b.dataset.m); v.hidden = true; UI.hudSucio = true; guardarPartida(); });
 }
 function finPartida(f) {
+  if (UI.modoToque === 'goma' || UI.goma) { UI.modoToque = null; soltarGoma(); ocultarPista(); $('#btnGoma').classList.remove('on'); $('#btnGoma').setAttribute('aria-pressed', 'false'); }
   const res = { modo: J.modo, fecha: J.fecha, practica: !!J.practica, pasajeros: J.pasajeros, dias: J.dia + 1, estacion: f.nombre, voluntario: !!f.voluntario };
   borrarPartida();
   PERFIL.partidas++; PERFIL.total += res.pasajeros; PERFIL.mejorDias = Math.max(PERFIL.mejorDias, res.dias);
@@ -570,6 +643,7 @@ function hojaAyuda() {
     <div class="paso"><span class="p-emo">👆</span><span><b>Traza líneas</b><small>Arrastra el dedo de una estación a otra. Puedes seguir de largo por varias estaciones en un solo trazo.</small></span></div>
     <div class="paso"><span class="p-emo">〰️</span><span><b>Alarga o acorta</b><small>Arrastra la punta de una línea (la rayita del final) hasta otra estación. Si vuelves a la estación anterior, se acorta. Si llegas a la primera, la línea da la vuelta.</small></span></div>
     <div class="paso"><span class="p-emo">➕</span><span><b>Mete una estación al medio</b><small>Toma un tramo de una línea y arrástralo hasta una estación.</small></span></div>
+    <div class="paso"><span class="p-emo">🧽</span><span><b>Borra con la goma</b><small>Toca la goma de abajo y después la línea: se borra entera o, si tocaste una punta, solo ese tramo. Sus trenes, puentes y túneles vuelven a quedar libres.</small></span></div>
     <div class="paso"><span class="p-emo">🧍</span><span><b>La gente sabe adónde va</b><small>El ícono al lado de cada estación dice a qué tipo de lugar quiere ir. Sube al tren que la acerca y combina sola.</small></span></div>
     <div class="paso"><span class="p-emo">⚠️</span><span><b>Que no se repleten</b><small>Si una estación junta más de 6 personas, empieza a llenarse el círculo rojo. Si se completa, el metro cierra.</small></span></div>
     <div class="paso"><span class="p-emo">🎁</span><span><b>Cada domingo</b><small>La Muni te da un tren y eliges una mejora: línea, vagón, puentes, túnel o intercambiador. Toca una línea de abajo para sumarle trenes.</small></span></div>`);
