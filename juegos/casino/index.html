@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#15281f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="description" content="Casino del Rincón: ruleta, rueda de la fortuna, cajas, cohete y doble o nada con fichas de juego.">
+<meta name="description" content="Casino del Rincón: ruleta, veintiuno, tragamonedas, plinko, minas y más, con fichas de juego que se cambian por premios de verdad.">
 <title>Casino del Rincón · Nuestro Rincón</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎰%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="/assets/icons/icon-180.png">
@@ -19,13 +19,17 @@
 <body>
 <header class="cab">
   <button class="redondo" id="btnVolver" aria-label="Volver a Nuestro Rincón">‹</button>
-  <div class="titulo"><b>Casino del Rincón</b><small id="txtQuien">fichas de juego</small></div>
+  <div class="titulo" id="titulo"><b>Casino del Rincón</b><small id="txtQuien">fichas de juego</small></div>
   <div class="fichas" id="fichas">🪙 0</div>
 </header>
 <main id="mesa"></main>
 <nav class="tabs" id="tabs"></nav>
 <div class="velo" id="velo" hidden><div class="tarjeta" id="tarjeta"></div></div>
 <div class="avisos" id="avisos"></div>
-<script src="juego.js"></script>
+<script src="reglas.js"></script>
+<script src="nucleo.js"></script>
+<script src="juegos.js"></script>
+<script src="premios.js"></script>
+<script src="secreto.js"></script>
 </body>
 </html>

@@ -1752,7 +1752,7 @@ let ultimoEstadoNube = 'idle';
    sube la suya releyendo antes de postear; la portada no las baja ni las
    sube NUNCA: pesan más que todo lo demás junto, y subir una copia vieja
    borraría lo que el juego guardó después. */
-const CLAVES_DE_JUEGOS = ['invernadero', 'observatorio', 'michi', 'pesadillas', 'metro', 'expediente'];
+const CLAVES_DE_JUEGOS = ['invernadero', 'observatorio', 'michi', 'pesadillas', 'metro', 'expediente', 'casino'];
 
 /* Cómo está cada rama en Neon, en JSON canónico. Sirve para subir solo lo que
    cambió: una nota nueva ya no sube las fotos, y si cada uno edita una
@@ -4773,7 +4773,9 @@ function casinoResumenLocal(){
   try{
     const q = localStorage.getItem('rinconQuien') || 'invitado';
     const r = JSON.parse(localStorage.getItem('casinoResumen__' + q) || 'null');
-    return r ? '🪙 ' + Number(r.fichas || 0).toLocaleString('es-CL') : 'nuevo';
+    if(!r) return 'nuevo';
+    if(r.deben) return '🎟️ ' + r.deben + (r.deben === 1 ? ' vale por cumplir' : ' vales por cumplir');
+    return '🪙 ' + Number(r.fichas || 0).toLocaleString('es-CL');
   }catch(e){ return 'nuevo'; }
 }
 function expResumenLocal(){
@@ -4855,7 +4857,7 @@ function jxRenderHub(){
         '<span class="jx-card-stat">' + expResumenLocal() + '</span></button>' +
       '<button class="jx-card casino full" data-url="juegos/casino/"><div class="sheen"></div><div class="jx-card-emo">🎰</div>' +
         '<div style="flex:1"><div class="jx-card-etiqueta">Nuevo · azar</div><div class="jx-card-nom">Casino del Rincón</div>' +
-        '<div class="jx-card-desc">Ruleta, rueda de la fortuna, cajas, cohete y doble o nada. Fichas de juego: se puede perder todo</div></div>' +
+        '<div class="jx-card-desc">Ruleta, veintiuno, tragamonedas, plinko, minas y más. Las fichas se cambian por premios de verdad, del helado al sushi</div></div>' +
         '<span class="jx-card-stat">' + casinoResumenLocal() + '</span></button>' +
       '<button class="jx-card metro full" data-url="juegos/metro/">' +
         '<svg class="jx-card-plano" viewBox="0 0 120 80" aria-hidden="true"><g fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 66 H52 L76 42 H112" stroke="#ffd27a"/><path d="M40 8 V34 L64 58 V76" stroke="#ff8a80"/></g><g fill="#fff"><circle cx="10" cy="66" r="5"/><circle cx="112" cy="42" r="5"/><circle cx="40" cy="8" r="5"/><circle cx="64" cy="58" r="6"/></g></svg>' +
