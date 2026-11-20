@@ -2,7 +2,7 @@
 // la caché vieja de golpe. Aunque se olvide, los archivos de los juegos se
 // sirven "de caché y se actualizan por detrás", así que la siguiente carga
 // ya trae lo nuevo.
-const CACHE_NAME = "nuestro-rincon-v38";
+const CACHE_NAME = "nuestro-rincon-v39";
 const APP_SHELL = [
   "/",
   "/manifest.webmanifest",
@@ -54,6 +54,7 @@ const APP_SHELL = [
   "/juegos/casino/reglas.js",
   "/juegos/casino/nucleo.js",
   "/juegos/casino/juegos.js",
+  "/juegos/casino/mas.js",
   "/juegos/casino/premios.js",
   "/juegos/casino/secreto.js",
   "/juegos/clinica/clinica.js",

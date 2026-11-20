@@ -331,8 +331,53 @@ function revisarMonto() {
 const JUEGOS = [];                       // cada archivo de juegos se registra aquí
 const juegoDe = id => JUEGOS.find(j => j.id === id);
 let vista = 'lobby';
-const estaOcupado = () => JUEGOS.some(j => j.ocupado && j.ocupado());
-const GRUPOS = [['Mesas', ['ruleta', 'veintiuno', 'dados']], ['Máquinas', ['traga', 'plinko', 'rueda']], ['Al límite', ['cohete', 'minas', 'doble']], ['Cajas y raspes', ['cajas', 'raspe']]];
+const estaOcupado = () => JUEGOS.some(j => j.ocupado && j.ocupado()) || !!auto;
+
+/* ---------- modo turbo: las animaciones duran un cuarto ---------- */
+const ms = x => (C.turbo ? Math.max(15, Math.round(x / 4)) : x);
+/* ---------- historial de resultados (las últimas jugadas, en píldoras) ---------- */
+const historialHTML = items => (items.length ? `<div class="historial pills">${items.map(h => `<span class="pill ${h.bien ? 'bien' : 'mal'}">${h.txt}</span>`).join('')}</div>` : '');
+
+/* ---------- apuesta automática (juegos con `jugarRapido`) ---------- */
+let auto = null;
+function autoHTML(j) {
+  const a = auto && auto.juego === j.id ? auto : null;
+  if (a) return `<div class="panel auto"><div class="fila"><b>🔁 Automática</b><small>${a.hechas} de ${a.total || '∞'} · ${a.neto >= 0 ? '+' : '−'}${fmt(Math.abs(a.neto))} 🪙 · apuesta ${fmt(a.actual)}</small></div><button class="grande rojo" id="pararAuto">${a.parar ? 'Parando…' : 'Parar'}</button></div>`;
+  return `<details class="panel auto"><summary><b>🔁 Apuesta automática</b></summary>
+    <div class="auto-campos">
+      <label>Jugadas<select id="autoN"><option>10</option><option selected>25</option><option>50</option><option>100</option><option value="0">Sin límite</option></select></label>
+      <label>Si pierdo<select id="autoPerder"><option value="igual">Repito la apuesta</option><option value="doble">La doblo</option></select></label>
+      <label>Parar si gano<input id="autoGano" type="number" inputmode="numeric" min="0" placeholder="no"></label>
+      <label>Parar si pierdo<input id="autoPierdo" type="number" inputmode="numeric" min="0" placeholder="no"></label>
+    </div><button class="grande claro" id="empezarAuto">Empezar la automática</button></details>`;
+}
+function conectarAuto(j) {
+  const p = $('#pararAuto'); if (p) p.onclick = () => { if (auto) auto.parar = true; p.disabled = true; p.textContent = 'Parando…'; };
+  const e = $('#empezarAuto');
+  if (e) e.onclick = () => {
+    const m = revisarMonto(); if (!m) return;
+    auto = { juego: j.id, base: m, actual: m, total: +$('#autoN').value, hechas: 0, neto: 0, alPerder: $('#autoPerder').value, gano: +$('#autoGano').value || 0, pierdo: +$('#autoPierdo').value || 0, parar: false };
+    correrAuto(j);
+  };
+}
+async function correrAuto(j) {
+  const a = auto, aqui = () => vista === 'juego:' + j.id;
+  if (aqui()) pintar();
+  while (auto === a && !a.parar && (!a.total || a.hechas < a.total)) {
+    if (a.actual > C.fichas) { aviso(a.actual > a.base ? 'No alcanza para doblar: la automática se detiene' : 'Sin fichas para seguir'); break; }
+    const r = await j.jugarRapido(a.actual);
+    if (!r) break;
+    a.hechas++; a.neto += r.pago - r.apuesta;
+    a.actual = r.pago >= r.apuesta || a.alPerder === 'igual' ? a.base : a.actual * 2;
+    if (a.gano && a.neto >= a.gano) { aviso('🎯 Llegaste a tu meta de ganancia', 'gana'); break; }
+    if (a.pierdo && -a.neto >= a.pierdo) { aviso('Llegaste a tu límite de pérdida'); break; }
+    if (aqui()) pintar();
+    await new Promise(res => setTimeout(res, ms(350)));
+  }
+  if (auto === a) auto = null;
+  if (aqui()) pintar();
+}
+const GRUPOS = [['🔥 Lo más jugado', ['cascada', 'cohete', 'minas', 'plinko', 'limbo', 'hilo']], ['Mesas', ['ruleta', 'veintiuno', 'baccarat', 'poker']], ['Máquinas', ['traga', 'keno', 'rueda', 'dados']], ['Al límite', ['torres', 'doble']], ['Cajas y raspes', ['cajas', 'raspe']]];
 const pctDev = s => Math.round(s * 1000) / 10 + '%';
 function vistaLobby() {
   const s = factor(), q = quien(), ev = eventoPara(q || 'Catalina'), debo = valesQueDebo();
@@ -362,7 +407,7 @@ function vistaCuentas() {
       <div><small>Regalado (diario y regalos)</small><b>${fmt(C.regalado)}</b></div><div><small>Gastado en premios</small><b>${fmt(C.canjeado)}</b></div>
       <div><small>Veces en cero</small><b>${C.quiebras}</b></div><div><small>Cosas guardadas</small><b>${C.inv.length}</b></div></div>
     <div class="panel"><b>Cuánto devuelve cada juego hoy</b><p class="sub" style="margin:6px 0 8px">De cada 100 fichas apostadas, en promedio vuelven:</p>
-      <table class="tabla">${DEVOLUCIONES(s).map(([n, r]) => `<tr><td>${n}</td><td style="color:${r >= 1 ? '#7fe0a8' : 'inherit'}">${(Math.round(r * 1000) / 10).toLocaleString('es-CL')}</td></tr>`).join('')}<tr><td>Veintiuno (jugando bien)</td><td>~99</td></tr></table>
+      <table class="tabla">${DEVOLUCIONES(s).map(([n, r]) => `<tr><td>${n}</td><td style="color:${r >= 1 ? '#7fe0a8' : 'inherit'}">${(Math.round(r * 1000) / 10).toLocaleString('es-CL')}</td></tr>`).join('')}<tr><td>Veintiuno (jugando bien)</td><td>~99</td></tr><tr><td>Video póker (jugando perfecto)</td><td>~97,3</td></tr></table>
       <p class="sub" style="margin:8px 0 0">${s > 1.0001 ? '🍀 Hoy la casa está generosa.' : s < 0.9999 ? 'Hoy la casa está más dura que de costumbre.' : 'Debajo de 100 la casa gana a la larga: se puede perder todo.'}</p></div>
     <div class="panel"><b>¿Por qué los premios cuestan tanto?</b><p class="sub" style="margin:6px 0 0">${s > 1.0001 ? 'Hoy la casa está generosa: jugando, las fichas crecen en promedio.' : 'Como la casa gana a la larga, en promedio nadie saca en premios más fichas que las que recibe gratis (el regalo del día, de hasta ' + fmt(REGALO_TOPE) + ', el préstamo de Michi y los regalos). Apostar todo de una vez cambia cuándo llega un premio, no cuántos llegan.'} Por eso las fichas no se reinician, y lo máximo que se gana en una jugada es ${fmt(CFG.tope)} 🪙.</p></div>
     <div class="pie"><button id="cSonido">${Sonido.mudo() ? '🔇 Sonido apagado' : '🔊 Sonido encendido'}</button><button id="cQuien">👤 ${esc(q || 'Quién juega')}</button></div>
@@ -385,9 +430,12 @@ function pintar() {
   else if (vista === 'secreto') { m.innerHTML = vistaSecreto(); conectarSecreto(); }
   else {
     const j = juegoDe(vista.slice(6)); if (!j) { vista = 'lobby'; return pintar(); }
-    m.innerHTML = j.vista() + (j.grupo === 'premios' ? '' : `<p class="nota">Lo máximo que se gana en una jugada: ${fmt(CFG.tope)} 🪙</p>`);
+    m.innerHTML = j.vista() + (j.jugarRapido ? autoHTML(j) : '') + (j.grupo === 'premios' ? '' : `<div class="pie-juego"><button class="chip turbo ${C.turbo ? 'sel' : ''}" data-turbo>⚡ Turbo</button><small>Lo máximo que se gana en una jugada: ${fmt(CFG.tope)} 🪙</small></div>`);
     conectarSelector(); j.conectar();
+    if (j.jugarRapido) conectarAuto(j);
+    if (auto && auto.juego === j.id) m.querySelectorAll('.grande:not(#pararAuto), [data-j]').forEach(b => { b.disabled = true; });
   }
+  m.querySelectorAll('[data-turbo]').forEach(b => b.onclick = () => { C.turbo = !C.turbo; guardar(); b.classList.toggle('sel', C.turbo); aviso(C.turbo ? '⚡ Turbo: animaciones rápidas' : 'Turbo apagado'); });
   m.querySelectorAll('[data-j]').forEach(b => b.onclick = () => { Sonido.listo(); Sonido.play('tap'); irA('juego:' + b.dataset.j); });
   m.querySelectorAll('[data-ir]').forEach(b => b.onclick = () => { Sonido.listo(); irA(b.dataset.ir); });
   const d = $('#bDiario'); if (d) d.onclick = () => { Sonido.listo(); cobrarDiario(); };
