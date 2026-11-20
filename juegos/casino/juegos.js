@@ -123,6 +123,7 @@ JUEGOS.push({
       if (C.fichas < caja.precio) { aviso('No te alcanzan las fichas'); if (C.fichas <= 0) quiebra(); return; }
       apostar(caja.precio); abriendo = true; $('#abrir').disabled = true;
       const s = factor(), gana = sacarDeCaja(caja, s, azar), items = Array.from({ length: 44 }, (_, i) => (i === 38 ? gana : sacarDeCaja(caja, s, azar)));
+      gana.v = Math.min(gana.v, caja.precio + CFG.tope);        // el máximo por jugada también vale aquí
       const tira = $('#tira'); tira.style.transition = 'none'; tira.style.transform = 'translateX(0)'; tira.innerHTML = items.map(itemHTML).join('');
       const ancho = $('.tira-caja').clientWidth, destino = 38 * 96 + 45 - ancho / 2 + (azar() - 0.5) * 60;
       requestAnimationFrame(() => requestAnimationFrame(() => { tira.style.transition = 'transform 5.2s cubic-bezier(.08,.6,.12,1)'; tira.style.transform = `translateX(${-destino}px)`; }));
@@ -161,6 +162,8 @@ function pasoCohete(ts) {
     Sonido.play('boom'); vibrar([60, 40, 90]);
     return terminarVuelo(0);
   }
+  /* al llegar al máximo por jugada se retira solo */
+  if (v.m * v.x - v.m >= CFG.tope) { v.fin = true; if (mu) mu.textContent = '✅ máximo'; return terminarVuelo(v.m + CFG.tope); }
   if (mu) mu.textContent = fmtX(v.x);
   if (bt) bt.textContent = 'Retirarse · ' + fmt(v.m * v.x) + ' 🪙';
   if (ce) { const k = Math.min(1, Math.log(v.x) / Math.log(12)); ce.style.left = (12 + k * 66) + '%'; ce.style.bottom = (8 + k * 70) + '%'; }
@@ -208,8 +211,9 @@ JUEGOS.push({
     const p = pDoble(factor());
     return `<h2>🪙 Doble o nada</h2><p class="sub">Tiras la moneda: con ${fmtP(p)} doblas, con ${fmtP(1 - p)} pierdes todo. Si ganas, cobras o arriesgas el pozo entero otra vez.</p>
       <div class="moneda" id="moneda">${pozo ? '😺' : '🪙'}</div>
-      ${pozo ? `<div class="pozo">Pozo: ${fmt(pozo)} 🪙</div><p class="sub" style="text-align:center">Doblar otra vez: ${fmtP(p)} de llegar a ${fmt(pozo * 2)}</p>
-        <div class="panel"><button class="grande" id="doblar">Doblar · ${fmt(pozo * 2)} 🪙</button><button class="grande verde" id="cobrar">Cobrar ${fmt(pozo)} 🪙</button></div>`
+      ${pozo ? (pozo * 2 - pozoInicial > CFG.tope ? `<div class="pozo">Pozo: ${fmt(pozo)} 🪙</div><p class="sub" style="text-align:center">Doblar otra vez pasaría el máximo por jugada (${fmt(CFG.tope)} 🪙): toca cobrar.</p>
+        <div class="panel"><button class="grande verde" id="cobrar">Cobrar ${fmt(pozo)} 🪙</button></div>` : `<div class="pozo">Pozo: ${fmt(pozo)} 🪙</div><p class="sub" style="text-align:center">Doblar otra vez: ${fmtP(p)} de llegar a ${fmt(pozo * 2)}</p>
+        <div class="panel"><button class="grande" id="doblar">Doblar · ${fmt(pozo * 2)} 🪙</button><button class="grande verde" id="cobrar">Cobrar ${fmt(pozo)} 🪙</button></div>`)
         : `<div class="panel">${selectorHTML()}<button class="grande" id="tirar">Tirar la moneda</button></div>`}`;
   },
   conectar() {
@@ -306,7 +310,7 @@ JUEGOS.push({
       const i = +b.dataset.c;
       if (r.minas.has(i)) { r.fin = true; r.pisada = i; Sonido.play('boom'); vibrar([70, 40, 90]); pagar(0, r.apuesta, this); pintar(); return; }
       r.abiertas.add(i); Sonido.play('gema'); vibrar(10);
-      if (r.abiertas.size >= CASILLAS - r.m) return cobrarMinas();
+      if (r.abiertas.size >= CASILLAS - r.m || r.apuesta * multMinas(r.abiertas.size, r.m, r.s) - r.apuesta >= CFG.tope) return cobrarMinas();
       pintar();
     });
     const c = $('#cobrarMinas'); if (c) c.onclick = () => cobrarMinas();
