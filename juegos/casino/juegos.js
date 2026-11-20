@@ -42,6 +42,7 @@ JUEGOS.push({
       const casos = rNumero != null ? 1 : APUESTAS.find(x => x.id === rApuesta).casos;
       const gano = rNumero != null ? n === rNumero : APUESTAS.find(x => x.id === rApuesta).ok(n);
       rGiro = rGiro - (rGiro % 360) + 360 * 6 + (360 - i * a) % 360;
+      $('#giro').style.transitionDuration = (C.turbo ? 1.15 : 4.6) + 's';
       $('#giro').style.transform = `rotate(${rGiro}deg)`;
       let tics = 0; const tic = setInterval(() => { Sonido.play('tic'); if (++tics > 22) clearInterval(tic); }, 140 + tics * 8);
       setTimeout(() => {
@@ -50,8 +51,8 @@ JUEGOS.push({
         rHist = [n].concat(rHist).slice(0, 12);
         rGirando = false;
         pagar(gano ? m * pagoRuleta(casos, s) : 0, m, this);
-        setTimeout(() => { if (vista === 'juego:ruleta' && !rGirando) pintar(); }, 1100);
-      }, 4700);
+        setTimeout(() => { if (vista === 'juego:ruleta' && !rGirando) pintar(); }, ms(1100));
+      }, ms(4700));
     };
   },
 });
@@ -90,12 +91,13 @@ JUEGOS.push({
       const ops = fPartes.filter(s => s.k === k), sg = ops[Math.floor(azar() * ops.length)];
       const dentro = sg.desde + (sg.hasta - sg.desde) * (0.15 + azar() * 0.7);
       fGiro = fGiro - (fGiro % 360) + 360 * 6 + (360 - dentro) % 360;
+      $('#giroF').style.transitionDuration = (C.turbo ? 1.15 : 4.6) + 's';
       $('#giroF').style.transform = `rotate(${fGiro}deg)`;
       setTimeout(() => {
         $('#resRueda').textContent = g.x ? fmtX(g.x) : '✕';
         fGirando = false; pagar(m * g.x, m, this);
-        setTimeout(() => { if (vista === 'juego:rueda' && !fGirando) pintar(); }, 1100);
-      }, 4700);
+        setTimeout(() => { if (vista === 'juego:rueda' && !fGirando) pintar(); }, ms(1100));
+      }, ms(4700));
     };
   },
 });
@@ -126,7 +128,7 @@ JUEGOS.push({
       gana.v = Math.min(gana.v, caja.precio + CFG.tope);        // el máximo por jugada también vale aquí
       const tira = $('#tira'); tira.style.transition = 'none'; tira.style.transform = 'translateX(0)'; tira.innerHTML = items.map(itemHTML).join('');
       const ancho = $('.tira-caja').clientWidth, destino = 38 * 96 + 45 - ancho / 2 + (azar() - 0.5) * 60;
-      requestAnimationFrame(() => requestAnimationFrame(() => { tira.style.transition = 'transform 5.2s cubic-bezier(.08,.6,.12,1)'; tira.style.transform = `translateX(${-destino}px)`; }));
+      requestAnimationFrame(() => requestAnimationFrame(() => { tira.style.transition = 'transform ' + (C.turbo ? 1.3 : 5.2) + 's cubic-bezier(.08,.6,.12,1)'; tira.style.transform = `translateX(${-destino}px)`; }));
       let tics = 0; const tic = setInterval(() => { Sonido.play('tic'); if (++tics > 30) clearInterval(tic); }, 120);
       setTimeout(() => {
         clearInterval(tic); abriendo = false;
@@ -137,7 +139,7 @@ JUEGOS.push({
           <button class="grande verde" id="vAhora">Vender ahora · ${fmt(gana.v)} 🪙</button><button class="grande claro" id="vGuardar">Guardarlo</button>`);
         $('#vAhora').onclick = () => { const i = C.inv.indexOf(gana); if (i >= 0) C.inv.splice(i, 1); C.ganado += gana.v; C.fichas += gana.v; guardar(); cerrar(); pintar(); Nube.programar(); };
         $('#vGuardar').onclick = () => { cerrar(); pintar(); };
-      }, 5400);
+      }, ms(5400));
     };
     document.querySelectorAll('[data-vender]').forEach(b => b.onclick = () => {
       if (abriendo) return;
@@ -150,7 +152,7 @@ JUEGOS.push({
 });
 
 /* ---------- COHETE ---------- */
-let vuelo = null;
+let vuelo = null, hCohete = [];
 function pasoCohete(ts) {
   const v = vuelo; if (!v || v.fin) return;
   v.x = Math.floor(Math.exp(0.11 * (ts - v.t0) / 1000) * 100) / 100;
@@ -172,6 +174,7 @@ function pasoCohete(ts) {
 }
 function terminarVuelo(cobra) {
   const v = vuelo; vuelo = null;
+  hCohete.unshift({ txt: fmtX(v.techo), bien: v.techo >= 2 }); hCohete = hCohete.slice(0, 14);
   if (cobra) { const mu = $('#mult'); if (mu) mu.textContent = '✅ ' + fmtX(v.x); }
   pagar(cobra, v.m, juegoDe('cohete'));
   setTimeout(() => { if (vista === 'juego:cohete' && !vuelo) pintar(); }, 1600);
@@ -183,7 +186,7 @@ JUEGOS.push({
   vista() {
     const s = factor();
     return `<h2>🚀 Cohete</h2><p class="sub">El multiplicador sube y en cualquier momento el cohete explota. Si te retiras antes, ganas tu apuesta por el multiplicador; si explota, la pierdes entera.</p>
-      <div class="cielo" id="cielo"><div class="estrellitas"></div><span class="cohete" id="cohete">🚀</span><div class="mult" id="mult">×1</div></div>
+      <div class="cielo" id="cielo"><div class="estrellitas"></div><span class="cohete" id="cohete">🚀</span><div class="mult" id="mult">×1</div></div>${historialHTML(hCohete)}
       <div class="panel">${tablaHTML([1.5, 2, 3, 5, 10, 50].map(m => ['Llegar a ' + fmtX(m), fmtP(pCohete(m, s))]).concat([['Explota apenas despega', fmtP(Math.max(0, 1 - pCohete(1.01, s)))]]))}</div>
       <div class="panel">${selectorHTML()}<div class="monto" style="margin-top:8px"><small style="flex:none;color:var(--tenue)">Retiro automático en</small><input id="auto" type="number" step="0.1" min="0" placeholder="no" value="${autoRetiro || ''}"></div>
         <button class="grande" id="despegar">Despegar</button></div>`;
@@ -227,7 +230,7 @@ JUEGOS.push({
         if (azar() < p) { pozo = base * 2; Sonido.play('gana'); aviso('¡Doblaste! Pozo: ' + fmt(pozo) + ' 🪙', 'gana'); }
         else { pozo = 0; pagar(0, pozoInicial, juegoDe('doble')); }
         pintar();
-      }, 950);
+      }, ms(950));
     };
     const t = $('#tirar'); if (t) t.onclick = () => { const m = revisarMonto(); if (!m || volteando || !apostar(m)) return; pozoInicial = m; tirar(m); };
     const d = $('#doblar'); if (d) d.onclick = () => tirar(pozo);
@@ -249,26 +252,30 @@ JUEGOS.push({
       <div class="panel">${selectorHTML()}<button class="grande" id="palanca">Tirar la palanca</button></div>`;
   },
   conectar() {
-    $('#palanca').onclick = () => {
-      if (tragaGirando) return;
-      const m = revisarMonto(); if (!m || !apostar(m)) return;
-      tragaGirando = true; $('#palanca').disabled = true;
-      const s = factor(), res = [giroRodillo(azar), giroRodillo(azar), giroRodillo(azar)];
+    $('#palanca').onclick = () => this.jugarRapido(revisarMonto());
+  },
+  jugarRapido(m) {
+    return new Promise(listo => {
+      if (!m || tragaGirando || !apostar(m)) return listo(null);
+      tragaGirando = true; const pal = $('#palanca'); if (pal) pal.disabled = true;
+      const s = factor(), res = [giroRodillo(azar), giroRodillo(azar), giroRodillo(azar)], k = C.turbo ? .25 : 1;
       res.forEach((r, i) => {
         const tira = $('#rod' + i), lista = [];
         for (let k = 0; k < 18 + i * 6; k++) lista.push(RODILLO[Math.floor(azar() * 7)].e);
         lista.push(RODILLO[Math.floor(azar() * 7)].e, r, RODILLO[Math.floor(azar() * 7)].e);
+        if (!tira) return;
         tira.style.transition = 'none'; tira.style.transform = 'translateY(0)'; tira.innerHTML = columnaHTML(lista);
-        requestAnimationFrame(() => requestAnimationFrame(() => { tira.style.transition = `transform ${1.1 + i * .45}s cubic-bezier(.15,.7,.2,1.04)`; tira.style.transform = `translateY(${-(lista.length - 3) * ALTO_SIMB}px)`; }));
-        setTimeout(() => Sonido.play('carta'), (1.1 + i * .45) * 1000);
+        requestAnimationFrame(() => requestAnimationFrame(() => { tira.style.transition = `transform ${(1.1 + i * .45) * k}s cubic-bezier(.15,.7,.2,1.04)`; tira.style.transform = `translateY(${-(lista.length - 3) * ALTO_SIMB}px)`; }));
+        setTimeout(() => Sonido.play('carta'), (1.1 + i * .45) * 1000 * k);
       });
       setTimeout(() => {
         tragaUlt = res; tragaGirando = false;
-        const x = pagoLinea(res[0], res[1], res[2], s);
-        pagar(m * x, m, this);
-        $('#palanca').disabled = false;
-      }, 2150);
-    };
+        const pago = m * pagoLinea(res[0], res[1], res[2], s);
+        pagar(pago, m, juegoDe('traga'));
+        const b = $('#palanca'); if (b && !auto) b.disabled = false;
+        listo({ apuesta: m, pago });
+      }, 2150 * k);
+    });
   },
 });
 
@@ -346,17 +353,17 @@ JUEGOS.push({
       let k = 0; for (let r = 0; r < FILAS_PLINKO; r++) { const der = azar() < 0.5; if (der) k++; pasos.push(der); }
       const b = { apuesta: m, pago: m * plinko(s)[k], k };
       bolas.push(b);
-      const el = document.createElement('i'); el.className = 'bola'; el.style.left = '50%'; el.style.top = '0%'; tablero.appendChild(el);
+      const el = document.createElement('i'); el.className = 'bola'; if (C.turbo) el.style.transitionDuration = '.035s'; el.style.left = '50%'; el.style.top = '0%'; tablero.appendChild(el);
       let x = 50, r = 0;
       const paso = () => {
         if (!document.body.contains(el)) return;
-        if (r < FILAS_PLINKO) { x += (pasos[r] ? 1 : -1) * DX / 2; el.style.left = x.toFixed(2) + '%'; el.style.top = (5 + r * 6.6 + 3).toFixed(2) + '%'; r++; Sonido.play('tic'); setTimeout(paso, 135); return; }
+        if (r < FILAS_PLINKO) { x += (pasos[r] ? 1 : -1) * DX / 2; el.style.left = x.toFixed(2) + '%'; el.style.top = (5 + r * 6.6 + 3).toFixed(2) + '%'; r++; Sonido.play('tic'); setTimeout(paso, ms(135)); return; }
         el.style.top = '86%';
         setTimeout(() => {
           el.remove(); const cas = $('#cas' + b.k); if (cas) { cas.classList.remove('cae'); void cas.offsetWidth; cas.classList.add('cae'); }
           const i = bolas.indexOf(b); if (i < 0) return; bolas.splice(i, 1);
           pagar(b.pago, b.apuesta, juegoDe('plinko'));
-        }, 160);
+        }, ms(160));
       };
       setTimeout(paso, 60);
     };
@@ -420,14 +427,14 @@ function terminarRaspe() {
 }
 
 /* ---------- DADOS ---------- */
-let dChance = 50, dDir = 'menor', dTirando = false, dUlt = null;
+let dChance = 50, dDir = 'menor', dTirando = false, dUlt = null, dHist = [];
 const fmtD = n => (n / 100).toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 JUEGOS.push({
   id: 'dados', e: '🎲', n: 'Dados', d: 'Tú eliges la probabilidad', col: '#2a4f6b', rtp: rtpDados, ocupado: () => dTirando,
   vista() {
     const s = factor(), limite = dDir === 'menor' ? dChance : 100 - dChance;
     return `<h2>🎲 Dados</h2><p class="sub">Sale un número del 0,00 al 99,99. Tú eliges el límite: mientras menos probable, más paga.</p>
-      <div class="dado-num ${dUlt ? (dUlt.gano ? 'bien' : 'mal') : ''}" id="dadoNum">${dUlt ? fmtD(dUlt.n) : '—'}</div>
+      <div class="dado-num ${dUlt ? (dUlt.gano ? 'bien' : 'mal') : ''}" id="dadoNum">${dUlt ? fmtD(dUlt.n) : '—'}</div>${historialHTML(dHist.map(h => ({ txt: fmtD(h.n), bien: h.gano })))}
       <div class="panel"><div class="opciones"><button class="op ${dDir === 'menor' ? 'on' : ''}" data-dir="menor"><b>Menor que ${dChance}</b><small>gana si sale 0 a ${fmtD(dChance * 100 - 1)}</small></button><button class="op ${dDir === 'mayor' ? 'on' : ''}" data-dir="mayor"><b>Mayor que ${100 - dChance}</b><small>gana si sale ${fmtD((100 - dChance) * 100)} o más</small></button></div>
         <input type="range" id="chance" min="2" max="95" value="${dChance}" style="width:100%;margin-top:12px">
         <div class="pozo" id="txtChance">${dChance}% de ganar · paga ${fmtX(pagoDados(dChance, s))}</div><p class="sub" style="text-align:center;margin:0">Límite: ${dDir === 'menor' ? 'menor que' : 'mayor o igual a'} ${limite}</p></div>
@@ -438,15 +445,23 @@ JUEGOS.push({
     const r = $('#chance');
     r.oninput = () => { dChance = +r.value; $('#txtChance').textContent = `${dChance}% de ganar · paga ${fmtX(pagoDados(dChance, factor()))}`; };
     r.onchange = () => pintar();
-    $('#tirarDados').onclick = () => {
-      if (dTirando) return;
-      const m = revisarMonto(); if (!m || !apostar(m)) return;
+    $('#tirarDados').onclick = () => this.jugarRapido(revisarMonto());
+  },
+  jugarRapido(m) {
+    return new Promise(res => {
+      if (!m || dTirando || !apostar(m)) return res(null);
       dTirando = true;
-      const s = factor(), n = Math.floor(azar() * 10000), gano = dDir === 'menor' ? n < dChance * 100 : n >= (100 - dChance) * 100, pago = pagoDados(dChance, s);
-      const el = $('#dadoNum'); el.className = 'dado-num';
-      let k = 0; const t = setInterval(() => { el.textContent = fmtD(Math.floor(azar() * 10000)); Sonido.play('tic'); if (++k > 12) { clearInterval(t); fin(); } }, 55);
-      const fin = () => { dUlt = { n, gano }; el.textContent = fmtD(n); el.classList.add(gano ? 'bien' : 'mal'); dTirando = false; pagar(gano ? m * pago : 0, m, this); };
-    };
+      const s = factor(), n = Math.floor(azar() * 10000), gano = dDir === 'menor' ? n < dChance * 100 : n >= (100 - dChance) * 100, pago = gano ? m * pagoDados(dChance, s) : 0;
+      const el = $('#dadoNum'); if (el) el.className = 'dado-num';
+      const fin = () => {
+        dUlt = { n, gano }; dHist.unshift({ n, gano }); dHist = dHist.slice(0, 14);
+        if (el) { el.textContent = fmtD(n); el.classList.add(gano ? 'bien' : 'mal'); }
+        dTirando = false; pagar(pago, m, juegoDe('dados'));
+        if (!auto) setTimeout(() => { if (!dTirando && vista === 'juego:dados') pintar(); }, ms(500));
+        res({ apuesta: m, pago });
+      };
+      let k = 0; const t = setInterval(() => { if (el) el.textContent = fmtD(Math.floor(azar() * 10000)); Sonido.play('tic'); if (++k > 8) { clearInterval(t); fin(); } }, ms(55));
+    });
   },
 });
 
@@ -479,10 +494,10 @@ function bancaJuega(sincrono) {
   if (sincrono) { while (sigue()) h.b.push(nuevaCarta(azar)); return resolver21(); }
   const paso = () => {
     if (mano !== h) return;
-    if (sigue()) { h.b.push(nuevaCarta(azar)); Sonido.play('carta'); pintar(); return setTimeout(paso, 550); }
+    if (sigue()) { h.b.push(nuevaCarta(azar)); Sonido.play('carta'); pintar(); return setTimeout(paso, ms(550)); }
     resolver21(); if (vista === 'juego:veintiuno') pintar();
   };
-  pintar(); setTimeout(paso, 550);
+  pintar(); setTimeout(paso, ms(550));
 }
 JUEGOS.push({
   id: 'veintiuno', e: '🃏', n: 'Veintiuno', d: 'Acércate a 21 sin pasarte', col: '#1d4a36', nota: 'no cambia con la suerte', ocupado: () => !!(mano && !mano.fin),

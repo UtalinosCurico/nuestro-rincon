@@ -145,10 +145,190 @@ function gajosAntojos(premios) {
 /* cuánto devuelve, medido en precio de tienda */
 const rtpAntojos = (premios, precio) => gajosAntojos(premios).reduce((a, g) => a + (g.premio ? g.p * g.premio.precio : 0), 0) / Math.max(1, precio);
 
+/* ============================================================
+   LOS JUEGOS MÁS JUGADOS EN LAS PLATAFORMAS DE CASINO
+   ============================================================ */
+
+/* ---------- limbo: eliges un objetivo, sale un número al instante ---------- */
+const pLimbo = (T, s) => Math.min(1, NORMAL * s / T);
+const resultadoLimbo = (u, s) => techoCohete(u, s);           // misma distribución que el cohete
+const rtpLimbo = s => NORMAL * s;
+
+/* ---------- torres: 8 pisos; en cada uno hay puertas seguras y una trampa ---------- */
+const PISOS_TORRE = 8;
+const MODOS_TORRE = {
+  facil: { n: 'Fácil', puertas: 4, seguras: 3 }, normal: { n: 'Normal', puertas: 3, seguras: 2 },
+  dificil: { n: 'Difícil', puertas: 2, seguras: 1 }, experto: { n: 'Experto', puertas: 3, seguras: 1 },
+};
+/* la ventaja de la casa se cobra una sola vez sobre el total, no en cada piso */
+const multTorre = (k, modo, s) => (k ? redX(NORMAL * s * Math.pow(MODOS_TORRE[modo].puertas / MODOS_TORRE[modo].seguras, k)) : 1);
+const pPiso = modo => MODOS_TORRE[modo].seguras / MODOS_TORRE[modo].puertas;
+const rtpTorres = s => NORMAL * s;
+
+/* ---------- mayor o menor: cartas del 2 al As (mazo infinito) ---------- */
+const VALORES_HILO = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+const pMayorIgual = v => (13 - v) / 13;                       // v = índice 0 (el 2) … 12 (el As)
+const pMenorIgual = v => (v + 1) / 13;
+/* `justo` es el producto de 1/p de los aciertos: la ventaja se cobra una vez, como en las minas */
+const pagoHilo = (justo, s) => (justo > 1 ? redX(NORMAL * s * justo) : 1);
+const rtpHilo = s => NORMAL * s;
+
+/* ---------- keno: 40 números, se sacan 10; eliges de 1 a 10 ---------- */
+const KENO_N = 40, KENO_SACA = 10;
+const pKeno = (n, k) => (k > n || k > KENO_SACA || KENO_SACA - k > KENO_N - n ? 0 : COMB(n, k) * COMB(KENO_N - n, KENO_SACA - k) / COMB(KENO_N, KENO_SACA));
+const KENO_MIN = [0, 1, 1, 2, 2, 3, 3, 3, 4, 4, 4];           // desde cuántos aciertos se paga
+/* el 97% se reparte entre los aciertos que pagan, con más peso en los frecuentes:
+   así hay premios chicos seguido y premios enormes muy de vez en cuando */
+function tablaKeno(n, s) {
+  const ks = []; for (let k = KENO_MIN[n]; k <= n; k++) ks.push(k);
+  const pesos = ks.map(k => Math.sqrt(pKeno(n, k))), suma = pesos.reduce((a, b) => a + b, 0);
+  return ks.map((k, i) => ({ k, p: pKeno(n, k), x: redX(NORMAL * s * (pesos[i] / suma) / pKeno(n, k)) }));
+}
+const rtpKeno = (s, n = 5) => tablaKeno(n, s).reduce((a, f) => a + f.p * f.x, 0);
+function sorteoKeno(az) {
+  const bolsa = Array.from({ length: KENO_N }, (_, i) => i + 1);
+  for (let i = bolsa.length - 1; i > 0; i--) { const j = Math.floor(az() * (i + 1)); [bolsa[i], bolsa[j]] = [bolsa[j], bolsa[i]]; }
+  return bolsa.slice(0, KENO_SACA);
+}
+
+/* ---------- baccarat (mazo infinito, reglas de tercera carta de siempre) ---------- */
+const valorBac = c => (c.r === 'A' ? 1 : ['10', 'J', 'Q', 'K'].includes(c.r) ? 0 : +c.r);
+function bancaPide(b, tercera) {                               // tercera = valor de la 3ª del jugador, o null
+  if (tercera == null) return b <= 5;
+  if (b <= 2) return true;
+  if (b === 3) return tercera !== 8;
+  if (b === 4) return tercera >= 2 && tercera <= 7;
+  if (b === 5) return tercera >= 4 && tercera <= 7;
+  if (b === 6) return tercera === 6 || tercera === 7;
+  return false;
+}
+function jugarBaccarat(az) {
+  const j = [nuevaCarta(az), nuevaCarta(az)], b = [nuevaCarta(az), nuevaCarta(az)];
+  const tot = m => m.reduce((a, c) => a + valorBac(c), 0) % 10;
+  if (tot(j) < 8 && tot(b) < 8) {
+    let tercera = null;
+    if (tot(j) <= 5) { j.push(nuevaCarta(az)); tercera = valorBac(j[2]); }
+    if (bancaPide(tot(b), tercera)) b.push(nuevaCarta(az));
+  }
+  const tj = tot(j), tb = tot(b);
+  return { j, b, tj, tb, gana: tj > tb ? 'jugador' : tb > tj ? 'banca' : 'empate' };
+}
+/* probabilidades exactas, recorriendo todas las manos (valor 0 pesa 4/13; del 1 al 9, 1/13 cada uno) */
+let PROBS_BAC = null;
+function probsBaccarat() {
+  if (PROBS_BAC) return PROBS_BAC;
+  const pv = v => (v === 0 ? 4 / 13 : 1 / 13), r = { jugador: 0, banca: 0, empate: 0 };
+  for (let j1 = 0; j1 < 10; j1++) for (let j2 = 0; j2 < 10; j2++) for (let b1 = 0; b1 < 10; b1++) for (let b2 = 0; b2 < 10; b2++) {
+    const p0 = pv(j1) * pv(j2) * pv(b1) * pv(b2), tj0 = (j1 + j2) % 10, tb0 = (b1 + b2) % 10;
+    const fin = (tj, tb, p) => { r[tj > tb ? 'jugador' : tb > tj ? 'banca' : 'empate'] += p; };
+    if (tj0 >= 8 || tb0 >= 8) { fin(tj0, tb0, p0); continue; }
+    const conBanca = (tj, tercera, p) => {
+      if (!bancaPide(tb0, tercera)) return fin(tj, tb0, p);
+      for (let b3 = 0; b3 < 10; b3++) fin(tj, (tb0 + b3) % 10, p * pv(b3));
+    };
+    if (tj0 <= 5) for (let j3 = 0; j3 < 10; j3++) conBanca((tj0 + j3) % 10, j3, p0 * pv(j3));
+    else conBanca(tj0, null, p0);
+  }
+  return (PROBS_BAC = r);
+}
+/* lo que devuelve cada apuesta (incluida la apuesta); en empate, jugador y banca recuperan lo apostado */
+function pagosBaccarat(s) {
+  const p = probsBaccarat(), R = NORMAL * s;
+  return { jugador: redX((R - p.empate) / p.jugador), banca: redX((R - p.empate) / p.banca), empate: redX(R / p.empate) };
+}
+function rtpBaccarat(s, a = 'jugador') { const p = probsBaccarat(), x = pagosBaccarat(s)[a]; return a === 'empate' ? p.empate * x : p[a] * x + p.empate; }
+
+/* ---------- video póker: Jotas o mejor, tabla 8/5 (~97,3% jugando perfecto) ---------- */
+const MANOS_POKER = [
+  { id: 'real', n: 'Escalera real', x: 800 }, { id: 'colorEsc', n: 'Escalera de color', x: 50 }, { id: 'poker', n: 'Póker', x: 25 },
+  { id: 'full', n: 'Full', x: 8 }, { id: 'color', n: 'Color', x: 5 }, { id: 'escalera', n: 'Escalera', x: 4 },
+  { id: 'trio', n: 'Trío', x: 3 }, { id: 'doble', n: 'Doble pareja', x: 2 }, { id: 'jotas', n: 'Pareja de jotas o más', x: 1 },
+];
+const valorPoker = c => ({ J: 11, Q: 12, K: 13, A: 14 }[c.r] || +c.r);
+function evaluarPoker(cartas) {
+  const vs = cartas.map(valorPoker).sort((a, b) => a - b);
+  const color = cartas.every(c => c.p === cartas[0].p);
+  const distintos = new Set(vs).size === 5;
+  const escalera = distintos && (vs[4] - vs[0] === 4 || vs.join() === '2,3,4,5,14');
+  const cuenta = {}; vs.forEach(v => { cuenta[v] = (cuenta[v] || 0) + 1; });
+  const reps = Object.values(cuenta).sort((a, b) => b - a);
+  let id = null;
+  if (escalera && color) id = vs[0] === 10 ? 'real' : 'colorEsc';
+  else if (reps[0] === 4) id = 'poker';
+  else if (reps[0] === 3 && reps[1] === 2) id = 'full';
+  else if (color) id = 'color';
+  else if (escalera) id = 'escalera';
+  else if (reps[0] === 3) id = 'trio';
+  else if (reps[0] === 2 && reps[1] === 2) id = 'doble';
+  else if (reps[0] === 2 && +Object.keys(cuenta).find(k => cuenta[k] === 2) >= 11) id = 'jotas';
+  return id ? MANOS_POKER.find(m => m.id === id) : null;
+}
+function mazoBarajado(az) {
+  const m = []; for (const p of PALOS) for (const r of RANGOS) m.push({ r, p });
+  for (let i = m.length - 1; i > 0; i--) { const j = Math.floor(az() * (i + 1)); [m[i], m[j]] = [m[j], m[i]]; }
+  return m;
+}
+
+/* ---------- lluvia de frutas: tragamonedas de cascada 6×5 ----------
+   Paga por cantidad: 8 o más iguales en cualquier lugar. Los que pagan desaparecen,
+   caen nuevos y se vuelve a revisar. Con 4 o más 🍭 hay tiradas gratis, y en ellas
+   aparecen 🌈 que multiplican lo ganado. No se puede calcular exacto: K se ajustó
+   simulando millones de tiradas para que devuelva 97% (ver pruebas en Node). */
+const CASCADA = {
+  cols: 6, filas: 5, min: 8, gratis: 10, regratis: 5, K: 1.77,
+  simbolos: [
+    { e: '❤️', p: 3, pagos: [10, 25, 50] }, { e: '💙', p: 5, pagos: [2.5, 10, 25] }, { e: '💜', p: 7, pagos: [2, 5, 15] },
+    { e: '🍬', p: 9, pagos: [1.5, 2, 12] }, { e: '🍎', p: 12, pagos: [1, 1.5, 10] }, { e: '🍑', p: 14, pagos: [0.8, 1.2, 8] },
+    { e: '🍉', p: 16, pagos: [0.5, 1, 5] }, { e: '🍇', p: 18, pagos: [0.4, 0.9, 4] }, { e: '🍌', p: 20, pagos: [0.25, 0.75, 2] },
+  ],
+  scatter: { e: '🍭', p: 2, pagos: { 4: 3, 5: 5, 6: 100 } },
+  multi: { e: '🌈', p: 1.4, valores: [{ v: 2, p: 30 }, { v: 3, p: 20 }, { v: 4, p: 14 }, { v: 5, p: 12 }, { v: 8, p: 8 }, { v: 10, p: 7 }, { v: 15, p: 4 }, { v: 25, p: 3 }, { v: 50, p: 1.5 }, { v: 100, p: 0.5 }] },
+  stats: { gana: 0.417, gratisCada: 207 },                     // medido en Node con 800.000 jugadas (aprox.)
+};
+const tramoCascada = n => (n >= 12 ? 2 : n >= 10 ? 1 : 0);
+const pagoCascada = (sim, n, s) => redX(sim.pagos[tramoCascada(n)] * CASCADA.K * s);
+const pagoScatter = (n, s) => redX((CASCADA.scatter.pagos[Math.min(6, n)] || 0) * CASCADA.K * s);
+function celdaCascada(az, gratis) {
+  const lista = CASCADA.simbolos.concat([CASCADA.scatter]).concat(gratis ? [CASCADA.multi] : []);
+  const c = elegirPeso(lista, az);
+  return c === CASCADA.multi ? { e: c.e, m: elegirPeso(CASCADA.multi.valores, az).v } : { e: c.e };
+}
+/* una tirada completa: devuelve los pasos (para animar) y lo ganado, en veces la apuesta */
+function tiradaCascada(az, s, gratis) {
+  const { cols, filas } = CASCADA;
+  let grid = Array.from({ length: cols }, () => Array.from({ length: filas }, () => celdaCascada(az, gratis)));
+  const pasos = [];
+  let total = 0;
+  for (let vuelta = 0; vuelta < 60; vuelta++) {
+    const cuenta = {};
+    grid.forEach(col => col.forEach(c => { if (!c.m && c.e !== CASCADA.scatter.e) cuenta[c.e] = (cuenta[c.e] || 0) + 1; }));
+    const ganan = CASCADA.simbolos.filter(sm => (cuenta[sm.e] || 0) >= CASCADA.min).map(sm => ({ e: sm.e, n: cuenta[sm.e], x: pagoCascada(sm, cuenta[sm.e], s) }));
+    if (!ganan.length) { pasos.push({ grid: grid.map(c => c.slice()), ganan: [] }); break; }
+    const x = ganan.reduce((a, g) => a + g.x, 0);
+    total += x;
+    pasos.push({ grid: grid.map(c => c.slice()), ganan, x });
+    const fuera = new Set(ganan.map(g => g.e));
+    grid = grid.map(col => { const quedan = col.filter(c => !fuera.has(c.e) || c.m); while (quedan.length < filas) quedan.unshift(celdaCascada(az, gratis)); return quedan; });
+  }
+  const fin = pasos[pasos.length - 1].grid;
+  const scatters = fin.reduce((a, col) => a + col.filter(c => c.e === CASCADA.scatter.e).length, 0);
+  const multis = fin.reduce((a, col) => a + col.reduce((b, c) => b + (c.m || 0), 0), 0);
+  const mult = total > 0 && multis > 0 ? multis : 1;
+  return { pasos, base: total, mult, x: total * mult + (scatters >= 4 ? pagoScatter(scatters, s) : 0), scatters, gratis: !gratis && scatters >= 4 ? CASCADA.gratis : gratis && scatters >= 3 ? CASCADA.regratis : 0 };
+}
+/* una jugada entera, con sus tiradas gratis encadenadas */
+function jugadaCascada(az, s) {
+  const tiradas = [tiradaCascada(az, s, false)];
+  let quedan = tiradas[0].gratis, x = tiradas[0].x;
+  for (let i = 0; i < quedan && i < 200; i++) { const t = tiradaCascada(az, s, true); tiradas.push(t); x += t.x; quedan += t.gratis; }
+  return { tiradas, x, gratis: tiradas.length - 1 };
+}
+
 /* devolución de cada juego para un factor de suerte (se muestra en Cuentas y en el panel) */
 const DEVOLUCIONES = s => [
-  ['Ruleta', rtpRuleta(s)], ['Rueda', rtpRueda(s)], ['Cajas', rtpCajas(s)], ['Cohete', rtpCohete(s)], ['Doble o nada', rtpDoble(s)],
-  ['Tragamonedas', rtpTraga(s)], ['Minas', rtpMinas(s)], ['Plinko', rtpPlinko(s)], ['Raspe y gane', rtpRaspe(s)], ['Dados', rtpDados(s)],
+  ['Lluvia de frutas (medido)', NORMAL * s], ['Cohete', rtpCohete(s)], ['Minas', rtpMinas(s)], ['Plinko', rtpPlinko(s)], ['Limbo', rtpLimbo(s)], ['Mayor o menor', rtpHilo(s)],
+  ['Ruleta', rtpRuleta(s)], ['Baccarat (jugador)', rtpBaccarat(s, 'jugador')], ['Tragamonedas', rtpTraga(s)], ['Keno (5 números)', rtpKeno(s, 5)], ['Rueda', rtpRueda(s)], ['Dados', rtpDados(s)],
+  ['Torres', rtpTorres(s)], ['Doble o nada', rtpDoble(s)], ['Cajas', rtpCajas(s)], ['Raspe y gane', rtpRaspe(s)],
 ];
 
 if (typeof module !== 'undefined') module.exports = {};
