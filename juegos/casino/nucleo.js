@@ -4,7 +4,7 @@
    teléfono (`casinoRincon_v1__<Persona>`, más `_copia`). A Neon
    sube la rama `datos.casino`:
      config   lo que fija Diego en el panel secreto (devolución,
-              hora feliz, premios, patrón)
+              hora feliz, premios, máximo por jugada)
      canjes   los vales de premios de verdad (se ven en los dos teléfonos)
      regalos  fichas que alguien le regala a otra persona
      marcador / respaldo  por persona, con las guardas de siempre
@@ -146,11 +146,11 @@ const PREMIOS_BASE = [
   { id: 'chocolate', e: '🍫', n: 'Chocolate', d: 'Uno rico, no de máquina', precio: 9000, peso: 7, activo: true },
   { id: 'pelicula', e: '🍿', n: 'Noche de película', d: 'Tú eliges la película', precio: 7000, peso: 6, activo: true },
 ];
-function configBase() { return { v: 1, t: 0, patron: null, devolucion: { Catalina: NORMAL, Diego: NORMAL }, evento: null, premios: PREMIOS_BASE.map(p => Object.assign({}, p)), antojoPrecio: 5000, tope: 50000 }; }
+function configBase() { return { v: 1, t: 0, devolucion: { Catalina: NORMAL, Diego: NORMAL }, evento: null, premios: PREMIOS_BASE.map(p => Object.assign({}, p)), antojoPrecio: 5000, tope: 50000 }; }
 function normalizarConfig(c) {
   const b = configBase(); c = objeto(c);
   const num = (v, d, lo, hi) => (Number.isFinite(+v) ? Math.max(lo, Math.min(hi, +v)) : d);
-  const out = { v: 1, t: num(c.t, 0, 0, 9e15), patron: typeof c.patron === 'string' ? c.patron : null, antojoPrecio: Math.round(num(c.antojoPrecio, b.antojoPrecio, 1, 1e7)), tope: Math.round(num(c.tope, b.tope, 1000, 1e7)) };
+  const out = { v: 1, t: num(c.t, 0, 0, 9e15), antojoPrecio: Math.round(num(c.antojoPrecio, b.antojoPrecio, 1, 1e7)), tope: Math.round(num(c.tope, b.tope, 1000, 1e7)) };
   out.devolucion = {}; for (const p of PERSONAS) out.devolucion[p] = num(objeto(c.devolucion)[p], NORMAL, 0.5, 1.6);
   const ev = objeto(c.evento);
   out.evento = ev.hasta > Date.now() ? { hasta: +ev.hasta, valor: num(ev.valor, 1.1, 0.5, 1.6), para: ['todos', ...PERSONAS].includes(ev.para) ? ev.para : 'todos' } : null;

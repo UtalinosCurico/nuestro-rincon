@@ -1,93 +1,32 @@
 /* ============================================================
    PANEL SECRETO DE LA CASA (para Diego)
-   Se abre tocando 7 veces seguidas el nombre del casino, solo en el
-   teléfono donde juega Diego, y dibujando su patrón (3×3, como el
-   desbloqueo del teléfono). El patrón se guarda como huella SHA-256
-   en `datos.casino.config.patron`, nunca en el código.
-   Es un escondite, no seguridad de banco: el repo es público y el
-   API no tiene usuarios.
+   La entrada es un easter egg: mantener apretado el contador de
+   fichas (arriba a la derecha) unos 3 segundos. Mientras tanto no
+   se ve nada, y en un teléfono donde no juega Diego no pasa nada:
+   ni el gesto ni el panel se notan. Es un escondite, no seguridad
+   de banco (el repo es público y el API no tiene usuarios).
    Lo que se cambia aquí se ve en los porcentajes del casino: las
    pantallas siempre muestran lo que de verdad paga cada juego.
    ============================================================ */
-let toquesTitulo = [], secretoAbierto = false, borrador = null;
+const MS_TOQUE_LARGO = 3000;
+let toqueLargo = 0, secretoAbierto = false, borrador = null;
 function engancharSecreto() {
-  $('#titulo').addEventListener('click', () => {
+  const chip = $('#fichas');
+  const soltar = () => { clearTimeout(toqueLargo); toqueLargo = 0; };
+  chip.addEventListener('pointerdown', () => {
+    soltar();
     if (quien() !== 'Diego') return;
-    const ahora = Date.now();
-    toquesTitulo = toquesTitulo.filter(t => ahora - t < 3000); toquesTitulo.push(ahora);
-    if (toquesTitulo.length >= 7) { toquesTitulo = []; abrirSecreto(); }
+    toqueLargo = setTimeout(() => { toqueLargo = 0; abrirSecreto(); }, MS_TOQUE_LARGO);
   });
-}
-async function huella(seq) {
-  const txt = 'casinoRincon|' + seq.join('-');
-  try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(txt)); return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join(''); }
-  catch (e) { let h = 2166136261; for (let i = 0; i < txt.length; i++) { h ^= txt.charCodeAt(i); h = Math.imul(h, 16777619); } return 'f' + (h >>> 0).toString(16); }
+  for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) chip.addEventListener(ev, soltar);
+  chip.addEventListener('contextmenu', e => e.preventDefault());
 }
 async function abrirSecreto() {
-  if (estaOcupado()) return;
-  if (secretoAbierto) { vista = 'secreto'; pintar(); return; }
-  try { await Nube.leer(); } catch (e) { /* usa la copia local de la config */ }
-  if (!CFG.patron) crearPatron(false); else pedirPatron(0);
-}
-function entrarAlPanel() { cerrar(); secretoAbierto = true; borrador = null; Sonido.play('premio'); vista = 'secreto'; pintar(); scrollTo(0, 0); }
-
-/* ---------- el patrón ---------- */
-const centroP = i => [40 + (i % 3) * 80, 40 + Math.floor(i / 3) * 80];
-function patronHTML(titulo, sub) {
-  return `<div class="emo">🔐</div><h3>${titulo}</h3>${sub ? `<p>${sub}</p>` : ''}<div class="patron" id="patron"><svg id="patronSvg" viewBox="0 0 240 240"></svg>${Array.from({ length: 9 }, (_, i) => `<i data-p="${i}" style="left:${(centroP(i)[0] / 2.4).toFixed(2)}%;top:${(centroP(i)[1] / 2.4).toFixed(2)}%"></i>`).join('')}</div>
-    <button class="grande claro" onclick="cerrar()">Cancelar</button>`;
-}
-function leerPatron(alTerminar) {
-  const caja = $('#patron'), svg = $('#patronSvg');
-  let seq = [], dibujando = false, cursor = null;
-  const pos = e => { const r = caja.getBoundingClientRect(); return [(e.clientX - r.left) * 240 / r.width, (e.clientY - r.top) * 240 / r.height]; };
-  const dibujar = () => {
-    const pts = seq.map(centroP).concat(cursor && seq.length ? [cursor] : []);
-    svg.innerHTML = pts.length > 1 ? `<polyline points="${pts.map(p => p.join(',')).join(' ')}" fill="none" stroke="#f2c14e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>` : '';
-    caja.querySelectorAll('[data-p]').forEach(d => d.classList.toggle('on', seq.includes(+d.dataset.p)));
-  };
-  const tocar = (x, y) => {
-    for (let i = 0; i < 9; i++) {
-      const [cx, cy] = centroP(i);
-      if (Math.hypot(cx - x, cy - y) > 30 || seq.includes(i)) continue;
-      /* si se pasa por encima del punto del medio, ese también cuenta (como en el teléfono) */
-      if (seq.length) {
-        const [ax, ay] = centroP(seq[seq.length - 1]), medio = [0, 1, 2, 3, 4, 5, 6, 7, 8].find(j => centroP(j)[0] === (ax + cx) / 2 && centroP(j)[1] === (ay + cy) / 2);
-        if (medio != null && !seq.includes(medio)) seq.push(medio);
-      }
-      seq.push(i); vibrar(8); Sonido.play('tic');
-    }
-  };
-  caja.onpointerdown = e => { caja.setPointerCapture(e.pointerId); dibujando = true; seq = []; const [x, y] = pos(e); tocar(x, y); cursor = [x, y]; dibujar(); };
-  caja.onpointermove = e => { if (!dibujando) return; const [x, y] = pos(e); tocar(x, y); cursor = [x, y]; dibujar(); };
-  const soltar = () => { if (!dibujando) return; dibujando = false; cursor = null; dibujar(); if (seq.length) alTerminar(seq.slice()); };
-  caja.onpointerup = soltar; caja.onpointercancel = soltar;
-}
-function crearPatron(cambiando) {
-  tarjeta(patronHTML(cambiando ? 'Tu patrón nuevo' : 'Crea tu patrón secreto', 'Une al menos 4 puntos sin levantar el dedo. Con este patrón vas a entrar al panel.'));
-  leerPatron(uno => {
-    if (uno.length < 4) { aviso('Une al menos 4 puntos'); return crearPatron(cambiando); }
-    tarjeta(patronHTML('Repítelo', 'Dibuja el mismo patrón otra vez.'));
-    leerPatron(async dos => {
-      if (dos.join() !== uno.join()) { aviso('No coincide: empecemos de nuevo'); return crearPatron(cambiando); }
-      const h = await huella(uno);
-      let existia = false;
-      try { await Nube.escribir(R => { if (R.config.patron && !cambiando) { existia = true; return; } R.config.patron = h; R.config.t = Date.now(); }); }
-      catch (e) { cerrar(); aviso('Para guardar el patrón hace falta internet'); return; }
-      if (existia) return pedirPatron(0);
-      aviso(cambiando ? 'Patrón cambiado' : 'Patrón guardado', 'gana');
-      entrarAlPanel();
-    });
-  });
-}
-function pedirPatron(fallos) {
-  tarjeta(patronHTML('', ''));
-  leerPatron(async seq => {
-    if (await huella(seq) === CFG.patron) return entrarAlPanel();
-    vibrar([40, 30, 40]);
-    if (fallos >= 2) { cerrar(); return; }
-    pedirPatron(fallos + 1);
-  });
+  if (estaOcupado() || quien() !== 'Diego') return;
+  try { await Nube.leer(); } catch (e) { /* sin señal: usa la copia local de la config */ }
+  secretoAbierto = true; borrador = null;
+  vibrar(30); Sonido.play('premio');
+  cerrar(); vista = 'secreto'; pintar(); scrollTo(0, 0);
 }
 
 /* ---------- el panel ---------- */
@@ -136,7 +75,7 @@ function vistaSecreto() {
       <input id="regMsg" placeholder="Un mensajito (opcional)" maxlength="120" style="width:100%;margin-top:6px">
       <button class="grande verde" id="regalar">Enviar el regalo</button><p class="sub" style="margin:6px 0 0">Le llega la próxima vez que abra el casino.</p></div>
     <h2>Vales</h2>${vales.length ? vales.map(v => valeHTML(v, v.estado !== 'cumplido' && !v.subiendo ? `<button class="chip ok" data-cumplir="${esc(v.id)}">Cumplido</button>` : '')).join('') : '<p class="sub">Nadie ha canjeado nada todavía.</p>'}
-    <div class="pie"><button id="cambiarPatron">🔐 Cambiar el patrón</button><button id="salirPanel">🚪 Salir del panel</button></div>`;
+    <div class="pie"><button id="salirPanel">🚪 Salir del panel</button></div>`;
 }
 async function guardarConfig(mutar, txt) {
   try { await Nube.escribir(R => { mutar(R.config); R.config.t = Date.now(); }); }
@@ -189,7 +128,6 @@ function conectarSecreto() {
     if (para === quien()) sincronizar(true);
   };
   document.querySelectorAll('[data-cumplir]').forEach(x => x.onclick = () => cumplirVale(x.dataset.cumplir));
-  $('#cambiarPatron').onclick = () => crearPatron(true);
   $('#salirPanel').onclick = () => { secretoAbierto = false; borrador = null; vista = 'lobby'; pintar(); scrollTo(0, 0); };
 }
 
