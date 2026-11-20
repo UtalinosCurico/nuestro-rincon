@@ -30,20 +30,21 @@ const hoy = (t = Date.now()) => (FECHA ? FECHA.format(new Date(t)) : new Date(t)
    FICHAS (local, por persona)
    ============================================================ */
 function nuevo() { return { v: 2, fichas: INICIAL, mayor: INICIAL, apostado: 0, ganado: 0, jugadas: 0, quiebras: 0, rescate: null, inv: [], mejor: null, diario: { fecha: null, racha: 0 }, pendientes: [], canjeado: 0, regalado: 0, grandes: [] }; }
+function normalizarC(d) {
+  const c = Object.assign(nuevo(), objeto(d));
+  for (const a of ['inv', 'pendientes', 'grandes']) if (!Array.isArray(c[a])) c[a] = [];
+  for (const k of ['fichas', 'mayor', 'apostado', 'ganado', 'jugadas', 'quiebras', 'canjeado', 'regalado']) if (!Number.isFinite(c[k])) c[k] = k === 'fichas' || k === 'mayor' ? INICIAL : 0;
+  c.diario = Object.assign({ fecha: null, racha: 0 }, objeto(c.diario));
+  return c;
+}
 function leer() {
   for (const k of [clave(), clave() + '_copia']) {
-    try {
-      const d = JSON.parse(localStorage.getItem(k) || 'null');
-      if (d && Number.isFinite(d.fichas)) {
-        const c = Object.assign(nuevo(), d);
-        for (const a of ['inv', 'pendientes', 'grandes']) if (!Array.isArray(c[a])) c[a] = [];
-        c.diario = Object.assign({ fecha: null, racha: 0 }, objeto(c.diario));
-        return c;
-      }
-    } catch (e) { /* sigue */ }
+    try { const d = JSON.parse(localStorage.getItem(k) || 'null'); if (d && Number.isFinite(d.fichas)) return normalizarC(d); } catch (e) { /* sigue */ }
   }
   return nuevo();
 }
+/* un perfil recién creado en este teléfono (nunca jugó, nunca cobró nada) */
+const esPerfilNuevo = c => c.jugadas === 0 && !c.diario.fecha && !c.canjeado && !c.regalado && c.fichas === INICIAL && !c.inv.length;
 let C = leer();
 function guardar() {
   C.mayor = Math.max(C.mayor, C.fichas);
@@ -71,6 +72,9 @@ function apostar(m, extra) {
 }
 function pagar(m, apuesta, juego) {
   m = Math.floor(m);
+  /* lo máximo que se gana en una jugada (lo fija Diego): un golpe de suerte enorme no se lleva todos los premios */
+  let topado = false;
+  if (m - apuesta > CFG.tope) { m = apuesta + CFG.tope; topado = true; }
   if (m > 0) { C.fichas += m; C.ganado += m; }
   const neto = m - apuesta;
   if (C.mejor == null || neto > C.mejor) C.mejor = neto;
@@ -82,6 +86,7 @@ function pagar(m, apuesta, juego) {
   else if (neto > 0) { Sonido.play('gana'); vibrar(20); aviso('+' + fmt(neto) + ' 🪙', 'gana'); }
   else if (m > 0) aviso('Recuperas ' + fmt(m) + ' 🪙');
   else { Sonido.play('pierde'); aviso('−' + fmt(apuesta) + ' 🪙', 'pierde'); }
+  if (topado) setTimeout(() => aviso('Llegaste al máximo por jugada: ' + fmt(CFG.tope) + ' 🪙'), 500);
   if (C.fichas <= 0) setTimeout(quiebra, 900);
   Nube.programar();
 }
@@ -126,20 +131,26 @@ function vibrar(ms) { try { if (navigator.vibrate && (!navigator.userActivation 
 /* ============================================================
    LO QUE FIJA DIEGO (config) — se lee de la nube, con copia local
    ============================================================ */
+/* Los precios se piensan en días de regalo diario. Con la casa ganando (tasa
+   bajo 100%), en promedio nadie saca en premios más fichas que las que recibe
+   gratis: apostar todo de una vez cambia CUÁNDO llega un premio, no CUÁNTOS.
+   Así el precio dice cada cuánto sale, juegue como juegue. */
+const REGALO_TOPE = 550;                       // el regalo diario con la racha completa
+const diasDe = precio => Math.max(1, Math.round(precio / REGALO_TOPE));
 const PREMIOS_BASE = [
-  { id: 'sushi', e: '🍣', n: 'Sushi acevichado del Tokyo', d: 'El premio mayor', precio: 60000, peso: 0.4, activo: true },
-  { id: 'sorpresa', e: '🎁', n: 'Premio sorpresa', d: 'Quien lo debe elige qué es', precio: 15000, peso: 2, activo: true },
-  { id: 'masaje', e: '💆', n: 'Masaje de 15 minutos', d: 'Sin apuro', precio: 8000, peso: 3, activo: true },
-  { id: 'cafe', e: '☕', n: 'Cafecito con algo dulce', d: 'Donde tú quieras', precio: 6000, peso: 4, activo: true },
-  { id: 'helado', e: '🍦', n: 'Helado', d: 'Del sabor que elijas', precio: 5000, peso: 6, activo: true },
-  { id: 'chocolate', e: '🍫', n: 'Chocolate', d: 'Uno rico, no de máquina', precio: 4000, peso: 8, activo: true },
-  { id: 'pelicula', e: '🍿', n: 'Noche de película', d: 'Tú eliges la película', precio: 3000, peso: 6, activo: true },
+  { id: 'sushi', e: '🍣', n: 'Sushi acevichado del Tokyo', d: 'El premio mayor', precio: 100000, peso: 0.4, activo: true },
+  { id: 'sorpresa', e: '🎁', n: 'Premio sorpresa', d: 'Quien lo debe elige qué es', precio: 30000, peso: 1.5, activo: true },
+  { id: 'masaje', e: '💆', n: 'Masaje de 15 minutos', d: 'Sin apuro', precio: 18000, peso: 3, activo: true },
+  { id: 'cafe', e: '☕', n: 'Cafecito con algo dulce', d: 'Donde tú quieras', precio: 15000, peso: 4, activo: true },
+  { id: 'helado', e: '🍦', n: 'Helado', d: 'Del sabor que elijas', precio: 12000, peso: 6, activo: true },
+  { id: 'chocolate', e: '🍫', n: 'Chocolate', d: 'Uno rico, no de máquina', precio: 9000, peso: 7, activo: true },
+  { id: 'pelicula', e: '🍿', n: 'Noche de película', d: 'Tú eliges la película', precio: 7000, peso: 6, activo: true },
 ];
-function configBase() { return { v: 1, t: 0, patron: null, devolucion: { Catalina: NORMAL, Diego: NORMAL }, evento: null, premios: PREMIOS_BASE.map(p => Object.assign({}, p)), antojoPrecio: 2500 }; }
+function configBase() { return { v: 1, t: 0, patron: null, devolucion: { Catalina: NORMAL, Diego: NORMAL }, evento: null, premios: PREMIOS_BASE.map(p => Object.assign({}, p)), antojoPrecio: 5000, tope: 50000 }; }
 function normalizarConfig(c) {
   const b = configBase(); c = objeto(c);
   const num = (v, d, lo, hi) => (Number.isFinite(+v) ? Math.max(lo, Math.min(hi, +v)) : d);
-  const out = { v: 1, t: num(c.t, 0, 0, 9e15), patron: typeof c.patron === 'string' ? c.patron : null, antojoPrecio: Math.round(num(c.antojoPrecio, b.antojoPrecio, 1, 1e7)) };
+  const out = { v: 1, t: num(c.t, 0, 0, 9e15), patron: typeof c.patron === 'string' ? c.patron : null, antojoPrecio: Math.round(num(c.antojoPrecio, b.antojoPrecio, 1, 1e7)), tope: Math.round(num(c.tope, b.tope, 1000, 1e7)) };
   out.devolucion = {}; for (const p of PERSONAS) out.devolucion[p] = num(objeto(c.devolucion)[p], NORMAL, 0.5, 1.6);
   const ev = objeto(c.evento);
   out.evento = ev.hasta > Date.now() ? { hasta: +ev.hasta, valor: num(ev.valor, 1.1, 0.5, 1.6), para: ['todos', ...PERSONAS].includes(ev.para) ? ev.para : 'todos' } : null;
@@ -196,6 +207,14 @@ async function sincronizar(subir) {
   try {
     await Nube.leer();
     const q = quien();
+    const guardado = q && Nube.remoto.respaldo[q];
+    if (guardado && guardado.save && esPerfilNuevo(C) && progresoDe(guardado.save) > 0) {
+      const pend = C.pendientes;
+      C = normalizarC(guardado.save);
+      C.pendientes = pend.concat(C.pendientes).filter((v, i, a) => a.findIndex(x => x.id === v.id) === i);
+      fichasAntes = C.fichas; guardar();
+      aviso('Seguimos con tus fichas de la nube ☁️');
+    }
     const regalos = q ? (Nube.remoto.regalos[q] || []) : [];
     const pend = C.pendientes.slice();
     if (q && (regalos.length || pend.length || subir || Date.now() - Nube.ultimaSubida > 10 * 60000)) {
@@ -331,7 +350,7 @@ function vistaLobby() {
     h += '</div>';
   }
   if (C.grandes.length) h += `<h2>Tus premios grandes</h2><div class="grandes">${C.grandes.map(g => `<span><i class="emo">${g.e}</i>+${fmt(g.neto)}</span>`).join('')}</div>`;
-  h += `<p class="nota">Fichas de juego: no son plata de verdad. Los premios los regala ${esc(otraDe(q) || 'tu pareja')}.</p>`;
+  h += `<p class="nota">Lo máximo que se gana en una jugada: ${fmt(CFG.tope)} 🪙. Fichas de juego: no son plata de verdad. Los premios los regala ${esc(otraDe(q) || 'tu pareja')}.</p>`;
   return h;
 }
 function vistaCuentas() {
@@ -345,17 +364,13 @@ function vistaCuentas() {
     <div class="panel"><b>Cuánto devuelve cada juego hoy</b><p class="sub" style="margin:6px 0 8px">De cada 100 fichas apostadas, en promedio vuelven:</p>
       <table class="tabla">${DEVOLUCIONES(s).map(([n, r]) => `<tr><td>${n}</td><td style="color:${r >= 1 ? '#7fe0a8' : 'inherit'}">${(Math.round(r * 1000) / 10).toLocaleString('es-CL')}</td></tr>`).join('')}<tr><td>Veintiuno (jugando bien)</td><td>~99</td></tr></table>
       <p class="sub" style="margin:8px 0 0">${s > 1.0001 ? '🍀 Hoy la casa está generosa.' : s < 0.9999 ? 'Hoy la casa está más dura que de costumbre.' : 'Debajo de 100 la casa gana a la larga: se puede perder todo.'}</p></div>
+    <div class="panel"><b>¿Por qué los premios cuestan tanto?</b><p class="sub" style="margin:6px 0 0">${s > 1.0001 ? 'Hoy la casa está generosa: jugando, las fichas crecen en promedio.' : 'Como la casa gana a la larga, en promedio nadie saca en premios más fichas que las que recibe gratis (el regalo del día, de hasta ' + fmt(REGALO_TOPE) + ', el préstamo de Michi y los regalos). Apostar todo de una vez cambia cuándo llega un premio, no cuántos llegan.'} Por eso las fichas no se reinician, y lo máximo que se gana en una jugada es ${fmt(CFG.tope)} 🪙.</p></div>
     <div class="pie"><button id="cSonido">${Sonido.mudo() ? '🔇 Sonido apagado' : '🔊 Sonido encendido'}</button><button id="cQuien">👤 ${esc(q || 'Quién juega')}</button></div>
-    <button class="grande rojo" id="reiniciar">Empezar de nuevo con ${fmt(INICIAL)} fichas</button>
     <p class="nota">Fichas de juego: no son plata de verdad ni se pueden cambiar por plata.</p>`;
 }
 function conectarCuentas() {
   $('#cSonido').onclick = () => { Sonido.alternar(); pintar(); };
   $('#cQuien').onclick = () => hojaQuien();
-  $('#reiniciar').onclick = () => {
-    tarjeta(`<div class="emo">🔄</div><h3>¿Empezar de nuevo?</h3><p>Se borran tus fichas, tus cosas y tus cuentas. Los vales ya canjeados se mantienen.</p><button class="grande rojo" id="rSi">Sí, de nuevo</button><button class="grande claro" onclick="cerrar()">Mejor no</button>`);
-    $('#rSi').onclick = () => { const pend = C.pendientes; C = nuevo(); C.pendientes = pend; fichasAntes = C.fichas; guardar(); cerrar(); pintar(); };
-  };
 }
 function irA(v) {
   if (v === vista) return;
@@ -368,7 +383,11 @@ function pintar() {
   else if (vista === 'cuentas') { m.innerHTML = vistaCuentas(); conectarCuentas(); }
   else if (vista === 'premios') { m.innerHTML = vistaPremios(); conectarPremios(); }
   else if (vista === 'secreto') { m.innerHTML = vistaSecreto(); conectarSecreto(); }
-  else { const j = juegoDe(vista.slice(6)); if (!j) { vista = 'lobby'; return pintar(); } m.innerHTML = j.vista(); conectarSelector(); j.conectar(); }
+  else {
+    const j = juegoDe(vista.slice(6)); if (!j) { vista = 'lobby'; return pintar(); }
+    m.innerHTML = j.vista() + (j.grupo === 'premios' ? '' : `<p class="nota">Lo máximo que se gana en una jugada: ${fmt(CFG.tope)} 🪙</p>`);
+    conectarSelector(); j.conectar();
+  }
   m.querySelectorAll('[data-j]').forEach(b => b.onclick = () => { Sonido.listo(); Sonido.play('tap'); irA('juego:' + b.dataset.j); });
   m.querySelectorAll('[data-ir]').forEach(b => b.onclick = () => { Sonido.listo(); irA(b.dataset.ir); });
   const d = $('#bDiario'); if (d) d.onclick = () => { Sonido.listo(); cobrarDiario(); };

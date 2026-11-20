@@ -183,3 +183,4 @@ select, .panel input:not([type=range]):not([type=checkbox]) { background: #0d1a1
 .fila-premio label { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; }
 .fila-premio label input { width: 84px; }
 .stats div small + small { margin-top: 2px; }
+.fila-premio .dias { flex-basis: 100%; color: var(--tenue); font-size: 12px; }
